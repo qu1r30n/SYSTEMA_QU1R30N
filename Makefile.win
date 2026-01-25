@@ -1,0 +1,43 @@
+# Project: SISTEMA_QU1R30N
+# Makefile created by Embarcadero Dev-C++ 6.3
+
+CPP      = g++.exe -D__DEBUG__
+CC       = gcc.exe -D__DEBUG__
+WINDRES  = windres.exe
+OBJ      = SISTEMA_QU1R30N.o procesos/00_procesos_del_sistema/var_fun_GG.o procesos/00_procesos_del_sistema/operaciones_textos.o procesos/00_procesos_del_sistema/operaciones_compu.o procesos/00_procesos_del_sistema/tex_bas.o procesos/01_procesos_de_negocio/operaciones_tienda.o
+LINKOBJ  = SISTEMA_QU1R30N.o procesos/00_procesos_del_sistema/var_fun_GG.o procesos/00_procesos_del_sistema/operaciones_textos.o procesos/00_procesos_del_sistema/operaciones_compu.o procesos/00_procesos_del_sistema/tex_bas.o procesos/01_procesos_de_negocio/operaciones_tienda.o
+LIBS     = -L"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib" -L"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/lib" -static-libgcc -g3
+INCS     = -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include"
+CXXINCS  = -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++"
+BIN      = SISTEMA_QU1R30N.exe
+CXXFLAGS = $(CXXINCS) -g3
+CFLAGS   = $(INCS) -g3
+DEL      = C:\Program Files (x86)\Embarcadero\Dev-Cpp\devcpp.exe INTERNAL_DEL
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${DEL} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+SISTEMA_QU1R30N.o: SISTEMA_QU1R30N.c
+	$(CC) -c SISTEMA_QU1R30N.c -o SISTEMA_QU1R30N.o $(CFLAGS)
+
+procesos/00_procesos_del_sistema/var_fun_GG.o: procesos/00_procesos_del_sistema/var_fun_GG.c
+	$(CC) -c procesos/00_procesos_del_sistema/var_fun_GG.c -o procesos/00_procesos_del_sistema/var_fun_GG.o $(CFLAGS)
+
+procesos/00_procesos_del_sistema/operaciones_textos.o: procesos/00_procesos_del_sistema/operaciones_textos.c
+	$(CC) -c procesos/00_procesos_del_sistema/operaciones_textos.c -o procesos/00_procesos_del_sistema/operaciones_textos.o $(CFLAGS)
+
+procesos/00_procesos_del_sistema/operaciones_compu.o: procesos/00_procesos_del_sistema/operaciones_compu.c
+	$(CC) -c procesos/00_procesos_del_sistema/operaciones_compu.c -o procesos/00_procesos_del_sistema/operaciones_compu.o $(CFLAGS)
+
+procesos/00_procesos_del_sistema/tex_bas.o: procesos/00_procesos_del_sistema/tex_bas.c
+	$(CC) -c procesos/00_procesos_del_sistema/tex_bas.c -o procesos/00_procesos_del_sistema/tex_bas.o $(CFLAGS)
+
+procesos/01_procesos_de_negocio/operaciones_tienda.o: procesos/01_procesos_de_negocio/operaciones_tienda.c
+	$(CC) -c procesos/01_procesos_de_negocio/operaciones_tienda.c -o procesos/01_procesos_de_negocio/operaciones_tienda.o $(CFLAGS)

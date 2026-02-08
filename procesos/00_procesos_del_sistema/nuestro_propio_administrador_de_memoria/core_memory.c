@@ -2,7 +2,7 @@
    Incluimos el header donde está definida la estructura core_arena
    y los prototipos de las funciones públicas.
 */
-#include "core_memory.h"
+//#include "core_memory.h"
 
 
 /*

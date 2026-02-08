@@ -90,9 +90,7 @@ typedef struct
 */
 
 /* Inicializa arena usando memoria externa */
-void core_arena_init(core_arena* arena,
-                     void* memoria_externa,
-                     size_t tamaño);
+void core_arena_init(core_arena* arena,void* memoria_externa,size_t tamaño);
 
 /* Inicializa arena usando memoria interna por defecto */
 void core_arena_init_default(core_arena* arena);

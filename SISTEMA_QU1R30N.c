@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "cabeceras/tex_bas.h"
-#include "cabeceras/operaciones_tienda.h"
+#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_tex_bas.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_tienda.h"
 
 int main() {
     inicializacion();
@@ -18,8 +18,11 @@ int main() {
             printf("Codigo de barras: "); scanf("%s",codigo);
             printf("Cantidad: "); scanf("%d",&cantidad);
             printf("Sucursal: "); scanf("%s",sucursal);
-            if(venta(codigo,cantidad,sucursal)) printf("Venta realizada\n");
-            else printf("Stock insuficiente o codigo invalido\n");
+
+            if(venta(codigo,cantidad,sucursal))
+                printf("Venta realizada\n");
+            else
+                printf("Stock insuficiente o codigo invalido\n");
         }
         else if(opcion==2){
             char codigo[50], proveedor[50];
@@ -27,12 +30,16 @@ int main() {
             printf("Codigo de barras: "); scanf("%s",codigo);
             printf("Cantidad: "); scanf("%d",&cantidad);
             printf("Proveedor: "); scanf("%s",proveedor);
-            if(compra(codigo,cantidad,proveedor)) printf("Compra realizada\n");
-            else printf("Codigo invalido\n");
+
+            if(compra(codigo,cantidad,proveedor))
+                printf("Compra realizada\n");
+            else
+                printf("Codigo invalido\n");
         }
         else if(opcion==3){
             char id[50], producto[100], contenido[50], tipo_medida[50];
             char precio_venta[50], cod_barras[50], cantidad[50], costo_comp[50], proveedor[50];
+
             printf("ID: "); scanf("%s",id);
             printf("Producto: "); scanf("%s",producto);
             printf("Contenido: "); scanf("%s",contenido);
@@ -42,7 +49,13 @@ int main() {
             printf("Cantidad: "); scanf("%s",cantidad);
             printf("Costo compra: "); scanf("%s",costo_comp);
             printf("Proveedor: "); scanf("%s",proveedor);
-            agregarProducto(id,producto,contenido,tipo_medida,precio_venta,cod_barras,cantidad,costo_comp,proveedor);
+
+            agregarProducto(
+                id,producto,contenido,tipo_medida,
+                precio_venta,cod_barras,cantidad,
+                costo_comp,proveedor
+            );
+
             printf("Producto agregado\n");
         }
 

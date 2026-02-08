@@ -1,7 +1,7 @@
 #ifndef OPERACIONES_TIENDA_H
 #define OPERACIONES_TIENDA_H
 
-#include "var_fun_GG.h"   //NECESARIO para COLUMNAS y MAX_PRODUCTOS
+#include "../00_cabeceras_del_sistema/var_fun_GG.h"   //NECESARIO para COLUMNAS y MAX_PRODUCTOS
 
 int leerInventario(char inventario[][COLUMNAS][256], int maxProductos);
 void guardarInventario(char inventario[][COLUMNAS][256], int n);

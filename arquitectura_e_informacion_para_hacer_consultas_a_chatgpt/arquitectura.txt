@@ -1,0 +1,57 @@
+SISTEMA_QUIR30N
+│
+├── cabeceras
+│   │
+│   ├── cabeceras_modelos
+│   │   │
+│   │   ├── 00_cabeceras_modelos_del_sistema
+│   │   │   ├── modelo_operaciones_compu.h
+│   │   │   ├── modelo_operaciones_textos.h
+│   │   │   ├── modelo_tex_bas.h
+│   │   │   └── modelo_var_fun_GG.h
+│   │   │
+│   │   ├── 01_cabeceras_modelos_de_negocios
+│   │   │   └── modelo_operaciones_tienda.h
+│   │   │
+│   │   └── 02_cabeceras_modelos_generales_de_negocios
+│   │
+│   └── cabeceras_procesos
+│       │
+│       ├── 00_cabeceras_del_sistema
+│       │   ├── operaciones_compu.h
+│       │   ├── operaciones_textos.h
+│       │   ├── tex_bas.h
+│       │   └── var_fun_GG.h
+│       │
+│       ├── 01_cabeceras_procesos_de_negocios
+│       │   └── operaciones_tienda.h
+│       │
+│       └── 02_cabeceras_procesos_generales_de_negocios
+│
+├── modelos
+│   │
+│   ├── 00_modelo_procesos_del_sistema
+│   │   ├── modelo_operaciones_compu.c
+│   │   ├── modelo_operaciones_textos.c
+│   │   ├── modelo_tex_bas.c
+│   │   └── modelo_var_fun_GG.c
+│   │
+│   ├── 01_modelo_procesos_de_negocio
+│   │   └── modelo_operaciones_tienda.c
+│   │
+│   └── 02_modelo_procesos_generales_de_negocios
+│
+├── procesos
+│   │
+│   ├── 00_procesos_del_sistema
+│   │   ├── operaciones_compu.c
+│   │   ├── operaciones_textos.c
+│   │   ├── tex_bas.c
+│   │   └── var_fun_GG.c
+│   │
+│   ├── 01_procesos_de_negocio
+│   │   └── operaciones_tienda.c
+│   │
+│   └── 02_procesos_generales_de_negocios
+│
+└── SISTEMA_QUIR30N.c

@@ -88,9 +88,4 @@ void agregar_fila(const char* ruta, const char* fila) {
     }
 }
 
-// Inicialización
-void inicializacion() {
-    crearArchivo(G_archivos[ARCH_INVENTARIO][0], G_archivos[ARCH_INVENTARIO][1]);
-    for(int i=0;i<2;i++)
-        crearArchivo(G_archivos_registros[i][0], G_archivos_registros[i][1]);
-}
+

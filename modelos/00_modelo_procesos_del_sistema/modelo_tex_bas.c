@@ -12,85 +12,41 @@
     #include <sys/stat.h>
 #endif
 
+#define MAX_LINEAS 1024
+#define MAX_LINEA 1024
 
 // Crear directorio
-/* Crear directorio linux creo
-void crearDirectorio(const char* ruta) {
-    char tmp[512];
-    strcpy(tmp, ruta);
-    char* p = strrchr(tmp, '/');
-    if(p) { *p = 0; mkdir(tmp, 0777); }
+void modelo_crearDirectorio(char* texto) {
+    crearDirectorio(texto);
 }
-*/
-void crearDirectorio(const char* ruta) 
-{
-    char tmp[512];
-    strcpy(tmp, ruta);
-
-    char* p =
-#ifdef _WIN32	 //si windows
-        strrchr(tmp, '\\');
-#else			//si es linux o otro
-        strrchr(tmp, '/');
-#endif
-
-    if (p) {
-        *p = 0;
-
-#ifdef _WIN32 //si windows
-        mkdir(tmp);
-#else //si es linux o otro
-        mkdir(tmp, 0777);
-#endif
-    }
-}
-
-
 
 // Crear archivo
-void crearArchivo(const char* ruta, const char* cabecera) {
-    crearDirectorio(ruta);
-    FILE* f = fopen(ruta, "r");
-    if(!f) {
-        f = fopen(ruta, "w");
-        if(f && cabecera) fprintf(f, "%s\n", cabecera);
-    }
-    if(f) fclose(f);
+void modelo_crearArchivo(char* texto) {
+    crearArchivo(texto, NULL);
 }
 
 // Leer archivo
-int leer_archivo(const char* ruta, char l[][MAX_LINEA]) {
-    FILE* f = fopen(ruta, "r");
-    if(!f) return 0;
-    int n = 0;
-    while(fgets(l[n], MAX_LINEA, f)) {
-        l[n][strcspn(l[n], "\n")] = 0;
-        n++;
-    }
-    fclose(f);
-    return n;
+void modelo_leer_archivo(char* texto) 
+{
+    char lineas[MAX_LINEAS][MAX_LINEA];
+    leer_archivo(texto, lineas);
 }
 
 // Guardar archivo
-void guardar_archivo(const char* ruta, char l[][MAX_LINEA], int n) {
-    FILE* f = fopen(ruta, "w");
-    for(int i=0;i<n;i++)
-        fprintf(f,"%s\n",l[i]);
-    fclose(f);
+void modelo_guardar_archivo(char* texto) {
+    char lineas[MAX_LINEAS][MAX_LINEA];
+    guardar_archivo(texto, lineas, 0);
 }
+
 
 // Agregar fila
-void agregar_fila(const char* ruta, const char* fila) {
-    FILE* f = fopen(ruta,"a");
-    if(f) {
-        fprintf(f,"%s\n",fila);
-        fclose(f);
-    }
+void modelo_agregar_fila(char* texto) {
+    agregar_fila(texto, texto);
 }
 
+
+
 // Inicialización
-void inicializacion() {
-    crearArchivo(G_archivos[ARCH_INVENTARIO][0], G_archivos[ARCH_INVENTARIO][1]);
-    for(int i=0;i<2;i++)
-        crearArchivo(G_archivos_registros[i][0], G_archivos_registros[i][1]);
+void modelo_inicializacion(char* texto) {
+    inicializacion();
 }

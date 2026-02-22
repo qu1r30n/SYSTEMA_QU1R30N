@@ -23,6 +23,5 @@ void editar_columna_completa(const char* ruta,int col,const char* nuevo);
 void eliminar_columna(const char* ruta,int col);
 void agregar_columna(const char* ruta,const char* nombre);
 
-void inicializacion();
 
 #endif

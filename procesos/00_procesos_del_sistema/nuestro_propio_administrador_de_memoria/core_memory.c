@@ -2,7 +2,7 @@
    Incluimos el header donde está definida la estructura core_arena
    y los prototipos de las funciones públicas.
 */
-//#include "core_memory.h"
+#include "../../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/nuestro_propio_administrador_de_memoria/core_memory.h"
 
 
 /*
@@ -35,7 +35,7 @@
    - Funciona incluso sin sistema operativo.
    - Se usa si el usuario llama core_arena_init_default().
 
-   El tamaño depende de CORE_ARENA_DEFAULT_SIZE.
+   El tamanio depende de CORE_ARENA_DEFAULT_SIZE.
 */
 static unsigned char core_arena_memoria_default[CORE_ARENA_DEFAULT_SIZE];
 
@@ -89,15 +89,15 @@ static size_t core_align_forward(size_t ptr, size_t align)
 
 void core_arena_init(core_arena* arena,
                      void* memoria_externa,
-                     size_t tamaño)
+                     size_t tamanio)
 {
     /*
        Validamos que:
        - arena no sea NULL
        - memoria_externa no sea NULL
-       - tamaño no sea 0
+       - tamanio no sea 0
     */
-    if (arena == NULL || memoria_externa == NULL || tamaño == 0)
+    if (arena == NULL || memoria_externa == NULL || tamanio == 0)
         return;
 
     /*
@@ -107,9 +107,9 @@ void core_arena_init(core_arena* arena,
     arena->memoria = (unsigned char*)memoria_externa;
 
     /*
-       Guardamos el tamaño total del bloque.
+       Guardamos el tamanio total del bloque.
     */
-    arena->capacidad = tamaño;
+    arena->capacidad = tamanio;
 
     /*
        Iniciamos el offset en 0.
@@ -205,12 +205,12 @@ void core_arena_restore(core_arena* arena, size_t snapshot)
 ===============================================================================
 */
 
-void* core_arena_alloc(core_arena* arena, size_t tamaño)
+void* core_arena_alloc(core_arena* arena, size_t tamanio)
 {
     /*
        Validamos parámetros.
     */
-    if (arena == NULL || tamaño == 0)
+    if (arena == NULL || tamanio == 0)
         return NULL;
 
     /*
@@ -222,7 +222,7 @@ void* core_arena_alloc(core_arena* arena, size_t tamaño)
     /*
        Verificamos que haya espacio suficiente.
     */
-    if (offset_alineado + tamaño > arena->capacidad)
+    if (offset_alineado + tamanio > arena->capacidad)
         return NULL;
 
     /*
@@ -233,7 +233,7 @@ void* core_arena_alloc(core_arena* arena, size_t tamaño)
     /*
        Avanzamos el offset.
     */
-    arena->offset = offset_alineado + tamaño;
+    arena->offset = offset_alineado + tamanio;
 
 #if CORE_ARENA_STATS
     /*
@@ -262,12 +262,12 @@ void* core_arena_alloc(core_arena* arena, size_t tamaño)
 ===============================================================================
 */
 
-void* core_arena_alloc_fast(core_arena* arena, size_t tamaño)
+void* core_arena_alloc_fast(core_arena* arena, size_t tamanio)
 {
     /*
        Validación básica.
     */
-    if (arena == NULL || tamaño == 0)
+    if (arena == NULL || tamanio == 0)
         return NULL;
 
     /*
@@ -279,7 +279,7 @@ void* core_arena_alloc_fast(core_arena* arena, size_t tamaño)
     /*
        Verificamos espacio.
     */
-    if (offset_alineado + tamaño > arena->capacidad)
+    if (offset_alineado + tamanio > arena->capacidad)
         return NULL;
 
     /*
@@ -290,7 +290,7 @@ void* core_arena_alloc_fast(core_arena* arena, size_t tamaño)
     /*
        Avanzamos offset.
     */
-    arena->offset = offset_alineado + tamaño;
+    arena->offset = offset_alineado + tamanio;
 
     /*
        Retornamos puntero.

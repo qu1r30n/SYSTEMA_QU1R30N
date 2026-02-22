@@ -3,26 +3,21 @@
 
 #define MAX_LINEA 1024
 
-void crearDirectorio(const char* ruta);
-void crearArchivo(const char* ruta, const char* cabecera);
+void modelo_crearDirectorio(char *texto);
+void modelo_crearArchivo(char *texto);
 
-int leer_archivo(const char* ruta, char l[][MAX_LINEA]);
-void guardar_archivo(const char* ruta, char l[][MAX_LINEA], int n);
+void modelo_leer_archivo(char *texto);
+void modelo_guardar_archivo(char *texto);
 
-void agregar_fila(const char* ruta, const char* fila);
-void eliminar_fila(const char* ruta, int filaEliminar);
-void editar_fila(const char* ruta, int fila, const char* nueva);
+void modelo_agregar_fila(char *texto);
+void modelo_eliminar_fila(char *texto);
+void modelo_editar_fila(char *texto);
 
-void editar_celda(const char* ruta,int colBuscar,const char* valorBuscar,
-                  int colEditar,const char* nuevoValor);
+void modelo_editar_celda(char *texto);
+void modelo_incrementar_celda(char *texto);
 
-void incrementar_celda(const char* ruta,int colBuscar,const char* valorBuscar,
-                       int colEditar,int inc);
-
-void editar_columna_completa(const char* ruta,int col,const char* nuevo);
-void eliminar_columna(const char* ruta,int col);
-void agregar_columna(const char* ruta,const char* nombre);
-
-void inicializacion();
+void modelo_editar_columna_completa(char *texto);
+void modelo_eliminar_columna(char *texto);
+void modelo_agregar_columna(char *texto);
 
 #endif

@@ -6,7 +6,7 @@
 */
 
 /* 
-   size_t es el tipo estándar para tamaños de memoria.
+   size_t es el tipo estándar para tamanios de memoria.
    Está definido en stddef.h.
 */
 #include <stddef.h>
@@ -18,7 +18,7 @@
 */
 
 /* 
-   Tamaño por defecto del bloque interno.
+   Tamanio por defecto del bloque interno.
    Solo se usa si NO pasamos memoria externa.
    Puede modificarse antes de incluir este archivo.
 */
@@ -59,7 +59,7 @@ typedef struct
     unsigned char* memoria;
 
     /*
-       Tamaño total del bloque de memoria.
+       Tamanio total del bloque de memoria.
     */
     size_t capacidad;
 
@@ -90,13 +90,16 @@ typedef struct
 */
 
 /* Inicializa arena usando memoria externa */
-void core_arena_init(core_arena* arena,void* memoria_externa,size_t tamaño);
+void core_arena_init(core_arena* arena,
+					void* memoria_externa,
+					size_t tamanio);
+
 
 /* Inicializa arena usando memoria interna por defecto */
 void core_arena_init_default(core_arena* arena);
 
 /* Solicita memoria dentro del arena */
-void* core_arena_alloc(core_arena* arena, size_t tamaño);
+void* core_arena_alloc(core_arena* arena, size_t tamanio);
 
 /* Reinicia el arena (libera todo de golpe) */
 void core_arena_reset(core_arena* arena);

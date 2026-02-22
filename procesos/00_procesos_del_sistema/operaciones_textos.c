@@ -31,6 +31,7 @@
 
 int split(const char* txt, const char* sep, char*** salida)
 {
+	
     /* -----------------------------------------------------------------------
        VALIDACIÓN DE PARÁMETROS
        -----------------------------------------------------------------------
@@ -204,7 +205,7 @@ int split(const char* txt, const char* sep, char*** salida)
 
 /*
 ===============================================================================
- FUNCIÓN: core_split_free
+ FUNCIÓN: free_split
 -------------------------------------------------------------------------------
 
  Libera completamente la memoria creada por core_split.
@@ -226,7 +227,7 @@ int split(const char* txt, const char* sep, char*** salida)
 ===============================================================================
 */
 
-void core_split_free(char** arreglo)
+void free_split(char** arreglo)
 {
     /* Si es NULL, no hacer nada */
     if (arreglo == NULL)
@@ -275,7 +276,7 @@ int main()
         i++;
     }
 
-    core_split_free(partes);
+    free_split(partes);
 
     return 0;
 }

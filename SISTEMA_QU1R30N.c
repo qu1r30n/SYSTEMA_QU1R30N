@@ -2,64 +2,54 @@
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_tex_bas.h"
 #include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_tienda.h"
 
-int main() {
-    inicializacion();
+#include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
-    int opcion;
-    do {
-        printf("\n--- POS TIENDA ---\n");
-        printf("1. Venta\n2. Compra\n3. Agregar producto\n0. Salir\nOpcion: ");
-        scanf("%d",&opcion);
-        getchar();
 
-        if(opcion==1){
-            char codigo[50], sucursal[50];
-            int cantidad;
-            printf("Codigo de barras: "); scanf("%s",codigo);
-            printf("Cantidad: "); scanf("%d",&cantidad);
-            printf("Sucursal: "); scanf("%s",sucursal);
+// Inicialización
+void inicializacion() {
+    crearArchivo(G_archivos[ARCH_INVENTARIO][0], G_archivos[ARCH_INVENTARIO][1]);
+    for(int i=0;i<2;i++)
+        crearArchivo(G_archivos_registros[i][0], G_archivos_registros[i][1]);
+}
 
-            if(venta(codigo,cantidad,sucursal))
-                printf("Venta realizada\n");
-            else
-                printf("Stock insuficiente o codigo invalido\n");
-        }
-        else if(opcion==2){
-            char codigo[50], proveedor[50];
-            int cantidad;
-            printf("Codigo de barras: "); scanf("%s",codigo);
-            printf("Cantidad: "); scanf("%d",&cantidad);
-            printf("Proveedor: "); scanf("%s",proveedor);
 
-            if(compra(codigo,cantidad,proveedor))
-                printf("Compra realizada\n");
-            else
-                printf("Codigo invalido\n");
-        }
-        else if(opcion==3){
-            char id[50], producto[100], contenido[50], tipo_medida[50];
-            char precio_venta[50], cod_barras[50], cantidad[50], costo_comp[50], proveedor[50];
+int main() 
+{
+    //inicializacion();
 
-            printf("ID: "); scanf("%s",id);
-            printf("Producto: "); scanf("%s",producto);
-            printf("Contenido: "); scanf("%s",contenido);
-            printf("Tipo medida: "); scanf("%s",tipo_medida);
-            printf("Precio venta: "); scanf("%s",precio_venta);
-            printf("Codigo barras: "); scanf("%s",cod_barras);
-            printf("Cantidad: "); scanf("%s",cantidad);
-            printf("Costo compra: "); scanf("%s",costo_comp);
-            printf("Proveedor: "); scanf("%s",proveedor);
+    char* texto_prueba = "compras|2|3|4|5|6";
+// Opción como string con varias acciones separadas por '|'
+    char* opcion;
 
-            agregarProducto(
-                id,producto,contenido,tipo_medida,
-                precio_venta,cod_barras,cantidad,
-                costo_comp,proveedor
-            );
+    while(1) { // while true para usar en un futuro
+        // Hacemos split de la cadena de opciones
+        int n_opciones = 0;
+        char** opciones = modelo_split(texto_prueba, "|");
+        
+        
+            if(strcmp(opciones[0], "ventas") == 0) {
+                
+                venta(opciones[1]);
+                
+            } 
+            else if(strcmp(opciones[0], "compras") == 0) {
+                
+                compra(opciones[1]);
+                
+            } 
+            else if(strcmp(opciones[0], "agregar_producto") == 0) {
+                
+                agregarProducto(opciones[1]);
+                
+            }
+            // Puedes agregar más opciones si quieres
+        
 
-            printf("Producto agregado\n");
-        }
-
-    } while(opcion!=0);
+        free_split(opciones, n_opciones);
+    }
 
     return 0;
 }
+
+
+

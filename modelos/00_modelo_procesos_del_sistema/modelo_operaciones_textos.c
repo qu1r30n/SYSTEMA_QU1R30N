@@ -1,24 +1,38 @@
 #include <stdlib.h>
 #include <string.h>
+
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 
-int split(const char* txt, const char* sep, char*** out) {
-    char* c = strdup(txt);
-    char* tok;
-    int count = 0;
-    char** result = malloc(sizeof(char*) * 64);
+char** modelo_split(char* texto, const char* sep) 
+{
+    char** salida = NULL;
+    
+    int resultado = split(texto, sep, &salida);
 
-    tok = strtok(c, sep);
-    while (tok) {
-        result[count++] = strdup(tok);
-        tok = strtok(NULL, sep);
+    if(resultado == -1) 
+    {
+        // Error al hacer split
+        return NULL;
     }
-    *out = result;
-    free(c);
-    return count;
+
+    return salida; // char** terminado en NULL
 }
 
-void free_split(char** a, int n) {
-    for(int i=0; i<n; i++) free(a[i]);
-    free(a);
+void modelo_free_split(char** arreglo)
+{
+    /* Si es NULL, no hacer nada */
+    if (arreglo == NULL)
+        return;
+
+    int i = 0;
+
+    /* Recorrer hasta encontrar NULL */
+    while (arreglo[i] != NULL)
+    {
+        free(arreglo[i]);
+        i++;
+    }
+
+    /* Liberar arreglo principal */
+    free(arreglo);
 }

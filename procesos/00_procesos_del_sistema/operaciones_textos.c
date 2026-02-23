@@ -283,3 +283,100 @@ int main()
 
 ===============================================================================
 */
+
+int texto_a_int_seguro(const char *texto, int *var_a_retornar) 
+{
+    int signo = 1;
+    long temp = 0;  // usamos long para detectar overflow
+
+    if (texto == 0 || var_a_retornar == 0)
+        return 0;
+
+    if (*texto == '-') {
+        signo = -1;
+        texto++;
+    } else if (*texto == '+') {
+        texto++;
+    }
+
+    if (*texto < '0' || *texto > '9')
+        return 0;  // no empieza con número
+
+    while (*texto >= '0' && *texto <= '9') {
+
+        temp = temp * 10 + (*texto - '0');
+
+        /* Detectar overflow para int 16-bit (PIC16F) */
+        if (temp > 32767)
+            return 0;
+
+        texto++;
+    }
+
+    if (*texto != '\0')
+        return 0;  // caracteres inválidos al final
+
+    *var_a_retornar = (int)(temp * signo);
+    return 1;
+}
+
+int texto_a_float_seguro(const char *texto, float *var_a_retornar) 
+{
+    float valor = 0.0f;
+    float decimal = 0.1f;
+    int signo = 1;
+    int tiene_decimal = 0;
+
+    if (texto == 0 || var_a_retornar == 0)
+        return 0;
+
+    if (*texto == '-') 
+    {
+        signo = -1;
+        texto++;
+    } 
+    else if (*texto == '+') 
+    {
+        texto++;
+    }
+
+    if ((*texto < '0' || *texto > '9') && *texto != '.')
+        return 0;
+
+    while (*texto != '\0') {
+
+        if (*texto >= '0' && *texto <= '9') 
+        {
+
+            if (!tiene_decimal) 
+            {
+                valor = valor * 10.0f + (*texto - '0');
+            } 
+            else 
+            {
+                valor += (*texto - '0') * decimal;
+                decimal *= 0.1f;
+            }
+
+        } 
+        else if (*texto == '.') 
+        {
+
+            if (tiene_decimal)
+                return 0;  // dos puntos decimales
+
+            tiene_decimal = 1;
+
+        } 
+        else 
+        {
+            return 0;  // carácter inválido
+        }
+
+        texto++;
+    }
+
+    *var_a_retornar = valor * signo;
+    return 1;
+}
+

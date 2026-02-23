@@ -1,4 +1,6 @@
 #include <stdio.h>
+
+#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_compu.h"
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_tex_bas.h"
 #include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_tienda.h"
 
@@ -21,7 +23,9 @@ int main()
 // Opción como string con varias acciones separadas por '|'
     char* opcion;
 
-    while(1) { // while true para usar en un futuro
+    while(1) 
+	{ 
+        // while true para usar en un futuro
         // Hacemos split de la cadena de opciones
         int n_opciones = 0;
         char** opciones = modelo_split(texto_prueba, "|");
@@ -37,7 +41,8 @@ int main()
                 compra(opciones[1]);
                 
             } 
-            else if(strcmp(opciones[0], "agregar_producto") == 0) {
+            else if(strcmp(opciones[0], "agregar_producto") == 0) 
+			{
                 
                 agregarProducto(opciones[1]);
                 
@@ -46,10 +51,10 @@ int main()
         
 
         free_split(opciones, n_opciones);
-    }
+        
+        modelo_delay_ms("1000");
+        
+	}
 
     return 0;
 }
-
-
-

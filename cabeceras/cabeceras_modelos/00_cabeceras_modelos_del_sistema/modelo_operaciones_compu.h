@@ -2,5 +2,6 @@
 #define MODELO_OPERACIONES_COMPU_H
 
 void modelo_fechaActual(char *texto);
+void delay_ms(char *texto);
 
 #endif

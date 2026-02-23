@@ -36,3 +36,19 @@ void modelo_free_split(char** arreglo)
     /* Liberar arreglo principal */
     free(arreglo);
 }
+
+
+int modelo_texto_a_int_seguro(char *texto) 
+{
+    int valor_int;
+    texto_a_int_seguro(texto, &valor_int);
+    return valor_int;
+}
+
+float modelo_texto_a_float_seguro( char *texto) 
+{
+    float valor_float;
+    texto_a_float_seguro(texto, &valor_float);
+    return valor_float;
+}
+

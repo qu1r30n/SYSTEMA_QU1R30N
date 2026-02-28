@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "name": "GCC MinGW (MSYS2)",
+            "includePath": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/cabeceras",
+                "${workspaceFolder}/cabeceras/cabeceras_modelos",
+                "${workspaceFolder}/cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema",
+                "${workspaceFolder}/cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios",
+                "${workspaceFolder}/cabeceras/cabeceras_procesos",
+                "${workspaceFolder}/cabeceras/cabeceras_procesos/00_cabeceras_del_sistema",
+                "${workspaceFolder}/cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios",
+                "C:\\msys64\\ucrt64\\include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+            "cStandard": "c11",
+            "intelliSenseMode": "gcc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "C:\\msys64\\ucrt64\\include"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": "${workspaceFolder}/.vscode/browse.VC.db"
+            }
+        }
+    ],
+    "version": 4
+}

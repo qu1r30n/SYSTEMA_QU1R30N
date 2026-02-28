@@ -1,0 +1,68 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: Compilar proyecto completo (Debug)",
+            "command": "gcc",
+            "args": [
+                "-std=c11",
+                "-Wall",
+                "-Wextra",
+                "-g3",
+                "-O0",
+                "-I${workspaceFolder}",
+                "-fdiagnostics-color=always",
+                "${workspaceFolder}/SISTEMA_QU1R30N.c",
+                "${workspaceFolder}/CLASE_QU1R30N.c",
+                "${workspaceFolder}/modelos/00_modelo_procesos_del_sistema/modelo_operaciones_compu.c",
+                "${workspaceFolder}/modelos/00_modelo_procesos_del_sistema/modelo_operaciones_textos.c",
+                "${workspaceFolder}/modelos/00_modelo_procesos_del_sistema/modelo_tex_bas.c",
+                "${workspaceFolder}/modelos/00_modelo_procesos_del_sistema/modelo_var_fun_GG.c",
+                "${workspaceFolder}/modelos/01_modelo_procesos_de_negocio/modelo_operaciones_tienda.c",
+                "${workspaceFolder}/procesos/00_procesos_del_sistema/operaciones_compu.c",
+                "${workspaceFolder}/procesos/00_procesos_del_sistema/operaciones_textos.c",
+                "${workspaceFolder}/procesos/00_procesos_del_sistema/tex_bas.c",
+                "${workspaceFolder}/procesos/00_procesos_del_sistema/var_fun_GG.c",
+                "${workspaceFolder}/procesos/00_procesos_del_sistema/nuestro_propio_administrador_de_memoria/core_memory.c",
+                "${workspaceFolder}/procesos/01_procesos_de_negocio/operaciones_tienda.c",
+                "-o",
+                "${workspaceFolder}/sistema_debug.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compila el proyecto completo con símbolos de debug para depuración"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: gcc.exe compilar archivo activo",
+            "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "Tarea generada por el depurador."
+        }
+    ],
+    "version": "2.0.0"
+}

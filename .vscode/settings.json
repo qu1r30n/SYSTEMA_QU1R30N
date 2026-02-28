@@ -1,0 +1,23 @@
+{
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.compilerPath": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+    "C_Cpp.default.intelliSenseEngine": "default",
+    "C_Cpp.formatting": "Default",
+    "C_Cpp.debugShortcut": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "files.exclude": {
+        "**/*.o": true,
+        "**/*.exe": false,
+        "**/*.a": true
+    },
+    "search.exclude": {
+        "**/.git": true,
+        "**/node_modules": true,
+        "**/*.o": true
+    }
+}

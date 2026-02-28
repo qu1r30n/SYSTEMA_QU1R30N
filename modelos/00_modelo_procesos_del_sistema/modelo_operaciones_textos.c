@@ -1,18 +1,32 @@
-#include <stdlib.h>
 #include <string.h>
+
+#ifdef _WIN32
+#include <stdlib.h>
+
+#elif defined(__linux__)
+#include <stdlib.h>
+
+#elif defined(__XC)
+#define _XTAL_FREQ 4000000
+#include <xc.h>
+/* PIC16F: Sin malloc. Las funciones de split son stubs. */
+
+#else
+#include <stdlib.h>
+#endif
 
 /* traer los prototipos del modelo para validar las firmas */
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 /* y los procesos que implementan la lógica */
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 
-char** modelo_split(char* texto, const char* sep) 
+char **modelo_split(char *texto, const char *sep)
 {
-    char** salida = NULL;
-    
+    char **salida = NULL;
+
     int resultado = split(texto, sep, &salida);
 
-    if(resultado == -1) 
+    if (resultado == -1)
     {
         // Error al hacer split
         return NULL;
@@ -21,7 +35,7 @@ char** modelo_split(char* texto, const char* sep)
     return salida; // char** terminado en NULL
 }
 
-void modelo_free_split(char** arreglo)
+void modelo_free_split(char **arreglo)
 {
     /* Si es NULL, no hacer nada */
     if (arreglo == NULL)
@@ -40,18 +54,16 @@ void modelo_free_split(char** arreglo)
     free(arreglo);
 }
 
-
-int modelo_texto_a_int_seguro(char *texto) 
+int modelo_texto_a_int_seguro(char *texto)
 {
     int valor_int;
     texto_a_int_seguro(texto, &valor_int);
     return valor_int;
 }
 
-float modelo_texto_a_float_seguro( char *texto) 
+float modelo_texto_a_float_seguro(char *texto)
 {
     float valor_float;
     texto_a_float_seguro(texto, &valor_float);
     return valor_float;
 }
-

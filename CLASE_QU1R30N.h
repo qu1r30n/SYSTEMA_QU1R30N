@@ -31,6 +31,7 @@ extern char *GG_archivos_registros[][2];
 
 /* aliases globales visibles en todo el proyecto (definidas en un único TU) */
 extern char **G_caracter_separacion;
+extern char **G_caracter_separacion_funciones_espesificas;
 extern char *(*G_archivos)[2];
 extern char *(*G_archivos_registros)[2];
 

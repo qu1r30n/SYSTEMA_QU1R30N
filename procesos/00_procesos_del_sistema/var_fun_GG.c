@@ -677,9 +677,11 @@ void RecargarVentanaEmergente_TRABAJOS_DIA(const char *al_finalizar_que_borrar)
     }
 }
 
-/* Función auxiliar para concatenar valores de columnas */
+/* Función auxiliar para concatenar valores de columnas
+   id_columna se pasa para futuras extensiones; actualmente no se usa. */
 char *columnas_concatenadas(ConfigField *arreglo, int filas, int id_columna, const char *caracter_separacion)
 {
+    (void)id_columna; /* evitar advertencia "unused parameter" */
     static char resultado[4096];
     memset(resultado, 0, sizeof(resultado));
 

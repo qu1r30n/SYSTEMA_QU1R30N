@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../../CLASE_QU1R30N.h"
+#include "../../cabeceras/codigos_retorno.h"
 #include "../../cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_tienda.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
@@ -86,10 +87,10 @@ int venta(const char *codigo, int cantidad, const char *sucursal)
     int n = leerInventario(inventario, MAX_PRODUCTOS);
     int idx = buscarProducto(inventario, n, codigo);
     if (idx == -1)
-        return 0;
+        return RET_NOT_FOUND;
     int stock = atoi(inventario[idx][6]);
     if (stock < cantidad)
-        return 0;
+        return RET_ERROR_GENERIC;
     stock -= cantidad;
     sprintf(inventario[idx][6], "%d", stock);
     fechaActual(inventario[idx][18], "%Y-%m-%d");
@@ -99,7 +100,7 @@ int venta(const char *codigo, int cantidad, const char *sucursal)
     fechaActual(fecha, "%Y-%m-%d");
     sprintf(registro, "%s%s%d%s%s%s%s", codigo, G_caracter_separacion[0], cantidad, G_caracter_separacion[0], sucursal, G_caracter_separacion[0], fecha);
     agregar_fila(G_archivos_registros[0][0], registro);
-    return 1;
+    return RET_OK;
 }
 
 // Compra simple
@@ -109,7 +110,7 @@ int compra(const char *codigo, int cantidad, const char *proveedor)
     int n = leerInventario(inventario, MAX_PRODUCTOS);
     int idx = buscarProducto(inventario, n, codigo);
     if (idx == -1)
-        return 0;
+        return RET_NOT_FOUND;
     int stock = atoi(inventario[idx][6]);
     stock += cantidad;
     sprintf(inventario[idx][6], "%d", stock);
@@ -120,5 +121,5 @@ int compra(const char *codigo, int cantidad, const char *proveedor)
     fechaActual(fecha, "%Y-%m-%d");
     sprintf(registro, "%s%s%d%s%s%s%s", codigo, G_caracter_separacion[0], cantidad, G_caracter_separacion[0], proveedor, G_caracter_separacion[0], fecha);
     agregar_fila(G_archivos_registros[1][0], registro);
-    return 1;
+    return RET_OK;
 }

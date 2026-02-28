@@ -1,4 +1,5 @@
 #include <string.h> // strlen, memcpy, strstr
+#include "../../cabeceras/codigos_retorno.h"
 
 #ifdef _WIN32
 #include <stdlib.h> // malloc, realloc, free
@@ -304,7 +305,7 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
     long temp = 0; // usamos long para detectar overflow
 
     if (texto == 0 || var_a_retornar == 0)
-        return 0;
+        return RET_INVALID_ARG;
 
     if (*texto == '-')
     {
@@ -317,7 +318,7 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
     }
 
     if (*texto < '0' || *texto > '9')
-        return 0; // no empieza con número
+        return RET_INVALID_ARG; // no empieza con número
 
     while (*texto >= '0' && *texto <= '9')
     {
@@ -326,16 +327,16 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
 
         /* Detectar overflow para int 16-bit (PIC16F) */
         if (temp > 32767)
-            return 0;
+            return RET_INVALID_ARG;
 
         texto++;
     }
 
     if (*texto != '\0')
-        return 0; // caracteres inválidos al final
+        return RET_INVALID_ARG; // caracteres inválidos al final
 
     *var_a_retornar = (int)(temp * signo);
-    return 1;
+    return RET_OK;
 }
 
 int texto_a_float_seguro(const char *texto, float *var_a_retornar)
@@ -346,7 +347,7 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
     int tiene_decimal = 0;
 
     if (texto == 0 || var_a_retornar == 0)
-        return 0;
+        return RET_INVALID_ARG;
 
     if (*texto == '-')
     {
@@ -359,7 +360,7 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
     }
 
     if ((*texto < '0' || *texto > '9') && *texto != '.')
-        return 0;
+        return RET_INVALID_ARG;
 
     while (*texto != '\0')
     {
@@ -381,18 +382,18 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
         {
 
             if (tiene_decimal)
-                return 0; // dos puntos decimales
+                return RET_INVALID_ARG; // dos puntos decimales
 
             tiene_decimal = 1;
         }
         else
         {
-            return 0; // carácter inválido
+            return RET_INVALID_ARG; // carácter inválido
         }
 
         texto++;
     }
 
     *var_a_retornar = valor * signo;
-    return 1;
+    return RET_OK;
 }

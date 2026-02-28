@@ -1,7 +1,10 @@
 #ifndef MODELO_TEX_BAS_H
 #define MODELO_TEX_BAS_H
 
+#include "modelo_var_fun_GG.h"
+
 #define MAX_LINEA 1024
+#define MAX_LINEAS (MAX_PRODUCTOS + 1)
 
 void modelo_crearDirectorio(char *texto);
 void modelo_crearArchivo(char *texto);

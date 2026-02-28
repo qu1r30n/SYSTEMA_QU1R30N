@@ -32,8 +32,7 @@ void inicializacion()
 
 void conmutador(char *texto_prueba)
 {
-    char **opciones = modelo_split(texto_prueba, G_caracter_separacion_funciones_espesificas
-                                                     [0]);
+    char **opciones = modelo_split(texto_prueba, G_caracter_separacion_funciones_espesificas[0]);
     int n_opciones = 0;
     if (opciones)
     {
@@ -43,8 +42,7 @@ void conmutador(char *texto_prueba)
 
     if (opciones && n_opciones >= 2 && strcmp(opciones[0], "op_tienda") == 0)
     {
-        char **sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas
-                                                          [1]);
+        char **sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]);
         int n_sub = 0;
         if (sub_opcion)
             while (sub_opcion[n_sub])
@@ -92,15 +90,15 @@ int main()
 
     /* ejemplos de comandos que el sistema entrega al modelo */
     const char *ejemplos[] = {
-        "op_tienda|ventas|ABC123|2|SucursalX",
-        "op_tienda|compras|XYZ987|5|Proveedor1",
-        "op_tienda|agregar_producto|1|Leche|1L|unidad|10|123456|100|50|ProveedorA",
+        "op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
+        "op_tienda~ventas§ABC123¶2§SucursalX",
+        "op_tienda~compras§XYZ987¶5§Proveedor1",
         NULL};
 
     for (int i = 0; ejemplos[i]; i++)
     {
         printf("Ejecutando comando: %s\n", ejemplos[i]);
-        // conmutador((char*)ejemplos[i]);
+        conmutador((char *)ejemplos[i]);
     }
 
     modelo_delay_ms("1000");

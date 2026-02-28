@@ -1,7 +1,10 @@
 #ifndef TEX_BAS_H
 #define TEX_BAS_H
 
+#include "var_fun_GG.h"
+
 #define MAX_LINEA 1024
+#define MAX_LINEAS (MAX_PRODUCTOS + 1)
 
 void crearDirectorio(const char *ruta);
 void crearArchivo(const char *ruta, const char *cabecera);

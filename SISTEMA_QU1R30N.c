@@ -1,12 +1,15 @@
 #include <stdio.h>
+#include <string.h>    /* strcmp, etc. */
 
-#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_compu.h"
-#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_tex_bas.h"
-#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_tienda.h"
+#include "CLASE_QU1R30N.h"
 
-#include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
+/* los encabezados incluidos en CLASE ya aportan los prototipos necesarios */
 
 const char** G_caracter_separacion = GG_caracter_separacion;
+const char* (*G_archivos)[2] = GG_archivos;
+const char* (*G_archivos_registros)[2] = GG_archivos_registros;
+
+
 // Inicialización
 void inicializacion() 
 {
@@ -16,49 +19,53 @@ void inicializacion()
 }
 
 
-void procesar_opcion(char* texto_prueba)
+void conmutador(char* texto_prueba)
 {
-    int n_opciones = 0;
     char** opciones = modelo_split(texto_prueba, G_caracter_separacion[0]);
-
-    if (strcmp(opciones[0], "op_tienda"))
-    {
-        char** sub_opcion = modelo_split(texto_prueba, G_caracter_separacion[1]);
-        if (sub_opcion == NULL || sub_opcion[0] == NULL)
-            return;
-
-        if (strcmp(sub_opcion[0], "ventas") == 0) 
-        {
-            venta(sub_opcion[1]);
-        } 
-        else if (strcmp(sub_opcion[0], "compras") == 0) 
-        {
-            compra(sub_opcion[1]);
-        } 
-        else if (strcmp(sub_opcion[0], "agregar_producto") == 0) 
-        {
-            agregarProducto(sub_opcion[1]);
-        }
-        else 
-        {
-            printf("Opción no válida: %s\n", sub_opcion[0]);
-        }
+    int n_opciones = 0;
+    if (opciones) {
+        while (opciones[n_opciones]) n_opciones++;
     }
-    else if (strcmp(opciones[0], "procesos_generales"))
+
+    if (opciones && n_opciones >= 2 && strcmp(opciones[0], "op_tienda") == 0)
+    {
+        char** sub_opcion = modelo_split(opciones[1], G_caracter_separacion[1]);
+        int n_sub = 0;
+        if (sub_opcion) while (sub_opcion[n_sub]) n_sub++;
+
+        if (n_sub >= 2) {
+            if (strcmp(sub_opcion[0], "ventas") == 0) 
+            {
+                modelo_venta(sub_opcion[1]);
+            } 
+            else if (strcmp(sub_opcion[0], "compras") == 0) 
+            {
+                modelo_compra(sub_opcion[1]);
+            } 
+            else if (strcmp(sub_opcion[0], "agregar_producto") == 0) 
+            {
+                modelo_agregarProducto(sub_opcion[1]);
+            }
+            else 
+            {
+                printf("Opción no válida: %s\n", sub_opcion[0]);
+            }
+        }
+
+        free_split(sub_opcion);
+    }
+    else if (opciones && strcmp(opciones[0], "procesos_generales") == 0)
     {
         // entrada salidad de dinero
         //SOLO CON EL DINERO - NO CON PRODUCTOS NI CON SERVICIOS SOLO CON EL DINERO 
         //pero talves impuestos y todo lo que un administrador y contador utilizaria lo mas general en realidad no se si esto iria aqui o en otro dedicado a eso
-        
     }
-    else if (strcmp(opciones[0], "procesos_sistema"))
+    else if (opciones && strcmp(opciones[0], "procesos_sistema") == 0)
     {
         //aqui se habla directamente con el sistema solo el programador
     }
-    
 
-    free_split(opciones, n_opciones);
-
+    free_split(opciones);
 }
 
 
@@ -66,18 +73,22 @@ void procesar_opcion(char* texto_prueba)
 
 int main() 
 {
-    //inicializacion();
+    inicializacion();
 
-    char* texto_prueba = "compras|2|3|4|5|6";
+    /* ejemplos de comandos que el sistema entrega al modelo */
+    const char* ejemplos[] = {
+        "op_tienda|ventas|ABC123|2|SucursalX",
+        "op_tienda|compras|XYZ987|5|Proveedor1",
+        "op_tienda|agregar_producto|1|Leche|1L|unidad|10|123456|100|50|ProveedorA",
+        NULL
+    };
 
-    
-    
+    for (int i = 0; ejemplos[i]; i++) {
+        printf("Ejecutando comando: %s\n", ejemplos[i]);
+        conmutador((char*)ejemplos[i]);
+    }
 
-    // Llamamos al conmutador
-    procesar_opcion(texto_prueba);
-
-    
-    modelo_delay_ms("1000");       
+    modelo_delay_ms("1000");
 	
 
 

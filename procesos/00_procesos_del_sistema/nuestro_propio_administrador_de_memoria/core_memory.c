@@ -37,7 +37,7 @@
 
    El tamanio depende de CORE_ARENA_DEFAULT_SIZE.
 */
-static unsigned char core_arena_memoria_default[CORE_ARENA_DEFAULT_SIZE];
+unsigned char core_arena_memoria_default[CORE_ARENA_DEFAULT_SIZE];
 
 
 /*
@@ -59,7 +59,7 @@ static unsigned char core_arena_memoria_default[CORE_ARENA_DEFAULT_SIZE];
    Retorna:
      Nuevo valor alineado correctamente.
 */
-static size_t core_align_forward(size_t ptr, size_t align)
+ size_t core_align_forward(size_t ptr, size_t align)
 {
     /* 
        Calculamos el residuo de ptr dividido por align.

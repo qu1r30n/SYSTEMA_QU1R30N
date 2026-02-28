@@ -6,52 +6,128 @@ SISTEMA_QUIR30N
 │   │   │
 │   │   ├── 00_cabeceras_modelos_del_sistema
 │   │   │   ├── modelo_operaciones_compu.h
+│   │   │   │       void modelo_fechaActual(char* texto)
+│   │   │   │       void modelo_delay_ms(char* texto)
+│   │   │   │
 │   │   │   ├── modelo_operaciones_textos.h
+│   │   │   │       char** modelo_split(char* texto, const char* sep)
+│   │   │   │       void modelo_free_split(char** arreglo)
+│   │   │   │       int modelo_texto_a_int_seguro(char *texto)
+│   │   │   │       float modelo_texto_a_float_seguro(char *texto)
+│   │   │   │
 │   │   │   ├── modelo_tex_bas.h
+│   │   │   │       void modelo_crearDirectorio(char* texto)
+│   │   │   │       void modelo_crearArchivo(char* texto)
+│   │   │   │       void modelo_leer_archivo(char* texto)
+│   │   │   │       void modelo_guardar_archivo(char* texto)
+│   │   │   │       void modelo_agregar_fila(char* texto)
+│   │   │   │       void modelo_inicializacion(char* texto)
+│   │   │   │
 │   │   │   └── modelo_var_fun_GG.h
+│   │   │           (solo constantes externas, no funciones)
 │   │   │
 │   │   ├── 01_cabeceras_modelos_de_negocios
 │   │   │   └── modelo_operaciones_tienda.h
+│   │   │           void modelo_leerInventario(char* texto)
+│   │   │           void modelo_guardarInventario(char* texto)
+│   │   │           void modelo_buscarProducto(char* texto)
+│   │   │           void modelo_agregarProducto(char* texto)
+│   │   │           void modelo_venta(char* texto)
+│   │   │           void modelo_compra(char* texto)
 │   │   │
 │   │   └── 02_cabeceras_modelos_generales_de_negocios
+│   │           (vacío)
 │   │
 │   └── cabeceras_procesos
 │       │
 │       ├── 00_cabeceras_del_sistema
 │       │   ├── operaciones_compu.h
+│       │   │       void delay_ms(unsigned int ms)
+│       │   │       void fechaActual(char* buffer, const char* formato)
+│       │   │
 │       │   ├── operaciones_textos.h
+│       │   │       int split(const char* txt, const char* sep, char*** salida)
+│       │   │       void free_split(char** arreglo, int n)
+│       │   │       int texto_a_int_seguro(const char *texto, int *var_a_retornar)
+│       │   │       int texto_a_float_seguro(const char *texto, float *var_a_retornar)
+│       │   │
 │       │   ├── tex_bas.h
+│       │   │       void crearDirectorio(const char* ruta)
+│       │   │       void crearArchivo(const char* ruta, const char* cabecera)
+│       │   │       int leer_archivo(const char* ruta, char l[][MAX_LINEA])
+│       │   │       void guardar_archivo(const char* ruta, char l[][MAX_LINEA], int n)
+│       │   │       void agregar_fila(const char* ruta, const char* fila)
+│       │   │       void eliminar_fila(const char* ruta, int filaEliminar)
+│       │   │       void editar_fila(const char* ruta, int fila, const char* nueva)
+│       │   │       void editar_celda(const char* ruta,int colBuscar,const char* valorBuscar,int colEditar,const char* nuevoValor)
+│       │   │       void incrementar_celda(const char* ruta,int colBuscar,const char* valorBuscar,int colEditar,int inc)
+│       │   │       void editar_columna_completa(const char* ruta,int col,const char* nuevo)
+│       │   │       void eliminar_columna(const char* ruta,int col)
+│       │   │       void agregar_columna(const char* ruta,const char* nombre)
+│       │   │
 │       │   └── var_fun_GG.h
+│       │           extern const char* GG_caracter_separacion[5]
+│       │           extern const char* GG_archivos[1][2]
+│       │           extern const char* GG_archivos_registros[2][2]
 │       │
 │       ├── 01_cabeceras_procesos_de_negocios
 │       │   └── operaciones_tienda.h
+│       │           int leerInventario(char inventario[][COLUMNAS][256], int maxProductos)
+│       │           void guardarInventario(char inventario[][COLUMNAS][256], int n)
+│       │           int buscarProducto(char inventario[][COLUMNAS][256], int n, const char* codigo)
+│       │           void agregarProducto(const char* id,const char* producto,const char* contenido,const char* tipo_medida,const char* precio_venta,const char* cod_barras,const char* cantidad,const char* costo_compra,const char* proveedor)
+│       │           int editarPrecio(const char* codigo,const char* precio,const char* proveedor)
+│       │           int venta(const char* codigo,int cantidad,const char* sucursal)
+│       │           int compra(const char* codigo,int cantidad,const char* proveedor)
 │       │
 │       └── 02_cabeceras_procesos_generales_de_negocios
+│               (vacío)
 │
 ├── modelos
 │   │
 │   ├── 00_modelo_procesos_del_sistema
 │   │   ├── modelo_operaciones_compu.c
+│   │   │       implementa: modelo_fechaActual, modelo_delay_ms
+│   │   │
 │   │   ├── modelo_operaciones_textos.c
+│   │   │       implementa: modelo_split, modelo_free_split, modelo_texto_a_int_seguro, modelo_texto_a_float_seguro
+│   │   │
 │   │   ├── modelo_tex_bas.c
+│   │   │       implementa: modelo_crearDirectorio, modelo_crearArchivo, modelo_leer_archivo, modelo_guardar_archivo, modelo_agregar_fila, modelo_inicializacion
+│   │   │
 │   │   └── modelo_var_fun_GG.c
+│   │           define variables externas GG_caracter_separacion, GG_archivos, GG_archivos_registros
 │   │
 │   ├── 01_modelo_procesos_de_negocio
 │   │   └── modelo_operaciones_tienda.c
+│   │           implementa: modelo_leerInventario, modelo_guardarInventario, modelo_buscarProducto, modelo_agregarProducto, modelo_venta, modelo_compra
 │   │
 │   └── 02_modelo_procesos_generales_de_negocios
+│           (vacío)
 │
 ├── procesos
 │   │
 │   ├── 00_procesos_del_sistema
 │   │   ├── operaciones_compu.c
+│   │   │       implementa: delay_ms, fechaActual
+│   │   │
 │   │   ├── operaciones_textos.c
+│   │   │       implementa: split, free_split, texto_a_int_seguro, texto_a_float_seguro
+│   │   │
 │   │   ├── tex_bas.c
+│   │   │       implementa: crearDirectorio, crearArchivo, leer_archivo, guardar_archivo, agregar_fila, eliminar_fila, editar_fila, editar_celda, incrementar_celda, editar_columna_completa, eliminar_columna, agregar_columna
+│   │   │
 │   │   └── var_fun_GG.c
+│   │           define variables GG_caracter_separacion, GG_archivos, GG_archivos_registros
 │   │
 │   ├── 01_procesos_de_negocio
 │   │   └── operaciones_tienda.c
+│   │           implementa: leerInventario, guardarInventario, buscarProducto, agregarProducto, editarPrecio, venta, compra
 │   │
 │   └── 02_procesos_generales_de_negocios
+│           (vacío)
 │
 └── SISTEMA_QUIR30N.c
+        void inicializacion()
+        void conmutador(char* texto_prueba)
+        int main()

@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* traer los prototipos del modelo para validar las firmas */
+#include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
+/* y los procesos que implementan la lógica */
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 
 char** modelo_split(char* texto, const char* sep) 

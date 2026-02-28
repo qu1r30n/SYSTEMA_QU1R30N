@@ -1,5 +1,5 @@
-#ifndef TEX_BAS_H
-#define TEX_BAS_H
+#ifndef MODELO_TEX_BAS_H
+#define MODELO_TEX_BAS_H
 
 #define MAX_LINEA 1024
 
@@ -20,4 +20,4 @@ void modelo_editar_columna_completa(char *texto);
 void modelo_eliminar_columna(char *texto);
 void modelo_agregar_columna(char *texto);
 
-#endif
+#endif // MODELO_TEX_BAS_H

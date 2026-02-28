@@ -6,6 +6,9 @@
 void crearDirectorio(const char* ruta);
 void crearArchivo(const char* ruta, const char* cabecera);
 
+/* función de inicio definida en el programa principal */
+void inicializacion(void);
+
 int leer_archivo(const char* ruta, char l[][MAX_LINEA]);
 void guardar_archivo(const char* ruta, char l[][MAX_LINEA], int n);
 

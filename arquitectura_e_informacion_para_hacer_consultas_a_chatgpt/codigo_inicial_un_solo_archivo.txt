@@ -8,8 +8,8 @@
 #define MAX_PRODUCTOS 1000
 
 // ================= VARIABLES GLOBALES =================
-static const char* G_caracter_separacion[] = { "|", "°", "¬", "╦", "╔" };
-static const char* G_archivos = {"C:\\Users\\qu1r30n\\Documents\\pru c++\\punto_ventainventario.txt"};
+const char* G_caracter_separacion[] = { "|", "°", "¬", "╦", "╔" };
+const char* G_archivos = {"C:\\Users\\qu1r30n\\Documents\\pru c++\\punto_ventainventario.txt"};
 
 // ================= SPLIT =================
 char** split(const char* texto, const char* sep, int* count) {

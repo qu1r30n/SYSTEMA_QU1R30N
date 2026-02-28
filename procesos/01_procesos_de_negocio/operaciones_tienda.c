@@ -7,6 +7,11 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 
+static const char** G_caracter_separacion = GG_caracter_separacion;
+static const char* (*G_archivos)[2] = GG_archivos;
+static const char* (*G_archivos_registros)[2] = GG_archivos_registros;
+
+
 // Leer inventario completo
 int leerInventario(char inventario[][COLUMNAS][256], int maxProductos){
     char lineas[MAX_PRODUCTOS+1][MAX_LINEA];
@@ -18,7 +23,7 @@ int leerInventario(char inventario[][COLUMNAS][256], int maxProductos){
         int n = split(lineas[i], G_caracter_separacion[0], &partes);
         for(int j=0;j<COLUMNAS;j++)
             strcpy(inventario[fila][j], (j<n)?partes[j]:"0");
-        free_split(partes,n);
+        free_split(partes);
         fila++;
     }
     return fila;

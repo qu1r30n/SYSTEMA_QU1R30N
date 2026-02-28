@@ -1,5 +1,19 @@
-#include <stdlib.h> // malloc, realloc, free
 #include <string.h> // strlen, memcpy, strstr
+
+#ifdef _WIN32
+#include <stdlib.h> // malloc, realloc, free
+
+#elif defined(__linux__)
+#include <stdlib.h> // malloc, realloc, free
+
+#elif defined(__XC)
+#define _XTAL_FREQ 4000000
+#include <xc.h>
+/* PIC16F: Sin malloc disponible. Las funciones son stubs limitadas. */
+
+#else
+#include <stdlib.h>
+#endif
 
 /*
 ===============================================================================

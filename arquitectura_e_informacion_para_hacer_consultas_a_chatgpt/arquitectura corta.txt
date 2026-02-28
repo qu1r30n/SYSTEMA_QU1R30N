@@ -1,0 +1,159 @@
+/ (raíz)
+├─ CLASE_QU1R30N.c
+├─ CLASE_QU1R30N.h
+├─ SISTEMA_QU1R30N.c
+├─ Makefile
+├─ DEBUGGING.md
+├─ inventario.txt
+├─ registros_ventas.txt
+├─ registros_compras.txt
+├─ cabeceras/
+│   ├─ cabeceras_modelos/
+│   │   ├─ 00_cabeceras_modelos_del_sistema/
+│   │   │   ├─ modelo_operaciones_compu.h
+│   │   │   ├─ modelo_operaciones_textos.h
+│   │   │   ├─ modelo_tex_bas.h
+│   │   │   └─ modelo_var_fun_GG.h
+│   │   └─ 01_cabeceras_modelos_de_negocios/
+│   │       └─ modelo_operaciones_tienda.h
+│   └─ cabeceras_procesos/
+│       ├─ 00_cabeceras_del_sistema/
+│       │   ├─ operaciones_compu.h
+│       │   ├─ operaciones_textos.h
+│       │   ├─ tex_bas.h
+│       │   ├─ var_fun_GG.h
+│       │   └─ nuestro_propio_administrador_de_memoria/
+│       │       └─ core_memory.h
+│       └─ 01_cabeceras_procesos_de_negocios/
+│           └─ operaciones_tienda.h
+├─ modelos/
+│   ├─ 00_modelo_procesos_del_sistema/
+│   │   ├─ modelo_operaciones_compu.c
+│   │   ├─ modelo_operaciones_textos.c
+│   │   ├─ modelo_tex_bas.c
+│   │   └─ modelo_var_fun_GG.c
+│   └─ 01_modelo_procesos_de_negocio/
+│       └─ modelo_operaciones_tienda.c
+└─ procesos/
+    ├─ 00_procesos_del_sistema/
+    │   ├─ operaciones_compu.c
+    │   ├─ operaciones_textos.c
+    │   ├─ tex_bas.c
+    │   ├─ var_fun_GG.c
+    │   └─ nuestro_propio_administrador_de_memoria/
+    │       └─ core_memory.c
+    └─ 01_procesos_de_negocio/
+        └─ operaciones_tienda.c
+
+
+
+
+
+<details> <summary><strong>Raíz</strong></summary>
+
+SISTEMA_QU1R30N.c
+
+void inicializacion(void)
+void conmutador(char *texto_prueba)
+int  main(void)
+CLASE_QU1R30N.c
+
+(ninguna; archivo vacío de consolidación)
+</details> <details> <summary><strong>modelos/00_modelo_procesos_del_sistema</strong></summary>
+
+modelo_operaciones_compu.c
+
+void modelo_fechaActual(char *texto)
+void modelo_delay_ms(char *texto)
+modelo_operaciones_textos.c
+
+char **modelo_split(char *texto, const char *sep)
+void modelo_free_split(char **arreglo)
+int   modelo_texto_a_int_seguro(char *texto)
+float modelo_texto_a_float_seguro(char *texto)
+modelo_tex_bas.c
+
+void modelo_crearDirectorio(char *texto)
+void modelo_crearArchivo(char *texto)
+void modelo_leer_archivo(char *texto)
+void modelo_guardar_archivo(char *texto)
+void modelo_agregar_fila(char *texto)
+void modelo_inicializacion(char *texto)
+modelo_var_fun_GG.c
+
+(solo incluye el encabezado; no define funciones)
+</details> <details> <summary><strong>modelos/01_modelo_procesos_de_negocio</strong></summary>
+
+modelo_operaciones_tienda.c
+int   modelo_leerInventario(char *texto)
+void  modelo_guardarInventario(char *texto)
+int   modelo_buscarProducto(char *texto)
+void  modelo_agregarProducto(char *texto)
+int   modelo_venta(char *texto)
+int   modelo_compra(char *texto)
+</details> <details> <summary><strong>procesos/00_procesos_del_sistema</strong></summary>
+
+operaciones_compu.c
+
+void delay_ms(unsigned int ms)
+void fechaActual(char *buffer, const char *formato)
+operaciones_textos.c
+
+int    split(const char *txt, const char *sep, char ***salida)
+void   free_split(char **arreglo)
+int    texto_a_int_seguro(const char *texto, int *var_a_retornar)
+int    texto_a_float_seguro(const char *texto, float *var_a_retornar)
+tex_bas.c
+
+void crearDirectorio(const char *ruta)
+void crearArchivo(const char *ruta, const char *cabecera)
+int  leer_archivo(const char *ruta, char l[][MAX_LINEA])
+void guardar_archivo(const char *ruta, char l[][MAX_LINEA], int n)
+void agregar_fila(const char *ruta, const char *fila)
+var_fun_GG.c
+
+Un conjunto de variables globales y estructuras de configuración; no hay funciones definidas más allá de las RecargarVentanaEmergente… (todas con firma void nombre(const char *al_finalizar_que_borrar)).
+core_memory.c
+
+size_t core_align_forward(size_t ptr, size_t align)
+void core_arena_init(core_arena *arena, void *memoria_externa, size_t tamanio)
+void core_arena_init_default(core_arena *arena)
+size_t core_arena_snapshot(const core_arena *arena)
+void core_arena_restore(core_arena *arena, size_t snapshot)
+void *core_arena_alloc(core_arena *arena, size_t tamanio)
+void *core_arena_alloc_fast(core_arena *arena, size_t tamanio)
+void core_arena_reset(core_arena *arena)
+size_t core_arena_usado(const core_arena *arena)
+size_t core_arena_disponible(const core_arena *arena)
+</details> <details> <summary><strong>procesos/01_procesos_de_negocio</strong></summary>
+
+operaciones_tienda.c
+int leerInventario(char inventario[][COLUMNAS][256], int maxProductos)
+void guardarInventario(char inventario[][COLUMNAS][256], int n)
+int buscarProducto(char inventario[][COLUMNAS][256], int n, const char *codigo)
+void  agregarProducto(const char *id, const char *producto, const char *contenido,                  const char *tipo_medida, const char *precio_venta,                  const char *cod_barras, const char *cantidad,                  const char *costo_compra, const char *proveedor)
+int venta(const char *codigo, int cantidad, const char *sucursal)
+int compra(const char *codigo, int cantidad, const char *proveedor)
+</details>
+
+📝 Notas
+Parámetros están listados en orden, tomando los nombres literales usados en los archivos fuente o en prototipos.
+Tipos de retorno se muestran antes del nombre de la función.
+Dos carpetas principales corresponden a procesos (implementación real) y modelos (capas de conexión).
+Los encabezados (.h) contienen los prototipos utilizados en toda la aplicación; los hemos mencionado sólo cuando aportan firmas útiles.
+Con esto tienes una visión completa de la arquitectura actual: cómo se organizan los ficheros en carpetas y qué operaciones ofrece cada módulo (nombre de función, parámetros y valor devuelto). Si necesitas algún diagrama UML/mermaid o más detalles sobre un área concreta, avísame.
+
+Raptor mini (Preview) • 1x
+
+
+
+
+
+
+
+
+
+
+
+
+

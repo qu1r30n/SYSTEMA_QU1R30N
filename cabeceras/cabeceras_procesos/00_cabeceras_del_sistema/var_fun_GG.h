@@ -27,6 +27,9 @@ extern char *GG_caracter_para_transferencia_entre_archivos_2[];
 extern char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[];
 extern char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[];
 
+extern char *GG_caracter_separacion_nom_parametro_de_valor[];
+extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
+
 extern char *GG_caracter_guardado_para_confirmacion[];
 
 extern char *GG_id_programa;
@@ -51,26 +54,26 @@ typedef struct
 extern char *GG_variables_string[MAX_VAR_STRING];
 
 /* Declaraciones de arreglos de configuración */
-extern ConfigField GG_ventana_datos_conf[2];
-extern ConfigField GG_ventana_emergente_productos[33];
-extern ConfigField GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[3];
-extern ConfigField GG_ventana_provedor[24];
-extern ConfigField GG_ventana_APRENDICES_E[32];
-extern ConfigField GG_ventana_afiliados_unificados[8];
-extern ConfigField GG_ventana_niv_afiliados_unificado[4];
-extern ConfigField GG_ventana_SUCUR[20];
-extern ConfigField GG_ventana_reg_dia[11];
-extern ConfigField GG_ventana_reg_mes[9];
-extern ConfigField GG_ventana_reg_año[9];
-extern ConfigField GG_ventana_reg_total[9];
-extern ConfigField GG_ventana_reg_prod_dia[12];
-extern ConfigField GG_ventana_reg_prod_mes[12];
-extern ConfigField GG_ventana_reg_prod_año[12];
-extern ConfigField GG_ventana_reg_prod_total[12];
-extern ConfigField GG_ventana_IMPUESTOS[6];
-extern ConfigField GG_ventana_DEDUSIBLES[7];
-extern ConfigField GG_ventana_HERRAMIENTAS[2];
-extern ConfigField GG_trabajos_dia[8];
+extern const char *GG_ventana_datos_conf[][5];
+extern const char *GG_ventana_emergente_productos[][5];
+extern const char *GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[][5];
+extern const char *GG_ventana_provedor[][5];
+extern const char *GG_ventana_APRENDICES_E[][5];
+extern const char *GG_ventana_afiliados_unificados[][5];
+extern const char *GG_ventana_niv_afiliados_unificado[][5];
+extern const char *GG_ventana_SUCUR[][5];
+extern const char *GG_ventana_reg_dia[][5];
+extern const char *GG_ventana_reg_mes[][5];
+extern const char *GG_ventana_reg_año[][5];
+extern const char *GG_ventana_reg_total[][5];
+extern const char *GG_ventana_reg_prod_dia[][5];
+extern const char *GG_ventana_reg_prod_mes[][5];
+extern const char *GG_ventana_reg_prod_año[][5];
+extern const char *GG_ventana_reg_prod_total[][5];
+extern const char *GG_ventana_IMPUESTOS[][5];
+extern const char *GG_ventana_DEDUSIBLES[][5];
+extern const char *GG_ventana_HERRAMIENTAS[][5];
+extern const char *GG_trabajos_dia[][5];
 
 /* Funciones para reinicializar estructuras */
 void RecargarVentanaEmergenteDatosConfiguracion(const char *al_finalizar_que_borrar);

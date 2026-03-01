@@ -1,5 +1,4 @@
 #include <string.h> // strlen, memcpy, strstr
-#include "../../cabeceras/codigos_retorno.h"
 
 #ifdef _WIN32
 #include <stdlib.h> // malloc, realloc, free
@@ -58,14 +57,18 @@ int split(const char *txt, const char *sep, char ***salida)
        Si alguno es NULL → error inmediato
     ----------------------------------------------------------------------- */
     if (txt == NULL || sep == NULL || salida == NULL)
+    {
         return -1;
+    }
 
     /* Obtener longitud del separador */
     size_t len_sep = strlen(sep);
 
     /* Si el separador está vacío, no tiene sentido dividir */
     if (len_sep == 0)
+    {
         return -1;
+    }
 
     /* Capacidad inicial del arreglo dinámico
        Significa que inicialmente podemos guardar 4 fragmentos */
@@ -79,7 +82,9 @@ int split(const char *txt, const char *sep, char ***salida)
 
     /* Si falla malloc → error */
     if (resultado == NULL)
+    {
         return -1;
+    }
 
     /* inicio apunta al comienzo del fragmento actual */
     const char *inicio = txt;
@@ -246,7 +251,9 @@ void free_split(char **arreglo)
 {
     /* Si es NULL, no hacer nada */
     if (arreglo == NULL)
+    {
         return;
+    }
 
     int i = 0;
 
@@ -305,7 +312,7 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
     long temp = 0; // usamos long para detectar overflow
 
     if (texto == 0 || var_a_retornar == 0)
-        return RET_INVALID_ARG;
+        return -1;
 
     if (*texto == '-')
     {
@@ -318,7 +325,9 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
     }
 
     if (*texto < '0' || *texto > '9')
-        return RET_INVALID_ARG; // no empieza con número
+    {
+        return -1; // no empieza con número
+    }
 
     while (*texto >= '0' && *texto <= '9')
     {
@@ -327,16 +336,20 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
 
         /* Detectar overflow para int 16-bit (PIC16F) */
         if (temp > 32767)
-            return RET_INVALID_ARG;
+        {
+            return -1;
+        }
 
         texto++;
     }
 
     if (*texto != '\0')
-        return RET_INVALID_ARG; // caracteres inválidos al final
+    {
+        return -1; // caracteres inválidos al final
+    }
 
     *var_a_retornar = (int)(temp * signo);
-    return RET_OK;
+    return 0;
 }
 
 int texto_a_float_seguro(const char *texto, float *var_a_retornar)
@@ -347,7 +360,7 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
     int tiene_decimal = 0;
 
     if (texto == 0 || var_a_retornar == 0)
-        return RET_INVALID_ARG;
+        return -1;
 
     if (*texto == '-')
     {
@@ -360,7 +373,9 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
     }
 
     if ((*texto < '0' || *texto > '9') && *texto != '.')
-        return RET_INVALID_ARG;
+    {
+        return -1;
+    }
 
     while (*texto != '\0')
     {
@@ -382,18 +397,20 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
         {
 
             if (tiene_decimal)
-                return RET_INVALID_ARG; // dos puntos decimales
+            {
+                return -1; // dos puntos decimales
+            }
 
             tiene_decimal = 1;
         }
         else
         {
-            return RET_INVALID_ARG; // carácter inválido
+            return -1; // carácter inválido
         }
 
         texto++;
     }
 
     *var_a_retornar = valor * signo;
-    return RET_OK;
+    return 0;
 }

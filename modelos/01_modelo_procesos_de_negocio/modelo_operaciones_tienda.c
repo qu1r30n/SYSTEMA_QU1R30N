@@ -19,7 +19,8 @@
 /* prototipos del modelo para validar firmas y ajustar retornos */
 #include "../../cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_tienda.h"
 #include "../../CLASE_QU1R30N.h"
-#include "../../cabeceras/codigos_retorno.h"
+/* usar el split del modelo de textos */
+#include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 
 /* las cabeceras de procesos que se invocan */
 #include "../../cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_tienda.h"
@@ -27,23 +28,9 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
 
 // char **G_caracter_separacion = GG_caracter_separacion;//dice que ya no por que ya fue definido en el main
-
-/* Helper reutilizable: parsea `texto` usando el separador indicado (índice)
-   y devuelve el array `parts`. Las conversiones seguras a entero/float se
-   realizan con `texto_a_int_seguro` / `texto_a_float_seguro` de
-   `operaciones_textos.c`. El array retornado debe liberarse con
-   `modelo_free_split(parts)` cuando ya no se necesite. */
-static char **modelo_parse_split(char *texto, int sep_index)
-{
-    if (texto == NULL)
-        return NULL;
-    char **parts = NULL;
-    int n = split(texto, G_caracter_separacion_funciones_espesificas[sep_index], &parts);
-    (void)n; /* el llamador valida la cantidad */
-    return parts;
-}
 
 // Leer inventario completo
 int modelo_leerInventario(char *texto)
@@ -60,7 +47,7 @@ int modelo_leerInventario(char *texto)
 // Guardar inventario
 void modelo_guardarInventario(char *texto)
 {
-    // En el proceso: guardarInventario(inventario, n) requiere inventario[][][]
+    // En el proceso: guardarInventario(inventario, i) requiere inventario[][][]
     // Con solo "texto" no podemos pasar el inventario real todavía.
     // Conexión mínima: no-op funcional (queda para estructura).
     (void)texto;
@@ -75,36 +62,172 @@ int modelo_buscarProducto(char *texto)
         return -1;
 
     char inventario_local[MAX_PRODUCTOS][COLUMNAS][256];
-    int n = leerInventario(inventario_local, MAX_PRODUCTOS);
+    int i = leerInventario(inventario_local, MAX_PRODUCTOS);
 
-    return buscarProducto(inventario_local, n, texto);
+    return buscarProducto(inventario_local, i, texto);
+}
+
+// carga_arreglo_a_structura
+StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4])
+{
+
+    StructurasDinamicas datos = crearStructuraVacia();
+    int cuantos_parametros_hay = 0;
+
+    while (nombres_variables[cuantos_parametros_hay][0] != NULL)
+    {
+
+        agregarCampo(&datos,
+                     nombres_variables[cuantos_parametros_hay][0],
+                     nombres_variables[cuantos_parametros_hay][1]);
+
+        if (strcmp(nombres_variables[cuantos_parametros_hay][1], "string") == 0)
+        {
+
+            asignarValorString(&datos,
+                               nombres_variables[cuantos_parametros_hay][0],
+                               nombres_variables[cuantos_parametros_hay][2]);
+        }
+        else if (strcmp(nombres_variables[cuantos_parametros_hay][1], "int") == 0)
+        {
+
+            asignarValorInt(&datos,
+                            nombres_variables[cuantos_parametros_hay][0],
+                            atoi(nombres_variables[cuantos_parametros_hay][2]));
+        }
+        else if (strcmp(nombres_variables[cuantos_parametros_hay][1], "float") == 0)
+        {
+
+            asignarValorFloat(&datos,
+                              nombres_variables[cuantos_parametros_hay][0],
+                              (float)atof(nombres_variables[cuantos_parametros_hay][2]));
+        }
+
+        cuantos_parametros_hay++;
+    }
+
+    return datos;
+}
+
+// Obtener valor de estructura por nombre y posición en orden de inserción
+void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden)
+{
+    if (orden < 0 || orden >= datos->total)
+    {
+        return NULL;
+    }
+
+    int tipo = datos->orden_tipo[orden];
+    int indice = datos->orden_indice[orden];
+
+    if (tipo == TIPO_STRING)
+    {
+        return (void *)datos->arreglo_char[indice];
+    }
+    else if (tipo == TIPO_INT)
+    {
+        return (void *)&datos->arreglo_int[indice];
+    }
+    else if (tipo == TIPO_FLOAT)
+    {
+        return (void *)&datos->arreglo_float[indice];
+    }
+
+    return NULL;
 }
 
 // Agregar producto
-void modelo_agregarProducto(char *texto)
+int modelo_agregarProducto(char *texto)
 {
     if (!texto)
-        return;
+    {
+        return -1;
+    }
 
-    /* parsear parámetros: direccion, fila, editar_info, etc. */
-    char **partes = modelo_parse_split(texto, 2);
+    char *nombres_variables[][4] = {
+        {"id", "int", "0", ""},
+        {"producto", "string", "nose", ""},
+        {"contenido", "float", "0", ""},
+        {"tipo_medida", "string", "nose", ""},
+        {"precio_venta", "float", "0", ""},
+        {"cod_barras", "string", "nose", ""},
+        {"cantidad", "float", "0", ""},
+        {"costo_compra", "float", "0", ""},
+        {"proveedor", "string", "nose", ""},
+        {NULL, NULL, NULL, NULL}};
+
+    StructurasDinamicas datos = cargarDesdeArreglo(nombres_variables);
+
+    int cuantos_parametros_hay = 0;
+    while (nombres_variables[cuantos_parametros_hay][0])
+    {
+        cuantos_parametros_hay++;
+    }
+
+    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+
     if (!partes)
-        return;
-    int n = 0;
-    while (partes[n])
-        n++;
-    if (n < 9)
+    {
+        liberarStructura(&datos);
+        return -2;
+    }
+
+    int i = 0;
+    while (partes[i])
+    {
+        char **nom_parametro_dato = modelo_split(partes[i], G_caracter_separacion_nom_parametro_de_valor[0]);
+        if (nom_parametro_dato && nom_parametro_dato[0] && nom_parametro_dato[1])
+        {
+            int j = 0;
+            while (nombres_variables[j][0])
+            {
+                if (strcmp(nombres_variables[j][0], nom_parametro_dato[0]) == 0)
+                {
+                    if (strcmp(nombres_variables[j][1], "string") == 0)
+                    {
+                        asignarValorString(&datos, nombres_variables[j][0], nom_parametro_dato[1]);
+                    }
+                    else if (strcmp(nombres_variables[j][1], "int") == 0)
+                    {
+                        asignarValorInt(&datos, nombres_variables[j][0], atoi(nom_parametro_dato[1]));
+                    }
+                    else if (strcmp(nombres_variables[j][1], "float") == 0)
+                    {
+                        asignarValorFloat(&datos, nombres_variables[j][0], (float)atof(nom_parametro_dato[1]));
+                    }
+                    break;
+                }
+                j++;
+            }
+        }
+        if (nom_parametro_dato)
+        {
+            modelo_free_split(nom_parametro_dato);
+        }
+        i++;
+    }
+
+    if (i <= 0)
     {
         modelo_free_split(partes);
-        return;
+        liberarStructura(&datos);
+        return -3;
     }
 
     agregarProducto(
-        partes[0], partes[1], partes[2],
-        partes[3], partes[4], partes[5],
-        partes[6], partes[7], partes[8]);
+        *(int *)obtenerValorPorOrden(&datos, 0),
+        (char *)obtenerValorPorOrden(&datos, 1),
+        *(float *)obtenerValorPorOrden(&datos, 2),
+        (char *)obtenerValorPorOrden(&datos, 3),
+        *(float *)obtenerValorPorOrden(&datos, 4),
+        (const char *)obtenerValorPorOrden(&datos, 5),
+        *(float *)obtenerValorPorOrden(&datos, 6),
+        *(float *)obtenerValorPorOrden(&datos, 7),
+        (const char *)obtenerValorPorOrden(&datos, 8));
 
     modelo_free_split(partes);
+    liberarStructura(&datos);
+    return 0;
 }
 
 // Venta simple
@@ -112,26 +235,30 @@ int modelo_venta(char *texto)
 {
     // texto: "codigo|cantidad|sucursal"
     if (!texto)
-        return RET_INVALID_ARG;
+        return -1;
 
-    char **partes = modelo_parse_split(texto, 0);
-    int n = 0;
+    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[0]);
+    int i = 0;
     if (partes)
     {
-        while (partes[n])
-            n++;
+        while (partes[i])
+        {
+            i++;
+        }
     }
-    if (n < 3 || !partes)
+    if (i < 3 || !partes)
     {
         if (partes)
             modelo_free_split(partes);
-        return RET_INVALID_ARG;
+        return -2;
     }
 
     const char *codigo = partes[0];
     int cantidad = 0;
-    if (texto_a_int_seguro(partes[1], &cantidad) != RET_OK)
+    if (texto_a_int_seguro(partes[1], &cantidad) != 0)
+    {
         cantidad = atoi(partes[1]);
+    }
     const char *sucursal = partes[2];
 
     int ok = venta(codigo, cantidad, sucursal);
@@ -145,12 +272,19 @@ int modelo_compra(char *texto)
 {
     // texto: "codigo|cantidad|proveedor"
     if (!texto)
-        return RET_INVALID_ARG;
+        return -1;
 
-    char **partes = NULL;
-    int n = split(texto, G_caracter_separacion_funciones_espesificas[0], &partes);
-    if (n < 3 || !partes)
-        return RET_INVALID_ARG;
+    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[0]);
+    if (!partes)
+        return -2;
+    int i = 0;
+    while (partes[i])
+        i++;
+    if (i < 3)
+    {
+        modelo_free_split(partes);
+        return -2;
+    }
 
     const char *codigo = partes[0];
     int cantidad = atoi(partes[1]);

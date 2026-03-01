@@ -39,7 +39,9 @@ void modelo_free_split(char **arreglo)
 {
     /* Si es NULL, no hacer nada */
     if (arreglo == NULL)
+    {
         return;
+    }
 
     int i = 0;
 

@@ -9,9 +9,6 @@
    se usan así porque GG_caracter_separacion es un "char *[]"
    no un arreglo fijo; el doble puntero permite indexar con G_caracter_separacion[i] */
 char **G_caracter_separacion = GG_caracter_separacion;
-
-/* igual para los separadores de funciones específicas, es un puntero
-   a primera celda de un arreglo de strings */
 char **G_caracter_separacion_funciones_espesificas = GG_caracter_separacion_funciones_espesificas;
 
 /* los archivos son en realidad un puntero a un arreglo de dos punteros a char.

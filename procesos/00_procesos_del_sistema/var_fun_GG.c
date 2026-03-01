@@ -22,6 +22,9 @@ char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘"};
 char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[] = {"•", "∆"};
 char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[] = {"⛙", "⛚"};
 
+char *GG_caracter_separacion_nom_parametro_de_valor[] = {"⊓", "⊔"};
+char *GG_caracter_separacion_nom_parametro_de_valor_2[] = {"⊑", "⊒"};
+
 char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝"};
 
 char *GG_id_programa = "CLASE_QU1R30N_2";
@@ -47,299 +50,298 @@ char *GG_variables_string[MAX_VAR_STRING] = {
 /* ===== TABLAS DE CONFIGURACIÓN VENTANAS ===== */
 
 /* Ventana: Datos de Configuración (2 campos) */
-ConfigField GG_ventana_datos_conf[2] = {
-    {.tipo = "2", .nombre = "dato_de_configuracion", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "2", .nombre = "descripcion_de_configuracion", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_datos_conf[][5] = {
+    {"2", "dato_de_configuracion", "", "", "TEXTO"},
+    {"2", "descripcion_de_configuracion", "", "", "TEXTO"}};
 
 /* Ventana: Productos (33 campos) */
-ConfigField GG_ventana_emergente_productos[33] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_PRODUCTO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_CONTENIDO", .validacion = "0°SOLO_NUMEROS", .valor_default = "-0", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "4", .nombre = "_03_TIPO_MEDIDA", .validacion = "NOSE°TODAS_MAYUSCULAS", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_PRECIO_VENTA", .validacion = "0°SOLO_NUMEROS", .valor_default = "-0", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "2", .nombre = "_05_COD_BARRAS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_CANTIDAD", .validacion = "1°SOLO_NUMEROS", .valor_default = "-0", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_07_COSTO_COMP", .validacion = "0°SOLO_NUMEROS", .valor_default = "-0", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "4", .nombre = "_08_PROVEDOR", .validacion = "NOSE°TODAS_MAYUSCULAS", .valor_default = "NOSE¬0", .tipo_dato = "TEXTO"},
-    {.tipo = "4", .nombre = "_09_GRUPO", .validacion = "PRODUCTO_PIEZA", .valor_default = "PRODUCTO_PIEZA", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_10_CANT_X_PAQUET", .validacion = "1°SOLO_NUMEROS", .valor_default = "-0", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "4", .nombre = "_11_ES_PAQUETE", .validacion = "INDIVIDUAL", .valor_default = "INDIVIDUAL", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_12_CODBAR_PAQUETE_E_ID", .validacion = "", .valor_default = "NOSE_2", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_13_COD_BAR_INDIVIDUAL_ES_PAQ_E_ID", .validacion = "", .valor_default = "NOSE_3¬1", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_14_LIGAR_PROD_SAB", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_15_IMPUESTOS", .validacion = "REYENO_TEXTBOX_VENTANA_IMPU", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_16_INGREDIENTES", .validacion = "NO_VISIBLE¬PRODUCTO_ELABORADO", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_17_CADUCIDAD", .validacion = "0°SOLO_NUMEROS", .valor_default = "-0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_18_ULTIMO_MOV", .validacion = "0°SOLO_NUMEROS", .valor_default = "-0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_19_SUCUR_VENT", .validacion = "", .valor_default = "NOSE¬0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_20_CLAF_PROD", .validacion = "", .valor_default = "-0", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_21_DIR_IMG_INTER", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_22_DIR_IMG_COMP", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_23_INFO_EXTRA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_24_PROCESO_CREAR", .validacion = "NO_VISIBLE", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_25_DIR_VID_PROC_CREAR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_26_TIEMPO_FABRICACION", .validacion = "0", .valor_default = "-0", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "2", .nombre = "_27_INDICES_DIA_REGISTRO_PRODUC_VENDIDO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "2", .nombre = "_28_INDICES_MES_REGISTRO_PRODUC_VENDIDO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "2", .nombre = "_29_INDICES_AÑO_REGISTRO_PRODUC_VENDIDO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "2", .nombre = "_30_ULTIMA_VENTA", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "2", .nombre = "_31_INDICES_TOTAL_REGISTRO_PRODUC_VENDIDO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "2", .nombre = "_32_NO_PONER_NADA", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_emergente_productos[][5] = {
 
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_PRODUCTO", "", "NOSE", "TEXTO"},
+    {"1", "_02_CONTENIDO", "0°SOLO_NUMEROS", "-0", "ENTERO_DECIMAL"},
+    {"4", "_03_TIPO_MEDIDA", "NOSE°TODAS_MAYUSCULAS", "NOSE", "TEXTO"},
+    {"1", "_04_PRECIO_VENTA", "0°SOLO_NUMEROS", "-0", "ENTERO_DECIMAL"},
+    {"2", "_05_COD_BARRAS", "", "NOSE", "TEXTO"},
+    {"1", "_06_CANTIDAD", "1°SOLO_NUMEROS", "-0", "ENTERO_DECIMAL"},
+    {"1", "_07_COSTO_COMP", "0°SOLO_NUMEROS", "-0", "ENTERO_DECIMAL"},
+    {"4", "_08_PROVEDOR", "NOSE°TODAS_MAYUSCULAS", "NOSE¬0", "TEXTO"},
+    {"4", "_09_GRUPO", "PRODUCTO_PIEZA", "PRODUCTO_PIEZA", "TEXTO"},
+    {"1", "_10_CANT_X_PAQUET", "1°SOLO_NUMEROS", "-0", "ENTERO_DECIMAL"},
+    {"4", "_11_ES_PAQUETE", "INDIVIDUAL", "INDIVIDUAL", "TEXTO"},
+    {"1", "_12_CODBAR_PAQUETE_E_ID", "", "NOSE_2", "TEXTO"},
+    {"1", "_13_COD_BAR_INDIVIDUAL_ES_PAQ_E_ID", "", "NOSE_3¬1", "TEXTO"},
+    {"1", "_14_LIGAR_PROD_SAB", "", "NOSE", "TEXTO"},
+    {"1", "_15_IMPUESTOS", "REYENO_TEXTBOX_VENTANA_IMPU", "NOSE", "TEXTO"},
+    {"1", "_16_INGREDIENTES", "NO_VISIBLE¬PRODUCTO_ELABORADO", "NOSE", "TEXTO"},
+    {"1", "_17_CADUCIDAD", "0°SOLO_NUMEROS", "-0", "TEXTO"},
+    {"1", "_18_ULTIMO_MOV", "0°SOLO_NUMEROS", "-0", "TEXTO"},
+    {"1", "_19_SUCUR_VENT", "", "NOSE¬0", "TEXTO"},
+    {"1", "_20_CLAF_PROD", "", "-0", "ENTERO_DECIMAL"},
+    {"1", "_21_DIR_IMG_INTER", "", "NOSE", "TEXTO"},
+    {"1", "_22_DIR_IMG_COMP", "", "NOSE", "TEXTO"},
+    {"1", "_23_INFO_EXTRA", "", "NOSE", "TEXTO"},
+    {"1", "_24_PROCESO_CREAR", "NO_VISIBLE", "NOSE", "TEXTO"},
+    {"1", "_25_DIR_VID_PROC_CREAR", "", "NOSE", "TEXTO"},
+    {"1", "_26_TIEMPO_FABRICACION", "0", "-0", "ENTERO_DECIMAL"},
+    {"2", "_27_INDICES_DIA_REGISTRO_PRODUC_VENDIDO", "", "0", "TEXTO"},
+    {"2", "_28_INDICES_MES_REGISTRO_PRODUC_VENDIDO", "", "0", "TEXTO"},
+    {"2", "_29_INDICES_AÑO_REGISTRO_PRODUC_VENDIDO", "", "0", "TEXTO"},
+    {"2", "_30_ULTIMA_VENTA", "", "", "TEXTO"},
+    {"2", "_31_INDICES_TOTAL_REGISTRO_PRODUC_VENDIDO", "", "0", "TEXTO"},
+    {"2", "_32_NO_PONER_NADA", "", "", "TEXTO"}};
 /* Ventana: Cosas No Estaban en Inventario (3 campos) */
-ConfigField GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[3] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_COD_BAR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_NOMBRE", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[3][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_COD_BAR", "", "NOSE", "TEXTO"},
+    {"1", "_02_NOMBRE", "", "NOSE", "TEXTO"}};
 
 /* Ventana: Proveedores (24 campos) */
-ConfigField GG_ventana_provedor[24] = {
-    {.tipo = "2", .nombre = "_00_ID_EMPRESA", .validacion = "", .valor_default = "-0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_01_NOMBRE_EMPRESA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_NOMBRE_ENCARGADO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_DIRECCIÓN_EMPRESA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_CIUDAD_EMPRESA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_ESTADO_EMPRESA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_CÓDIGO_POSTAL", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_PAÍS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_CORREO_ELECTRÓNICO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_09_TELÉFONO_ENCARGADO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_10_TELEFONO_EMPRESA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_11_TIPO_DE_PROVEEDOR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_12_PRODUCTOS_SERVICIOS_SUMINISTRADOS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_13_CUENTA_BANCO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_14_UBICACIÓN_(GPS)", .validacion = "", .valor_default = "-0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_15_NOTAS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_16_RECORDATORIO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_17_ACTIVO_O_NO_ACTIVO", .validacion = "", .valor_default = "ACTIVO", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_18_CALIFICACIÓN", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_19_COMENTARIOS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_20_SUCURSALES_QUE_LE_COMPRAN", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_21_DINERO_A_COMPRARLE", .validacion = "0°SOLO_NUMEROS", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_22_DIAS_DE_PREVENTA", .validacion = "", .valor_default = "NOSE¬NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_23_DIAS_DE_ENTREGA", .validacion = "", .valor_default = "NOSE¬NOSE", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_provedor[][5] = {
+    {"2", "_00_ID_EMPRESA", "", "-0", "TEXTO"},
+    {"1", "_01_NOMBRE_EMPRESA", "", "NOSE", "TEXTO"},
+    {"1", "_02_NOMBRE_ENCARGADO", "", "NOSE", "TEXTO"},
+    {"1", "_03_DIRECCIÓN_EMPRESA", "", "NOSE", "TEXTO"},
+    {"1", "_04_CIUDAD_EMPRESA", "", "NOSE", "TEXTO"},
+    {"1", "_05_ESTADO_EMPRESA", "", "NOSE", "TEXTO"},
+    {"1", "_06_CÓDIGO_POSTAL", "", "NOSE", "TEXTO"},
+    {"1", "_07_PAÍS", "", "NOSE", "TEXTO"},
+    {"1", "_08_CORREO_ELECTRÓNICO", "", "NOSE", "TEXTO"},
+    {"1", "_09_TELÉFONO_ENCARGADO", "", "NOSE", "TEXTO"},
+    {"1", "_10_TELEFONO_EMPRESA", "", "NOSE", "TEXTO"},
+    {"1", "_11_TIPO_DE_PROVEEDOR", "", "NOSE", "TEXTO"},
+    {"1", "_12_PRODUCTOS_SERVICIOS_SUMINISTRADOS", "", "NOSE", "TEXTO"},
+    {"1", "_13_CUENTA_BANCO", "", "NOSE", "TEXTO"},
+    {"1", "_14_UBICACIÓN_(GPS)", "", "-0", "TEXTO"},
+    {"1", "_15_NOTAS", "", "NOSE", "TEXTO"},
+    {"1", "_16_RECORDATORIO", "", "", "TEXTO"},
+    {"1", "_17_ACTIVO_O_NO_ACTIVO", "", "ACTIVO", "TEXTO"},
+    {"1", "_18_CALIFICACIÓN", "", "0", "TEXTO"},
+    {"1", "_19_COMENTARIOS", "", "NOSE", "TEXTO"},
+    {"1", "_20_SUCURSALES_QUE_LE_COMPRAN", "", "NOSE", "TEXTO"},
+    {"1", "_21_DINERO_A_COMPRARLE", "0°SOLO_NUMEROS", "0", "TEXTO"},
+    {"1", "_22_DIAS_DE_PREVENTA", "", "NOSE¬NOSE", "TEXTO"},
+    {"1", "_23_DIAS_DE_ENTREGA", "", "NOSE¬NOSE", "TEXTO"}};
 
 /* Ventana: Aprendices (32 campos) */
-ConfigField GG_ventana_APRENDICES_E[32] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_01_NOMBRE", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_APELLIDO_PATERNO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_APELLIDO_MATERNO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_FECHA_DE_NACIMIENTO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_GÉNERO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_DIRECCIÓN", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_CIUDAD", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_ESTADO_PROVINCIA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_09_CÓDIGO_POSTAL", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_10_PAÍS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_11_CORREO_ELECTRÓNICO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_12_TELÉFONO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_13_FECHA_DE_INGRESO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_14_SUELDO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_15_CARGO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_16_ESTADO_DE_CURS_APRENDIS_E", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_17_SUPERVISOR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_18_NOTAS", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_19_AFILIADO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_20_FECHA_DE_TERMINACIÓN", .validacion = "0°SOLO_NUMEROS", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_21_MOTIVO_DE_TERMINACIÓN", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_22_HORAS_TRABAJADAS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_23_EVALUACIONES_DE_DESEMPEÑO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_24_HABILIDADES_Y_CERTIFICACIONES", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_25_IDIOMAS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_26_FECHA_DE_ÚLTIMA_PROMOCIÓN", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_27_ID_DEPARTAMENTO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_28_HISTORIAL_DE_CAPACITACIÓN", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_29_ÚLTIMO_AUMENTO_DE_SALARIO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_30_TIPO_EMPLEADO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_31_RANGO_CALIF", .validacion = "", .valor_default = "-0", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_APRENDICES_E[][5] = {
+    {"2", "_00_ID", "", "-0", "TEXTO"},
+    {"1", "_01_NOMBRE", "", "NOSE", "TEXTO"},
+    {"1", "_02_APELLIDO_PATERNO", "", "NOSE", "TEXTO"},
+    {"1", "_03_APELLIDO_MATERNO", "", "NOSE", "TEXTO"},
+    {"1", "_04_FECHA_DE_NACIMIENTO", "", "NOSE", "TEXTO"},
+    {"1", "_05_GÉNERO", "", "NOSE", "TEXTO"},
+    {"1", "_06_DIRECCIÓN", "", "NOSE", "TEXTO"},
+    {"1", "_07_CIUDAD", "", "NOSE", "TEXTO"},
+    {"1", "_08_ESTADO_PROVINCIA", "", "NOSE", "TEXTO"},
+    {"1", "_09_CÓDIGO_POSTAL", "", "NOSE", "TEXTO"},
+    {"1", "_10_PAÍS", "", "NOSE", "TEXTO"},
+    {"1", "_11_CORREO_ELECTRÓNICO", "", "NOSE", "TEXTO"},
+    {"1", "_12_TELÉFONO", "", "NOSE", "TEXTO"},
+    {"1", "_13_FECHA_DE_INGRESO", "", "NOSE", "TEXTO"},
+    {"1", "_14_SUELDO", "", "NOSE", "TEXTO"},
+    {"1", "_15_CARGO", "", "NOSE", "TEXTO"},
+    {"1", "_16_ESTADO_DE_CURS_APRENDIS_E", "", "NOSE", "TEXTO"},
+    {"1", "_17_SUPERVISOR", "", "NOSE", "TEXTO"},
+    {"1", "_18_NOTAS", "", "", "TEXTO"},
+    {"1", "_19_AFILIADO", "", "NOSE", "TEXTO"},
+    {"1", "_20_FECHA_DE_TERMINACIÓN", "0°SOLO_NUMEROS", "0", "TEXTO"},
+    {"1", "_21_MOTIVO_DE_TERMINACIÓN", "", "NOSE", "TEXTO"},
+    {"1", "_22_HORAS_TRABAJADAS", "", "NOSE", "TEXTO"},
+    {"1", "_23_EVALUACIONES_DE_DESEMPEÑO", "", "NOSE", "TEXTO"},
+    {"1", "_24_HABILIDADES_Y_CERTIFICACIONES", "", "NOSE", "TEXTO"},
+    {"1", "_25_IDIOMAS", "", "NOSE", "TEXTO"},
+    {"1", "_26_FECHA_DE_ÚLTIMA_PROMOCIÓN", "", "NOSE", "TEXTO"},
+    {"1", "_27_ID_DEPARTAMENTO", "", "NOSE", "TEXTO"},
+    {"1", "_28_HISTORIAL_DE_CAPACITACIÓN", "", "NOSE", "TEXTO"},
+    {"1", "_29_ÚLTIMO_AUMENTO_DE_SALARIO", "", "NOSE", "TEXTO"},
+    {"1", "_30_TIPO_EMPLEADO", "", "NOSE", "TEXTO"},
+    {"1", "_31_RANGO_CALIF", "", "-0", "TEXTO"}};
 
 /* Ventana: Afiliados Unificados (8 campos) */
-ConfigField GG_ventana_afiliados_unificados[8] = {
-    {.tipo = "1", .nombre = "_00_ID_USUARIO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_01_IDP", .validacion = "", .valor_default = "0╔0╦0¬0╔1╦1", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_PUNTOS_D_R", .validacion = "", .valor_default = "0╦0¬0╦0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_PUNTOS_D_R_TOTALES", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_DATOS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_NIVEL", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_ID_HORIZONTAL", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_TIPO_AFILIADO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"}};
-
+const char *GG_ventana_afiliados_unificados[][5] = {
+    {"1", "_00_ID_USUARIO", "", "0", "TEXTO"},
+    {"1", "_01_IDP", "", "0╔0╦0¬0╔1╦1", "TEXTO"},
+    {"1", "_02_PUNTOS_D_R", "", "0╦0¬0╦0", "TEXTO"},
+    {"1", "_03_PUNTOS_D_R_TOTALES", "", "0", "TEXTO"},
+    {"1", "_04_DATOS", "", "NOSE", "TEXTO"},
+    {"1", "_05_NIVEL", "", "0", "TEXTO"},
+    {"1", "_06_ID_HORIZONTAL", "", "0", "TEXTO"},
+    {"1", "_07_TIPO_AFILIADO", "", "NOSE", "TEXTO"}};
 /* Ventana: Niveles Afiliados Unificado (4 campos) */
-ConfigField GG_ventana_niv_afiliados_unificado[4] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_NIVEL", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_ID_HORIZONTAL", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_VACIOS", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_niv_afiliados_unificado[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_NIVEL", "", "0", "TEXTO"},
+    {"1", "_02_ID_HORIZONTAL", "", "0", "TEXTO"},
+    {"1", "_03_VACIOS", "", "", "TEXTO"}};
 
 /* Ventana: Sucursales (20 campos) */
-ConfigField GG_ventana_SUCUR[20] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_NOM_ID_SUCUR", .validacion = "", .valor_default = "-0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_NOMBRE_SUCUR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_NOMBRE_ENCARGADO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_DIRECCIÓN_SUCUR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_CIUDAD_SUCUR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_ESTADO_SUCUR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_CÓDIGO_POSTAL", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_PAÍS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_09_CORREO_ELECTRÓNICO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_10_TELÉFONO_ENCARGADO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_11_TELEFONO_SUCUR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_12_TIPO_DE_SUCUR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_13_PRODUCTOS_SERVICIOS", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_14_CUENTA_BANCO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_15_UBICACIÓN_(GPS)", .validacion = "", .valor_default = "-0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_16_NOTAS", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_17_RECORDATORIO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_18_ACTIVO_O_NO_ACTIVO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_19_HORA_ABRIR_CERRAR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_SUCUR[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_NOM_ID_SUCUR", "", "-0", "TEXTO"},
+    {"1", "_02_NOMBRE_SUCUR", "", "NOSE", "TEXTO"},
+    {"1", "_03_NOMBRE_ENCARGADO", "", "NOSE", "TEXTO"},
+    {"1", "_04_DIRECCIÓN_SUCUR", "", "NOSE", "TEXTO"},
+    {"1", "_05_CIUDAD_SUCUR", "", "NOSE", "TEXTO"},
+    {"1", "_06_ESTADO_SUCUR", "", "NOSE", "TEXTO"},
+    {"1", "_07_CÓDIGO_POSTAL", "", "NOSE", "TEXTO"},
+    {"1", "_08_PAÍS", "", "NOSE", "TEXTO"},
+    {"1", "_09_CORREO_ELECTRÓNICO", "", "NOSE", "TEXTO"},
+    {"1", "_10_TELÉFONO_ENCARGADO", "", "NOSE", "TEXTO"},
+    {"1", "_11_TELEFONO_SUCUR", "", "NOSE", "TEXTO"},
+    {"1", "_12_TIPO_DE_SUCUR", "", "NOSE", "TEXTO"},
+    {"1", "_13_PRODUCTOS_SERVICIOS", "", "NOSE", "TEXTO"},
+    {"1", "_14_CUENTA_BANCO", "", "NOSE", "TEXTO"},
+    {"1", "_15_UBICACIÓN_(GPS)", "", "-0", "TEXTO"},
+    {"1", "_16_NOTAS", "", "", "TEXTO"},
+    {"1", "_17_RECORDATORIO", "", "NOSE", "TEXTO"},
+    {"1", "_18_ACTIVO_O_NO_ACTIVO", "", "NOSE", "TEXTO"},
+    {"1", "_19_HORA_ABRIR_CERRAR", "", "NOSE", "TEXTO"}};
 
 /* Ventana: Registro Día (11 campos) */
-ConfigField GG_ventana_reg_dia[11] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_HORA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_OPERACION", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_TOTAL_IMPUESTO", .validacion = "", .valor_default = "NOSE╦0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_CÓDIGO_PRECIO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_COMENTARIO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_TOTAL_VENTA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_TOTAL_COSTO_COMP", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_TOTAL_IMPUESTOS", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_09_TOTAL_DEDUSIBLES", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_10_PLATAFORMA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_reg_dia[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_HORA", "", "0", "TEXTO"},
+    {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
+    {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"},
+    {"1", "_04_CÓDIGO_PRECIO", "", "NOSE", "TEXTO"},
+    {"1", "_05_COMENTARIO", "", "", "TEXTO"},
+    {"1", "_06_TOTAL_VENTA", "", "0", "TEXTO"},
+    {"1", "_07_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
+    {"1", "_08_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
+    {"1", "_09_TOTAL_DEDUSIBLES", "", "0", "TEXTO"},
+    {"1", "_10_PLATAFORMA", "", "NOSE", "TEXTO"}};
 
 /* Ventana: Registro Mes (9 campos) */
-ConfigField GG_ventana_reg_mes[9] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_DIA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_OPERACION", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_TOTAL_IMPUESTO", .validacion = "", .valor_default = "NOSE╦0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_COMENTARIO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_TOTAL_VENTA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_TOTAL_COSTO_COMP", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_TOTAL_IMPUESTOS", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_TOTAL_GANANCIA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_reg_mes[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_DIA", "", "0", "TEXTO"},
+    {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
+    {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"},
+    {"1", "_04_COMENTARIO", "", "", "TEXTO"},
+    {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"},
+    {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
+    {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
+    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}};
 
 /* Ventana: Registro Año (9 campos) */
-ConfigField GG_ventana_reg_año[9] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_MES", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_OPERACION", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_TOTAL_IMPUESTO", .validacion = "", .valor_default = "NOSE╦0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_COMENTARIO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_TOTAL_VENTA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_TOTAL_COSTO_COMP", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_TOTAL_IMPUESTOS", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_TOTAL_GANANCIA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_reg_año[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_MES", "", "0", "TEXTO"},
+    {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
+    {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"},
+    {"1", "_04_COMENTARIO", "", "", "TEXTO"},
+    {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"},
+    {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
+    {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
+    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}};
 
 /* Ventana: Registro Total (9 campos) */
-ConfigField GG_ventana_reg_total[9] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_AÑO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_OPERACION", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_TOTAL_IMPUESTO", .validacion = "", .valor_default = "NOSE╦0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_COMENTARIO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_TOTAL_VENTA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_TOTAL_COSTO_COMP", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_TOTAL_IMPUESTOS", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_TOTAL_GANANCIA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_reg_total[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_AÑO", "", "0", "TEXTO"},
+    {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
+    {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"},
+    {"1", "_04_COMENTARIO", "", "", "TEXTO"},
+    {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"},
+    {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
+    {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
+    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}};
 
 /* Ventana: Registro Productos Día (12 campos) */
-ConfigField GG_ventana_reg_prod_dia[12] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_NOMBRE_PRODUCTO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_CANTIDAD", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_COD_BAR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_PROVEDORES", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_HISTORIAL", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_RANKING", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_PROMEDIO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_VECES_SUPERA_PROMEDIO", .validacion = "", .valor_default = "7", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_09_USO_MULTIPLE", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_10_TIPO_PRODUCTO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_11_NIVEL_NECESIDAD", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_reg_prod_dia[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
+    {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
+    {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"},
+    {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"},
+    {"1", "_05_HISTORIAL", "", "0", "TEXTO"},
+    {"1", "_06_RANKING", "", "0", "TEXTO"},
+    {"1", "_07_PROMEDIO", "", "0", "TEXTO"},
+    {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
+    {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
+    {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
+    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
 
 /* Ventana: Registro Productos Mes (12 campos) */
-ConfigField GG_ventana_reg_prod_mes[12] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_NOMBRE_PRODUCTO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_CANTIDAD", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_COD_BAR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_PROVEDORES", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_HISTORIAL", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_RANKING", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_PROMEDIO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_VECES_SUPERA_PROMEDIO", .validacion = "", .valor_default = "7", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_09_USO_MULTIPLE", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_10_TIPO_PRODUCTO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_11_NIVEL_NECESIDAD", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_reg_prod_mes[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
+    {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
+    {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"},
+    {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"},
+    {"1", "_05_HISTORIAL", "", "0", "TEXTO"},
+    {"1", "_06_RANKING", "", "0", "TEXTO"},
+    {"1", "_07_PROMEDIO", "", "0", "TEXTO"},
+    {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
+    {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
+    {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
+    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
 
 /* Ventana: Registro Productos Año (12 campos) */
-ConfigField GG_ventana_reg_prod_año[12] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_NOMBRE_PRODUCTO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_CANTIDAD", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_COD_BAR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_PROVEDORES", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_HISTORIAL", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_RANKING", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_PROMEDIO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_VECES_SUPERA_PROMEDIO", .validacion = "", .valor_default = "7", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_09_USO_MULTIPLE", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_10_TIPO_PRODUCTO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_11_NIVEL_NECESIDAD", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_reg_prod_año[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
+    {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
+    {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"},
+    {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"},
+    {"1", "_05_HISTORIAL", "", "0", "TEXTO"},
+    {"1", "_06_RANKING", "", "0", "TEXTO"},
+    {"1", "_07_PROMEDIO", "", "0", "TEXTO"},
+    {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
+    {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
+    {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
+    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
 
 /* Ventana: Registro Productos Total (12 campos) */
-ConfigField GG_ventana_reg_prod_total[12] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_NOMBRE_PRODUCTO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_CANTIDAD", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_COD_BAR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_PROVEDORES", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_HISTORIAL", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_RANKING", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_PROMEDIO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_08_VECES_SUPERA_PROMEDIO", .validacion = "", .valor_default = "7", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_09_USO_MULTIPLE", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_10_TIPO_PRODUCTO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_11_NIVEL_NECESIDAD", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_reg_prod_total[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
+    {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
+    {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"},
+    {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"},
+    {"1", "_05_HISTORIAL", "", "0", "TEXTO"},
+    {"1", "_06_RANKING", "", "0", "TEXTO"},
+    {"1", "_07_PROMEDIO", "", "0", "TEXTO"},
+    {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
+    {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
+    {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
+    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
 
 /* Ventana: Impuestos (6 campos) */
-ConfigField GG_ventana_IMPUESTOS[6] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_IMPUESTO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_PORCENTAGE", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_DESCRIPCION", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_INFO_EXTRA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_TIPO_IMPUESTO", .validacion = "", .valor_default = "3", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_IMPUESTOS[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_IMPUESTO", "", "0", "TEXTO"},
+    {"1", "_02_PORCENTAGE", "", "0", "TEXTO"},
+    {"1", "_03_DESCRIPCION", "", "NOSE", "TEXTO"},
+    {"1", "_04_INFO_EXTRA", "", "NOSE", "TEXTO"},
+    {"1", "_05_TIPO_IMPUESTO", "", "3", "TEXTO"}};
 
 /* Ventana: Deducibles (7 campos) */
-ConfigField GG_ventana_DEDUSIBLES[7] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_FECHA", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_MONTO", .validacion = "", .valor_default = "0", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_DESCRIPCION", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_PROVEDOR", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_ARCHIVO_FACTURA", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_FOLIO", .validacion = "", .valor_default = "NOSE", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_DEDUSIBLES[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_FECHA", "", "0", "TEXTO"},
+    {"1", "_02_MONTO", "", "0", "TEXTO"},
+    {"1", "_03_DESCRIPCION", "", "NOSE", "TEXTO"},
+    {"1", "_04_PROVEDOR", "", "NOSE", "TEXTO"},
+    {"1", "_05_ARCHIVO_FACTURA", "", "NOSE", "TEXTO"},
+    {"1", "_06_FOLIO", "", "NOSE", "TEXTO"}};
 
 /* Ventana: Herramientas (2 campos) */
-ConfigField GG_ventana_HERRAMIENTAS[2] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_COD_BAR", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"}};
+const char *GG_ventana_HERRAMIENTAS[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_COD_BAR", "", "", "TEXTO"}};
 
 /* Ventana: Trabajos por Día (8 campos) */
-ConfigField GG_trabajos_dia[8] = {
-    {.tipo = "2", .nombre = "_00_ID", .validacion = "", .valor_default = "-1", .tipo_dato = "ENTERO_DECIMAL"},
-    {.tipo = "1", .nombre = "_01_DIA", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_02_ID_TRABAJADOR", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_03_HECHO_O_NO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_04_CANTIDAD", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_05_COSTO_COMP", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_06_ID_QUIENLOISO", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"},
-    {.tipo = "1", .nombre = "_07_ID_PROGRAMA", .validacion = "", .valor_default = "", .tipo_dato = "TEXTO"}};
+const char *GG_trabajos_dia[][5] = {
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
+    {"1", "_01_DIA", "", "", "TEXTO"},
+    {"1", "_02_ID_TRABAJADOR", "", "", "TEXTO"},
+    {"1", "_03_HECHO_O_NO", "", "", "TEXTO"},
+    {"1", "_04_CANTIDAD", "", "", "TEXTO"},
+    {"1", "_05_COSTO_COMP", "", "", "TEXTO"},
+    {"1", "_06_ID_QUIENLOISO", "", "", "TEXTO"},
+    {"1", "_07_ID_PROGRAMA", "", "", "TEXTO"}};
 
 void RecargarVentanaEmergenteDatosConfiguracion(const char *al_finalizar_que_borrar)
 {

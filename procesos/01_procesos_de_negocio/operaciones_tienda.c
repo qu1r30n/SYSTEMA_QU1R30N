@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../../CLASE_QU1R30N.h"
-#include "../../cabeceras/codigos_retorno.h"
 #include "../../cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_tienda.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
@@ -21,7 +20,9 @@ int leerInventario(char inventario[][COLUMNAS][256], int maxProductos)
         char **partes;
         int n = split(lineas[i], G_caracter_separacion[0], &partes);
         for (int j = 0; j < COLUMNAS; j++)
+        {
             strcpy(inventario[fila][j], (j < n) ? partes[j] : "0");
+        }
         free_split(partes);
         fila++;
     }
@@ -50,30 +51,36 @@ void guardarInventario(char inventario[][COLUMNAS][256], int n)
 int buscarProducto(char inventario[][COLUMNAS][256], int n, const char *codigo)
 {
     for (int i = 0; i < n; i++)
+    {
         if (strcmp(inventario[i][5], codigo) == 0)
+        {
             return i;
+        }
+    }
     return -1;
 }
 
 // Agregar producto
-void agregarProducto(const char *id, const char *producto, const char *contenido,
-                     const char *tipo_medida, const char *precio_venta,
-                     const char *cod_barras, const char *cantidad,
-                     const char *costo_compra, const char *proveedor)
+void agregarProducto(int id, char *producto, float contenido,
+                     char *tipo_medida, float precio_venta,
+                     const char *cod_barras, float cantidad,
+                     float costo_compra, const char *proveedor)
 {
     char inventario[MAX_PRODUCTOS][COLUMNAS][256];
     int n = leerInventario(inventario, MAX_PRODUCTOS);
 
     for (int i = 0; i < COLUMNAS; i++)
+    {
         strcpy(inventario[n][i], "0");
-    strcpy(inventario[n][0], id);
+    }
+    sprintf(inventario[n][0], "%d", id);
     strcpy(inventario[n][1], producto);
-    strcpy(inventario[n][2], contenido);
+    sprintf(inventario[n][2], "%.2f", contenido);
     strcpy(inventario[n][3], tipo_medida);
-    strcpy(inventario[n][4], precio_venta);
+    sprintf(inventario[n][4], "%.2f", precio_venta);
     strcpy(inventario[n][5], cod_barras);
-    strcpy(inventario[n][6], cantidad);
-    strcpy(inventario[n][7], costo_compra);
+    sprintf(inventario[n][6], "%.2f", cantidad);
+    sprintf(inventario[n][7], "%.2f", costo_compra);
     strcpy(inventario[n][8], proveedor);
     fechaActual(inventario[n][18], "%Y-%m-%d");
 
@@ -87,10 +94,14 @@ int venta(const char *codigo, int cantidad, const char *sucursal)
     int n = leerInventario(inventario, MAX_PRODUCTOS);
     int idx = buscarProducto(inventario, n, codigo);
     if (idx == -1)
-        return RET_NOT_FOUND;
+    {
+        return -2;
+    }
     int stock = atoi(inventario[idx][6]);
     if (stock < cantidad)
-        return RET_ERROR_GENERIC;
+    {
+        return -3;
+    }
     stock -= cantidad;
     sprintf(inventario[idx][6], "%d", stock);
     fechaActual(inventario[idx][18], "%Y-%m-%d");
@@ -100,7 +111,7 @@ int venta(const char *codigo, int cantidad, const char *sucursal)
     fechaActual(fecha, "%Y-%m-%d");
     sprintf(registro, "%s%s%d%s%s%s%s", codigo, G_caracter_separacion[0], cantidad, G_caracter_separacion[0], sucursal, G_caracter_separacion[0], fecha);
     agregar_fila(G_archivos_registros[0][0], registro);
-    return RET_OK;
+    return 0;
 }
 
 // Compra simple
@@ -110,7 +121,7 @@ int compra(const char *codigo, int cantidad, const char *proveedor)
     int n = leerInventario(inventario, MAX_PRODUCTOS);
     int idx = buscarProducto(inventario, n, codigo);
     if (idx == -1)
-        return RET_NOT_FOUND;
+        return -2;
     int stock = atoi(inventario[idx][6]);
     stock += cantidad;
     sprintf(inventario[idx][6], "%d", stock);
@@ -121,5 +132,5 @@ int compra(const char *codigo, int cantidad, const char *proveedor)
     fechaActual(fecha, "%Y-%m-%d");
     sprintf(registro, "%s%s%d%s%s%s%s", codigo, G_caracter_separacion[0], cantidad, G_caracter_separacion[0], proveedor, G_caracter_separacion[0], fecha);
     agregar_fila(G_archivos_registros[1][0], registro);
-    return RET_OK;
+    return 0;
 }

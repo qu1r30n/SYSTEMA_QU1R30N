@@ -5,6 +5,11 @@
 #ifndef MODELOS_H
 #define MODELOS_H
 
+extern char *GG_caracter_separacion_nom_parametro_de_valor[];
+extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
+#define G_caracter_separacion_nom_parametro_de_valor GG_caracter_separacion_nom_parametro_de_valor
+#define G_caracter_separacion_nom_parametro_de_valor_2 GG_caracter_separacion_nom_parametro_de_valor_2
+
 // Directorios y Archivos
 void modelo_crearDirectorio(char *texto);
 void modelo_crearArchivo(char *texto);
@@ -28,7 +33,7 @@ void modelo_inicializacion(char *texto);
 int modelo_leerInventario(char *texto);
 void modelo_guardarInventario(char *texto);
 int modelo_buscarProducto(char *texto);
-void modelo_agregarProducto(char *texto);
+int modelo_agregarProducto(char *texto);
 int modelo_editarPrecio(char *texto);
 int modelo_venta(char *texto);
 int modelo_compra(char *texto);

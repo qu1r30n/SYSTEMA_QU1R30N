@@ -64,10 +64,14 @@ void crearArchivo(const char *ruta, const char *cabecera)
     {
         f = fopen(ruta, "w");
         if (f && cabecera)
+        {
             fprintf(f, "%s\n", cabecera);
+        }
     }
     if (f)
+    {
         fclose(f);
+    }
 
 #elif defined(__XC)
     (void)ruta;
@@ -82,7 +86,9 @@ int leer_archivo(const char *ruta, char l[][MAX_LINEA])
 #if defined(_WIN32) || defined(__linux__)
     FILE *f = fopen(ruta, "r");
     if (!f)
+    {
         return 0;
+    }
     int n = 0;
     while (fgets(l[n], MAX_LINEA, f))
     {

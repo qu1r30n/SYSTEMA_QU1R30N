@@ -294,3 +294,66 @@ void liberarStructura(StructurasDinamicas *s)
     s->count_int = 0;
     s->count_float = 0;
 }
+/* Cargar estructura desde arreglo bidimensional */
+StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4])
+{
+    StructurasDinamicas datos = crearStructuraVacia();
+    int cuantos_parametros_hay = 0;
+
+    while (nombres_variables[cuantos_parametros_hay][0] != NULL)
+    {
+        agregarCampo(&datos,
+                     nombres_variables[cuantos_parametros_hay][0],
+                     nombres_variables[cuantos_parametros_hay][1]);
+
+        if (strcmp(nombres_variables[cuantos_parametros_hay][1], "string") == 0)
+        {
+            asignarValorString(&datos,
+                               nombres_variables[cuantos_parametros_hay][0],
+                               nombres_variables[cuantos_parametros_hay][2]);
+        }
+        else if (strcmp(nombres_variables[cuantos_parametros_hay][1], "int") == 0)
+        {
+            asignarValorInt(&datos,
+                            nombres_variables[cuantos_parametros_hay][0],
+                            atoi(nombres_variables[cuantos_parametros_hay][2]));
+        }
+        else if (strcmp(nombres_variables[cuantos_parametros_hay][1], "float") == 0)
+        {
+            asignarValorFloat(&datos,
+                              nombres_variables[cuantos_parametros_hay][0],
+                              (float)atof(nombres_variables[cuantos_parametros_hay][2]));
+        }
+
+        cuantos_parametros_hay++;
+    }
+
+    return datos;
+}
+
+/* Obtener valor de estructura por orden de inserción */
+void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden)
+{
+    if (orden < 0 || orden >= datos->total)
+    {
+        return NULL;
+    }
+
+    int tipo = datos->orden_tipo[orden];
+    int indice = datos->orden_indice[orden];
+
+    if (tipo == TIPO_STRING)
+    {
+        return (void *)datos->arreglo_char[indice];
+    }
+    else if (tipo == TIPO_INT)
+    {
+        return (void *)&datos->arreglo_int[indice];
+    }
+    else if (tipo == TIPO_FLOAT)
+    {
+        return (void *)&datos->arreglo_float[indice];
+    }
+
+    return NULL;
+}

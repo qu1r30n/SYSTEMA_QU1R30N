@@ -42,4 +42,10 @@ void asignarValorFloat(StructurasDinamicas *s, const char *nombre, float valor);
 /* Liberar toda la memoria de la estructura */
 void liberarStructura(StructurasDinamicas *s);
 
+/* Cargar estructura desde arreglo bidimensional */
+StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4]);
+
+/* Obtener valor de estructura por orden de inserción */
+void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden);
+
 #endif

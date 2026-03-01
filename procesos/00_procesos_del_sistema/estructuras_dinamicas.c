@@ -16,6 +16,7 @@
 #endif
 
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
+#include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 
 /* ============================================= */
 /* EJEMPLO DE USO                                */
@@ -26,7 +27,7 @@
 
         StructurasDinamicas s = crearStructuraVacia();
 
-        // Agregar campos en tiempo de ejecución
+        // Agregar campos en tiempo de ejecuci??n
         agregarCampo(&s, "producto", "string");
         agregarCampo(&s, "precio", "float");
         agregarCampo(&s, "stock", "int");
@@ -52,7 +53,7 @@
 #define TIPO_FLOAT 2
 
 /* ============================================= */
-/* CREAR ESTRUCTURA DINÁMICA VACÍA              */
+/* CREAR ESTRUCTURA DIN??MICA VAC??A              */
 /* ============================================= */
 StructurasDinamicas crearStructuraVacia(void)
 {
@@ -75,7 +76,7 @@ StructurasDinamicas crearStructuraVacia(void)
 }
 
 /* ============================================= */
-/* AGREGAR CAMPO DINÁMICO                        */
+/* AGREGAR CAMPO DIN??MICO                        */
 /* ============================================= */
 void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
 {
@@ -95,7 +96,7 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
         strcpy(s->nombres[s->total - 1], nombre);
     }
 
-    /* Agregar campo según tipo */
+    /* Agregar campo seg??n tipo */
     if (strcmp(tipo, "string") == 0)
     {
         s->arreglo_char = (char **)realloc(s->arreglo_char, sizeof(char *) * (s->count_string + 1));
@@ -126,7 +127,7 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
 }
 
 /* ============================================= */
-/* IMPRIMIR ESTRUCTURA DINÁMICA                  */
+/* IMPRIMIR ESTRUCTURA DIN??MICA                  */
 /* ============================================= */
 void imprimirStructura(StructurasDinamicas *s)
 {
@@ -293,7 +294,9 @@ void liberarStructura(StructurasDinamicas *s)
     s->count_string = 0;
     s->count_int = 0;
     s->count_float = 0;
+    s->count_float = 0;
 }
+
 /* Cargar estructura desde arreglo bidimensional */
 StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4])
 {
@@ -331,7 +334,7 @@ StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4])
     return datos;
 }
 
-/* Obtener valor de estructura por orden de inserción */
+/* Obtener valor de estructura por orden de inserci?n */
 void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden)
 {
     if (orden < 0 || orden >= datos->total)
@@ -356,4 +359,56 @@ void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden)
     }
 
     return NULL;
+}
+
+/* Procesar partes de texto y cargar en estructura */
+StructurasDinamicas procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const char *separador)
+{
+    StructurasDinamicas datos = cargarDesdeArreglo(nombres_variables);
+
+    int i = 0;
+    while (partes[i])
+    {
+        char **nom_parametro_dato = modelo_split(partes[i], separador);
+
+        if (nom_parametro_dato && nom_parametro_dato[0] && nom_parametro_dato[1])
+        {
+            int j = 0;
+            while (nombres_variables[j][0])
+            {
+                if (strcmp(nombres_variables[j][0], nom_parametro_dato[0]) ==  0)
+                {
+                    if (strcmp(nombres_variables[j][1], "string") == 0)
+                    {
+                        asignarValorString(&datos,
+                                           nombres_variables[j][0],
+                                           nom_parametro_dato[1]);
+                    }
+                    else if (strcmp(nombres_variables[j][1], "int") == 0)
+                    {
+                        asignarValorInt(&datos,
+                                        nombres_variables[j][0],
+                                        atoi(nom_parametro_dato[1]));
+                    }
+                    else if (strcmp(nombres_variables[j][1], "float") == 0)
+                    {
+                        asignarValorFloat(&datos,
+                                          nombres_variables[j][0],
+                                          (float)atof(nom_parametro_dato[1]));
+                    }
+                    break;
+                }
+                j++;
+            }
+        }
+
+        if (nom_parametro_dato)
+        {
+            modelo_free_split(nom_parametro_dato);
+        }
+
+        i++;
+    }
+
+    return datos;
 }

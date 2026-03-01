@@ -48,4 +48,7 @@ StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4]);
 /* Obtener valor de estructura por orden de inserción */
 void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden);
 
+/* Procesar partes de texto y cargar en estructura */
+StructurasDinamicas procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const char *separador);
+
 #endif

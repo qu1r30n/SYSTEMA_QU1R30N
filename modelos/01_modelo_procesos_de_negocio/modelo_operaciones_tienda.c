@@ -75,19 +75,18 @@ int modelo_agregarProducto(char *texto)
         return -1;
     }
 
-    char *nombres_variables[][4] = {
-        {"id", "int", "0", ""},
-        {"producto", "string", "nose", ""},
-        {"contenido", "float", "0", ""},
-        {"tipo_medida", "string", "nose", ""},
-        {"precio_venta", "float", "0", ""},
-        {"cod_barras", "string", "nose", ""},
-        {"cantidad", "float", "0", ""},
-        {"costo_compra", "float", "0", ""},
-        {"proveedor", "string", "nose", ""},
-        {NULL, NULL, NULL, NULL}};
-
-    StructurasDinamicas datos = cargarDesdeArreglo(nombres_variables);
+    char *nombres_variables[][4] =
+        {
+            {"id", "int", "0", ""},
+            {"producto", "string", "nose", ""},
+            {"contenido", "float", "0", ""},
+            {"tipo_medida", "string", "nose", ""},
+            {"precio_venta", "float", "0", ""},
+            {"cod_barras", "string", "nose", ""},
+            {"cantidad", "float", "0", ""},
+            {"costo_compra", "float", "0", ""},
+            {"proveedor", "string", "nose", ""},
+            {NULL, NULL, NULL, NULL}};
 
     int cuantos_parametros_hay = 0;
     while (nombres_variables[cuantos_parametros_hay][0])
@@ -99,45 +98,16 @@ int modelo_agregarProducto(char *texto)
 
     if (!partes)
     {
-        liberarStructura(&datos);
         return -2;
     }
+
+    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
 
     int i = 0;
     while (partes[i])
     {
-        char **nom_parametro_dato = modelo_split(partes[i], G_caracter_separacion_nom_parametro_de_valor[0]);
-        if (nom_parametro_dato && nom_parametro_dato[0] && nom_parametro_dato[1])
-        {
-            int j = 0;
-            while (nombres_variables[j][0])
-            {
-                if (strcmp(nombres_variables[j][0], nom_parametro_dato[0]) == 0)
-                {
-                    if (strcmp(nombres_variables[j][1], "string") == 0)
-                    {
-                        asignarValorString(&datos, nombres_variables[j][0], nom_parametro_dato[1]);
-                    }
-                    else if (strcmp(nombres_variables[j][1], "int") == 0)
-                    {
-                        asignarValorInt(&datos, nombres_variables[j][0], atoi(nom_parametro_dato[1]));
-                    }
-                    else if (strcmp(nombres_variables[j][1], "float") == 0)
-                    {
-                        asignarValorFloat(&datos, nombres_variables[j][0], (float)atof(nom_parametro_dato[1]));
-                    }
-                    break;
-                }
-                j++;
-            }
-        }
-        if (nom_parametro_dato)
-        {
-            modelo_free_split(nom_parametro_dato);
-        }
         i++;
     }
-
     if (i <= 0)
     {
         modelo_free_split(partes);

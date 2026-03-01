@@ -115,16 +115,36 @@ int modelo_agregarProducto(char *texto)
         return -3;
     }
 
+    int a1 = *(int *)obtenerValorPorOrden(&datos, 0);
+    char *b1 = (char *)obtenerValorPorOrden(&datos, 1);
+    float c1 = *(float *)obtenerValorPorOrden(&datos, 2);
+    char *d1 = (char *)obtenerValorPorOrden(&datos, 3);
+    float e1 = *(float *)obtenerValorPorOrden(&datos, 4);
+    char *f1 = (char *)obtenerValorPorOrden(&datos, 5);
+    float g1 = *(float *)obtenerValorPorOrden(&datos, 6);
+    float h1 = *(float *)obtenerValorPorOrden(&datos, 7);
+    char *i1 = (char *)obtenerValorPorOrden(&datos, 8);
+
+    printf("a1 (int): %d\n", a1);
+    printf("b1 (string): %s\n", b1);
+    printf("c1 (float): %.2f\n", c1);
+    printf("d1 (string): %s\n", d1);
+    printf("e1 (float): %.2f\n", e1);
+    printf("f1 (string): %s\n", f1);
+    printf("g1 (float): %.2f\n", g1);
+    printf("h1 (float): %.2f\n", h1);
+    printf("i1 (string): %s\n", i1);
+
     agregarProducto(
-        *(int *)obtenerValorPorOrden(&datos, 0),
-        (char *)obtenerValorPorOrden(&datos, 1),
-        *(float *)obtenerValorPorOrden(&datos, 2),
-        (char *)obtenerValorPorOrden(&datos, 3),
-        *(float *)obtenerValorPorOrden(&datos, 4),
-        (const char *)obtenerValorPorOrden(&datos, 5),
-        *(float *)obtenerValorPorOrden(&datos, 6),
-        *(float *)obtenerValorPorOrden(&datos, 7),
-        (const char *)obtenerValorPorOrden(&datos, 8));
+        a1,
+        b1,
+        c1,
+        d1,
+        e1,
+        f1,
+        g1,
+        h1,
+        i1);
 
     modelo_free_split(partes);
     liberarStructura(&datos);
@@ -154,13 +174,13 @@ int modelo_venta(char *texto)
         return -2;
     }
 
-    const char *codigo = partes[0];
+    char *codigo = partes[0];
     int cantidad = 0;
     if (texto_a_int_seguro(partes[1], &cantidad) != 0)
     {
         cantidad = atoi(partes[1]);
     }
-    const char *sucursal = partes[2];
+    char *sucursal = partes[2];
 
     int ok = venta(codigo, cantidad, sucursal);
 
@@ -187,9 +207,9 @@ int modelo_compra(char *texto)
         return -2;
     }
 
-    const char *codigo = partes[0];
+    char *codigo = partes[0];
     int cantidad = atoi(partes[1]);
-    const char *proveedor = partes[2];
+    char *proveedor = partes[2];
 
     int ok = compra(codigo, cantidad, proveedor);
 

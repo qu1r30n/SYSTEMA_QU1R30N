@@ -48,7 +48,7 @@ void guardarInventario(char inventario[][COLUMNAS][256], int n)
 }
 
 // Buscar producto
-int buscarProducto(char inventario[][COLUMNAS][256], int n, const char *codigo)
+int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo)
 {
     for (int i = 0; i < n; i++)
     {
@@ -61,10 +61,15 @@ int buscarProducto(char inventario[][COLUMNAS][256], int n, const char *codigo)
 }
 
 // Agregar producto
-void agregarProducto(int id, char *producto, float contenido,
-                     char *tipo_medida, float precio_venta,
-                     const char *cod_barras, float cantidad,
-                     float costo_compra, const char *proveedor)
+void agregarProducto(int id,
+                     char *producto,
+                     float contenido,
+                     char *tipo_medida,
+                     float precio_venta,
+                     char *cod_barras,
+                     float cantidad,
+                     float costo_compra,
+                     char *proveedor)
 {
     char inventario[MAX_PRODUCTOS][COLUMNAS][256];
     int n = leerInventario(inventario, MAX_PRODUCTOS);
@@ -88,7 +93,7 @@ void agregarProducto(int id, char *producto, float contenido,
 }
 
 // Venta simple
-int venta(const char *codigo, int cantidad, const char *sucursal)
+int venta(char *codigo, int cantidad, char *sucursal)
 {
     char inventario[MAX_PRODUCTOS][COLUMNAS][256];
     int n = leerInventario(inventario, MAX_PRODUCTOS);
@@ -115,7 +120,7 @@ int venta(const char *codigo, int cantidad, const char *sucursal)
 }
 
 // Compra simple
-int compra(const char *codigo, int cantidad, const char *proveedor)
+int compra(char *codigo, int cantidad, char *proveedor)
 {
     char inventario[MAX_PRODUCTOS][COLUMNAS][256];
     int n = leerInventario(inventario, MAX_PRODUCTOS);

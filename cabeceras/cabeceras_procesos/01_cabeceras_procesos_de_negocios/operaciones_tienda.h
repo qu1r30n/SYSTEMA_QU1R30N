@@ -5,15 +5,15 @@
 
 int leerInventario(char inventario[][COLUMNAS][256], int maxProductos);
 void guardarInventario(char inventario[][COLUMNAS][256], int n);
-int buscarProducto(char inventario[][COLUMNAS][256], int n, const char *codigo);
+int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo);
 
 void agregarProducto(int id, char *producto, float contenido,
                      char *tipo_medida, float precio_venta,
-                     const char *cod_barras, float cantidad,
-                     float costo_compra, const char *proveedor);
+                     char *cod_barras, float cantidad,
+                     float costo_compra, char *proveedor);
 
-int editarPrecio(const char *codigo, const char *precio, const char *proveedor);
-int venta(const char *codigo, int cantidad, const char *sucursal);
-int compra(const char *codigo, int cantidad, const char *proveedor);
+int editarPrecio(char *codigo, char *precio, char *proveedor);
+int venta(char *codigo, int cantidad, char *sucursal);
+int compra(char *codigo, int cantidad, char *proveedor);
 
 #endif

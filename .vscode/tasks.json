@@ -23,6 +23,7 @@
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/operaciones_textos.c",
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/tex_bas.c",
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/var_fun_GG.c",
+                "${workspaceFolder}/procesos/00_procesos_del_sistema/estructuras_dinamicas.c",
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/nuestro_propio_administrador_de_memoria/core_memory.c",
                 "${workspaceFolder}/procesos/01_procesos_de_negocio/operaciones_tienda.c",
                 "-o",

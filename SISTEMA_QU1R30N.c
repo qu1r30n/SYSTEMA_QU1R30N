@@ -87,7 +87,8 @@ int main()
 
     /* ejemplos de comandos que el sistema entrega al modelo */
     const char *ejemplos[] = {
-        "op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
+        //"op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
+        "op_tienda~agregar_producto§1¶2§3¶4¶5¶6¶7¶8¶9",
         "op_tienda~ventas§ABC123¶2§SucursalX",
         "op_tienda~compras§XYZ987¶5§Proveedor1",
         NULL};

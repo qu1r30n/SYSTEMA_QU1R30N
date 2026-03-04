@@ -35,19 +35,59 @@
 // Leer inventario completo
 int modelo_leerInventario(char *texto)
 {
+    if (!texto)
+    {
+        return -1;
+    }
+
+    char *nombres_variables[][4] =
+        {
+            {"maxProductos", "int", "0", ""},
+            {NULL, NULL, NULL, NULL}};
+
+    int cuantos_parametros_hay = 0;
+    while (nombres_variables[cuantos_parametros_hay][0])
+    {
+        cuantos_parametros_hay++;
+    }
+
+    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    if (!partes)
+    {
+        return -2;
+    }
+
+    int cuantas_partes = 0;
+    while (partes[cuantas_partes])
+    {
+        cuantas_partes++;
+    }
+
+    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+
+    if (cuantas_partes <= 0)
+    {
+        modelo_free_split(partes);
+        liberarStructura(&datos);
+        return -3;
+    }
+
     // texto: "maxProductos"
-    int maxProductos = (texto && texto[0]) ? atoi(texto) : MAX_PRODUCTOS;
+    int maxProductos = *(int *)obtenerValorPorOrden(&datos, 0);
 
     // Para solo conexión: crea un inventario local y llama al proceso.
     char inventario_local[MAX_PRODUCTOS][COLUMNAS][256];
     int cantidad = leerInventario(inventario_local, maxProductos);
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
     return cantidad;
 }
 
 // Guardar inventario
 void modelo_guardarInventario(char *texto)
 {
-    // En el proceso: guardarInventario(inventario, i) requiere inventario[][][]
+    // En el proceso: guardarInventario(inventario, cuantas_partes) requiere inventario[][][]
     // Con solo "texto" no podemos pasar el inventario real todavía.
     // Conexión mínima: no-op funcional (queda para estructura).
     (void)texto;
@@ -57,14 +97,54 @@ void modelo_guardarInventario(char *texto)
 // Buscar producto
 int modelo_buscarProducto(char *texto)
 {
-    // texto: "codigo"
     if (!texto)
+    {
         return -1;
+    }
+
+    char *nombres_variables[][4] =
+        {
+            {"codigo", "string", "nose", ""},
+            {NULL, NULL, NULL, NULL}};
+
+    int cuantos_parametros_hay = 0;
+    while (nombres_variables[cuantos_parametros_hay][0])
+    {
+        cuantos_parametros_hay++;
+    }
+
+    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    if (!partes)
+    {
+        return -2;
+    }
+
+    int cuantas_partes = 0;
+    while (partes[cuantas_partes])
+    {
+        cuantas_partes++;
+    }
+
+    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+
+    if (cuantas_partes <= 0)
+    {
+        modelo_free_split(partes);
+        liberarStructura(&datos);
+        return -3;
+    }
+
+    // texto: "codigo"
+    char *codigo = (char *)obtenerValorPorOrden(&datos, 0);
 
     char inventario_local[MAX_PRODUCTOS][COLUMNAS][256];
-    int i = leerInventario(inventario_local, MAX_PRODUCTOS);
+    int cantidad = leerInventario(inventario_local, MAX_PRODUCTOS);
 
-    return buscarProducto(inventario_local, i, texto);
+    int resultado = buscarProducto(inventario_local, cantidad, codigo);
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
+    return resultado;
 }
 
 // Agregar producto
@@ -95,20 +175,20 @@ int modelo_agregarProducto(char *texto)
     }
 
     char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
-
     if (!partes)
     {
         return -2;
     }
 
+    int cuantas_partes = 0;
+    while (partes[cuantas_partes])
+    {
+        cuantas_partes++;
+    }
+
     StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
 
-    int i = 0;
-    while (partes[i])
-    {
-        i++;
-    }
-    if (i <= 0)
+    if (cuantas_partes <= 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
@@ -154,65 +234,107 @@ int modelo_agregarProducto(char *texto)
 // Venta simple
 int modelo_venta(char *texto)
 {
-    // texto: "codigo|cantidad|sucursal"
     if (!texto)
+    {
         return -1;
-
-    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[0]);
-    int i = 0;
-    if (partes)
-    {
-        while (partes[i])
-        {
-            i++;
-        }
     }
-    if (i < 3 || !partes)
+
+    char *nombres_variables[][4] =
+        {
+            {"codigo", "string", "nose", ""},
+            {"cantidad", "int", "0", ""},
+            {"sucursal", "string", "nose", ""},
+            {NULL, NULL, NULL, NULL}};
+
+    int cuantos_parametros_hay = 0;
+    while (nombres_variables[cuantos_parametros_hay][0])
     {
-        if (partes)
-            modelo_free_split(partes);
+        cuantos_parametros_hay++;
+    }
+
+    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    if (!partes)
+    {
         return -2;
     }
 
-    char *codigo = partes[0];
-    int cantidad = 0;
-    if (texto_a_int_seguro(partes[1], &cantidad) != 0)
+    int cuantas_partes = 0;
+    while (partes[cuantas_partes])
     {
-        cantidad = atoi(partes[1]);
+        cuantas_partes++;
     }
-    char *sucursal = partes[2];
+
+    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+
+    if (cuantas_partes <= 0)
+    {
+        modelo_free_split(partes);
+        liberarStructura(&datos);
+        return -3;
+    }
+
+    // texto: "codigo|cantidad|sucursal"
+    char *codigo = (char *)obtenerValorPorOrden(&datos, 0);
+    int cantidad = *(int *)obtenerValorPorOrden(&datos, 1);
+    char *sucursal = (char *)obtenerValorPorOrden(&datos, 2);
 
     int ok = venta(codigo, cantidad, sucursal);
 
     modelo_free_split(partes);
+    liberarStructura(&datos);
     return ok;
 }
 
 // Compra simple
 int modelo_compra(char *texto)
 {
-    // texto: "codigo|cantidad|proveedor"
     if (!texto)
-        return -1;
-
-    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[0]);
-    if (!partes)
-        return -2;
-    int i = 0;
-    while (partes[i])
-        i++;
-    if (i < 3)
     {
-        modelo_free_split(partes);
+        return -1;
+    }
+
+    char *nombres_variables[][4] =
+        {
+            {"codigo", "string", "nose", ""},
+            {"cantidad", "int", "0", ""},
+            {"proveedor", "string", "nose", ""},
+            {NULL, NULL, NULL, NULL}};
+
+    int cuantos_parametros_hay = 0;
+    while (nombres_variables[cuantos_parametros_hay][0])
+    {
+        cuantos_parametros_hay++;
+    }
+
+    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    if (!partes)
+    {
         return -2;
     }
 
-    char *codigo = partes[0];
-    int cantidad = atoi(partes[1]);
-    char *proveedor = partes[2];
+    int cuantas_partes = 0;
+    while (partes[cuantas_partes])
+    {
+        cuantas_partes++;
+    }
+
+    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+
+    if (cuantas_partes <= 0)
+    {
+        modelo_free_split(partes);
+        liberarStructura(&datos);
+        return -3;
+    }
+
+    // texto: "codigo|cantidad|proveedor"
+    char *codigo = (char *)obtenerValorPorOrden(&datos, 0);
+    int cantidad = *(int *)obtenerValorPorOrden(&datos, 1);
+    char *proveedor = (char *)obtenerValorPorOrden(&datos, 2);
 
     int ok = compra(codigo, cantidad, proveedor);
 
     modelo_free_split(partes);
+    liberarStructura(&datos);
     return ok;
 }

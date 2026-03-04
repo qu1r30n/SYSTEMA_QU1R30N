@@ -1,6 +1,11 @@
 #ifndef MODELO_OPERACIONES_COMPU_H
 #define MODELO_OPERACIONES_COMPU_H
 
+extern char *GG_caracter_separacion_nom_parametro_de_valor[];
+extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
+#define G_caracter_separacion_nom_parametro_de_valor GG_caracter_separacion_nom_parametro_de_valor
+#define G_caracter_separacion_nom_parametro_de_valor_2 GG_caracter_separacion_nom_parametro_de_valor_2
+
 void modelo_fechaActual(char *texto);
 void modelo_delay_ms(char *texto);
 

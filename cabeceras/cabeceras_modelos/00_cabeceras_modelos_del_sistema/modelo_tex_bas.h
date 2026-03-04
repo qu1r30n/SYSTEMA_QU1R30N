@@ -3,6 +3,11 @@
 
 #include "modelo_var_fun_GG.h"
 
+extern char *GG_caracter_separacion_nom_parametro_de_valor[];
+extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
+#define G_caracter_separacion_nom_parametro_de_valor GG_caracter_separacion_nom_parametro_de_valor
+#define G_caracter_separacion_nom_parametro_de_valor_2 GG_caracter_separacion_nom_parametro_de_valor_2
+
 #define MAX_LINEA 1024
 #define MAX_LINEAS (MAX_PRODUCTOS + 1)
 

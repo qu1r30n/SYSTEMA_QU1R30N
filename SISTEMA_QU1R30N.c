@@ -34,7 +34,10 @@ void conmutador(char *texto_prueba)
     if (opciones)
     {
         while (opciones[n_opciones])
+        {
+            imprimirMensaje_para_depurar("%s\n", opciones[n_opciones]); // Imprime el nombre y valor que se van a asignar (para depuración)
             n_opciones++;
+        }
     }
 
     if (opciones && n_opciones >= 2 && strcmp(opciones[0], "op_tienda") == 0)
@@ -42,9 +45,13 @@ void conmutador(char *texto_prueba)
         char **sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]);
         int n_sub = 0;
         if (sub_opcion)
+        {
             while (sub_opcion[n_sub])
+            {
+                imprimirMensaje_para_depurar("%s\n", sub_opcion[n_sub]); // Imprime el nombre y valor que se van a asignar (para depuración)
                 n_sub++;
-
+            }
+        }
         if (n_sub >= 2)
         {
             if (strcmp(sub_opcion[0], "ventas") == 0)
@@ -67,6 +74,7 @@ void conmutador(char *texto_prueba)
 
         free_split(sub_opcion);
     }
+
     else if (opciones && strcmp(opciones[0], "procesos_generales") == 0)
     {
         // entrada salidad de dinero

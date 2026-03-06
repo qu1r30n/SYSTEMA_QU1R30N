@@ -17,6 +17,7 @@
 // también incluimos algunos encabezados de procesos comunes
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
 // Declaraciones externas de variables globales de procesos

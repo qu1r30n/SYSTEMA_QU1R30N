@@ -150,12 +150,12 @@ int modelo_buscarProducto(char *texto)
 // Agregar producto
 int modelo_agregarProducto(char *texto)
 {
-    if (!texto)
+    if (!texto) // Verifica si el texto es NULL
     {
         return -1;
     }
 
-    char *nombres_variables[][4] =
+    char *nombres_variables[][4] = // Arreglo de campos esperados con su tipo y valor por defecto
         {
             {"id", "int", "0", ""},
             {"producto", "string", "nose", ""},
@@ -169,7 +169,7 @@ int modelo_agregarProducto(char *texto)
             {NULL, NULL, NULL, NULL}};
 
     int cuantos_parametros_hay = 0;
-    while (nombres_variables[cuantos_parametros_hay][0])
+    while (nombres_variables[cuantos_parametros_hay][0]) // Cuenta cuántos campos hay en el arreglo de nombres_variables
     {
         cuantos_parametros_hay++;
     }
@@ -181,7 +181,7 @@ int modelo_agregarProducto(char *texto)
     }
 
     int cuantas_partes = 0;
-    while (partes[cuantas_partes])
+    while (partes[cuantas_partes]) // Cuenta cuántas partes del texto que se reccibio en el parametro hay en el arreglo de partes
     {
         cuantas_partes++;
     }
@@ -195,25 +195,25 @@ int modelo_agregarProducto(char *texto)
         return -3;
     }
 
-    int a1 = *(int *)obtenerValorPorOrden(&datos, 0);
-    char *b1 = (char *)obtenerValorPorOrden(&datos, 1);
-    float c1 = *(float *)obtenerValorPorOrden(&datos, 2);
-    char *d1 = (char *)obtenerValorPorOrden(&datos, 3);
-    float e1 = *(float *)obtenerValorPorOrden(&datos, 4);
-    char *f1 = (char *)obtenerValorPorOrden(&datos, 5);
-    float g1 = *(float *)obtenerValorPorOrden(&datos, 6);
-    float h1 = *(float *)obtenerValorPorOrden(&datos, 7);
-    char *i1 = (char *)obtenerValorPorOrden(&datos, 8);
+    int a1 = *(int *)obtenerValorPorOrden(&datos, 0);     // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
+    char *b1 = (char *)obtenerValorPorOrden(&datos, 1);   // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
+    float c1 = *(float *)obtenerValorPorOrden(&datos, 2); // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
+    char *d1 = (char *)obtenerValorPorOrden(&datos, 3);   // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
+    float e1 = *(float *)obtenerValorPorOrden(&datos, 4); // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
+    char *f1 = (char *)obtenerValorPorOrden(&datos, 5);   // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
+    float g1 = *(float *)obtenerValorPorOrden(&datos, 6); // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
+    float h1 = *(float *)obtenerValorPorOrden(&datos, 7); // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
+    char *i1 = (char *)obtenerValorPorOrden(&datos, 8);   // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
 
-    printf("a1 (int): %d\n", a1);
-    printf("b1 (string): %s\n", b1);
-    printf("c1 (float): %.2f\n", c1);
-    printf("d1 (string): %s\n", d1);
-    printf("e1 (float): %.2f\n", e1);
-    printf("f1 (string): %s\n", f1);
-    printf("g1 (float): %.2f\n", g1);
-    printf("h1 (float): %.2f\n", h1);
-    printf("i1 (string): %s\n", i1);
+    printf("a1 (int): %d\n", a1);     // checa si todo esta bien (para depuracion)
+    printf("b1 (string): %s\n", b1);  // checa si todo esta bien (para depuracion)
+    printf("c1 (float): %.2f\n", c1); // checa si todo esta bien (para depuracion)
+    printf("d1 (string): %s\n", d1);  // checa si todo esta bien (para depuracion)
+    printf("e1 (float): %.2f\n", e1); // checa si todo esta bien (para depuracion)
+    printf("f1 (string): %s\n", f1);  // checa si todo esta bien (para depuracion)
+    printf("g1 (float): %.2f\n", g1); // checa si todo esta bien (para depuracion)
+    printf("h1 (float): %.2f\n", h1); // checa si todo esta bien (para depuracion)
+    printf("i1 (string): %s\n", i1);  // checa si todo esta bien (para depuracion)
 
     agregarProducto(
         a1,
@@ -226,8 +226,8 @@ int modelo_agregarProducto(char *texto)
         h1,
         i1);
 
-    modelo_free_split(partes);
-    liberarStructura(&datos);
+    modelo_free_split(partes); // Libera la memoria del arreglo de partes
+    liberarStructura(&datos);  // Libera la memoria de la estructura dinámica
     return 0;
 }
 

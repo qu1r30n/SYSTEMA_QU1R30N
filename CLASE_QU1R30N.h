@@ -9,6 +9,8 @@
 #include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_banco.h"
 #include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_feria.h"
 #include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_renta_equipos.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_fabricas.h"
+#include "cabeceras/cabeceras_modelos/02_cabeceras_modelos_generales_de_negocios/modelo_operaciones_procesos_generales.h"
 
 // -----------------------------
 // Cabeceras de modelos del sistema

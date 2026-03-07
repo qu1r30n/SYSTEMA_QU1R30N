@@ -139,3 +139,23 @@ int compra(char *codigo, int cantidad, char *proveedor)
     agregar_fila(G_archivos_registros[1][0], registro);
     return 0;
 }
+
+int tienda_consultar_producto(const char *codigo, float *precio_venta, float *stock)
+{
+    if (!codigo || !precio_venta || !stock)
+    {
+        return -1;
+    }
+
+    char inventario[MAX_PRODUCTOS][COLUMNAS][256];
+    int n = leerInventario(inventario, MAX_PRODUCTOS);
+    int idx = buscarProducto(inventario, n, (char *)codigo);
+    if (idx == -1)
+    {
+        return -2;
+    }
+
+    *precio_venta = (float)atof(inventario[idx][4]);
+    *stock = (float)atof(inventario[idx][6]);
+    return 0;
+}

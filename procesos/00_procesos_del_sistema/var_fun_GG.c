@@ -7,7 +7,27 @@ int GG_indice_donde_comensar = 1;
 
 char *GG_cantidado_por_archivo = "100";
 
-char *GG_caracter_separacion[] = {"|", "°", "¬", "╦", "╔"};
+/*
+ * Separadores base del sistema.
+ *
+ * IMPORTANTE PARA NOVATOS:
+ * - El separador de CELDAS/COLUMNAS en archivos tipo tabla es [0] = "|".
+ * - Los demas valores se usan para subniveles de separacion dentro de un mismo texto.
+ *
+ * Ejemplo de una fila con 3 celdas:
+ *   "1|JUAN|ADMIN"
+ *
+ * En el codigo normalmente veras G_caracter_separacion[0], pero eso NO es otra variable:
+ * en var_fun_GG.h existe un alias de preprocesador:
+ *   #define G_caracter_separacion GG_caracter_separacion
+ */
+char *GG_caracter_separacion[] = {
+    "|", /* [0] separa columnas/celdas de una fila */
+    "°", /* [1] separacion de segundo nivel */
+    "¬", /* [2] separacion de tercer nivel */
+    "╦", /* [3] separacion de cuarto nivel */
+    "╔"  /* [4] separacion de quinto nivel */
+};
 char *GG_caracter_separacion_2[] = {"⚭", "⚮", "⚯", "⚰", "⚱"};
 
 char *GG_caracter_separacion_funciones_espesificas[] = {"~", "§", "¶", "╬", "╝", "╩", "║", "╗", "┐", "└", "┬", "├", "┼"};

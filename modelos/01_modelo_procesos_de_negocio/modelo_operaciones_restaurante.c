@@ -126,3 +126,35 @@ int modelo_restaurante_registrar_pedido(char *texto)
     liberarStructura(&datos);
     return ok;
 }
+
+int modelo_restaurante_consultar_platillo(char *texto)
+{
+    char *vars[][4] = {
+        {"codigo", "string", "NOSE", ""},
+        {NULL, NULL, NULL, NULL}};
+
+    StructurasDinamicas datos;
+    char **partes = NULL;
+    if (parsear(texto, vars, &datos, &partes) != 0)
+    {
+        return -1;
+    }
+
+    char *codigo = NULL;
+    float precio = 0.0f;
+    int stock = 0;
+    int ok = -1;
+
+    if (obtener_cadena(&datos, 0, &codigo) == 0)
+    {
+        ok = restaurante_consultar_platillo(codigo, &precio, &stock);
+        if (ok == 0)
+        {
+            printf("[RESTAURANTE] codigo=%s | precio=%.2f | stock=%d\n", codigo, precio, stock);
+        }
+    }
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
+    return ok;
+}

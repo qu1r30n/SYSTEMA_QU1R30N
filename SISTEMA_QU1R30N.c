@@ -55,6 +55,10 @@ void conmutador(char *texto_prueba)
             {
                 modelo_agregarProducto(carga_util ? carga_util : sub_opcion[1]);
             }
+            else if (strcmp(sub_opcion[0], "consultar_producto") == 0)
+            {
+                modelo_tienda_consultar_producto(carga_util ? carga_util : sub_opcion[1]);
+            }
             else
             {
                 printf("Opción no válida: %s\n", sub_opcion[0]);
@@ -91,6 +95,10 @@ void conmutador(char *texto_prueba)
             else if (strcmp(sub_opcion[0], "registrar_pedido") == 0)
             {
                 modelo_restaurante_registrar_pedido(carga_util ? carga_util : sub_opcion[1]);
+            }
+            else if (strcmp(sub_opcion[0], "consultar_platillo") == 0)
+            {
+                modelo_restaurante_consultar_platillo(carga_util ? carga_util : sub_opcion[1]);
             }
             else
             {
@@ -133,6 +141,10 @@ void conmutador(char *texto_prueba)
             {
                 modelo_banco_retirar(carga_util ? carga_util : sub_opcion[1]);
             }
+            else if (strcmp(sub_opcion[0], "consultar_saldo") == 0)
+            {
+                modelo_banco_consultar_saldo(carga_util ? carga_util : sub_opcion[1]);
+            }
             else
             {
                 printf("Opción no válida: %s\n", sub_opcion[0]);
@@ -170,6 +182,10 @@ void conmutador(char *texto_prueba)
             {
                 modelo_feria_canjear_premio(carga_util ? carga_util : sub_opcion[1]);
             }
+            else if (strcmp(sub_opcion[0], "consultar_premio") == 0)
+            {
+                modelo_feria_consultar_premio(carga_util ? carga_util : sub_opcion[1]);
+            }
             else
             {
                 printf("Opción no válida: %s\n", sub_opcion[0]);
@@ -206,6 +222,57 @@ void conmutador(char *texto_prueba)
             else if (strcmp(sub_opcion[0], "registrar_alquiler") == 0)
             {
                 modelo_renta_registrar_alquiler(carga_util ? carga_util : sub_opcion[1]);
+            }
+            else if (strcmp(sub_opcion[0], "consultar_equipo") == 0)
+            {
+                modelo_renta_consultar_equipo(carga_util ? carga_util : sub_opcion[1]);
+            }
+            else
+            {
+                printf("Opción no válida: %s\n", sub_opcion[0]);
+            }
+        }
+
+        free_split(sub_opcion);
+    }
+
+    else if (opciones && n_opciones >= 2 && strcmp(opciones[0], "op_fabricas") == 0)
+    {
+        char **sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]);
+        char *carga_util = strstr(opciones[1], G_caracter_separacion_funciones_espesificas[1]);
+        if (carga_util)
+        {
+            carga_util += strlen(G_caracter_separacion_funciones_espesificas[1]);
+        }
+
+        int n_sub = 0;
+        if (sub_opcion)
+        {
+            while (sub_opcion[n_sub])
+            {
+                n_sub++;
+            }
+        }
+
+        if (n_sub >= 2)
+        {
+            char *payload = carga_util ? carga_util : sub_opcion[1];
+
+            if (strcmp(sub_opcion[0], "registrar_producto") == 0)
+            {
+                modelo_fabrica_registrar_producto(payload);
+            }
+            else if (strcmp(sub_opcion[0], "producir_lote") == 0)
+            {
+                modelo_fabrica_producir_lote(payload);
+            }
+            else if (strcmp(sub_opcion[0], "despachar_producto") == 0)
+            {
+                modelo_fabrica_despachar_producto(payload);
+            }
+            else if (strcmp(sub_opcion[0], "consultar_producto") == 0)
+            {
+                modelo_fabrica_consultar_producto(payload);
             }
             else
             {
@@ -279,11 +346,56 @@ void conmutador(char *texto_prueba)
         free_split(sub_opcion);
     }
 
-    else if (opciones && strcmp(opciones[0], "procesos_generales") == 0)
+    else if (opciones && n_opciones >= 2 &&
+             (strcmp(opciones[0], "procesos_generales") == 0 || strcmp(opciones[0], "op_procesos_generales") == 0))
     {
-        // entrada salidad de dinero
-        // SOLO CON EL DINERO - NO CON PRODUCTOS NI CON SERVICIOS SOLO CON EL DINERO
-        // pero talves impuestos y todo lo que un administrador y contador utilizaria lo mas general en realidad no se si esto iria aqui o en otro dedicado a eso
+        char **sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]);
+        char *carga_util = strstr(opciones[1], G_caracter_separacion_funciones_espesificas[1]);
+        if (carga_util)
+        {
+            carga_util += strlen(G_caracter_separacion_funciones_espesificas[1]);
+        }
+
+        int n_sub = 0;
+        if (sub_opcion)
+        {
+            while (sub_opcion[n_sub])
+            {
+                n_sub++;
+            }
+        }
+
+        if (n_sub >= 2)
+        {
+            char *payload = carga_util ? carga_util : sub_opcion[1];
+
+            if (strcmp(sub_opcion[0], "registrar_movimiento") == 0)
+            {
+                modelo_pg_registrar_movimiento(payload);
+            }
+            else if (strcmp(sub_opcion[0], "resumen_contador") == 0)
+            {
+                modelo_pg_contador_resumen_general(payload);
+            }
+            else if (strcmp(sub_opcion[0], "resumen_contador_negocio") == 0)
+            {
+                modelo_pg_contador_resumen_negocio(payload);
+            }
+            else if (strcmp(sub_opcion[0], "configurar_presupuesto") == 0)
+            {
+                modelo_pg_admin_configurar_presupuesto(payload);
+            }
+            else if (strcmp(sub_opcion[0], "verificar_presupuesto") == 0)
+            {
+                modelo_pg_admin_verificar_presupuesto(payload);
+            }
+            else
+            {
+                printf("Opción no válida: %s\n", sub_opcion[0]);
+            }
+        }
+
+        free_split(sub_opcion);
     }
     else if (opciones && strcmp(opciones[0], "procesos_sistema") == 0)
     {
@@ -310,11 +422,26 @@ int main()
         "op_banco~retirar§cuenta⊓C0001¶monto⊓100¶motivo⊓CAJA_CHICA",
         "op_feria~registrar_premio§codigo⊓PR01¶nombre⊓PELUCHE¶puntos⊓120¶stock⊓10",
         "op_feria~canjear_premio§usuario⊓USR100¶codigo⊓PR01¶cantidad⊓2",
+        "op_feria~consultar_premio§codigo⊓PR01",
         "op_renta_equipos~registrar_equipo§codigo⊓EQ01¶nombre⊓BOCINA¶costo_dia⊓350¶stock⊓4",
         "op_renta_equipos~registrar_alquiler§cliente⊓ANA¶codigo⊓EQ01¶dias⊓3¶cantidad⊓1",
+        "op_renta_equipos~consultar_equipo§codigo⊓EQ01",
+        "op_tienda~consultar_producto§codigo⊓ABC123",
+        "op_restaurante~consultar_platillo§codigo⊓P001",
+        "op_banco~consultar_saldo§cuenta⊓C0001",
+        "op_fabricas~registrar_producto§codigo⊓F001¶nombre⊓CAJA_CARTON¶costo_unitario⊓12.5¶stock⊓100",
+        "op_fabricas~producir_lote§codigo⊓F001¶cantidad⊓40¶responsable⊓JEFE_PLANTA",
+        "op_fabricas~despachar_producto§codigo⊓F001¶cantidad⊓15¶destino⊓SUCURSAL_CENTRO",
+        "op_fabricas~consultar_producto§codigo⊓F001",
         "op_tex_bas~agregar_fila§ruta⊓demo_tex_bas.txt¶fila⊓1|usuario_demo|tipo¬1°tipo¬2╦sub_info|contrasena",
         "op_tex_bas~editar_celda§ruta⊓demo_tex_bas.txt¶col_buscar⊓0¶valor_buscar⊓1¶col_editar⊓1¶nuevo⊓usuario_editado",
         "op_tex_bas~incrementar_celda§ruta⊓demo_tex_bas.txt¶col_buscar⊓0¶valor_buscar⊓1¶col_editar⊓0¶incremento⊓1",
+        "op_procesos_generales~registrar_movimiento§ruta_libro⊓contabilidad_libro.txt¶tipo⊓ENTRADA¶monto⊓1500¶quien⊓CLIENTE_A¶negocio⊓TIENDA¶concepto⊓VENTA¶item_tipo⊓PRODUCTO¶item_nombre⊓LECHE¶medio_pago⊓EFECTIVO",
+        "op_procesos_generales~registrar_movimiento§ruta_libro⊓contabilidad_libro.txt¶tipo⊓SALIDA¶monto⊓450¶quien⊓PROVEEDOR_X¶negocio⊓TIENDA¶concepto⊓COMPRA_INSUMOS¶item_tipo⊓PRODUCTO¶item_nombre⊓CAJAS¶medio_pago⊓TRANSFERENCIA",
+        "op_procesos_generales~configurar_presupuesto§ruta_presupuestos⊓contabilidad_presupuestos.txt¶negocio⊓TIENDA¶rubro⊓COMPRA_INSUMOS¶limite⊓1000",
+        "op_procesos_generales~verificar_presupuesto§ruta_libro⊓contabilidad_libro.txt¶ruta_presupuestos⊓contabilidad_presupuestos.txt¶negocio⊓TIENDA¶rubro⊓COMPRA_INSUMOS",
+        "op_procesos_generales~resumen_contador§ruta_libro⊓contabilidad_libro.txt",
+        "op_procesos_generales~resumen_contador_negocio§ruta_libro⊓contabilidad_libro.txt¶negocio⊓TIENDA",
         NULL};
 
     for (int i = 0; ejemplos[i]; i++)

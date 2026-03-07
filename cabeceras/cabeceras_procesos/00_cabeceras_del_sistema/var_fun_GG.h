@@ -75,7 +75,19 @@ extern const char *GG_ventana_DEDUSIBLES[][5];
 extern const char *GG_ventana_HERRAMIENTAS[][5];
 extern const char *GG_trabajos_dia[][5];
 
-/* Alias globales: usar G_* en el codigo y mantener GG_* como fuente real. */
+/*
+ * Alias globales para simplificar lectura de codigo.
+ *
+ * IMPORTANTE PARA NOVATOS:
+ * - La variable "real" (definida en var_fun_GG.c) es GG_caracter_separacion.
+ * - En otros archivos se suele escribir G_caracter_separacion.
+ * - Ambas apuntan a lo mismo por este #define:
+ *     G_caracter_separacion -> GG_caracter_separacion
+ *
+ * Ejemplo practico:
+ *   G_caracter_separacion[0] == "|"
+ *   Ese valor se usa para dividir una fila en celdas/columnas.
+ */
 #define G_archivos GG_archivos
 #define G_archivos_registros GG_archivos_registros
 #define G_indice_donde_comensar GG_indice_donde_comensar

@@ -115,3 +115,37 @@ int feria_canjear_premio(const char *usuario, const char *codigo, int cantidad)
     agregar_fila(ARCH_FERIA_CANJES, canje);
     return 0;
 }
+
+int feria_consultar_premio(const char *codigo, int *puntos, int *stock)
+{
+    if (!codigo || !puntos || !stock)
+    {
+        return -1;
+    }
+
+    feria_asegurar_archivos();
+
+    char lineas[MAX_LINEAS][MAX_LINEA];
+    int n = leer_archivo(ARCH_FERIA_PREMIOS, lineas);
+    int idx = feria_buscar_premio(lineas, n, codigo);
+    if (idx == -1)
+    {
+        return -2;
+    }
+
+    char **partes = NULL;
+    int cols = split(lineas[idx], G_caracter_separacion[0], &partes);
+    if (cols < 4 || !partes || !partes[2] || !partes[3])
+    {
+        if (partes)
+        {
+            free_split(partes);
+        }
+        return -3;
+    }
+
+    *puntos = atoi(partes[2]);
+    *stock = atoi(partes[3]);
+    free_split(partes);
+    return 0;
+}

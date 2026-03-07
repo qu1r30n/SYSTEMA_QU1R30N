@@ -8,6 +8,13 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
+/*
+ * Convencion de capas:
+ * - MODELOS: interpreta el comando, define defaults y decide parametros.
+ * - PROCESOS: ejecuta solo con los parametros necesarios.
+ * - En tex_bas, MODELOS obtiene "ruta" y se la pasa a PROCESOS.
+ */
+
 static int obtener_entero(StructurasDinamicas *datos, int orden, int *salida)
 {
     int *ptr = (int *)obtenerValorPorOrden(datos, orden);

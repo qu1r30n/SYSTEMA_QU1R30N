@@ -425,3 +425,41 @@ int modelo_compra(char *texto)
     liberarStructura(&datos);
     return ok;
 }
+
+int modelo_tienda_consultar_producto(char *texto)
+{
+    if (!texto)
+    {
+        return -1;
+    }
+
+    char *nombres_variables[][4] = {
+        {"codigo", "string", "nose", ""},
+        {NULL, NULL, NULL, NULL}};
+
+    char **partes = NULL;
+    StructurasDinamicas datos;
+    int resultado_parseo = construir_datos_desde_texto(texto, nombres_variables, &datos, &partes);
+    if (resultado_parseo != 0)
+    {
+        return resultado_parseo;
+    }
+
+    char *codigo = NULL;
+    float precio_venta = 0.0f;
+    float stock = 0.0f;
+
+    int ok = -4;
+    if (obtener_cadena_por_orden(&datos, 0, &codigo) == 0)
+    {
+        ok = tienda_consultar_producto(codigo, &precio_venta, &stock);
+        if (ok == 0)
+        {
+            printf("[TIENDA] codigo=%s | precio_venta=%.2f | stock=%.2f\n", codigo, precio_venta, stock);
+        }
+    }
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
+    return ok;
+}

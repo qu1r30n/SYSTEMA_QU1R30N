@@ -129,3 +129,35 @@ int modelo_renta_registrar_alquiler(char *texto)
     liberarStructura(&datos);
     return ok;
 }
+
+int modelo_renta_consultar_equipo(char *texto)
+{
+    char *vars[][4] = {
+        {"codigo", "string", "", ""},
+        {NULL, NULL, NULL, NULL}};
+
+    StructurasDinamicas datos;
+    char **partes = NULL;
+    if (parsear(texto, vars, &datos, &partes) != 0)
+    {
+        return -1;
+    }
+
+    char *codigo = NULL;
+    float costo_por_dia = 0.0f;
+    int stock = 0;
+    int ok = -1;
+
+    if (obtener_cadena(&datos, 0, &codigo) == 0)
+    {
+        ok = renta_consultar_equipo(codigo, &costo_por_dia, &stock);
+        if (ok == 0)
+        {
+            printf("[RENTA] codigo=%s | costo_dia=%.2f | stock=%d\n", codigo, costo_por_dia, stock);
+        }
+    }
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
+    return ok;
+}

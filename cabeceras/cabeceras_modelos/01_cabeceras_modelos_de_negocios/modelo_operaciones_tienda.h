@@ -44,6 +44,7 @@ int modelo_agregarProducto(char *texto);
 int modelo_editarPrecio(char *texto);
 int modelo_venta(char *texto);
 int modelo_compra(char *texto);
+int modelo_tienda_consultar_producto(char *texto);
 
 // Fecha
 void modelo_fechaActual(char *texto);

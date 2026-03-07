@@ -115,3 +115,35 @@ int modelo_feria_canjear_premio(char *texto)
     liberarStructura(&datos);
     return ok;
 }
+
+int modelo_feria_consultar_premio(char *texto)
+{
+    char *vars[][4] = {
+        {"codigo", "string", "", ""},
+        {NULL, NULL, NULL, NULL}};
+
+    StructurasDinamicas datos;
+    char **partes = NULL;
+    if (parsear(texto, vars, &datos, &partes) != 0)
+    {
+        return -1;
+    }
+
+    char *codigo = NULL;
+    int puntos = 0;
+    int stock = 0;
+    int ok = -1;
+
+    if (obtener_cadena(&datos, 0, &codigo) == 0)
+    {
+        ok = feria_consultar_premio(codigo, &puntos, &stock);
+        if (ok == 0)
+        {
+            printf("[FERIA] codigo=%s | puntos=%d | stock=%d\n", codigo, puntos, stock);
+        }
+    }
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
+    return ok;
+}

@@ -115,3 +115,37 @@ int renta_registrar_alquiler(const char *cliente, const char *codigo, int dias, 
     agregar_fila(ARCH_RENTA_MOV, movimiento);
     return 0;
 }
+
+int renta_consultar_equipo(const char *codigo, float *costo_por_dia, int *stock)
+{
+    if (!codigo || !costo_por_dia || !stock)
+    {
+        return -1;
+    }
+
+    renta_asegurar_archivos();
+
+    char lineas[MAX_LINEAS][MAX_LINEA];
+    int n = leer_archivo(ARCH_RENTA_EQUIPOS, lineas);
+    int idx = renta_buscar_equipo(lineas, n, codigo);
+    if (idx == -1)
+    {
+        return -2;
+    }
+
+    char **partes = NULL;
+    int cols = split(lineas[idx], G_caracter_separacion[0], &partes);
+    if (cols < 4 || !partes || !partes[2] || !partes[3])
+    {
+        if (partes)
+        {
+            free_split(partes);
+        }
+        return -3;
+    }
+
+    *costo_por_dia = (float)atof(partes[2]);
+    *stock = atoi(partes[3]);
+    free_split(partes);
+    return 0;
+}

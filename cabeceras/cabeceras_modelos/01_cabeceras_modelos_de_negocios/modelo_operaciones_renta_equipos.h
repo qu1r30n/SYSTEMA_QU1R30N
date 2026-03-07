@@ -3,5 +3,6 @@
 
 int modelo_renta_registrar_equipo(char *texto);
 int modelo_renta_registrar_alquiler(char *texto);
+int modelo_renta_consultar_equipo(char *texto);
 
 #endif

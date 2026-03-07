@@ -159,3 +159,36 @@ int banco_retirar(const char *cuenta, float monto, const char *motivo)
     agregar_fila(ARCH_BANCO_MOV, movimiento);
     return 0;
 }
+
+int banco_consultar_saldo(const char *cuenta, float *saldo)
+{
+    if (!cuenta || !saldo)
+    {
+        return -1;
+    }
+
+    banco_asegurar_archivos();
+
+    char lineas[MAX_LINEAS][MAX_LINEA];
+    int n = leer_archivo(ARCH_BANCO_CUENTAS, lineas);
+    int idx = banco_buscar_cuenta(lineas, n, cuenta);
+    if (idx == -1)
+    {
+        return -2;
+    }
+
+    char **partes = NULL;
+    int cols = split(lineas[idx], G_caracter_separacion[0], &partes);
+    if (cols < 3 || !partes || !partes[2])
+    {
+        if (partes)
+        {
+            free_split(partes);
+        }
+        return -3;
+    }
+
+    *saldo = (float)atof(partes[2]);
+    free_split(partes);
+    return 0;
+}

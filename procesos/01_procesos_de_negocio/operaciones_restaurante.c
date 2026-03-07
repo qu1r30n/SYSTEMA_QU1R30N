@@ -116,3 +116,37 @@ int restaurante_registrar_pedido(const char *mesa, const char *codigo, int canti
     agregar_fila(ARCH_REST_PEDIDOS, pedido);
     return 0;
 }
+
+int restaurante_consultar_platillo(const char *codigo, float *precio, int *stock)
+{
+    if (!codigo || !precio || !stock)
+    {
+        return -1;
+    }
+
+    restaurante_asegurar_archivos();
+
+    char lineas[MAX_LINEAS][MAX_LINEA];
+    int n = leer_archivo(ARCH_REST_MENU, lineas);
+    int idx = restaurante_buscar_menu(lineas, n, codigo);
+    if (idx == -1)
+    {
+        return -2;
+    }
+
+    char **partes = NULL;
+    int cols = split(lineas[idx], G_caracter_separacion[0], &partes);
+    if (cols < 4 || !partes || !partes[2] || !partes[3])
+    {
+        if (partes)
+        {
+            free_split(partes);
+        }
+        return -3;
+    }
+
+    *precio = (float)atof(partes[2]);
+    *stock = atoi(partes[3]);
+    free_split(partes);
+    return 0;
+}

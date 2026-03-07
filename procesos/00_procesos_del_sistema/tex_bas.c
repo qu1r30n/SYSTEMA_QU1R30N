@@ -22,6 +22,18 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 
+/*
+ * Regla de arquitectura:
+ * - "modelos" decide el proceso y prepara parametros (incluyendo defaults).
+ * - "procesos" solo ejecuta con los parametros que necesita.
+ * - En tex_bas, "ruta" es un parametro necesario porque operamos archivos.
+ * - No se usan rutas fijas para poder reutilizar el mismo proceso con distintas rutas.
+ */
+static int ruta_valida(const char *ruta)
+{
+    return (ruta != NULL && ruta[0] != '\0');
+}
+
 static int total_columnas_objetivo(int columnas_actuales, int columna_minima)
 {
     if (columna_minima + 1 > columnas_actuales)
@@ -35,6 +47,11 @@ static void construir_linea_desde_partes(char *destino, size_t tam_destino,
                                          char **partes, int columnas,
                                          const char *valor_defecto)
 {
+    /*
+     * Para reconstruir una fila de "tabla en texto" usamos el separador de celdas.
+     * G_caracter_separacion[0] es "|" (alias de GG_caracter_separacion[0]).
+     * Ejemplo de salida: "1|JUAN|ADMIN".
+     */
     const char *separador = G_caracter_separacion[0];
     destino[0] = '\0';
 
@@ -59,6 +76,11 @@ static void construir_linea_desde_partes(char *destino, size_t tam_destino,
 // Crear directorio
 void crearDirectorio(const char *ruta)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     char tmp[512];
     strcpy(tmp, ruta);
@@ -91,6 +113,11 @@ void crearDirectorio(const char *ruta)
 // Crear archivo
 void crearArchivo(const char *ruta, const char *cabecera)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     crearDirectorio(ruta);
     FILE *f = fopen(ruta, "r");
@@ -117,6 +144,11 @@ void crearArchivo(const char *ruta, const char *cabecera)
 // Leer archivo
 int leer_archivo(const char *ruta, char l[][MAX_LINEA])
 {
+    if (!ruta_valida(ruta))
+    {
+        return 0;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     FILE *f = fopen(ruta, "r");
     if (!f)
@@ -143,6 +175,11 @@ int leer_archivo(const char *ruta, char l[][MAX_LINEA])
 // Guardar archivo
 void guardar_archivo(const char *ruta, char l[][MAX_LINEA], int n)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     FILE *f = fopen(ruta, "w");
     for (int i = 0; i < n; i++)
@@ -160,6 +197,11 @@ void guardar_archivo(const char *ruta, char l[][MAX_LINEA], int n)
 // Agregar fila
 void agregar_fila(const char *ruta, const char *fila)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     FILE *f = fopen(ruta, "a");
     if (f)
@@ -177,6 +219,11 @@ void agregar_fila(const char *ruta, const char *fila)
 
 void eliminar_fila(const char *ruta, int filaEliminar)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     char lineas[MAX_LINEAS][MAX_LINEA];
     int n = leer_archivo(ruta, lineas);
@@ -200,6 +247,11 @@ void eliminar_fila(const char *ruta, int filaEliminar)
 
 void editar_fila(const char *ruta, int fila, const char *nueva)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     if (!nueva)
     {
@@ -227,6 +279,11 @@ void editar_fila(const char *ruta, int fila, const char *nueva)
 void editar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
                   int colEditar, const char *nuevoValor)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     if (!valorBuscar || !nuevoValor || colBuscar < 0 || colEditar < 0)
     {
@@ -243,6 +300,10 @@ void editar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
     for (int i = 1; i < n; i++)
     {
         char **partes = NULL;
+        /*
+         * split divide la fila por celdas usando "|".
+         * Ejemplo: "10|LAPIZ|25" -> ["10", "LAPIZ", "25"].
+         */
         int columnas = split(lineas[i], G_caracter_separacion[0], &partes);
         if (columnas <= 0)
         {
@@ -289,6 +350,11 @@ void editar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
 void incrementar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
                        int colEditar, int inc)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     if (!valorBuscar || colBuscar < 0 || colEditar < 0)
     {
@@ -305,6 +371,10 @@ void incrementar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
     for (int i = 1; i < n; i++)
     {
         char **partes = NULL;
+        /*
+         * Igual que en editar_celda: partimos la fila por "|" para trabajar
+         * cada celda por separado.
+         */
         int columnas = split(lineas[i], G_caracter_separacion[0], &partes);
         if (columnas <= 0)
         {
@@ -354,6 +424,11 @@ void incrementar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
 
 void editar_columna_completa(const char *ruta, int col, const char *nuevo)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     if (col < 0 || !nuevo)
     {
@@ -370,6 +445,7 @@ void editar_columna_completa(const char *ruta, int col, const char *nuevo)
     for (int i = 0; i < n; i++)
     {
         char **partes = NULL;
+        /* Se procesa cada linea como tabla separada por "|". */
         int columnas = split(lineas[i], G_caracter_separacion[0], &partes);
         if (columnas <= 0)
         {
@@ -407,6 +483,11 @@ void editar_columna_completa(const char *ruta, int col, const char *nuevo)
 
 void eliminar_columna(const char *ruta, int col)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     if (col < 0)
     {
@@ -423,6 +504,7 @@ void eliminar_columna(const char *ruta, int col)
     for (int i = 0; i < n; i++)
     {
         char **partes = NULL;
+        /* Se separan celdas por "|" para poder quitar una columna concreta. */
         int columnas = split(lineas[i], G_caracter_separacion[0], &partes);
         if (columnas <= 1 || col >= columnas)
         {
@@ -459,6 +541,11 @@ void eliminar_columna(const char *ruta, int col)
 
 void agregar_columna(const char *ruta, const char *nombre)
 {
+    if (!ruta_valida(ruta))
+    {
+        return;
+    }
+
 #if defined(_WIN32) || defined(__linux__)
     if (!nombre)
     {
@@ -474,6 +561,10 @@ void agregar_columna(const char *ruta, const char *nombre)
 
     for (int i = 0; i < n; i++)
     {
+        /*
+         * Al agregar columna se concatena otra celda al final de la fila,
+         * siempre separada por "|".
+         */
         const char *valor_nuevo = (i == 0) ? nombre : "0";
         size_t usados = strlen(lineas[i]);
         const char *sep = G_caracter_separacion[0];

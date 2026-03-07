@@ -15,5 +15,6 @@ void agregarProducto(int id, char *producto, float contenido,
 int editarPrecio(char *codigo, char *precio, char *proveedor);
 int venta(char *codigo, int cantidad, char *sucursal);
 int compra(char *codigo, int cantidad, char *proveedor);
+int tienda_consultar_producto(const char *codigo, float *precio_venta, float *stock);
 
 #endif

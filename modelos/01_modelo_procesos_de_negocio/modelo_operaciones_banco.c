@@ -141,3 +141,34 @@ int modelo_banco_retirar(char *texto)
     liberarStructura(&datos);
     return ok;
 }
+
+int modelo_banco_consultar_saldo(char *texto)
+{
+    char *vars[][4] = {
+        {"cuenta", "string", "", ""},
+        {NULL, NULL, NULL, NULL}};
+
+    StructurasDinamicas datos;
+    char **partes = NULL;
+    if (parsear(texto, vars, &datos, &partes) != 0)
+    {
+        return -1;
+    }
+
+    char *cuenta = NULL;
+    float saldo = 0.0f;
+
+    int ok = -1;
+    if (obtener_cadena(&datos, 0, &cuenta) == 0)
+    {
+        ok = banco_consultar_saldo(cuenta, &saldo);
+        if (ok == 0)
+        {
+            printf("[BANCO] cuenta=%s | saldo=%.2f\n", cuenta, saldo);
+        }
+    }
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
+    return ok;
+}

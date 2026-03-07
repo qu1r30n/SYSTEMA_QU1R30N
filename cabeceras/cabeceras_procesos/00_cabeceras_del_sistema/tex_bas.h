@@ -6,6 +6,16 @@
 #define MAX_LINEA 1024
 #define MAX_LINEAS (MAX_PRODUCTOS + 1)
 
+/*
+ * Regla de arquitectura (importante):
+ * - "modelos" define el proceso, aplica defaults y parsea el comando.
+ * - "procesos" recibe solo los parametros necesarios para ejecutar.
+ * - En este modulo (tex_bas), como trabaja con archivos, "ruta" si es necesaria.
+ * - La ruta nunca debe estar hardcodeada en procesos.
+ *
+ * Esto permite reutilizar el mismo proceso con diferentes archivos.
+ */
+
 void crearDirectorio(const char *ruta);
 void crearArchivo(const char *ruta, const char *cabecera);
 

@@ -17,6 +17,7 @@
 
 void imprimirMensaje_para_depurar(const char *format, ...)
 {
+#if SISTEMA_DEBUG_LOGS
     // ---------------------------
     // Los "..." significan que la función puede recibir
     // un número indefinido de argumentos adicionales,
@@ -38,6 +39,9 @@ void imprimirMensaje_para_depurar(const char *format, ...)
 #endif
 
     va_end(args); // Libera la lista de argumentos variables. Siempre debe llamarse al final// para limpiar cualquier recurso interno usado por la lista.
+#else
+    (void)format;
+#endif
 }
 
 /* =========================

@@ -5,6 +5,10 @@
 // Cabeceras de modelos de negocio
 // -----------------------------
 #include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_tienda.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_restaurante.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_banco.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_feria.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_renta_equipos.h"
 
 // -----------------------------
 // Cabeceras de modelos del sistema

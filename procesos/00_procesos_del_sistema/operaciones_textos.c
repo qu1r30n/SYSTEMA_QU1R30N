@@ -1,4 +1,6 @@
 #include <string.h> // strlen, memcpy, strstr
+#include <stdio.h>  // FILE, fopen, fgetc, fprintf, vsnprintf
+#include <stdarg.h> // va_list
 
 #ifdef _WIN32
 #include <stdlib.h> // malloc, realloc, free
@@ -14,6 +16,272 @@
 #else
 #include <stdlib.h>
 #endif
+
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
+
+/* Prototipos adelantados para evitar uso antes de definicion */
+int split(const char *txt, const char *sep, char ***salida);
+void free_split(char **arreglo);
+
+char *texto_copiar_dinamico(const char *texto_origen)
+{
+    if (!texto_origen)
+    {
+        return NULL;
+    }
+
+    size_t longitud = strlen(texto_origen);
+    /* Reserva memoria en heap para devolver una copia independiente */
+    char *texto_copia = (char *)malloc(longitud + 1);
+    if (!texto_copia)
+    {
+        return NULL;
+    }
+
+    memcpy(texto_copia, texto_origen, longitud + 1);
+    return texto_copia;
+}
+
+char *texto_formatear_dinamico(const char *formato, ...)
+{
+    va_list argumentos;
+    va_start(argumentos, formato);
+    int longitud_necesaria = vsnprintf(NULL, 0, formato, argumentos);
+    va_end(argumentos);
+
+    if (longitud_necesaria < 0)
+    {
+        return NULL;
+    }
+
+    char *texto_formateado = (char *)malloc((size_t)longitud_necesaria + 1);
+    if (!texto_formateado)
+    {
+        return NULL;
+    }
+
+    va_start(argumentos, formato);
+    vsnprintf(texto_formateado, (size_t)longitud_necesaria + 1, formato, argumentos);
+    va_end(argumentos);
+    return texto_formateado;
+}
+
+int texto_leer_linea_dinamica(FILE *archivo, char **linea_salida)
+{
+    if (!archivo || !linea_salida)
+    {
+        return -1;
+    }
+
+    size_t capacidad = 64;
+    size_t longitud = 0;
+    /* linea_salida es puntero doble porque devolvemos memoria creada aqui */
+    char *linea = (char *)malloc(capacidad);
+    if (!linea)
+    {
+        return -1;
+    }
+
+    int caracter = 0;
+    while ((caracter = fgetc(archivo)) != EOF)
+    {
+        if (caracter == '\r')
+        {
+            continue;
+        }
+        if (caracter == '\n')
+        {
+            break;
+        }
+
+        if (longitud + 1 >= capacidad)
+        {
+            size_t nueva_capacidad = capacidad * 2;
+            /* realloc puede mover la memoria: por eso usamos temporal */
+            char *temporal = (char *)realloc(linea, nueva_capacidad);
+            if (!temporal)
+            {
+                free(linea);
+                return -1;
+            }
+            linea = temporal;
+            capacidad = nueva_capacidad;
+        }
+
+        linea[longitud++] = (char)caracter;
+    }
+
+    if (caracter == EOF && longitud == 0)
+    {
+        free(linea);
+        return 0;
+    }
+
+    linea[longitud] = '\0';
+    *linea_salida = linea;
+    return 1;
+}
+
+void texto_liberar_lineas_dinamicas(char **lineas, int cantidad_lineas)
+{
+    if (!lineas)
+    {
+        return;
+    }
+
+    /* Primero se libera cada fila y al final el arreglo de punteros */
+    for (int i = 0; i < cantidad_lineas; i++)
+    {
+        free(lineas[i]);
+    }
+    free(lineas);
+}
+
+int texto_leer_archivo_dinamico(const char *ruta, char ***lineas_salida)
+{
+    if (!ruta || !lineas_salida)
+    {
+        return -1;
+    }
+
+    FILE *archivo = fopen(ruta, "r");
+    if (!archivo)
+    {
+        *lineas_salida = NULL;
+        return 0;
+    }
+
+    int cantidad_lineas = 0;
+    int capacidad = 8;
+    /* lineas es un arreglo dinamico de punteros a char (char**) */
+    char **lineas = (char **)malloc((size_t)capacidad * sizeof(char *));
+    if (!lineas)
+    {
+        fclose(archivo);
+        return -1;
+    }
+
+    while (1)
+    {
+        char *linea_leida = NULL;
+        int resultado_lectura = texto_leer_linea_dinamica(archivo, &linea_leida);
+        if (resultado_lectura == 0)
+        {
+            break;
+        }
+        if (resultado_lectura < 0)
+        {
+            texto_liberar_lineas_dinamicas(lineas, cantidad_lineas);
+            fclose(archivo);
+            return -1;
+        }
+
+        if (cantidad_lineas >= capacidad)
+        {
+            int nueva_capacidad = capacidad * 2;
+            /* igual que en char*: usamos temporal por seguridad */
+            char **temporal = (char **)realloc(lineas, (size_t)nueva_capacidad * sizeof(char *));
+            if (!temporal)
+            {
+                free(linea_leida);
+                texto_liberar_lineas_dinamicas(lineas, cantidad_lineas);
+                fclose(archivo);
+                return -1;
+            }
+            lineas = temporal;
+            capacidad = nueva_capacidad;
+        }
+
+        lineas[cantidad_lineas++] = linea_leida;
+    }
+
+    fclose(archivo);
+    *lineas_salida = lineas;
+    return cantidad_lineas;
+}
+
+int texto_guardar_archivo_dinamico(const char *ruta, char **lineas, int cantidad_lineas)
+{
+    if (!ruta || !lineas || cantidad_lineas < 0)
+    {
+        return -1;
+    }
+
+    FILE *archivo = fopen(ruta, "w");
+    if (!archivo)
+    {
+        return -1;
+    }
+
+    for (int i = 0; i < cantidad_lineas; i++)
+    {
+        fprintf(archivo, "%s\n", lineas[i] ? lineas[i] : "");
+    }
+
+    fclose(archivo);
+    return 0;
+}
+
+int texto_buscar_fila_por_columna_en_archivo(const char *ruta,
+                                             int columna_busqueda,
+                                             const char *valor_buscado,
+                                             int omitir_encabezado,
+                                             char **fila_encontrada)
+{
+    if (!ruta || !valor_buscado || !fila_encontrada || columna_busqueda < 0)
+    {
+        return -1;
+    }
+
+    /* inicializamos salida para evitar punteros colgantes */
+    *fila_encontrada = NULL;
+
+    char **lineas = NULL;
+    int cantidad_lineas = texto_leer_archivo_dinamico(ruta, &lineas);
+    if (cantidad_lineas < 0)
+    {
+        return -2;
+    }
+
+    if (cantidad_lineas <= 0)
+    {
+        return -3;
+    }
+
+    int inicio = omitir_encabezado ? 1 : 0;
+    if (inicio < 0)
+    {
+        inicio = 0;
+    }
+
+    for (int i = inicio; i < cantidad_lineas; i++)
+    {
+        char **partes = NULL;
+        int columnas = split(lineas[i], G_caracter_separacion[0], &partes);
+
+        int coincide = 0;
+        if (columnas > columna_busqueda && partes && partes[columna_busqueda])
+        {
+            coincide = (strcmp(partes[columna_busqueda], valor_buscado) == 0);
+        }
+
+        if (partes)
+        {
+            free_split(partes);
+        }
+
+        if (coincide)
+        {
+            /* devolvemos una copia para que el caller pueda usarla/liberarla */
+            *fila_encontrada = texto_copiar_dinamico(lineas[i]);
+            texto_liberar_lineas_dinamicas(lineas, cantidad_lineas);
+            return (*fila_encontrada != NULL) ? 0 : -2;
+        }
+    }
+
+    texto_liberar_lineas_dinamicas(lineas, cantidad_lineas);
+    return -3;
+}
 
 /*
 ===============================================================================

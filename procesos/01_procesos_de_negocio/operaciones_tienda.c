@@ -14,15 +14,28 @@ int leerInventario(char inventario[][COLUMNAS][256], int maxProductos)
     char lineas[MAX_PRODUCTOS + 1][MAX_LINEA];
     int nLineas = leer_archivo(G_archivos[ARCH_INVENTARIO][0], lineas);
 
+    if (nLineas <= 1)
+    {
+        return 0;
+    }
+
     int fila = 0;
     for (int i = 1; i < nLineas && fila < maxProductos; i++)
     {
-        char **partes;
+        char **partes = NULL;
         int n = split(lineas[i], G_caracter_separacion[0], &partes);
+
+        if (n < 0 || partes == NULL)
+        {
+            continue;
+        }
+
         for (int j = 0; j < COLUMNAS; j++)
         {
-            strcpy(inventario[fila][j], (j < n) ? partes[j] : "0");
+            const char *valor = (j < n && partes[j]) ? partes[j] : "0";
+            snprintf(inventario[fila][j], sizeof(inventario[fila][j]), "%s", valor);
         }
+
         free_split(partes);
         fila++;
     }
@@ -33,15 +46,49 @@ int leerInventario(char inventario[][COLUMNAS][256], int maxProductos)
 void guardarInventario(char inventario[][COLUMNAS][256], int n)
 {
     char lineas[MAX_PRODUCTOS + 1][MAX_LINEA];
-    strcpy(lineas[0], G_archivos[ARCH_INVENTARIO][1]);
+    snprintf(lineas[0], sizeof(lineas[0]), "%s", G_archivos[ARCH_INVENTARIO][1]);
     for (int i = 0; i < n; i++)
     {
-        lineas[i + 1][0] = 0;
+        lineas[i + 1][0] = '\0';
+        size_t usado = 0;
         for (int j = 0; j < COLUMNAS; j++)
         {
-            strcat(lineas[i + 1], inventario[i][j]);
+            int escritos = snprintf(lineas[i + 1] + usado,
+                                    sizeof(lineas[i + 1]) - usado,
+                                    "%s",
+                                    inventario[i][j]);
+            if (escritos < 0)
+            {
+                break;
+            }
+
+            if ((size_t)escritos >= sizeof(lineas[i + 1]) - usado)
+            {
+                usado = sizeof(lineas[i + 1]) - 1;
+                break;
+            }
+
+            usado += (size_t)escritos;
+
             if (j < COLUMNAS - 1)
-                strcat(lineas[i + 1], G_caracter_separacion[0]);
+            {
+                escritos = snprintf(lineas[i + 1] + usado,
+                                    sizeof(lineas[i + 1]) - usado,
+                                    "%s",
+                                    G_caracter_separacion[0]);
+                if (escritos < 0)
+                {
+                    break;
+                }
+
+                if ((size_t)escritos >= sizeof(lineas[i + 1]) - usado)
+                {
+                    usado = sizeof(lineas[i + 1]) - 1;
+                    break;
+                }
+
+                usado += (size_t)escritos;
+            }
         }
     }
     guardar_archivo(G_archivos[ARCH_INVENTARIO][0], lineas, n + 1);
@@ -74,19 +121,30 @@ void agregarProducto(int id,
     char inventario[MAX_PRODUCTOS][COLUMNAS][256];
     int n = leerInventario(inventario, MAX_PRODUCTOS);
 
+    if (n < 0)
+    {
+        return;
+    }
+
+    if (n >= MAX_PRODUCTOS)
+    {
+        /* No hay espacio para otro producto. */
+        return;
+    }
+
     for (int i = 0; i < COLUMNAS; i++)
     {
-        strcpy(inventario[n][i], "0");
+        snprintf(inventario[n][i], sizeof(inventario[n][i]), "%s", "0");
     }
     sprintf(inventario[n][0], "%d", id);
-    strcpy(inventario[n][1], producto);
+    snprintf(inventario[n][1], sizeof(inventario[n][1]), "%s", producto ? producto : "");
     sprintf(inventario[n][2], "%.2f", contenido);
-    strcpy(inventario[n][3], tipo_medida);
+    snprintf(inventario[n][3], sizeof(inventario[n][3]), "%s", tipo_medida ? tipo_medida : "");
     sprintf(inventario[n][4], "%.2f", precio_venta);
-    strcpy(inventario[n][5], cod_barras);
+    snprintf(inventario[n][5], sizeof(inventario[n][5]), "%s", cod_barras ? cod_barras : "");
     sprintf(inventario[n][6], "%.2f", cantidad);
     sprintf(inventario[n][7], "%.2f", costo_compra);
-    strcpy(inventario[n][8], proveedor);
+    snprintf(inventario[n][8], sizeof(inventario[n][8]), "%s", proveedor ? proveedor : "");
     fechaActual(inventario[n][18], "%Y-%m-%d");
 
     guardarInventario(inventario, n + 1);
@@ -137,5 +195,25 @@ int compra(char *codigo, int cantidad, char *proveedor)
     fechaActual(fecha, "%Y-%m-%d");
     sprintf(registro, "%s%s%d%s%s%s%s", codigo, G_caracter_separacion[0], cantidad, G_caracter_separacion[0], proveedor, G_caracter_separacion[0], fecha);
     agregar_fila(G_archivos_registros[1][0], registro);
+    return 0;
+}
+
+int tienda_consultar_producto(const char *codigo, float *precio_venta, float *stock)
+{
+    if (!codigo || !precio_venta || !stock)
+    {
+        return -1;
+    }
+
+    char inventario[MAX_PRODUCTOS][COLUMNAS][256];
+    int n = leerInventario(inventario, MAX_PRODUCTOS);
+    int idx = buscarProducto(inventario, n, (char *)codigo);
+    if (idx == -1)
+    {
+        return -2;
+    }
+
+    *precio_venta = (float)atof(inventario[idx][4]);
+    *stock = (float)atof(inventario[idx][6]);
     return 0;
 }

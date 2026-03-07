@@ -70,12 +70,25 @@ extern const char *GG_ventana_reg_prod_dia[][5];
 extern const char *GG_ventana_reg_prod_mes[][5];
 extern const char *GG_ventana_reg_prod_año[][5];
 extern const char *GG_ventana_reg_prod_total[][5];
+extern const char *GG_ventana_presupuestos[][5];
 extern const char *GG_ventana_IMPUESTOS[][5];
 extern const char *GG_ventana_DEDUSIBLES[][5];
 extern const char *GG_ventana_HERRAMIENTAS[][5];
 extern const char *GG_trabajos_dia[][5];
 
-/* Alias globales: usar G_* en el codigo y mantener GG_* como fuente real. */
+/*
+ * Alias globales para simplificar lectura de codigo.
+ *
+ * IMPORTANTE PARA NOVATOS:
+ * - La variable "real" (definida en var_fun_GG.c) es GG_caracter_separacion.
+ * - En otros archivos se suele escribir G_caracter_separacion.
+ * - Ambas apuntan a lo mismo por este #define:
+ *     G_caracter_separacion -> GG_caracter_separacion
+ *
+ * Ejemplo practico:
+ *   G_caracter_separacion[0] == "|"
+ *   Ese valor se usa para dividir una fila en celdas/columnas.
+ */
 #define G_archivos GG_archivos
 #define G_archivos_registros GG_archivos_registros
 #define G_indice_donde_comensar GG_indice_donde_comensar
@@ -111,6 +124,7 @@ extern const char *GG_trabajos_dia[][5];
 #define G_ventana_reg_prod_mes GG_ventana_reg_prod_mes
 #define G_ventana_reg_prod_año GG_ventana_reg_prod_año
 #define G_ventana_reg_prod_total GG_ventana_reg_prod_total
+#define G_ventana_presupuestos GG_ventana_presupuestos
 #define G_ventana_IMPUESTOS GG_ventana_IMPUESTOS
 #define G_ventana_DEDUSIBLES GG_ventana_DEDUSIBLES
 #define G_ventana_HERRAMIENTAS GG_ventana_HERRAMIENTAS
@@ -140,5 +154,10 @@ void RecargarVentanaEmergente_TRABAJOS_DIA(const char *al_finalizar_que_borrar);
 
 /* Función auxiliar para concatenar columnas */
 char *columnas_concatenadas(ConfigField *arreglo, int filas, int id_columna, const char *caracter_separacion);
+
+/* Encabezado dinamico basado en GG_ventana_reg_dia */
+const char *GG_encabezado_ventana_reg_dia(void);
+/* Encabezado dinamico basado en GG_ventana_presupuestos */
+const char *GG_encabezado_ventana_presupuestos(void);
 
 #endif

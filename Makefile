@@ -6,11 +6,14 @@
 CC = gcc
 CFLAGS = -std=c11 -Wall -Wextra -I.
 
+# recursive wildcard helper (GNU Make portable)
+rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
+
 # collect all C sources under the project tree
-SRC := $(wildcard *.c) \
-       $(wildcard modelos/**/*.c) \
-       $(wildcard procesos/**/*.c) \
-       $(wildcard cabeceras/**/*.c)
+SRC := $(call rwildcard,./,*.c)
+
+# pre.c is a scratch/legacy file and should not be linked into production build
+SRC := $(filter-out ./pre.c,$(SRC))
 
 OBJ := $(SRC:.c=.o)
 
@@ -24,6 +27,6 @@ sistema.exe: $(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(OBJ) sistema.exe
+	$(RM) $(OBJ) sistema.exe
 
 .PHONY: all clean

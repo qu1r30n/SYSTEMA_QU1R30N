@@ -5,6 +5,12 @@
 // Cabeceras de modelos de negocio
 // -----------------------------
 #include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_tienda.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_restaurante.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_banco.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_feria.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_renta_equipos.h"
+#include "cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_fabricas.h"
+#include "cabeceras/cabeceras_modelos/02_cabeceras_modelos_generales_de_negocios/modelo_operaciones_procesos_generales.h"
 
 // -----------------------------
 // Cabeceras de modelos del sistema
@@ -17,6 +23,7 @@
 // también incluimos algunos encabezados de procesos comunes
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_arreglos.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 

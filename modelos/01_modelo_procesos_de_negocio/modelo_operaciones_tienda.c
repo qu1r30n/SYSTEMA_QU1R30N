@@ -174,7 +174,7 @@ int modelo_agregarProducto(char *texto)
         cuantos_parametros_hay++;
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
     if (!partes)
     {
         return -2;
@@ -264,7 +264,7 @@ int modelo_venta(char *texto)
         cuantas_partes++;
     }
 
-    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[2]);
 
     if (cuantas_partes <= 0)
     {

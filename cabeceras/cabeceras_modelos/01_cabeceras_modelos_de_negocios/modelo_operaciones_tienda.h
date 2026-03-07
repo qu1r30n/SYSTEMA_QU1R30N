@@ -5,11 +5,6 @@
 #ifndef MODELOS_H
 #define MODELOS_H
 
-extern char *GG_caracter_separacion_nom_parametro_de_valor[];
-extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
-#define G_caracter_separacion_nom_parametro_de_valor GG_caracter_separacion_nom_parametro_de_valor
-#define G_caracter_separacion_nom_parametro_de_valor_2 GG_caracter_separacion_nom_parametro_de_valor_2
-
 // Directorios y Archivos
 void modelo_crearDirectorio(char *texto);
 void modelo_crearArchivo(char *texto);

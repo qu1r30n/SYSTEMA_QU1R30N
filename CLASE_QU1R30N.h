@@ -28,12 +28,9 @@ extern char *GG_caracter_separacion_funciones_espesificas_2[];
 extern char *GG_archivos[][2];
 extern char *GG_archivos_registros[][2];
 
-// Puedes agregar nuevas cabeceras de modelos aquí en el futuro
+extern char *GG_caracter_separacion_nom_parametro_de_valor[];
+extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
 
-/* aliases globales visibles en todo el proyecto (definidas en un único TU) */
-extern char **G_caracter_separacion;
-extern char **G_caracter_separacion_funciones_espesificas;
-extern char *(*G_archivos)[2];
-extern char *(*G_archivos_registros)[2];
+// Puedes agregar nuevas cabeceras de modelos aquí en el futuro
 
 #endif // CLASE_QU1R30N_H

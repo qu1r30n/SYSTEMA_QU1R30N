@@ -3,22 +3,6 @@
 
 #include "CLASE_QU1R30N.h"
 
-/* los encabezados incluidos en CLASE ya aportan los prototipos necesarios */
-
-/* apuntadores simples a las arreglos definidos en var_fun_GG.c
-   se usan así porque GG_caracter_separacion es un "char *[]"
-   no un arreglo fijo; el doble puntero permite indexar con G_caracter_separacion[i] */
-char **G_caracter_separacion = GG_caracter_separacion;
-char **G_caracter_separacion_funciones_espesificas = GG_caracter_separacion_funciones_espesificas;
-
-/* los archivos son en realidad un puntero a un arreglo de dos punteros a char.
-   NO deben declararse como "char **[2]" ni "char ***[2]" porque eso crearía
-   un arreglo en esta unidad de traducción en lugar de un alias al arreglo
-   original. usamos char *(*G_archivos)[2] para que el tipo coincida con el
-   extern declarado en el header y podamos hacer G_archivos[i][j]. */
-char *(*G_archivos)[2] = GG_archivos;
-char *(*G_archivos_registros)[2] = GG_archivos_registros;
-
 // Inicialización
 void inicializacion()
 {
@@ -96,7 +80,7 @@ int main()
     /* ejemplos de comandos que el sistema entrega al modelo */
     const char *ejemplos[] = {
         //"op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
-        "op_tienda~agregar_producto§1¶2¶3¶4¶5¶6¶7¶8¶9",
+        "op_tienda~agregar_producto§id⊓1¶producto⊓2¶contenido⊓3¶tipo_medida⊓4¶precio_venta⊓5¶cod_barras⊓6¶cantidad⊓7¶costo_compra⊓8¶proveedor⊓9",
         "op_tienda~ventas§ABC123¶2§SucursalX",
         "op_tienda~compras§XYZ987¶5§Proveedor1",
         NULL};

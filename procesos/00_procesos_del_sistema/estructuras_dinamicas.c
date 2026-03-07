@@ -122,6 +122,7 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
     {
         imprimirMensaje_para_depurar("ANTES arreglo_char: %p, count_string: %d\n", (void *)s->arreglo_char, s->count_string); // Imprime la dirección del arreglo de strings y el contador de strings antes del realloc (para depuración)
         // aumenta el arreglo de strings para que tenga espacio para el nuevo campo
+        s->arreglo_char = (char **)realloc(s->arreglo_char, sizeof(char *) * (s->count_string + 1));
         s->arreglo_char[s->count_string] = NULL;                                                                                                                                              // valor inicial = NULL
         imprimirMensaje_para_depurar("DESPUES arreglo_char: %p, count_string: %d, nuevo elemento: %p\n", (void *)s->arreglo_char, s->count_string, (void *)s->arreglo_char[s->count_string]); // Imprime la dirección del arreglo de strings, el contador de strings y la dirección del nuevo elemento después del realloc (para depuración)
 
@@ -406,12 +407,6 @@ StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4])
 /* Obtener valor de estructura por orden de inserci?n */
 void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden)
 {
-    for (int i = 0; datos->arreglo_char[i] != NULL; i++)
-    {
-        printf("%s\n", datos->arreglo_char[i]);
-        printf("%d\n", datos->arreglo_int[i]);
-        printf("%f\n\n\n", datos->arreglo_float[i]);
-    }
 
     if (orden < 0 || orden >= datos->total) // Verifica que el orden solicitado esté dentro del rango de campos existentes en la estructura
     {
@@ -446,6 +441,10 @@ StructurasDinamicas procesar_partes_del_texto(char **partes, char *nombres_varia
     while (partes[i]) // Recorre las partes del texto hasta encontrar un NULL
     {
         char **nom_parametro_dato = modelo_split(partes[i], separador); // Divide cada parte del texto en nombre de parámetro y valor usando el separador especificado
+        for (int j = 0; nom_parametro_dato[j] != NULL; j++)
+        {
+            imprimirMensaje_para_depurar("nom_parametro_dato[%d]: %s  separador:%s\n", j, nom_parametro_dato[j], separador);
+        }
 
         if (nom_parametro_dato && nom_parametro_dato[0] && nom_parametro_dato[1]) // Verifica que la división haya sido exitosa y que ambos elementos existan
         {

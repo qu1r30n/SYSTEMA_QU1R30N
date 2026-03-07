@@ -20,17 +20,6 @@
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
-// Declaraciones externas de variables globales de procesos
-extern char *GG_caracter_separacion[];
-extern char *GG_caracter_separacion_2[];
-extern char *GG_caracter_separacion_funciones_espesificas[];
-extern char *GG_caracter_separacion_funciones_espesificas_2[];
-extern char *GG_archivos[][2];
-extern char *GG_archivos_registros[][2];
-
-extern char *GG_caracter_separacion_nom_parametro_de_valor[];
-extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
-
 // Puedes agregar nuevas cabeceras de modelos aquí en el futuro
 
 #endif // CLASE_QU1R30N_H

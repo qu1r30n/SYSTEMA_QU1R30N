@@ -30,7 +30,7 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
 
-// char **G_caracter_separacion = GG_caracter_separacion;//dice que ya no por que ya fue definido en el main
+// char **G_caracter_separacion = G_caracter_separacion;//dice que ya no por que ya fue definido en el main
 
 // Leer inventario completo
 int modelo_leerInventario(char *texto)

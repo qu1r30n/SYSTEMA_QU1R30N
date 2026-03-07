@@ -13,8 +13,8 @@ static const char *ARCH_RENTA_MOV = "renta_alquileres.txt";
 
 static void renta_asegurar_archivos(void)
 {
-    crearArchivo(ARCH_RENTA_EQUIPOS, "codigo|nombre|costo_dia|stock|fecha");
-    crearArchivo(ARCH_RENTA_MOV, "cliente|codigo|dias|cantidad|total|fecha");
+    crearArchivo(ARCH_RENTA_EQUIPOS, "_00_CODIGO|_01_NOMBRE|_02_COSTO_DIA|_03_STOCK|_04_FECHA");
+    crearArchivo(ARCH_RENTA_MOV, "_00_CLIENTE|_01_CODIGO|_02_DIAS|_03_CANTIDAD|_04_TOTAL|_05_FECHA");
 }
 
 static int renta_buscar_equipo(char lineas[][MAX_LINEA], int n, const char *codigo)

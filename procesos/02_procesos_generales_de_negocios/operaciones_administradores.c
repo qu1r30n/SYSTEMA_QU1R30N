@@ -14,12 +14,12 @@ static int texto_valido_admin(const char *txt)
 
 static void admin_asegurar_archivo_libro(const char *ruta_libro)
 {
-    crearArchivo(ruta_libro, "id|tipo|monto|quien|negocio|concepto|item_tipo|item_nombre|medio_pago|fecha");
+    crearArchivo(ruta_libro, GG_encabezado_ventana_reg_dia());
 }
 
 static void admin_asegurar_archivo_presupuestos(const char *ruta_presupuestos)
 {
-    crearArchivo(ruta_presupuestos, "negocio|rubro|limite");
+    crearArchivo(ruta_presupuestos, GG_encabezado_ventana_presupuestos());
 }
 
 int pg_administrador_configurar_presupuesto(const char *ruta_presupuestos,
@@ -38,7 +38,7 @@ int pg_administrador_configurar_presupuesto(const char *ruta_presupuestos,
     int n = leer_archivo(ruta_presupuestos, lineas);
     if (n <= 0)
     {
-        snprintf(lineas[0], MAX_LINEA, "negocio|rubro|limite");
+        snprintf(lineas[0], MAX_LINEA, "%s", GG_encabezado_ventana_presupuestos());
         n = 1;
     }
 

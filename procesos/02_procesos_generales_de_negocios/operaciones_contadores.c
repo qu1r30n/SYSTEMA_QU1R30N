@@ -13,7 +13,7 @@ static int texto_valido_contador(const char *txt)
 
 static void contador_asegurar_archivo_libro(const char *ruta_libro)
 {
-    crearArchivo(ruta_libro, "id|tipo|monto|quien|negocio|concepto|item_tipo|item_nombre|medio_pago|fecha");
+    crearArchivo(ruta_libro, "_00_ID|_01_OPERACION|_02_MONTO|_03_QUIEN|_04_NEGOCIO|_05_RUBRO|_06_ITEM_TIPO|_07_ITEM_NOMBRE|_08_MEDIO_PAGO|_09_FECHA");
 }
 
 int pg_contador_resumen_general(const char *ruta_libro,

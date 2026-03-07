@@ -22,7 +22,7 @@ static int tipo_valido(const char *tipo)
 
 static void pg_asegurar_archivo_libro(const char *ruta_libro)
 {
-    crearArchivo(ruta_libro, "id|tipo|monto|quien|negocio|concepto|item_tipo|item_nombre|medio_pago|fecha");
+    crearArchivo(ruta_libro, GG_encabezado_ventana_reg_dia());
 }
 
 static int pg_siguiente_id(const char *ruta_libro)

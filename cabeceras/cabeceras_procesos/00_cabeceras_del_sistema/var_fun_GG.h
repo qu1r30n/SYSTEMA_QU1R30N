@@ -70,6 +70,7 @@ extern const char *GG_ventana_reg_prod_dia[][5];
 extern const char *GG_ventana_reg_prod_mes[][5];
 extern const char *GG_ventana_reg_prod_año[][5];
 extern const char *GG_ventana_reg_prod_total[][5];
+extern const char *GG_ventana_presupuestos[][5];
 extern const char *GG_ventana_IMPUESTOS[][5];
 extern const char *GG_ventana_DEDUSIBLES[][5];
 extern const char *GG_ventana_HERRAMIENTAS[][5];
@@ -123,6 +124,7 @@ extern const char *GG_trabajos_dia[][5];
 #define G_ventana_reg_prod_mes GG_ventana_reg_prod_mes
 #define G_ventana_reg_prod_año GG_ventana_reg_prod_año
 #define G_ventana_reg_prod_total GG_ventana_reg_prod_total
+#define G_ventana_presupuestos GG_ventana_presupuestos
 #define G_ventana_IMPUESTOS GG_ventana_IMPUESTOS
 #define G_ventana_DEDUSIBLES GG_ventana_DEDUSIBLES
 #define G_ventana_HERRAMIENTAS GG_ventana_HERRAMIENTAS
@@ -152,5 +154,10 @@ void RecargarVentanaEmergente_TRABAJOS_DIA(const char *al_finalizar_que_borrar);
 
 /* Función auxiliar para concatenar columnas */
 char *columnas_concatenadas(ConfigField *arreglo, int filas, int id_columna, const char *caracter_separacion);
+
+/* Encabezado dinamico basado en GG_ventana_reg_dia */
+const char *GG_encabezado_ventana_reg_dia(void);
+/* Encabezado dinamico basado en GG_ventana_presupuestos */
+const char *GG_encabezado_ventana_presupuestos(void);
 
 #endif

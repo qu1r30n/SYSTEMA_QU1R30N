@@ -6,41 +6,9 @@
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 #include "../../cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_renta_equipos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_arreglos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include "../../cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_renta_equipos.h"
-
-static int obtener_entero(StructurasDinamicas *datos, int orden, int *salida)
-{
-    int *ptr = (int *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -1;
-    }
-    *salida = *ptr;
-    return 0;
-}
-
-static int obtener_flotante(StructurasDinamicas *datos, int orden, float *salida)
-{
-    float *ptr = (float *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -1;
-    }
-    *salida = *ptr;
-    return 0;
-}
-
-static int obtener_cadena(StructurasDinamicas *datos, int orden, char **salida)
-{
-    char *ptr = (char *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -1;
-    }
-    *salida = ptr;
-    return 0;
-}
 
 static int parsear(char *texto, char *vars[][4], StructurasDinamicas *datos, char ***partes)
 {
@@ -82,10 +50,10 @@ int modelo_renta_registrar_equipo(char *texto)
     int stock = 0;
 
     int ok = -1;
-    if (obtener_cadena(&datos, 0, &codigo) == 0 &&
-        obtener_cadena(&datos, 1, &nombre) == 0 &&
-        obtener_flotante(&datos, 2, &costo) == 0 &&
-        obtener_entero(&datos, 3, &stock) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &codigo) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 1, &nombre) == 0 &&
+        arreglo_obtener_flotante_por_orden(&datos, 2, &costo) == 0 &&
+        arreglo_obtener_entero_por_orden(&datos, 3, &stock) == 0)
     {
         ok = renta_registrar_equipo(codigo, nombre, costo, stock);
     }
@@ -117,10 +85,10 @@ int modelo_renta_registrar_alquiler(char *texto)
     int cantidad = 0;
 
     int ok = -1;
-    if (obtener_cadena(&datos, 0, &cliente) == 0 &&
-        obtener_cadena(&datos, 1, &codigo) == 0 &&
-        obtener_entero(&datos, 2, &dias) == 0 &&
-        obtener_entero(&datos, 3, &cantidad) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &cliente) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 1, &codigo) == 0 &&
+        arreglo_obtener_entero_por_orden(&datos, 2, &dias) == 0 &&
+        arreglo_obtener_entero_por_orden(&datos, 3, &cantidad) == 0)
     {
         ok = renta_registrar_alquiler(cliente, codigo, dias, cantidad);
     }
@@ -148,7 +116,7 @@ int modelo_renta_consultar_equipo(char *texto)
     int stock = 0;
     int ok = -1;
 
-    if (obtener_cadena(&datos, 0, &codigo) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &codigo) == 0)
     {
         ok = renta_consultar_equipo(codigo, &costo_por_dia, &stock);
         if (ok == 0)

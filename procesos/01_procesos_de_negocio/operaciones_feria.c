@@ -13,8 +13,8 @@ static const char *ARCH_FERIA_CANJES = "feria_canjes.txt";
 
 static void feria_asegurar_archivos(void)
 {
-    crearArchivo(ARCH_FERIA_PREMIOS, "codigo|nombre|puntos|stock|fecha");
-    crearArchivo(ARCH_FERIA_CANJES, "usuario|codigo|cantidad|puntos_totales|fecha");
+    crearArchivo(ARCH_FERIA_PREMIOS, "_00_CODIGO|_01_NOMBRE|_02_PUNTOS|_03_STOCK|_04_FECHA");
+    crearArchivo(ARCH_FERIA_CANJES, "_00_ID_USUARIO|_01_CODIGO|_02_CANTIDAD|_03_PUNTOS_TOTALES|_04_FECHA");
 }
 
 static int feria_buscar_premio(char lineas[][MAX_LINEA], int n, const char *codigo)

@@ -13,8 +13,8 @@ static const char *ARCH_REST_PEDIDOS = "restaurante_pedidos.txt";
 
 static void restaurante_asegurar_archivos(void)
 {
-    crearArchivo(ARCH_REST_MENU, "codigo|nombre|precio|stock|fecha");
-    crearArchivo(ARCH_REST_PEDIDOS, "mesa|codigo|cantidad|total|fecha");
+    crearArchivo(ARCH_REST_MENU, "_00_CODIGO|_01_NOMBRE|_02_PRECIO_VENTA|_03_STOCK|_04_FECHA");
+    crearArchivo(ARCH_REST_PEDIDOS, "_00_MESA|_01_CODIGO|_02_CANTIDAD|_03_TOTAL_VENTA|_04_FECHA");
 }
 
 static int restaurante_buscar_menu(char lineas[][MAX_LINEA], int n, const char *codigo)

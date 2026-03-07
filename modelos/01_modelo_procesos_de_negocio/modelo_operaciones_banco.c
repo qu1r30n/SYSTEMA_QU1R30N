@@ -6,30 +6,9 @@
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 #include "../../cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_banco.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_arreglos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include "../../cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_banco.h"
-
-static int obtener_flotante(StructurasDinamicas *datos, int orden, float *salida)
-{
-    float *ptr = (float *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -1;
-    }
-    *salida = *ptr;
-    return 0;
-}
-
-static int obtener_cadena(StructurasDinamicas *datos, int orden, char **salida)
-{
-    char *ptr = (char *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -1;
-    }
-    *salida = ptr;
-    return 0;
-}
 
 static int parsear(char *texto, char *vars[][4], StructurasDinamicas *datos, char ***partes)
 {
@@ -38,6 +17,7 @@ static int parsear(char *texto, char *vars[][4], StructurasDinamicas *datos, cha
         return -1;
     }
 
+    /* tmp es un arreglo dinamico de textos (char**) creado por split */
     char **tmp = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!tmp)
     {
@@ -45,6 +25,7 @@ static int parsear(char *texto, char *vars[][4], StructurasDinamicas *datos, cha
     }
 
     *datos = procesar_partes_del_texto(tmp, vars, G_caracter_separacion_nom_parametro_de_valor[0]);
+    /* devolvemos el puntero para poder liberarlo despues */
     *partes = tmp;
     return 0;
 }
@@ -69,9 +50,9 @@ int modelo_banco_registrar_cuenta(char *texto)
     float saldo = 0.0f;
 
     int ok = -1;
-    if (obtener_cadena(&datos, 0, &cuenta) == 0 &&
-        obtener_cadena(&datos, 1, &titular) == 0 &&
-        obtener_flotante(&datos, 2, &saldo) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &cuenta) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 1, &titular) == 0 &&
+        arreglo_obtener_flotante_por_orden(&datos, 2, &saldo) == 0)
     {
         ok = banco_registrar_cuenta(cuenta, titular, saldo);
     }
@@ -99,8 +80,8 @@ int modelo_banco_depositar(char *texto)
     float monto = 0.0f;
 
     int ok = -1;
-    if (obtener_cadena(&datos, 0, &cuenta) == 0 &&
-        obtener_flotante(&datos, 1, &monto) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &cuenta) == 0 &&
+        arreglo_obtener_flotante_por_orden(&datos, 1, &monto) == 0)
     {
         ok = banco_depositar(cuenta, monto);
     }
@@ -130,9 +111,9 @@ int modelo_banco_retirar(char *texto)
     float monto = 0.0f;
 
     int ok = -1;
-    if (obtener_cadena(&datos, 0, &cuenta) == 0 &&
-        obtener_flotante(&datos, 1, &monto) == 0 &&
-        obtener_cadena(&datos, 2, &motivo) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &cuenta) == 0 &&
+        arreglo_obtener_flotante_por_orden(&datos, 1, &monto) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 2, &motivo) == 0)
     {
         ok = banco_retirar(cuenta, monto, motivo);
     }
@@ -159,7 +140,7 @@ int modelo_banco_consultar_saldo(char *texto)
     float saldo = 0.0f;
 
     int ok = -1;
-    if (obtener_cadena(&datos, 0, &cuenta) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &cuenta) == 0)
     {
         ok = banco_consultar_saldo(cuenta, &saldo);
         if (ok == 0)

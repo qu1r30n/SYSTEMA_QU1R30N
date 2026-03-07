@@ -6,32 +6,11 @@
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 #include "../../cabeceras/cabeceras_modelos/02_cabeceras_modelos_generales_de_negocios/modelo_operaciones_procesos_generales.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_arreglos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include "../../cabeceras/cabeceras_procesos/02_cabeceras_procesos_generales_de_negocios/operaciones_procesos_generales.h"
 #include "../../cabeceras/cabeceras_procesos/02_cabeceras_procesos_generales_de_negocios/operaciones_contadores.h"
 #include "../../cabeceras/cabeceras_procesos/02_cabeceras_procesos_generales_de_negocios/operaciones_administradores.h"
-
-static int obtener_flotante(StructurasDinamicas *datos, int orden, float *salida)
-{
-    float *ptr = (float *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -1;
-    }
-    *salida = *ptr;
-    return 0;
-}
-
-static int obtener_cadena(StructurasDinamicas *datos, int orden, char **salida)
-{
-    char *ptr = (char *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -1;
-    }
-    *salida = ptr;
-    return 0;
-}
 
 static int parsear(char *texto, char *vars[][4], StructurasDinamicas *datos, char ***partes)
 {
@@ -83,15 +62,15 @@ int modelo_pg_registrar_movimiento(char *texto)
     float monto = 0.0f;
 
     int resultado = -1;
-    if (obtener_cadena(&datos, 0, &ruta_libro) == 0 &&
-        obtener_cadena(&datos, 1, &tipo) == 0 &&
-        obtener_flotante(&datos, 2, &monto) == 0 &&
-        obtener_cadena(&datos, 3, &quien) == 0 &&
-        obtener_cadena(&datos, 4, &negocio) == 0 &&
-        obtener_cadena(&datos, 5, &concepto) == 0 &&
-        obtener_cadena(&datos, 6, &item_tipo) == 0 &&
-        obtener_cadena(&datos, 7, &item_nombre) == 0 &&
-        obtener_cadena(&datos, 8, &medio_pago) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &ruta_libro) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 1, &tipo) == 0 &&
+        arreglo_obtener_flotante_por_orden(&datos, 2, &monto) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 3, &quien) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 4, &negocio) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 5, &concepto) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 6, &item_tipo) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 7, &item_nombre) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 8, &medio_pago) == 0)
     {
         resultado = pg_registrar_movimiento(ruta_libro, tipo, monto, quien, negocio, concepto, item_tipo, item_nombre, medio_pago);
     }
@@ -120,7 +99,7 @@ int modelo_pg_contador_resumen_general(char *texto)
     float saldo = 0.0f;
 
     int resultado = -1;
-    if (obtener_cadena(&datos, 0, &ruta_libro) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &ruta_libro) == 0)
     {
         resultado = pg_contador_resumen_general(ruta_libro, &entradas, &salidas, &saldo);
         if (resultado == 0)
@@ -155,8 +134,8 @@ int modelo_pg_contador_resumen_negocio(char *texto)
     float saldo = 0.0f;
 
     int resultado = -1;
-    if (obtener_cadena(&datos, 0, &ruta_libro) == 0 &&
-        obtener_cadena(&datos, 1, &negocio) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &ruta_libro) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 1, &negocio) == 0)
     {
         resultado = pg_contador_resumen_negocio(ruta_libro, negocio, &entradas, &salidas, &saldo);
         if (resultado == 0)
@@ -192,10 +171,10 @@ int modelo_pg_admin_configurar_presupuesto(char *texto)
     float limite = 0.0f;
 
     int resultado = -1;
-    if (obtener_cadena(&datos, 0, &ruta_presupuestos) == 0 &&
-        obtener_cadena(&datos, 1, &negocio) == 0 &&
-        obtener_cadena(&datos, 2, &rubro) == 0 &&
-        obtener_flotante(&datos, 3, &limite) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &ruta_presupuestos) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 1, &negocio) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 2, &rubro) == 0 &&
+        arreglo_obtener_flotante_por_orden(&datos, 3, &limite) == 0)
     {
         resultado = pg_administrador_configurar_presupuesto(ruta_presupuestos, negocio, rubro, limite);
     }
@@ -232,10 +211,10 @@ int modelo_pg_admin_verificar_presupuesto(char *texto)
     int excedido = 0;
 
     int resultado = -1;
-    if (obtener_cadena(&datos, 0, &ruta_libro) == 0 &&
-        obtener_cadena(&datos, 1, &ruta_presupuestos) == 0 &&
-        obtener_cadena(&datos, 2, &negocio) == 0 &&
-        obtener_cadena(&datos, 3, &rubro) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &ruta_libro) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 1, &ruta_presupuestos) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 2, &negocio) == 0 &&
+        arreglo_obtener_cadena_por_orden(&datos, 3, &rubro) == 0)
     {
         resultado = pg_administrador_verificar_presupuesto(ruta_libro, ruta_presupuestos, negocio, rubro,
                                                            &gastado, &limite, &disponible, &excedido);

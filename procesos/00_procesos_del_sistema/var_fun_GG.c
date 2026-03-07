@@ -109,7 +109,9 @@ const char *GG_ventana_emergente_productos[][5] = {
     {"2", "_29_INDICES_AÑO_REGISTRO_PRODUC_VENDIDO", "", "0", "TEXTO"},
     {"2", "_30_ULTIMA_VENTA", "", "", "TEXTO"},
     {"2", "_31_INDICES_TOTAL_REGISTRO_PRODUC_VENDIDO", "", "0", "TEXTO"},
+    {"2", "_32_TIPO_DE_PRODUCTO", "", "", "TEXTO"},
     {"2", "_32_NO_PONER_NADA", "", "", "TEXTO"}};
+
 /* Ventana: Cosas No Estaban en Inventario (3 campos) */
 const char *GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[3][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
@@ -178,13 +180,22 @@ const char *GG_ventana_APRENDICES_E[][5] = {
     {"1", "_30_TIPO_EMPLEADO", "", "NOSE", "TEXTO"},
     {"1", "_31_RANGO_CALIF", "", "-0", "TEXTO"}};
 
-/* Ventana: Afiliados Unificados (8 campos) */
+/* Ventana: Afiliados Unificados (8 campos)
+ *
+ * REGLA CLAVE:
+ * - _00_ID_USUARIO es el ID unico de persona para identificarla en el sistema.
+ *
+ * FORMATO DE _04_DATOS:
+ * - Estructura de pares clave/valor: clave╦valor¬clave╦valor
+ * - Subdato opcional al final: ...╔subdatooopcion
+ * - Ejemplo completo: nombre╦vic¬edad╦18╔subdatooopcion
+ */
 const char *GG_ventana_afiliados_unificados[][5] = {
     {"1", "_00_ID_USUARIO", "", "0", "TEXTO"},
     {"1", "_01_IDP", "", "0╔0╦0¬0╔1╦1", "TEXTO"},
     {"1", "_02_PUNTOS_D_R", "", "0╦0¬0╦0", "TEXTO"},
     {"1", "_03_PUNTOS_D_R_TOTALES", "", "0", "TEXTO"},
-    {"1", "_04_DATOS", "", "NOSE", "TEXTO"},
+    {"1", "_04_DATOS", "", "nombre╦vic¬edad╦18╔subdatooopcion", "TEXTO"},
     {"1", "_05_NIVEL", "", "0", "TEXTO"},
     {"1", "_06_ID_HORIZONTAL", "", "0", "TEXTO"},
     {"1", "_07_TIPO_AFILIADO", "", "NOSE", "TEXTO"}};
@@ -218,7 +229,17 @@ const char *GG_ventana_SUCUR[][5] = {
     {"1", "_18_ACTIVO_O_NO_ACTIVO", "", "NOSE", "TEXTO"},
     {"1", "_19_HORA_ABRIR_CERRAR", "", "NOSE", "TEXTO"}};
 
-/* Ventana: Registro Día (11 campos) */
+/*
+ * REGLA DE FORMATO PARA REGISTROS GG:
+ * - Las ventanas GG_ventana_reg_* son para movimientos de compra/venta y productos.
+ * - NO usar aqui el layout de contabilidad general:
+ *   "id|tipo|monto|quien|negocio|concepto|item_tipo|item_nombre|medio_pago|fecha"
+ * - NO usar aqui el layout de presupuesto:
+ *   "negocio|rubro|limite"
+ * - Cada GG_ventana_* mantiene su propio formato de columnas definido abajo.
+ */
+
+/* Ventana: Registro Dia (11 campos) - movimientos diarios */
 const char *GG_ventana_reg_dia[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_HORA", "", "0", "TEXTO"},
@@ -232,7 +253,7 @@ const char *GG_ventana_reg_dia[][5] = {
     {"1", "_09_TOTAL_DEDUSIBLES", "", "0", "TEXTO"},
     {"1", "_10_PLATAFORMA", "", "NOSE", "TEXTO"}};
 
-/* Ventana: Registro Mes (9 campos) */
+/* Ventana: Registro Mes (9 campos) - acumulado mensual */
 const char *GG_ventana_reg_mes[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_DIA", "", "0", "TEXTO"},
@@ -244,7 +265,7 @@ const char *GG_ventana_reg_mes[][5] = {
     {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
     {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}};
 
-/* Ventana: Registro Año (9 campos) */
+/* Ventana: Registro Anio (9 campos) - acumulado anual */
 const char *GG_ventana_reg_año[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_MES", "", "0", "TEXTO"},
@@ -256,7 +277,7 @@ const char *GG_ventana_reg_año[][5] = {
     {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
     {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}};
 
-/* Ventana: Registro Total (9 campos) */
+/* Ventana: Registro Total (9 campos) - acumulado historico */
 const char *GG_ventana_reg_total[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_AÑO", "", "0", "TEXTO"},
@@ -268,7 +289,7 @@ const char *GG_ventana_reg_total[][5] = {
     {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
     {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}};
 
-/* Ventana: Registro Productos Día (12 campos) */
+/* Ventana: Registro Productos Dia (12 campos) */
 const char *GG_ventana_reg_prod_dia[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
@@ -298,7 +319,7 @@ const char *GG_ventana_reg_prod_mes[][5] = {
     {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
     {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
 
-/* Ventana: Registro Productos Año (12 campos) */
+/* Ventana: Registro Productos Anio (12 campos) */
 const char *GG_ventana_reg_prod_año[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
@@ -328,7 +349,13 @@ const char *GG_ventana_reg_prod_total[][5] = {
     {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
     {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
 
-/* Ventana: Impuestos (6 campos) */
+/* Ventana: Presupuestos (3 campos) */
+const char *GG_ventana_presupuestos[][5] = {
+    {"1", "_00_NEGOCIO", "", "GENERAL", "TEXTO"},
+    {"1", "_01_RUBRO", "", "OPERACION", "TEXTO"},
+    {"1", "_02_LIMITE", "", "0", "TEXTO"}};
+
+/* Ventana: Impuestos (6 campos) - registros para pago de impuestos */
 const char *GG_ventana_IMPUESTOS[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_IMPUESTO", "", "0", "TEXTO"},
@@ -337,7 +364,7 @@ const char *GG_ventana_IMPUESTOS[][5] = {
     {"1", "_04_INFO_EXTRA", "", "NOSE", "TEXTO"},
     {"1", "_05_TIPO_IMPUESTO", "", "3", "TEXTO"}};
 
-/* Ventana: Deducibles (7 campos) */
+/* Ventana: Deducibles (7 campos) - registros para aplicar deducibles */
 const char *GG_ventana_DEDUSIBLES[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_FECHA", "", "0", "TEXTO"},
@@ -352,7 +379,7 @@ const char *GG_ventana_HERRAMIENTAS[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_COD_BAR", "", "", "TEXTO"}};
 
-/* Ventana: Trabajos por Día (8 campos) */
+/* Ventana: Trabajos por Dia (10 campos) - registro de trabajos por empleado */
 const char *GG_trabajos_dia[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_DIA", "", "", "TEXTO"},
@@ -361,7 +388,9 @@ const char *GG_trabajos_dia[][5] = {
     {"1", "_04_CANTIDAD", "", "", "TEXTO"},
     {"1", "_05_COSTO_COMP", "", "", "TEXTO"},
     {"1", "_06_ID_QUIENLOISO", "", "", "TEXTO"},
-    {"1", "_07_ID_PROGRAMA", "", "", "TEXTO"}};
+    {"1", "_07_ID_PROGRAMA", "", "", "TEXTO"},
+    {"1", "_07_ID_SUCURSAL", "", "", "TEXTO"},
+    {"1", "_08_ID_NEGOCIO", "", "", "TEXTO"}};
 
 void RecargarVentanaEmergenteDatosConfiguracion(const char *al_finalizar_que_borrar)
 {
@@ -722,4 +751,52 @@ char *columnas_concatenadas(ConfigField *arreglo, int filas, int id_columna, con
     }
 
     return resultado;
+}
+
+const char *GG_encabezado_ventana_reg_dia(void)
+{
+    static char encabezado[2048];
+    encabezado[0] = '\0';
+
+    int total_filas = (int)(sizeof(GG_ventana_reg_dia) / sizeof(GG_ventana_reg_dia[0]));
+    for (int i = 0; i < total_filas; i++)
+    {
+        const char *nombre_campo = GG_ventana_reg_dia[i][1];
+        if (!nombre_campo || nombre_campo[0] == '\0')
+        {
+            continue;
+        }
+
+        if (encabezado[0] != '\0')
+        {
+            strncat(encabezado, G_caracter_separacion[0], sizeof(encabezado) - strlen(encabezado) - 1);
+        }
+        strncat(encabezado, nombre_campo, sizeof(encabezado) - strlen(encabezado) - 1);
+    }
+
+    return encabezado;
+}
+
+const char *GG_encabezado_ventana_presupuestos(void)
+{
+    static char encabezado[512];
+    encabezado[0] = '\0';
+
+    int total_filas = (int)(sizeof(GG_ventana_presupuestos) / sizeof(GG_ventana_presupuestos[0]));
+    for (int i = 0; i < total_filas; i++)
+    {
+        const char *nombre_campo = GG_ventana_presupuestos[i][1];
+        if (!nombre_campo || nombre_campo[0] == '\0')
+        {
+            continue;
+        }
+
+        if (encabezado[0] != '\0')
+        {
+            strncat(encabezado, G_caracter_separacion[0], sizeof(encabezado) - strlen(encabezado) - 1);
+        }
+        strncat(encabezado, nombre_campo, sizeof(encabezado) - strlen(encabezado) - 1);
+    }
+
+    return encabezado;
 }

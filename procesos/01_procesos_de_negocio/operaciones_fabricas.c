@@ -13,8 +13,8 @@ static const char *ARCH_FAB_MOV = "fabrica_movimientos.txt";
 
 static void fabrica_asegurar_archivos(void)
 {
-    crearArchivo(ARCH_FAB_PRODUCTOS, "codigo|nombre|costo_unitario|stock|fecha");
-    crearArchivo(ARCH_FAB_MOV, "codigo|tipo|cantidad|responsable_destino|stock_final|fecha");
+    crearArchivo(ARCH_FAB_PRODUCTOS, "_00_CODIGO|_01_NOMBRE|_02_COSTO_UNITARIO|_03_STOCK|_04_FECHA");
+    crearArchivo(ARCH_FAB_MOV, "_00_CODIGO|_01_OPERACION|_02_CANTIDAD|_03_RESPONSABLE_DESTINO|_04_STOCK_FINAL|_05_FECHA");
 }
 
 static int fabrica_buscar_producto(char lineas[][MAX_LINEA], int n, const char *codigo)
@@ -37,6 +37,13 @@ static int fabrica_buscar_producto(char lineas[][MAX_LINEA], int n, const char *
     }
 
     return -1;
+}
+
+int fabrica_buscar_producto_en_archivo(const char *ruta_inventario,
+                                       const char *codigo,
+                                       char **fila_producto)
+{
+    return texto_buscar_fila_por_columna_en_archivo(ruta_inventario, 0, codigo, 1, fila_producto);
 }
 
 int fabrica_registrar_producto(const char *codigo, const char *nombre, float costo_unitario, int stock)

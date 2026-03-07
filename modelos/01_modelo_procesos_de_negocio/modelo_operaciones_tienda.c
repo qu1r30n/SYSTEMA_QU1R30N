@@ -27,41 +27,9 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_arreglos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
-
-static int obtener_entero_por_orden(StructurasDinamicas *datos, int orden, int *salida)
-{
-    int *ptr = (int *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -4;
-    }
-    *salida = *ptr;
-    return 0;
-}
-
-static int obtener_flotante_por_orden(StructurasDinamicas *datos, int orden, float *salida)
-{
-    float *ptr = (float *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -4;
-    }
-    *salida = *ptr;
-    return 0;
-}
-
-static int obtener_cadena_por_orden(StructurasDinamicas *datos, int orden, char **salida)
-{
-    char *ptr = (char *)obtenerValorPorOrden(datos, orden);
-    if (!ptr || !salida)
-    {
-        return -4;
-    }
-    *salida = ptr;
-    return 0;
-}
 
 static int construir_datos_desde_texto(
     char *texto,
@@ -193,7 +161,7 @@ int modelo_leerInventario(char *texto)
     }
 
     int maxProductos = 0;
-    if (obtener_entero_por_orden(&datos, 0, &maxProductos) != 0)
+    if (arreglo_obtener_entero_por_orden(&datos, 0, &maxProductos) != 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
@@ -241,7 +209,7 @@ int modelo_buscarProducto(char *texto)
     }
 
     char *codigo = NULL;
-    if (obtener_cadena_por_orden(&datos, 0, &codigo) != 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &codigo) != 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
@@ -297,15 +265,15 @@ int modelo_agregarProducto(char *texto)
     char *f1 = NULL;
     char *i1 = NULL;
 
-    if (obtener_entero_por_orden(&datos, 0, &a1) != 0 ||
-        obtener_cadena_por_orden(&datos, 1, &b1) != 0 ||
-        obtener_flotante_por_orden(&datos, 2, &c1) != 0 ||
-        obtener_cadena_por_orden(&datos, 3, &d1) != 0 ||
-        obtener_flotante_por_orden(&datos, 4, &e1) != 0 ||
-        obtener_cadena_por_orden(&datos, 5, &f1) != 0 ||
-        obtener_flotante_por_orden(&datos, 6, &g1) != 0 ||
-        obtener_flotante_por_orden(&datos, 7, &h1) != 0 ||
-        obtener_cadena_por_orden(&datos, 8, &i1) != 0)
+    if (arreglo_obtener_entero_por_orden(&datos, 0, &a1) != 0 ||
+        arreglo_obtener_cadena_por_orden(&datos, 1, &b1) != 0 ||
+        arreglo_obtener_flotante_por_orden(&datos, 2, &c1) != 0 ||
+        arreglo_obtener_cadena_por_orden(&datos, 3, &d1) != 0 ||
+        arreglo_obtener_flotante_por_orden(&datos, 4, &e1) != 0 ||
+        arreglo_obtener_cadena_por_orden(&datos, 5, &f1) != 0 ||
+        arreglo_obtener_flotante_por_orden(&datos, 6, &g1) != 0 ||
+        arreglo_obtener_flotante_por_orden(&datos, 7, &h1) != 0 ||
+        arreglo_obtener_cadena_por_orden(&datos, 8, &i1) != 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
@@ -366,9 +334,9 @@ int modelo_venta(char *texto)
     char *sucursal = NULL;
     int cantidad = 0;
 
-    if (obtener_cadena_por_orden(&datos, 0, &codigo) != 0 ||
-        obtener_entero_por_orden(&datos, 1, &cantidad) != 0 ||
-        obtener_cadena_por_orden(&datos, 2, &sucursal) != 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &codigo) != 0 ||
+        arreglo_obtener_entero_por_orden(&datos, 1, &cantidad) != 0 ||
+        arreglo_obtener_cadena_por_orden(&datos, 2, &sucursal) != 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
@@ -410,9 +378,9 @@ int modelo_compra(char *texto)
     char *proveedor = NULL;
     int cantidad = 0;
 
-    if (obtener_cadena_por_orden(&datos, 0, &codigo) != 0 ||
-        obtener_entero_por_orden(&datos, 1, &cantidad) != 0 ||
-        obtener_cadena_por_orden(&datos, 2, &proveedor) != 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &codigo) != 0 ||
+        arreglo_obtener_entero_por_orden(&datos, 1, &cantidad) != 0 ||
+        arreglo_obtener_cadena_por_orden(&datos, 2, &proveedor) != 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
@@ -450,7 +418,7 @@ int modelo_tienda_consultar_producto(char *texto)
     float stock = 0.0f;
 
     int ok = -4;
-    if (obtener_cadena_por_orden(&datos, 0, &codigo) == 0)
+    if (arreglo_obtener_cadena_por_orden(&datos, 0, &codigo) == 0)
     {
         ok = tienda_consultar_producto(codigo, &precio_venta, &stock);
         if (ok == 0)

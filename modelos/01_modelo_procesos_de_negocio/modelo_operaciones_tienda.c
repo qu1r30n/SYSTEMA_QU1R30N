@@ -216,15 +216,16 @@ int modelo_agregarProducto(char *texto)
     printf("i1 (string): %s\n", i1);  // checa si todo esta bien (para depuracion)
 
     agregarProducto(
-        a1,
-        b1,
-        c1,
-        d1,
-        e1,
-        f1,
-        g1,
-        h1,
-        i1);
+        a1, // int
+        b1, // string
+        c1, // float
+        d1, // string
+        e1, // float
+        f1, // string
+        g1, // float
+        h1, // float
+        i1  // string
+    );
 
     modelo_free_split(partes); // Libera la memoria del arreglo de partes
     liberarStructura(&datos);  // Libera la memoria de la estructura dinámica

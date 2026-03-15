@@ -1,4 +1,7 @@
 #include <string.h> // strlen, memcpy, strstr
+#include <stdio.h>  // snprintf
+#include <stdarg.h> // va_list, va_start, va_end
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 
 #ifdef _WIN32
 #include <stdlib.h> // malloc, realloc, free
@@ -412,5 +415,122 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
     }
 
     *var_a_retornar = valor * signo;
+    return 0;
+}
+
+/*
+Ejemplos de uso (entrada -> salida):
+
+1) Texto sin separador inicial:
+    destino = ""
+    valor = "producto"
+    tipo_valor = CONCAT_TEXTO
+    caracter_separacion = "|"
+    salida destino = "producto"
+
+2) Texto con separador automatico:
+    destino = "producto"
+    valor = "Leche"
+    tipo_valor = CONCAT_TEXTO
+    caracter_separacion = "|"
+    salida destino = "producto|Leche"
+
+3) Entero:
+    destino = "producto|Leche"
+    valor = &cantidad (cantidad = 5)
+    tipo_valor = CONCAT_INT
+    caracter_separacion = "|"
+    salida destino = "producto|Leche|5"
+
+4) Float:
+    destino = "producto|Leche|5"
+    valor = &precio (precio = 12.5f)
+    tipo_valor = CONCAT_FLOAT
+    caracter_separacion = "|"
+    salida destino = "producto|Leche|5|12.50"
+*/
+int concatenar(char *destino, size_t capacidad_destino, const void *valor, int tipo_valor, const char *caracter_separacion)
+{
+    if (destino == NULL || valor == NULL || capacidad_destino == 0)
+    {
+        return -1;
+    }
+
+    size_t largo_actual = strlen(destino);
+    if (largo_actual >= capacidad_destino)
+    {
+        return -1;
+    }
+
+    size_t restante = capacidad_destino - largo_actual;
+    int escritos = 0;
+
+    if (caracter_separacion != NULL && caracter_separacion[0] != '\0' && largo_actual > 0)
+    {
+        escritos = snprintf(destino + largo_actual, restante, "%s", caracter_separacion);
+        if (escritos < 0 || (size_t)escritos >= restante)
+        {
+            return -1;
+        }
+
+        largo_actual += (size_t)escritos;
+        restante -= (size_t)escritos;
+    }
+
+    if (tipo_valor == CONCAT_TEXTO)
+    {
+        escritos = snprintf(destino + largo_actual, restante, "%s", (const char *)valor);
+    }
+    else if (tipo_valor == CONCAT_INT)
+    {
+        escritos = snprintf(destino + largo_actual, restante, "%d", *(const int *)valor);
+    }
+    else if (tipo_valor == CONCAT_FLOAT)
+    {
+        escritos = snprintf(destino + largo_actual, restante, "%.2f", *(const float *)valor);
+    }
+    else
+    {
+        return -1;
+    }
+
+    if (escritos < 0 || (size_t)escritos >= restante)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+/*
+Ejemplo:
+    char salida[128] = "";
+    concatenar_formato(salida, "%s", "producto");
+    concatenar_formato(salida, "|%d", 5);
+    concatenar_formato(salida, "|%.2f", 12.5f);
+
+Resultado en salida:
+    "producto|5|12.50"
+*/
+int concatenar_formato(char *destino, const char *formato, ...)
+{
+    if (destino == NULL || formato == NULL)
+    {
+        return -1;
+    }
+
+    /* Version simple estilo printf; el llamador debe asegurar que destino tenga espacio suficiente. */
+    size_t largo_actual = strlen(destino);
+
+    va_list args;
+    va_start(args, formato);
+    int escritos = vsprintf(destino + largo_actual, formato, args);
+    va_end(args);
+
+    if (escritos < 0)
+    {
+        return -1;
+    }
+
     return 0;
 }

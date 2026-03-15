@@ -36,9 +36,10 @@ void modelo_fechaActual(char *texto)
         cuantas_partes++;
     }
 
-    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+    StructurasDinamicas datos = crearStructuraVacia();
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
 
-    if (cuantas_partes <= 0)
+    if (ret_parse < 0 || cuantas_partes <= 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
@@ -84,9 +85,10 @@ void modelo_delay_ms(char *texto)
         cuantas_partes++;
     }
 
-    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+    StructurasDinamicas datos = crearStructuraVacia();
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
 
-    if (cuantas_partes <= 0)
+    if (ret_parse < 0 || cuantas_partes <= 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);

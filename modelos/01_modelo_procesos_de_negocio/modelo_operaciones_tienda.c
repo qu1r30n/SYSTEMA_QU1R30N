@@ -63,13 +63,14 @@ int modelo_leerInventario(char *texto)
         cuantas_partes++;
     }
 
-    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+    StructurasDinamicas datos = crearStructuraVacia();
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
 
-    if (cuantas_partes <= 0)
+    if (ret_parse < 0 || cuantas_partes <= 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
-        return -3;
+        return (ret_parse < 0) ? ret_parse : -3;
     }
 
     // texto: "maxProductos"
@@ -125,13 +126,14 @@ int modelo_buscarProducto(char *texto)
         cuantas_partes++;
     }
 
-    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+    StructurasDinamicas datos = crearStructuraVacia();
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
 
-    if (cuantas_partes <= 0)
+    if (ret_parse < 0 || cuantas_partes <= 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
-        return -3;
+        return (ret_parse < 0) ? ret_parse : -3;
     }
 
     // texto: "codigo"
@@ -157,15 +159,38 @@ int modelo_agregarProducto(char *texto)
 
     char *nombres_variables[][4] = // Arreglo de campos esperados con su tipo y valor por defecto
         {
-            {"id", "int", "0", ""},
-            {"producto", "string", "nose", ""},
-            {"contenido", "float", "0", ""},
-            {"tipo_medida", "string", "nose", ""},
-            {"precio_venta", "float", "0", ""},
-            {"cod_barras", "string", "nose", ""},
-            {"cantidad", "float", "0", ""},
-            {"costo_compra", "float", "0", ""},
-            {"proveedor", "string", "nose", ""},
+            {"producto", "string", "NOSE", ""},
+            {"contenido", "float", "-0", ""},
+            {"tipo_medida", "string", "NOSE", ""},
+            {"precio_venta", "float", "-0", ""},
+            {"cod_barras", "string", "NOSE", ""},
+            {"cantidad", "float", "-0", ""},
+            {"costo_comp", "float", "-0", ""},
+            {"provedor", "string", "NOSE¬0", ""},
+            {"grupo", "string", "PRODUCTO_PIEZA", ""},
+            {"cant_x_paquet", "float", "-0", ""},
+            {"es_paquete", "string", "INDIVIDUAL", ""},
+            {"codbar_paquete_e_id", "string", "NOSE_2", ""},
+            {"cod_bar_individual_es_paq_e_id", "string", "NOSE_3¬1", ""},
+            {"ligar_prod_sab", "string", "NOSE", ""},
+            {"impuestos", "string", "NOSE", ""},
+            {"ingredientes", "string", "NOSE", ""},
+            {"caducidad", "string", "-0", ""},
+            {"ultimo_mov", "string", "-0", ""},
+            {"sucur_vent", "string", "NOSE¬0", ""},
+            {"claf_prod", "float", "-0", ""},
+            {"dir_img_inter", "string", "NOSE", ""},
+            {"dir_img_comp", "string", "NOSE", ""},
+            {"info_extra", "string", "NOSE", ""},
+            {"proceso_crear", "string", "NOSE", ""},
+            {"dir_vid_proc_crear", "string", "NOSE", ""},
+            {"tiempo_fabricacion", "float", "-0", ""},
+            {"indices_dia_registro_produc_vendido", "string", "0", ""},
+            {"indices_mes_registro_produc_vendido", "string", "0", ""},
+            {"indices_anio_registro_produc_vendido", "string", "0", ""},
+            {"ultima_venta", "string", "", ""},
+            {"indices_total_registro_produc_vendido", "string", "0", ""},
+            {"no_poner_nada", "string", "", ""},
             {NULL, NULL, NULL, NULL}};
 
     int cuantos_parametros_hay = 0;
@@ -186,46 +211,49 @@ int modelo_agregarProducto(char *texto)
         cuantas_partes++;
     }
 
-    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+    StructurasDinamicas datos = crearStructuraVacia();
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
 
-    if (cuantas_partes <= 0)
+    if (ret_parse < 0 || cuantas_partes <= 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
-        return -3;
+        return (ret_parse < 0) ? ret_parse : -3;
     }
 
-    int a1 = *(int *)obtenerValorPorOrden(&datos, 0);     // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
-    char *b1 = (char *)obtenerValorPorOrden(&datos, 1);   // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
-    float c1 = *(float *)obtenerValorPorOrden(&datos, 2); // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
-    char *d1 = (char *)obtenerValorPorOrden(&datos, 3);   // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
-    float e1 = *(float *)obtenerValorPorOrden(&datos, 4); // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
-    char *f1 = (char *)obtenerValorPorOrden(&datos, 5);   // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
-    float g1 = *(float *)obtenerValorPorOrden(&datos, 6); // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
-    float h1 = *(float *)obtenerValorPorOrden(&datos, 7); // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
-    char *i1 = (char *)obtenerValorPorOrden(&datos, 8);   // estos son solo para ver si los valores se están obteniendo correctamente de la estructura dinámica. Luego se usarán directamente en la función agregarProducto.
-
-    printf("a1 (int): %d\n", a1);     // checa si todo esta bien (para depuracion)
-    printf("b1 (string): %s\n", b1);  // checa si todo esta bien (para depuracion)
-    printf("c1 (float): %.2f\n", c1); // checa si todo esta bien (para depuracion)
-    printf("d1 (string): %s\n", d1);  // checa si todo esta bien (para depuracion)
-    printf("e1 (float): %.2f\n", e1); // checa si todo esta bien (para depuracion)
-    printf("f1 (string): %s\n", f1);  // checa si todo esta bien (para depuracion)
-    printf("g1 (float): %.2f\n", g1); // checa si todo esta bien (para depuracion)
-    printf("h1 (float): %.2f\n", h1); // checa si todo esta bien (para depuracion)
-    printf("i1 (string): %s\n", i1);  // checa si todo esta bien (para depuracion)
-
     agregarProducto(
-        a1, // int
-        b1, // string
-        c1, // float
-        d1, // string
-        e1, // float
-        f1, // string
-        g1, // float
-        h1, // float
-        i1  // string
-    );
+        (char *)obtenerValorPorOrden(&datos, 0),
+        *(float *)obtenerValorPorOrden(&datos, 1),
+        (char *)obtenerValorPorOrden(&datos, 2),
+        *(float *)obtenerValorPorOrden(&datos, 3),
+        (char *)obtenerValorPorOrden(&datos, 4),
+        *(float *)obtenerValorPorOrden(&datos, 5),
+        *(float *)obtenerValorPorOrden(&datos, 6),
+        (char *)obtenerValorPorOrden(&datos, 7),
+        (char *)obtenerValorPorOrden(&datos, 8),
+        *(float *)obtenerValorPorOrden(&datos, 9),
+        (char *)obtenerValorPorOrden(&datos, 10),
+        (char *)obtenerValorPorOrden(&datos, 11),
+        (char *)obtenerValorPorOrden(&datos, 12),
+        (char *)obtenerValorPorOrden(&datos, 13),
+        (char *)obtenerValorPorOrden(&datos, 14),
+        (char *)obtenerValorPorOrden(&datos, 15),
+        (char *)obtenerValorPorOrden(&datos, 16),
+        (char *)obtenerValorPorOrden(&datos, 17),
+        (char *)obtenerValorPorOrden(&datos, 18),
+        *(float *)obtenerValorPorOrden(&datos, 19),
+        (char *)obtenerValorPorOrden(&datos, 20),
+        (char *)obtenerValorPorOrden(&datos, 21),
+        (char *)obtenerValorPorOrden(&datos, 22),
+        (char *)obtenerValorPorOrden(&datos, 23),
+        (char *)obtenerValorPorOrden(&datos, 24),
+        *(float *)obtenerValorPorOrden(&datos, 25),
+        (char *)obtenerValorPorOrden(&datos, 26),
+        (char *)obtenerValorPorOrden(&datos, 27),
+        (char *)obtenerValorPorOrden(&datos, 28),
+        (char *)obtenerValorPorOrden(&datos, 29),
+        (char *)obtenerValorPorOrden(&datos, 30),
+        (char *)obtenerValorPorOrden(&datos, 31));
 
     modelo_free_split(partes); // Libera la memoria del arreglo de partes
     liberarStructura(&datos);  // Libera la memoria de la estructura dinámica
@@ -265,13 +293,14 @@ int modelo_venta(char *texto)
         cuantas_partes++;
     }
 
-    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[2]);
+    StructurasDinamicas datos = crearStructuraVacia();
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[2], &datos);
 
-    if (cuantas_partes <= 0)
+    if (ret_parse < 0 || cuantas_partes <= 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
-        return -3;
+        return (ret_parse < 0) ? ret_parse : -3;
     }
 
     // texto: "codigo|cantidad|sucursal"
@@ -319,13 +348,14 @@ int modelo_compra(char *texto)
         cuantas_partes++;
     }
 
-    StructurasDinamicas datos = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0]);
+    StructurasDinamicas datos = crearStructuraVacia();
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
 
-    if (cuantas_partes <= 0)
+    if (ret_parse < 0 || cuantas_partes <= 0)
     {
         modelo_free_split(partes);
         liberarStructura(&datos);
-        return -3;
+        return (ret_parse < 0) ? ret_parse : -3;
     }
 
     // texto: "codigo|cantidad|proveedor"

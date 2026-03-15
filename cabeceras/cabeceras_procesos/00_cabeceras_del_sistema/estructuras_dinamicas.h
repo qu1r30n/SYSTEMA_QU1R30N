@@ -1,9 +1,9 @@
 #ifndef ESTRUCTURAS_DINAMICAS_H
 #define ESTRUCTURAS_DINAMICAS_H
 /* Macros para tipos */
-#define TIPO_STRING 0
-#define TIPO_INT 1
-#define TIPO_FLOAT 2
+#define TIPO_STRING 0 /* string */
+#define TIPO_INT 1    /* int */
+#define TIPO_FLOAT 2  /* float */
 typedef struct
 {
     char **arreglo_char;
@@ -48,7 +48,7 @@ StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4]);
 /* Obtener valor de estructura por orden de inserción */
 void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden);
 
-/* Procesar partes de texto y cargar en estructura */
-StructurasDinamicas procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const char *separador);
+/* Procesar partes de texto y cargar en estructura. Retorna 0 si todo salio bien, <0 si hubo error. */
+int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const char *separador, StructurasDinamicas *a_retornar);
 
 #endif

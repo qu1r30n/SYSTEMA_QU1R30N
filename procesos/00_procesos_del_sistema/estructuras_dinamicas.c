@@ -18,6 +18,7 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
+#include "../../cabeceras/codigos_retorno.h"
 
 /* ============================================= */
 /* EJEMPLO DE USO                                */
@@ -49,9 +50,9 @@
 */
 
 /* Macros para tipos */
-#define TIPO_STRING 0
-#define TIPO_INT 1
-#define TIPO_FLOAT 2
+#define TIPO_STRING 0 /* string */
+#define TIPO_INT 1    /* int */
+#define TIPO_FLOAT 2  /* float */
 
 /* ============================================= */
 /* CREAR ESTRUCTURA DIN??MICA VAC??A              */
@@ -127,7 +128,7 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
         imprimirMensaje_para_depurar("DESPUES arreglo_char: %p, count_string: %d, nuevo elemento: %p\n", (void *)s->arreglo_char, s->count_string, (void *)s->arreglo_char[s->count_string]); // Imprime la dirección del arreglo de strings, el contador de strings y la dirección del nuevo elemento después del realloc (para depuración)
 
         imprimirMensaje_para_depurar("ANTES: orden_tipo[%d]=%d\norden_indice[%d]=%d\ncount_string=%d\n", s->total - 1, s->orden_tipo[s->total - 1], s->total - 1, s->orden_indice[s->total - 1], s->count_string);   // Imprime el tipo y el índice que se van a asignar antes de asignarlos (para depuración)
-        s->orden_tipo[s->total - 1] = TIPO_STRING;                                                                                                                                                                   // guarda tipo = 0
+        s->orden_tipo[s->total - 1] = TIPO_STRING;                                                                                                                                                                   // TIPO_STRING = 0
         s->orden_indice[s->total - 1] = s->count_string;                                                                                                                                                             // índice dentro del arreglo de strings
         s->count_string++;                                                                                                                                                                                           // aumenta contador de strings
         imprimirMensaje_para_depurar("DESPUES: orden_tipo[%d]=%d\norden_indice[%d]=%d\ncount_string=%d\n", s->total - 1, s->orden_tipo[s->total - 1], s->total - 1, s->orden_indice[s->total - 1], s->count_string); // Imprime el tipo y el índice que se asigno (para depuración)
@@ -140,7 +141,7 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
         imprimirMensaje_para_depurar("DESPUES arreglo_int: %p, count_int: %d, nuevo elemento: %d\n", (void *)s->arreglo_int, s->count_int, s->arreglo_int[s->count_int]); // Imprime la dirección del arreglo de enteros, el contador de enteros y el valor del nuevo elemento después del realloc (para depuración)
 
         imprimirMensaje_para_depurar("ANTES: orden_tipo[%d]=%d\norden_indice[%d]=%d\ncount_string=%d\n", s->total - 1, s->orden_tipo[s->total - 1], s->total - 1, s->orden_indice[s->total - 1], s->count_string); // Imprime el tipo y el índice que se van a asignar antes de asignarlos (para depuración)
-        s->orden_tipo[s->total - 1] = TIPO_INT;                                                                                                                                                                    // índice dentro del arreglo de int
+        s->orden_tipo[s->total - 1] = TIPO_INT;                                                                                                                                                                    // TIPO_INT = 1
         s->orden_indice[s->total - 1] = s->count_int;                                                                                                                                                              // índice dentro del arreglo de enteros
         s->count_int++;                                                                                                                                                                                            // aumenta contador de enteros
         imprimirMensaje_para_depurar("DESPUES arreglo_int: %p, count_int: %d, nuevo elemento: %d\n", (void *)s->arreglo_int, s->count_int, s->arreglo_int[s->count_int]);                                          // Imprime la dirección del arreglo de enteros, el contador de enteros y el valor del nuevo elemento después del realloc (para depuración)
@@ -153,7 +154,7 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
         imprimirMensaje_para_depurar("DESPUES arreglo_float: %p, count_float: %d, nuevo elemento: %.2f\n", (void *)s->arreglo_float, s->count_float, s->arreglo_float[s->count_float]); // Imprime la dirección del arreglo de floats, el contador de floats y el valor del nuevo elemento después del realloc (para depuración)
 
         imprimirMensaje_para_depurar("ANTES: orden_tipo[%d]=%d\norden_indice[%d]=%d\ncount_string=%d\n", s->total - 1, s->orden_tipo[s->total - 1], s->total - 1, s->orden_indice[s->total - 1], s->count_string); // Imprime el tipo y el índice que se van a asignar antes de asignarlos (para depuración)
-        s->orden_tipo[s->total - 1] = TIPO_FLOAT;                                                                                                                                                                  // índice dentro del arreglo de float
+        s->orden_tipo[s->total - 1] = TIPO_FLOAT;                                                                                                                                                                  // TIPO_FLOAT = 2
         s->orden_indice[s->total - 1] = s->count_float;                                                                                                                                                            // índice dentro del arreglo de floats
         s->count_float++;                                                                                                                                                                                          // aumenta contador de floats
         imprimirMensaje_para_depurar("DESPUES arreglo_float: %p, count_float: %d, nuevo elemento: %.2f\n", (void *)s->arreglo_float, s->count_float, s->arreglo_float[s->count_float]);                            // Imprime la dirección del arreglo de floats, el contador de floats y el valor del nuevo elemento después del realloc (para depuración)
@@ -176,16 +177,16 @@ void imprimirStructura(StructurasDinamicas *s)
     {
         imprimirMensaje_para_depurar("%s = ", s->nombres[i]); // Imprime el nombre del campo
 
-        if (s->orden_tipo[i] == TIPO_STRING) // Si el tipo es string, imprime el valor del arreglo de strings en la posición indicada por orden_indice
+        if (s->orden_tipo[i] == TIPO_STRING) // TIPO_STRING = 0
         {
             char *valor = s->arreglo_char[s->orden_indice[i]];            // valor del campo (string)
             imprimirMensaje_para_depurar("%s\n", valor ? valor : "NULL"); // Imprime el valor del campo o "NULL" si es NULL
         }
-        else if (s->orden_tipo[i] == TIPO_INT) // Si el tipo es int, imprime el valor del arreglo de enteros en la posición indicada por orden_indice
+        else if (s->orden_tipo[i] == TIPO_INT) // TIPO_INT = 1
         {
             imprimirMensaje_para_depurar("%d\n", s->arreglo_int[s->orden_indice[i]]); // Imprime el valor del campo (int)
         }
-        else if (s->orden_tipo[i] == TIPO_FLOAT) // Si el tipo es float, imprime el valor del arreglo de floats en la posición indicada por orden_indice
+        else if (s->orden_tipo[i] == TIPO_FLOAT) // TIPO_FLOAT = 2
         {
             imprimirMensaje_para_depurar("%.2f\n", s->arreglo_float[s->orden_indice[i]]); // Imprime el valor del campo (float)
         }
@@ -209,7 +210,7 @@ void asignarValorString(StructurasDinamicas *s, const char *nombre, const char *
     {
         imprimirMensaje_para_depurar("%d | %s | %s\n", i, s->nombres[i], nombre); // Imprime el índice, el nombre del campo actual y el nombre que se busca (para depuración)
 
-        if (strcmp(s->nombres[i], nombre) == 0 && s->orden_tipo[i] == TIPO_STRING) // Si encuentra el campo con el nombre y tipo string
+        if (strcmp(s->nombres[i], nombre) == 0 && s->orden_tipo[i] == TIPO_STRING) // TIPO_STRING = 0
         {
             /* Liberar valor anterior si existe */
             if (s->arreglo_char[s->orden_indice[i]]) // Si el campo ya tiene un valor asignado (no es NULL), libera la memoria para evitar fugas
@@ -244,7 +245,7 @@ void asignarValorInt(StructurasDinamicas *s, const char *nombre, int valor)
     {
         imprimirMensaje_para_depurar("asignarValorInt revisando: i=%d, campo=%s\n", i, s->nombres[i]);
 
-        if (strcmp(s->nombres[i], nombre) == 0 && s->orden_tipo[i] == TIPO_INT) // Si encuentra el campo con el nombre y tipo int
+        if (strcmp(s->nombres[i], nombre) == 0 && s->orden_tipo[i] == TIPO_INT) // TIPO_INT = 1
         {
             s->arreglo_int[s->orden_indice[i]] = valor; // Asigna el valor al campo (int)
             imprimirMensaje_para_depurar("asignarValorInt aplicado: %s=%d\n", nombre, s->arreglo_int[s->orden_indice[i]]);
@@ -272,7 +273,7 @@ void asignarValorFloat(StructurasDinamicas *s, const char *nombre, float valor)
     {
         imprimirMensaje_para_depurar("asignarValorFloat revisando: i=%d, campo=%s\n", i, s->nombres[i]);
 
-        if (strcmp(s->nombres[i], nombre) == 0 && s->orden_tipo[i] == TIPO_FLOAT) // Si encuentra el campo con el nombre y tipo float
+        if (strcmp(s->nombres[i], nombre) == 0 && s->orden_tipo[i] == TIPO_FLOAT) // TIPO_FLOAT = 2
         {
             s->arreglo_float[s->orden_indice[i]] = valor; // Asigna el valor al campo (float)
             imprimirMensaje_para_depurar("asignarValorFloat aplicado: %s=%.2f\n", nombre, s->arreglo_float[s->orden_indice[i]]);
@@ -416,15 +417,15 @@ void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden)
     int tipo = datos->orden_tipo[orden];     // Obtiene el tipo del campo según el orden de inserción
     int indice = datos->orden_indice[orden]; // Obtiene el índice del campo según el orden de inserción
 
-    if (tipo == TIPO_STRING) // Si el tipo del campo es string
+    if (tipo == TIPO_STRING) // TIPO_STRING = 0
     {
         return (void *)datos->arreglo_char[indice]; // Retorna el valor del campo de tipo string en la posición indicada por el índice
     }
-    else if (tipo == TIPO_INT) // Si el tipo del campo es int
+    else if (tipo == TIPO_INT) // TIPO_INT = 1
     {
         return (void *)&datos->arreglo_int[indice]; // Retorna el valor del campo de tipo int en la posición indicada por el índice
     }
-    else if (tipo == TIPO_FLOAT) // Si el tipo del campo es float
+    else if (tipo == TIPO_FLOAT) // TIPO_FLOAT = 2
     {
         return (void *)&datos->arreglo_float[indice]; // Retorna el valor del campo de tipo float en la posición indicada por el índice
     }
@@ -433,17 +434,31 @@ void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden)
 }
 
 /* Procesar partes de texto y cargar en estructura */
-StructurasDinamicas procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const char *separador)
+int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const char *separador, StructurasDinamicas *a_retornar)
 {
+    if (!partes || !nombres_variables || !separador || !a_retornar)
+    {
+        return -2; // Si algún puntero es NULL, retorna un error específico para indicar parámetros inválidos
+    }
+
     StructurasDinamicas datos = cargarDesdeArreglo(nombres_variables);
 
     int i = 0;
     while (partes[i]) // Recorre las partes del texto hasta encontrar un NULL
     {
         char **nom_parametro_dato = modelo_split(partes[i], separador); // Divide cada parte del texto en nombre de parámetro y valor usando el separador especificado
+
+        if (!nom_parametro_dato)
+        {
+            liberarStructura(&datos);
+            return -1; // Si la división del texto en nombre de parámetro y valor falla (modelo_split devuelve NULL), libera la estructura creada y retorna un error genérico
+        }
+
+        int contador_elementos_parametro = 0;
         for (int j = 0; nom_parametro_dato[j] != NULL; j++)
         {
             imprimirMensaje_para_depurar("nom_parametro_dato[%d]: %s  separador:%s\n", j, nom_parametro_dato[j], separador);
+            contador_elementos_parametro++;
         }
 
         if (nom_parametro_dato && nom_parametro_dato[0] && nom_parametro_dato[1]) // Verifica que la división haya sido exitosa y que ambos elementos existan
@@ -451,6 +466,15 @@ StructurasDinamicas procesar_partes_del_texto(char **partes, char *nombres_varia
             int j = 0;
             while (nombres_variables[j][0]) // Recorre el arreglo de nombres de variables hasta encontrar un NULL
             {
+                if (contador_elementos_parametro > 2 &&
+                    strcmp(nom_parametro_dato[1], "") == 0 &&
+                    strcmp(nom_parametro_dato[2], "no_predeterminado") == 0) // Verifica que la división del texto en nombre de parámetro y valor haya resultado en al menos 2 elementos (nombre y valor)
+                {
+                    modelo_free_split(nom_parametro_dato);
+                    liberarStructura(&datos);
+                    return -1; // si no se quiere el valor predeterminado y el valor está vacío, se retorna un error -1 para indicar que no se asignará ningún valor a ese campo y no prosedera con el agregado
+                }
+
                 if (strcmp(nombres_variables[j][0], nom_parametro_dato[0]) == 0) // Compara el nombre del parámetro con el nombre de la variable
                 {
                     if (strcmp(nombres_variables[j][1], "string") == 0) // Si el tipo del campo es string
@@ -485,5 +509,6 @@ StructurasDinamicas procesar_partes_del_texto(char **partes, char *nombres_varia
         i++;
     }
 
-    return datos;
+    *a_retornar = datos;
+    return 0; // Retorna 0 para indicar que el procesamiento fue exitoso
 }

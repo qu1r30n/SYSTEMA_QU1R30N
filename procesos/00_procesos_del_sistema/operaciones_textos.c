@@ -1,3 +1,11 @@
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
+ * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
+ * - stdarg.h: Argumentos variables de funciones tipo printf
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h: Dependencia interna del proyecto
+ * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
+ * - xc.h: Cabecera del compilador para microcontroladores PIC
+ */
 #include <string.h> // strlen, memcpy, strstr
 #include <stdio.h>  // snprintf
 #include <stdarg.h> // va_list, va_start, va_end
@@ -419,82 +427,155 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
 }
 
 /*
-Ejemplos de uso (entrada -> salida):
+Ejemplo:
+    char salida[128] = "";
+    concatenar_formato(salida, NULL, "%s", "producto");
+    concatenar_formato(salida, "|", "%d", 5);
+    concatenar_formato(salida, "|", "%.2f", 12.5f);
 
-1) Texto sin separador inicial:
-    destino = ""
-    valor = "producto"
-    tipo_valor = CONCAT_TEXTO
-    caracter_separacion = "|"
-    salida destino = "producto"
-
-2) Texto con separador automatico:
-    destino = "producto"
-    valor = "Leche"
-    tipo_valor = CONCAT_TEXTO
-    caracter_separacion = "|"
-    salida destino = "producto|Leche"
-
-3) Entero:
-    destino = "producto|Leche"
-    valor = &cantidad (cantidad = 5)
-    tipo_valor = CONCAT_INT
-    caracter_separacion = "|"
-    salida destino = "producto|Leche|5"
-
-4) Float:
-    destino = "producto|Leche|5"
-    valor = &precio (precio = 12.5f)
-    tipo_valor = CONCAT_FLOAT
-    caracter_separacion = "|"
-    salida destino = "producto|Leche|5|12.50"
+Resultado en salida:
+    "producto|5|12.50"
 */
-int concatenar(char *destino, size_t capacidad_destino, const void *valor, int tipo_valor, const char *caracter_separacion)
+int concatenar_formato_separado_por_variable(char **destino, const char *separador, const char *formato, ...)
 {
-    if (destino == NULL || valor == NULL || capacidad_destino == 0)
+    if (destino == NULL || formato == NULL)
     {
         return -1;
     }
 
-    size_t largo_actual = strlen(destino);
-    if (largo_actual >= capacidad_destino)
+    if (*destino == NULL)
     {
-        return -1;
-    }
-
-    size_t restante = capacidad_destino - largo_actual;
-    int escritos = 0;
-
-    if (caracter_separacion != NULL && caracter_separacion[0] != '\0' && largo_actual > 0)
-    {
-        escritos = snprintf(destino + largo_actual, restante, "%s", caracter_separacion);
-        if (escritos < 0 || (size_t)escritos >= restante)
+        *destino = malloc(1);
+        if (*destino == NULL)
         {
             return -1;
         }
-
-        largo_actual += (size_t)escritos;
-        restante -= (size_t)escritos;
+        (*destino)[0] = '\0';
     }
 
-    if (tipo_valor == CONCAT_TEXTO)
+    size_t largo_actual = strlen(*destino);
+
+    const char *formato_a_usar = formato;
+    char *formato_expandido = NULL;
+
+    if (separador != NULL && separador[0] != '\0')
     {
-        escritos = snprintf(destino + largo_actual, restante, "%s", (const char *)valor);
+        size_t len_formato = strlen(formato);
+        size_t len_sep = strlen(separador);
+        size_t cantidad_specs = 0;
+
+        for (size_t i = 0; i < len_formato; i++)
+        {
+            if (formato[i] == '%')
+            {
+                i++;
+
+                if (i >= len_formato)
+                {
+                    break;
+                }
+
+                if (formato[i] == '%')
+                {
+                    continue;
+                }
+
+                while (i < len_formato && strchr("diuoxXfFeEgGaAcspn", formato[i]) == NULL)
+                {
+                    i++;
+                }
+
+                if (i < len_formato)
+                {
+                    cantidad_specs++;
+                }
+            }
+        }
+
+        if (cantidad_specs > 0)
+        {
+            size_t len_expandido = len_formato + (cantidad_specs * len_sep) + 1;
+            formato_expandido = malloc(len_expandido);
+
+            if (formato_expandido == NULL)
+            {
+                return -1;
+            }
+
+            size_t j = 0;
+
+            for (size_t i = 0; i < len_formato; i++)
+            {
+                formato_expandido[j++] = formato[i];
+
+                if (formato[i] == '%')
+                {
+                    i++;
+
+                    if (i >= len_formato)
+                    {
+                        break;
+                    }
+
+                    formato_expandido[j++] = formato[i];
+
+                    if (formato[i] == '%')
+                    {
+                        continue;
+                    }
+
+                    while (i < len_formato && strchr("diuoxXfFeEgGaAcspn", formato[i]) == NULL)
+                    {
+                        i++;
+                        if (i < len_formato)
+                        {
+                            formato_expandido[j++] = formato[i];
+                        }
+                    }
+
+                    if (i < len_formato)
+                    {
+                        memcpy(formato_expandido + j, separador, len_sep);
+                        j += len_sep;
+                    }
+                }
+            }
+
+            formato_expandido[j] = '\0';
+            formato_a_usar = formato_expandido;
+        }
     }
-    else if (tipo_valor == CONCAT_INT)
+
+    va_list args;
+    va_start(args, formato);
+
+    va_list args_len;
+    va_copy(args_len, args);
+    int necesarios = vsnprintf(NULL, 0, formato_a_usar, args_len);
+    va_end(args_len);
+
+    if (necesarios < 0)
     {
-        escritos = snprintf(destino + largo_actual, restante, "%d", *(const int *)valor);
-    }
-    else if (tipo_valor == CONCAT_FLOAT)
-    {
-        escritos = snprintf(destino + largo_actual, restante, "%.2f", *(const float *)valor);
-    }
-    else
-    {
+        va_end(args);
+        free(formato_expandido);
         return -1;
     }
 
-    if (escritos < 0 || (size_t)escritos >= restante)
+    char *tmp = realloc(*destino, largo_actual + (size_t)necesarios + 1);
+    if (tmp == NULL)
+    {
+        va_end(args);
+        free(formato_expandido);
+        return -1;
+    }
+
+    *destino = tmp;
+    int escritos = vsnprintf(*destino + largo_actual, (size_t)necesarios + 1, formato_a_usar, args);
+    va_end(args);
+
+    free(formato_expandido);
+
+    if (escritos < 0)
     {
         return -1;
     }
@@ -502,24 +583,13 @@ int concatenar(char *destino, size_t capacidad_destino, const void *valor, int t
     return 0;
 }
 
-/*
-Ejemplo:
-    char salida[128] = "";
-    concatenar_formato(salida, "%s", "producto");
-    concatenar_formato(salida, "|%d", 5);
-    concatenar_formato(salida, "|%.2f", 12.5f);
-
-Resultado en salida:
-    "producto|5|12.50"
-*/
-int concatenar_formato(char *destino, const char *formato, ...)
+int concatenar_formato(char *destino, const char *separador, const char *formato, ...)
 {
     if (destino == NULL || formato == NULL)
     {
         return -1;
     }
 
-    /* Version simple estilo printf; el llamador debe asegurar que destino tenga espacio suficiente. */
     size_t largo_actual = strlen(destino);
 
     va_list args;
@@ -530,6 +600,12 @@ int concatenar_formato(char *destino, const char *formato, ...)
     if (escritos < 0)
     {
         return -1;
+    }
+
+    /* Agregar separador al final del valor recien concatenado. */
+    if (separador != NULL)
+    {
+        strcat(destino, separador);
     }
 
     return 0;

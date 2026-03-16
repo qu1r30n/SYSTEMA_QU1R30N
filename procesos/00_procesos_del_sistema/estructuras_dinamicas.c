@@ -1,4 +1,13 @@
 #ifdef _WIN32
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
+ * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
+ * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h: Dependencia interna del proyecto
+ * - ../../cabeceras/codigos_retorno.h: Dependencia interna del proyecto
+ */
 #include <stdio.h>  // Librería estándar para entrada y salida (printf, etc.)
 #include <stdlib.h> // Librería estándar para memoria dinámica (malloc, realloc, free)
 #include <string.h> // Librería para manejo de cadenas (strlen, strcmp, strcpy)

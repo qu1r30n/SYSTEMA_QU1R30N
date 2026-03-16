@@ -1,6 +1,9 @@
 #ifndef MODELO_TEX_BAS_H
 #define MODELO_TEX_BAS_H
 
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - modelo_var_fun_GG.h: Dependencia interna del proyecto
+ */
 #include "modelo_var_fun_GG.h"
 
 #define MAX_LINEA 1024

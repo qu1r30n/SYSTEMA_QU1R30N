@@ -1,6 +1,9 @@
 #ifndef OPERACIONES_TIENDA_H
 #define OPERACIONES_TIENDA_H
 
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - ../00_cabeceras_del_sistema/var_fun_GG.h: Dependencia interna del proyecto
+ */
 #include "../00_cabeceras_del_sistema/var_fun_GG.h" //NECESARIO para COLUMNAS y MAX_PRODUCTOS
 
 int leerInventario(char inventario[][COLUMNAS][256], int maxProductos);
@@ -38,8 +41,8 @@ void agregarProducto(
     char *indices_mes_registro_produc_vendido,
     char *indices_anio_registro_produc_vendido,
     char *ultima_venta,
-    char *indices_total_registro_produc_vendido,
-    char *no_poner_nada);
+    char *indices_total_registro_produc_vendido
+);
 
 int editarPrecio(char *codigo, char *precio, char *proveedor);
 int venta(char *codigo, int cantidad, char *sucursal);

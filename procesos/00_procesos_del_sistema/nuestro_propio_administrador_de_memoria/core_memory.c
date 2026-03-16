@@ -2,6 +2,9 @@
    Incluimos el header donde está definida la estructura core_arena
    y los prototipos de las funciones públicas.
 */
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - ../../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/nuestro_propio_administrador_de_memoria/core_memory.h: Dependencia interna del proyecto
+ */
 #include "../../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/nuestro_propio_administrador_de_memoria/core_memory.h"
 
 

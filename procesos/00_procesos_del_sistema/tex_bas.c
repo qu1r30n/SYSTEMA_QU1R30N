@@ -1,3 +1,14 @@
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
+ * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
+ * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
+ * - sys/stat.h: Informacion y operaciones de sistema de archivos
+ * - direct.h: Funciones de directorios en Windows
+ * - xc.h: Cabecera del compilador para microcontroladores PIC
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h: Dependencia interna del proyecto
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,13 +37,17 @@
 void crearDirectorio(const char *ruta)
 {
 #if defined(_WIN32) || defined(__linux__)
-    char tmp[512];
+
+    char *tmp = malloc(strlen(ruta) + 1);
+    if (!tmp)
+        return;
+
     strcpy(tmp, ruta);
 
     char *p =
-#ifdef _WIN32 // si windows
+#ifdef _WIN32
         strrchr(tmp, '\\');
-#else // si es linux o otro
+#else
         strrchr(tmp, '/');
 #endif
 
@@ -40,15 +55,17 @@ void crearDirectorio(const char *ruta)
     {
         *p = 0;
 
-#ifdef _WIN32 // si windows
+#ifdef _WIN32
         mkdir(tmp);
-#else // si es linux o otro
+#else
         mkdir(tmp, 0777);
 #endif
     }
 
+    free(tmp);
+
 #elif defined(__XC)
-    /* PIC16F: Sin sistema de archivos. No se crea nada. */
+
     (void)ruta;
 
 #endif

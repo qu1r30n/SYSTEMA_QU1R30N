@@ -9,6 +9,9 @@
    size_t es el tipo estándar para tamanios de memoria.
    Está definido en stddef.h.
 */
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - stddef.h: Tipos base como size_t y NULL
+ */
 #include <stddef.h>
 
 /*

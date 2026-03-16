@@ -1,3 +1,11 @@
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h: Dependencia interna del proyecto
+ * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
+ * - stdarg.h: Argumentos variables de funciones tipo printf
+ * - windows.h: Dependencia interna del proyecto
+ * - time.h: Fecha y hora
+ * - xc.h: Cabecera del compilador para microcontroladores PIC
+ */
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 
 #include <stdio.h>

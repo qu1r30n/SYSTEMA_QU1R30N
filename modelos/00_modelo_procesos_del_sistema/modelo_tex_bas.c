@@ -1,3 +1,18 @@
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
+ * - stddef.h: Tipos base como size_t y NULL
+ * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
+ * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
+ * - sys/stat.h: Informacion y operaciones de sistema de archivos
+ * - direct.h: Funciones de directorios en Windows
+ * - xc.h: Cabecera del compilador para microcontroladores PIC
+ * - ../../CLASE_QU1R30N.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h: Dependencia interna del proyecto
+ */
 #include <stdio.h>
 #include <stddef.h>
 #include <string.h>

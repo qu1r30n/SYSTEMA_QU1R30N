@@ -1,6 +1,9 @@
 #ifndef PROCESOS_OPERACIONES_TEXTOS_H
 #define PROCESOS_OPERACIONES_TEXTOS_H
 
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - stddef.h: Tipos base como size_t y NULL
+ */
 #include <stddef.h>
 
 #define CONCAT_TEXTO 0
@@ -16,9 +19,8 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar);
 
 int texto_a_int_seguro(const char *texto, int *var_a_retornar);
 
-int concatenar(char *destino, size_t capacidad_destino, const void *valor, int tipo_valor, const char *caracter_separacion);
-
 /* Version tipo printf: formatea y concatena al destino. */
-int concatenar_formato(char *destino, const char *formato, ...);
+int concatenar_formato_separado_por_variable(char **destino, const char *separador, const char *formato, ...);
+int concatenar_formato(char *destino, const char *separador, const char *formato, ...);
 
 #endif // PROCESOS_OPERACIONES_TEXTOS_H

@@ -1,3 +1,18 @@
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
+ * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
+ * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
+ * - xc.h: Cabecera del compilador para microcontroladores PIC
+ * - ../../cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_tienda.h: Dependencia interna del proyecto
+ * - ../../CLASE_QU1R30N.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_tienda.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h: Dependencia interna del proyecto
+ */
 #include <stdio.h>
 #include <string.h>
 
@@ -190,7 +205,6 @@ int modelo_agregarProducto(char *texto)
             {"indices_anio_registro_produc_vendido", "string", "0", ""},
             {"ultima_venta", "string", "", ""},
             {"indices_total_registro_produc_vendido", "string", "0", ""},
-            {"no_poner_nada", "string", "", ""},
             {NULL, NULL, NULL, NULL}};
 
     int cuantos_parametros_hay = 0;
@@ -252,8 +266,7 @@ int modelo_agregarProducto(char *texto)
         (char *)obtenerValorPorOrden(&datos, 27),
         (char *)obtenerValorPorOrden(&datos, 28),
         (char *)obtenerValorPorOrden(&datos, 29),
-        (char *)obtenerValorPorOrden(&datos, 30),
-        (char *)obtenerValorPorOrden(&datos, 31));
+        (char *)obtenerValorPorOrden(&datos, 30));
 
     modelo_free_split(partes); // Libera la memoria del arreglo de partes
     liberarStructura(&datos);  // Libera la memoria de la estructura dinámica

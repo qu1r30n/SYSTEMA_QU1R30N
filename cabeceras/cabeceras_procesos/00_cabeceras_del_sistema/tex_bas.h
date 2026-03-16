@@ -1,6 +1,9 @@
 #ifndef TEX_BAS_H
 #define TEX_BAS_H
 
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - var_fun_GG.h: Dependencia interna del proyecto
+ */
 #include "var_fun_GG.h"
 
 #define MAX_LINEA 1024

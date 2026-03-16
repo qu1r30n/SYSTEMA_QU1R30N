@@ -1,3 +1,10 @@
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
+ * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
+ * - xc.h: Cabecera del compilador para microcontroladores PIC
+ * - ../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h: Dependencia interna del proyecto
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h: Dependencia interna del proyecto
+ */
 #include <string.h>
 
 #ifdef _WIN32

@@ -1,3 +1,9 @@
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+ * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
+ * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
+ * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
+ * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h: Dependencia interna del proyecto
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

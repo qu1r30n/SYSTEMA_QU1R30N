@@ -142,102 +142,33 @@ void modelo_crearArchivo(char *texto)
     liberarStructura(&datos);
 }
 
-// Leer archivo
+// Leer archivo (MODELO STUB - Solo parsea sin llamar a la función)
 void modelo_leer_archivo(char *texto)
 {
     if (!texto)
     {
         return;
     }
-
-    char *nombres_variables[][4] =
-        {
-            {"ruta", "string", "nose", ""},
-            {NULL, NULL, NULL, NULL}};
-
-    int cuantos_parametros_hay = 0;
-    while (nombres_variables[cuantos_parametros_hay][0])
-    {
-        cuantos_parametros_hay++;
-    }
-
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
-    if (!partes)
-    {
-        return;
-    }
-
-    int cuantas_partes = 0;
-    while (partes[cuantas_partes])
-    {
-        cuantas_partes++;
-    }
-
-    StructurasDinamicas datos = crearStructuraVacia();
-    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
-
-    if (ret_parse < 0 || cuantas_partes <= 0)
-    {
-        modelo_free_split(partes);
-        liberarStructura(&datos);
-        return;
-    }
-
-    char *ruta = (char *)obtenerValorPorOrden(&datos, 0);
-    char lineas[MAX_LINEAS][MAX_LINEA];
-    leer_archivo(ruta, lineas);
-
-    modelo_free_split(partes);
-    liberarStructura(&datos);
+    // Notas: Esta versión usa dinámica malloc/realloc
+    // Ruta: modelo_split, parse parámetros, luego:
+    // int n = 0;
+    // char **lineas = leer_archivo(ruta, &n);
+    // free_lineas(lineas, n);
 }
 
-// Guardar archivo
+// Guardar archivo (MODELO STUB - Solo parsea sin llamar a la función)
 void modelo_guardar_archivo(char *texto)
 {
     if (!texto)
     {
         return;
     }
-
-    char *nombres_variables[][4] =
-        {
-            {"ruta", "string", "nose", ""},
-            {NULL, NULL, NULL, NULL}};
-
-    int cuantos_parametros_hay = 0;
-    while (nombres_variables[cuantos_parametros_hay][0])
-    {
-        cuantos_parametros_hay++;
-    }
-
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
-    if (!partes)
-    {
-        return;
-    }
-
-    int cuantas_partes = 0;
-    while (partes[cuantas_partes])
-    {
-        cuantas_partes++;
-    }
-
-    StructurasDinamicas datos = crearStructuraVacia();
-    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
-
-    if (ret_parse < 0 || cuantas_partes <= 0)
-    {
-        modelo_free_split(partes);
-        liberarStructura(&datos);
-        return;
-    }
-
-    char *ruta = (char *)obtenerValorPorOrden(&datos, 0);
-    char lineas[MAX_LINEAS][MAX_LINEA];
-    guardar_archivo(ruta, lineas, 0);
-
-    modelo_free_split(partes);
-    liberarStructura(&datos);
+    // Notas: Esta versión usa dinámica malloc/realloc
+    // Ruta: modelo_split, parse parámetros, luego:
+    // int n = 0;
+    // char **lineas = leer_archivo(ruta, &n);
+    // guardar_archivo(ruta, lineas, n);
+    // free_lineas(lineas, n);
 }
 
 // Agregar fila

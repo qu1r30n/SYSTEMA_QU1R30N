@@ -2,6 +2,7 @@
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
  * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
  * - stdarg.h: Argumentos variables de funciones tipo printf
+ * - time.h: Funciones de fecha y hora
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h: Dependencia interna del proyecto
  * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
  * - xc.h: Cabecera del compilador para microcontroladores PIC
@@ -9,7 +10,10 @@
 #include <string.h> // strlen, memcpy, strstr
 #include <stdio.h>  // snprintf
 #include <stdarg.h> // va_list, va_start, va_end
+#include <time.h>   // time, localtime, strftime
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
 #ifdef _WIN32
 #include <stdlib.h> // malloc, realloc, free
@@ -609,4 +613,1020 @@ int concatenar_formato(char *destino, const char *separador, const char *formato
     }
 
     return 0;
+}
+
+/* =======================
+   FUNCIONES NUEVAS DEL C#
+   ======================== */
+
+char *join_paresido_simple(char caracter_union_filas, char **texto, int n_texto,
+                           const char *columnas_extraer, const char *caracter_union_columnas)
+{
+    if (!texto || n_texto <= 0)
+        return calloc(1, 1);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    if (columnas_extraer != NULL && strlen(columnas_extraer) > 0)
+    {
+        for (int i = 0; i < n_texto; i++)
+        {
+            char **partes = NULL;
+            int n = split(texto[i], caracter_union_columnas, &partes);
+            if (n > 0)
+            {
+                char **cols_extraer = NULL;
+                int n_cols = split(columnas_extraer, caracter_union_columnas, &cols_extraer);
+
+                for (int j = 0; j < n_cols; j++)
+                {
+                    int col_idx = atoi(cols_extraer[j]);
+                    if (col_idx < n && col_idx >= 0 && partes[col_idx])
+                    {
+                        if (j > 0)
+                            strncat(resultado, caracter_union_columnas, 65535 - strlen(resultado) - 1);
+                        strncat(resultado, partes[col_idx], 65535 - strlen(resultado) - 1);
+                    }
+                }
+                free_split(cols_extraer);
+                strncat(resultado, &caracter_union_filas, 65535 - strlen(resultado) - 1);
+            }
+            free_split(partes);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < n_texto; i++)
+        {
+            if (i > 0)
+                strncat(resultado, &caracter_union_filas, 65535 - strlen(resultado) - 1);
+            if (texto[i])
+                strncat(resultado, texto[i], 65535 - strlen(resultado) - 1);
+        }
+    }
+
+    size_t len = strlen(resultado);
+    if (len > 0 && resultado[len - 1] == caracter_union_filas)
+    {
+        resultado[len - 1] = '\0';
+    }
+
+    return resultado;
+}
+
+char *joineada_paraesida_y_quitador_de_extremos(const char *data,
+                                                int restar_cuantas,
+                                                int restar_primera_celda)
+{
+    if (!data)
+        return calloc(1, 1);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    char **partes = NULL;
+    int n = split(data, GG_caracter_separacion[0], &partes);
+    if (n <= 0)
+    {
+        free_split(partes);
+        return resultado;
+    }
+
+    if (restar_primera_celda)
+    {
+        for (int i = restar_cuantas; i < n; i++)
+        {
+            if (i > restar_cuantas)
+                strncat(resultado, GG_caracter_separacion[0], 65535 - strlen(resultado) - 1);
+            if (partes[i])
+                strncat(resultado, partes[i], 65535 - strlen(resultado) - 1);
+        }
+    }
+    else
+    {
+        int cantidad_retornar = n - restar_cuantas;
+        for (int i = 0; i < cantidad_retornar; i++)
+        {
+            if (i > 0)
+                strncat(resultado, GG_caracter_separacion[0], 65535 - strlen(resultado) - 1);
+            if (partes[i])
+                strncat(resultado, partes[i], 65535 - strlen(resultado) - 1);
+        }
+    }
+
+    free_split(partes);
+    return resultado;
+}
+
+char *Trimend_paresido(const char *texto)
+{
+    if (!texto)
+        return calloc(1, 1);
+
+    char *resultado = malloc(strlen(texto) + 1);
+    if (!resultado)
+        return NULL;
+
+    char **partes = NULL;
+    int n = split(texto, GG_caracter_separacion[0], &partes);
+    if (n <= 0)
+    {
+        free_split(partes);
+        strcpy(resultado, texto);
+        return resultado;
+    }
+
+    resultado[0] = '\0';
+    int hasta = n;
+    if (n > 0 && partes[n - 1] && strlen(partes[n - 1]) == 0)
+        hasta = n - 1;
+
+    for (int i = 0; i < hasta; i++)
+    {
+        if (i > 0)
+            strncat(resultado, GG_caracter_separacion[0], strlen(texto) - 1);
+        if (partes[i])
+            strncat(resultado, partes[i], strlen(texto) - 1);
+    }
+
+    free_split(partes);
+    return resultado;
+}
+
+char *concatenacion_filas_de_un_archivo(const char *ruta_archivo, int poner_num_fila)
+{
+    int n_lineas = 0;
+    char **lineas = leer_archivo(ruta_archivo, &n_lineas);
+    if (!lineas)
+        return calloc(1, 1);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+    {
+        free_lineas(lineas, n_lineas);
+        return NULL;
+    }
+    resultado[0] = '\0';
+
+    for (int i = 0; i < n_lineas; i++)
+    {
+        char prefijo[32] = "";
+        if (poner_num_fila)
+            snprintf(prefijo, sizeof(prefijo), "%d) ", i);
+
+        if (strlen(resultado) > 0)
+            strncat(resultado, GG_caracter_separacion[0], 65535 - strlen(resultado) - 1);
+        strncat(resultado, prefijo, 65535 - strlen(resultado) - 1);
+        strncat(resultado, lineas[i], 65535 - strlen(resultado) - 1);
+    }
+
+    free_lineas(lineas, n_lineas);
+    return resultado;
+}
+
+char *concatenacion_filas_de_un_arreglo(char **arreglo, int n_arreglo, int poner_num_fila)
+{
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    for (int i = 0; i < n_arreglo; i++)
+    {
+        if (!arreglo[i])
+            continue;
+
+        char prefijo[32] = "";
+        if (poner_num_fila)
+            snprintf(prefijo, sizeof(prefijo), "%d) ", i);
+
+        if (strlen(resultado) > 0)
+            strncat(resultado, GG_caracter_separacion[0], 65535 - strlen(resultado) - 1);
+        strncat(resultado, prefijo, 65535 - strlen(resultado) - 1);
+        strncat(resultado, arreglo[i], 65535 - strlen(resultado) - 1);
+    }
+
+    return resultado;
+}
+
+char *concatenacion_caracter_separacion(const char *texto_actual,
+                                        const char *texto_agregar,
+                                        const char *separador)
+{
+    if (!texto_agregar)
+        return calloc(1, 1);
+
+    size_t len_actual = texto_actual ? strlen(texto_actual) : 0;
+    size_t len_agregar = strlen(texto_agregar);
+    size_t len_sep = separador ? strlen(separador) : 0;
+
+    char *resultado = malloc(len_actual + len_agregar + len_sep + 10);
+    if (!resultado)
+        return NULL;
+
+    resultado[0] = '\0';
+
+    if (texto_actual != NULL && strlen(texto_actual) > 0)
+    {
+        strcpy(resultado, texto_actual);
+        if (separador)
+            strncat(resultado, separador, len_sep);
+    }
+
+    strncat(resultado, texto_agregar, len_agregar);
+    return resultado;
+}
+
+char *generar_folio(const char *formato_fecha_hora)
+{
+    char *folio = malloc(256);
+    if (!folio)
+        return NULL;
+
+    time_t t = time(NULL);
+    struct tm *tm_info = localtime(&t);
+
+    if (formato_fecha_hora == NULL)
+    {
+        strftime(folio, 256, "%y%m%d%H%M%S", tm_info);
+    }
+    else
+    {
+        strftime(folio, 256, formato_fecha_hora, tm_info);
+    }
+
+    return folio;
+}
+
+char **extraer_separado_carpetas_nombreArchivo_extencion(const char *direccion_archivo)
+{
+    char **resultado = malloc(3 * sizeof(char *));
+    if (!resultado)
+        return NULL;
+
+    for (int i = 0; i < 3; i++)
+    {
+        resultado[i] = malloc(512);
+        if (resultado[i])
+            resultado[i][0] = '\0';
+    }
+
+    if (!direccion_archivo)
+        return resultado;
+
+    char **partes = NULL;
+    int n = split(direccion_archivo, "\\", &partes);
+    if (n > 0)
+    {
+        for (int i = 0; i < n - 1; i++)
+        {
+            strncat(resultado[0], partes[i], 510 - strlen(resultado[0]));
+            if (i < n - 2)
+                strncat(resultado[0], "\\", 510 - strlen(resultado[0]));
+        }
+
+        char **nom_ext = NULL;
+        int n_ne = split(partes[n - 1], ".", &nom_ext);
+        if (n_ne > 0)
+        {
+            strncpy(resultado[1], nom_ext[0], 511);
+            if (n_ne > 1)
+                strncpy(resultado[2], nom_ext[1], 511);
+            free_split(nom_ext);
+        }
+        free_split(partes);
+    }
+
+    return resultado;
+}
+
+char *ReemplazarCaracteres_de_texto_arreglo(const char *info,
+                                            char **caracteres_sep, int n_sep,
+                                            char **caracteres_sustitucion)
+{
+    if (!info)
+        return calloc(1, 1);
+
+    char *resultado = malloc(strlen(info) * 2 + 1);
+    if (!resultado)
+        return NULL;
+    strcpy(resultado, info);
+
+    for (int i = 0; i < n_sep; i++)
+    {
+        if (!caracteres_sep[i] || !caracteres_sustitucion[i])
+            continue;
+
+        char *temp = malloc(strlen(resultado) * 2 + 1024);
+        if (!temp)
+        {
+            free(resultado);
+            return NULL;
+        }
+        temp[0] = '\0';
+
+        const char *pos = resultado;
+        const char *found;
+        int sep_len = strlen(caracteres_sep[i]);
+
+        while ((found = strstr(pos, caracteres_sep[i])) != NULL)
+        {
+            strncat(temp, pos, found - pos);
+            strcat(temp, caracteres_sustitucion[i]);
+            pos = found + sep_len;
+        }
+        strcat(temp, pos);
+
+        free(resultado);
+        resultado = temp;
+    }
+
+    return resultado;
+}
+
+/* =========================================================================
+   BÚSQUEDA PROFUNDA - Buscar en estructuras anidadas por columnas
+   ========================================================================= */
+
+char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer,
+                               const char *comparar)
+{
+    if (!texto || !columnas_recorrer || !comparar)
+        return calloc(1, 1);
+
+    /* Usar split para acceder a filas usando separador primario */
+    char **filas = NULL;
+    int n_filas = split(texto, GG_caracter_separacion[0], &filas);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    int encontrado = 0;
+    for (int i = 0; i < n_filas; i++)
+    {
+        if (!filas[i])
+            continue;
+
+        /* Split la fila por segundo separador para acceder a columnas */
+        char **columnas = NULL;
+        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
+
+        /* Recorrer columnas según índices especificados */
+        const char *pos = columnas_recorrer;
+        while (pos && *pos)
+        {
+            int col_idx = atoi(pos);
+            if (col_idx >= 0 && col_idx < n_cols && columnas[col_idx])
+            {
+                if (strcmp(columnas[col_idx], comparar) == 0)
+                {
+                    if (encontrado)
+                        strcat(resultado, GG_caracter_separacion[0]);
+                    strcat(resultado, filas[i]);
+                    encontrado = 1;
+                    break;
+                }
+            }
+            /* Buscar siguiente índice separado por '|' */
+            while (pos && *pos && *pos != '|')
+                pos++;
+            if (*pos == '|')
+                pos++;
+        }
+
+        free_split(columnas);
+    }
+
+    free_split(filas);
+    return resultado;
+}
+
+/* =========================================================================
+   BÚSQUEDA PROFUNDA CON FORMATO FINAL
+   ========================================================================= */
+
+char *busqueda_profunda_comparacion_final_string(const char *texto,
+                                                 const char *columnas_recorrer,
+                                                 const char *comparar)
+{
+    if (!texto || !columnas_recorrer || !comparar)
+        return calloc(1, 1);
+
+    /* Similar a busqueda_profunda_string pero retorna con formato especial */
+    char **filas = NULL;
+    int n_filas = split(texto, GG_caracter_separacion[0], &filas);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    int encontrado = 0;
+    const char *ultima_fila = NULL;
+
+    for (int i = 0; i < n_filas; i++)
+    {
+        if (!filas[i])
+            continue;
+
+        char **columnas = NULL;
+        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
+
+        const char *pos = columnas_recorrer;
+        while (pos && *pos)
+        {
+            int col_idx = atoi(pos);
+            if (col_idx >= 0 && col_idx < n_cols && columnas[col_idx])
+            {
+                if (strcmp(columnas[col_idx], comparar) == 0)
+                {
+                    ultima_fila = filas[i];
+                    encontrado = 1;
+                    break;
+                }
+            }
+            while (pos && *pos && *pos != '|')
+                pos++;
+            if (*pos == '|')
+                pos++;
+        }
+
+        free_split(columnas);
+    }
+
+    if (encontrado && ultima_fila)
+        strcpy(resultado, ultima_fila);
+
+    free_split(filas);
+    return resultado;
+}
+
+/* =========================================================================
+   BÚSQUEDA CON MÚLTIPLES CONDICIONES (YY)
+   ========================================================================= */
+
+char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto,
+                                                const char *columnas_recorrer,
+                                                const char *comparaciones)
+{
+    if (!texto || !columnas_recorrer || !comparaciones)
+        return calloc(1, 1);
+
+    char **filas = NULL;
+    int n_filas = split(texto, GG_caracter_separacion[0], &filas);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    /* Parsear comparaciones múltiples (separadas por algún delimitador) */
+    char **comparaciones_arr = NULL;
+    int n_comparaciones = split(comparaciones, "|", &comparaciones_arr);
+
+    int encontrado = 0;
+    for (int i = 0; i < n_filas; i++)
+    {
+        if (!filas[i])
+            continue;
+
+        char **columnas = NULL;
+        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
+
+        int todas_coinciden = 1;
+
+        /* Verificar todas las condiciones */
+        for (int j = 0; j < n_comparaciones && todas_coinciden; j++)
+        {
+            if (!comparaciones_arr[j])
+                continue;
+
+            /* Parsear "col_idx:valor" */
+            char temp[1024];
+            strcpy(temp, comparaciones_arr[j]);
+            char *colon = strchr(temp, ':');
+
+            if (colon)
+            {
+                *colon = '\0';
+                int col_idx = atoi(temp);
+                const char *valor_esperado = colon + 1;
+
+                if (col_idx < 0 || col_idx >= n_cols || !columnas[col_idx] ||
+                    strcmp(columnas[col_idx], valor_esperado) != 0)
+                {
+                    todas_coinciden = 0;
+                }
+            }
+        }
+
+        if (todas_coinciden)
+        {
+            if (encontrado)
+                strcat(resultado, GG_caracter_separacion[0]);
+            strcat(resultado, filas[i]);
+            encontrado = 1;
+        }
+
+        free_split(columnas);
+    }
+
+    free_split(comparaciones_arr);
+    free_split(filas);
+    return resultado;
+}
+
+/* =========================================================================
+   EDICIÓN CON INCREMENTO RECURSIVO
+   ========================================================================= */
+
+char *editar_incr_string_funcion_recursiva(const char *texto,
+                                           const char *columnas_recorrer,
+                                           const char *info_sustituir,
+                                           const char *edit_0_increm_1)
+{
+    if (!texto || !columnas_recorrer)
+        return calloc(1, 1);
+
+    int es_incremento = edit_0_increm_1 && strcmp(edit_0_increm_1, "1") == 0;
+
+    char **filas = NULL;
+    int n_filas = split(texto, GG_caracter_separacion[0], &filas);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    for (int i = 0; i < n_filas; i++)
+    {
+        if (i > 0)
+            strcat(resultado, GG_caracter_separacion[0]);
+
+        if (!filas[i])
+            continue;
+
+        char **columnas = NULL;
+        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
+
+        /* Parsear índices de columnas a editar */
+        const char *pos = columnas_recorrer;
+        while (pos && *pos)
+        {
+            int col_idx = atoi(pos);
+            if (col_idx >= 0 && col_idx < n_cols)
+            {
+                if (es_incremento && columnas[col_idx])
+                {
+                    /* Incrementar valor numérico */
+                    int val = atoi(columnas[col_idx]);
+                    char new_val[64];
+                    snprintf(new_val, sizeof(new_val), "%d", val + 1);
+                    strcpy(columnas[col_idx], new_val);
+                }
+                else if (info_sustituir && columnas[col_idx])
+                {
+                    /* Reemplazar con nuevo valor */
+                    strcpy(columnas[col_idx], info_sustituir);
+                }
+            }
+            while (pos && *pos && *pos != '|')
+                pos++;
+            if (*pos == '|')
+                pos++;
+        }
+
+        /* Reconstruir fila */
+        for (int j = 0; j < n_cols; j++)
+        {
+            if (j > 0)
+                strcat(resultado, GG_caracter_separacion[1]);
+            if (columnas[j])
+                strcat(resultado, columnas[j]);
+        }
+
+        free_split(columnas);
+    }
+
+    free_split(filas);
+    return resultado;
+}
+
+/* =========================================================================
+   EDICIÓN PROFUNDA MÚLTIPLE CON COMPARACIÓN FINAL
+   ========================================================================= */
+
+char *editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(
+    const char *texto,
+    const char *indices_editar,
+    const char *info_editar,
+    const char *comparacion,
+    const char *edit_0_increm_1)
+{
+    if (!texto || !indices_editar)
+        return calloc(1, 1);
+
+    /* Combina búsqueda con comparación y edición */
+    char *encontrado = busqueda_profunda_comparacion_final_string(texto, indices_editar, comparacion);
+
+    if (encontrado && strlen(encontrado) > 0)
+    {
+        char *editado = editar_incr_string_funcion_recursiva(encontrado, indices_editar,
+                                                             info_editar, edit_0_increm_1);
+        free(encontrado);
+        return editado;
+    }
+
+    free(encontrado);
+    return calloc(1, 1);
+}
+
+/* =========================================================================
+   WRAPPER ARR_FUN - Edición con estructura simplificada
+   ========================================================================= */
+
+char *ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(const char *datos)
+{
+    if (!datos)
+        return calloc(1, 1);
+
+    /* Parsear estructura: "texto|indices|info|edit_mode" */
+    char **partes = NULL;
+    int n_partes = split(datos, "|", &partes);
+
+    char *resultado = calloc(1, 1);
+
+    if (n_partes >= 3)
+    {
+        resultado = editar_incr_string_funcion_recursiva(partes[0], partes[1],
+                                                         partes[2],
+                                                         n_partes > 3 ? partes[3] : "0");
+    }
+
+    free_split(partes);
+    return resultado;
+}
+
+/* =========================================================================
+   EDICIÓN CON MÚLTIPLES CHEQUEOS
+   ========================================================================= */
+
+char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(
+    const char *texto,
+    const char *indices_editar,
+    const char *comparacion_con_edicion,
+    const char *edit_0_increm_1)
+{
+    if (!texto || !indices_editar || !comparacion_con_edicion)
+        return calloc(1, 1);
+
+    /* Parsear comparación_con_edicion para extraer comparación e info_editar */
+    char temp[1024];
+    strcpy(temp, comparacion_con_edicion);
+    char *coma = strchr(temp, ',');
+
+    char *comparar_val = temp;
+    char *editar_val = "";
+
+    if (coma)
+    {
+        *coma = '\0';
+        editar_val = coma + 1;
+    }
+
+    /* Buscar filas que coincidan y editarlas */
+    char **filas = NULL;
+    int n_filas = split(texto, GG_caracter_separacion[0], &filas);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    for (int i = 0; i < n_filas; i++)
+    {
+        if (i > 0)
+            strcat(resultado, GG_caracter_separacion[0]);
+
+        if (!filas[i])
+            continue;
+
+        /* Verificar si esta fila coincide con la búsqueda */
+        char **columnas = NULL;
+        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
+
+        int debe_editar = 0;
+        const char *pos = indices_editar;
+        while (pos && *pos)
+        {
+            int col_idx = atoi(pos);
+            if (col_idx >= 0 && col_idx < n_cols && columnas[col_idx] &&
+                strcmp(columnas[col_idx], comparar_val) == 0)
+            {
+                debe_editar = 1;
+                break;
+            }
+            while (pos && *pos && *pos != '|')
+                pos++;
+            if (*pos == '|')
+                pos++;
+        }
+
+        if (debe_editar)
+        {
+            pos = indices_editar;
+            while (pos && *pos)
+            {
+                int col_idx = atoi(pos);
+                if (col_idx >= 0 && col_idx < n_cols)
+                {
+                    int es_incremento = edit_0_increm_1 && strcmp(edit_0_increm_1, "1") == 0;
+                    if (columnas[col_idx] && strcmp(columnas[col_idx], comparar_val) == 0)
+                    {
+                        if (es_incremento)
+                        {
+                            int val = atoi(columnas[col_idx]);
+                            snprintf(columnas[col_idx], 64, "%d", val + 1);
+                        }
+                        else if (*editar_val)
+                        {
+                            strcpy(columnas[col_idx], editar_val);
+                        }
+                    }
+                }
+                while (pos && *pos && *pos != '|')
+                    pos++;
+                if (*pos == '|')
+                    pos++;
+            }
+        }
+
+        for (int j = 0; j < n_cols; j++)
+        {
+            if (j > 0)
+                strcat(resultado, GG_caracter_separacion[1]);
+            if (columnas[j])
+                strcat(resultado, columnas[j]);
+        }
+
+        free_split(columnas);
+    }
+
+    free_split(filas);
+    return resultado;
+}
+
+/* =========================================================================
+   EDICIÓN PROFUNDA MÚLTIPLE SIMPLE
+   ========================================================================= */
+
+char *editar_inc_edicion_profunda_multiple_string(const char *texto,
+                                                  const char *indices_editar,
+                                                  const char *info_editar,
+                                                  const char *edit_0_increm_1)
+{
+    /* Simplemente aplica la edición a todas las filas en los índices especificados */
+    char **filas = NULL;
+    int n_filas = split(texto, GG_caracter_separacion[0], &filas);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    int es_incremento = edit_0_increm_1 && strcmp(edit_0_increm_1, "1") == 0;
+
+    for (int i = 0; i < n_filas; i++)
+    {
+        if (i > 0)
+            strcat(resultado, GG_caracter_separacion[0]);
+
+        if (!filas[i])
+            continue;
+
+        char **columnas = NULL;
+        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
+
+        const char *pos = indices_editar;
+        while (pos && *pos)
+        {
+            int col_idx = atoi(pos);
+            if (col_idx >= 0 && col_idx < n_cols && columnas[col_idx])
+            {
+                if (es_incremento)
+                {
+                    int val = atoi(columnas[col_idx]);
+                    snprintf(columnas[col_idx], 64, "%d", val + 1);
+                }
+                else if (info_editar)
+                {
+                    strcpy(columnas[col_idx], info_editar);
+                }
+            }
+            while (pos && *pos && *pos != '|')
+                pos++;
+            if (*pos == '|')
+                pos++;
+        }
+
+        for (int j = 0; j < n_cols; j++)
+        {
+            if (j > 0)
+                strcat(resultado, GG_caracter_separacion[1]);
+            if (columnas[j])
+                strcat(resultado, columnas[j]);
+        }
+
+        free_split(columnas);
+    }
+
+    free_split(filas);
+    return resultado;
+}
+
+/* =========================================================================
+   EDICIÓN PROFUNDA AL FINAL
+   ========================================================================= */
+
+char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto,
+                                                           const char *indices_editar,
+                                                           const char *info_editar,
+                                                           const char *edit_0_increm_1)
+{
+    /* Edita solo la última fila que coincide */
+    char **filas = NULL;
+    int n_filas = split(texto, GG_caracter_separacion[0], &filas);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    int es_incremento = edit_0_increm_1 && strcmp(edit_0_increm_1, "1") == 0;
+
+    /* Primera pasada: copiar todas las filas */
+    for (int i = 0; i < n_filas; i++)
+    {
+        if (i > 0)
+            strcat(resultado, GG_caracter_separacion[0]);
+
+        if (!filas[i])
+            continue;
+
+        /* En la última iteración, editar */
+        if (i == n_filas - 1)
+        {
+            char **columnas = NULL;
+            int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
+
+            const char *pos = indices_editar;
+            while (pos && *pos)
+            {
+                int col_idx = atoi(pos);
+                if (col_idx >= 0 && col_idx < n_cols && columnas[col_idx])
+                {
+                    if (es_incremento)
+                    {
+                        int val = atoi(columnas[col_idx]);
+                        snprintf(columnas[col_idx], 64, "%d", val + 1);
+                    }
+                    else if (info_editar)
+                    {
+                        strcpy(columnas[col_idx], info_editar);
+                    }
+                }
+                while (pos && *pos && *pos != '|')
+                    pos++;
+                if (*pos == '|')
+                    pos++;
+            }
+
+            for (int j = 0; j < n_cols; j++)
+            {
+                if (j > 0)
+                    strcat(resultado, GG_caracter_separacion[1]);
+                if (columnas[j])
+                    strcat(resultado, columnas[j]);
+            }
+
+            free_split(columnas);
+        }
+        else
+        {
+            strcat(resultado, filas[i]);
+        }
+    }
+
+    free_split(filas);
+    return resultado;
+}
+
+/* =========================================================================
+   RECORRER CARACTERES DE SEPARACIÓN
+   ========================================================================= */
+
+char *recorrer_caracter_separacion(const char *contenidoFila,
+                                   const char *izquierda_o_derecha,
+                                   int numero_veses)
+{
+    if (!contenidoFila)
+        return calloc(1, 1);
+
+    char **partes = NULL;
+    int n_partes = split(contenidoFila, GG_caracter_separacion[0], &partes);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    int es_izquierda = izquierda_o_derecha && strcmp(izquierda_o_derecha, "izq") == 0;
+
+    if (es_izquierda)
+    {
+        /* Saltar primeros 'numero_veses' elementos */
+        for (int i = numero_veses; i < n_partes; i++)
+        {
+            if (i > numero_veses)
+                strcat(resultado, GG_caracter_separacion[0]);
+            if (partes[i])
+                strcat(resultado, partes[i]);
+        }
+    }
+    else
+    {
+        /* Tomar hasta 'n - numero_veses' elementos */
+        int hasta = n_partes - numero_veses;
+        for (int i = 0; i < hasta && i < n_partes; i++)
+        {
+            if (i > 0)
+                strcat(resultado, GG_caracter_separacion[0]);
+            if (partes[i])
+                strcat(resultado, partes[i]);
+        }
+    }
+
+    free_split(partes);
+    return resultado;
+}
+
+/* =========================================================================
+   RECORRER CARACTERES DE SEPARACIÓN - FUNCIÓN ESPECÍFICA
+   ========================================================================= */
+
+char *recorrer_caracter_separacion_funciones_espesificas(const char *contenidoFila,
+                                                         const char *izquierda_o_derecha,
+                                                         int numero_veses)
+{
+    if (!contenidoFila)
+        return calloc(1, 1);
+
+    /* Usar separador específico si está disponible */
+    char separador[16];
+    if (GG_caracter_separacion_funciones_espesificas[0])
+        strcpy(separador, GG_caracter_separacion_funciones_espesificas[0]);
+    else
+        strcpy(separador, GG_caracter_separacion[0]);
+
+    char **partes = NULL;
+    int n_partes = split(contenidoFila, separador, &partes);
+
+    char *resultado = malloc(65536);
+    if (!resultado)
+        return NULL;
+    resultado[0] = '\0';
+
+    int es_izquierda = izquierda_o_derecha && strcmp(izquierda_o_derecha, "izq") == 0;
+
+    if (es_izquierda)
+    {
+        for (int i = numero_veses; i < n_partes; i++)
+        {
+            if (i > numero_veses)
+                strcat(resultado, separador);
+            if (partes[i])
+                strcat(resultado, partes[i]);
+        }
+    }
+    else
+    {
+        int hasta = n_partes - numero_veses;
+        for (int i = 0; i < hasta && i < n_partes; i++)
+        {
+            if (i > 0)
+                strcat(resultado, separador);
+            if (partes[i])
+                strcat(resultado, partes[i]);
+        }
+    }
+
+    free_split(partes);
+    return resultado;
 }

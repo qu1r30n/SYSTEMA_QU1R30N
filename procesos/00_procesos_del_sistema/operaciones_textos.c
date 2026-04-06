@@ -14,6 +14,7 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 
 #ifdef _WIN32
 #include <stdlib.h> // malloc, realloc, free
@@ -589,17 +590,34 @@ int concatenar_formato_separado_por_variable(char **destino, const char *separad
 
 int concatenar_formato(char *destino, const char *separador, const char *formato, ...)
 {
+    imprimirMensaje_para_depurar("[concatenar_formato] destino(ptr): %p\n", (void *)destino);
+    imprimirMensaje_para_depurar("[concatenar_formato] destino(valor): %s\n", destino ? destino : "(null)");
+    imprimirMensaje_para_depurar("[concatenar_formato] separador: %s\n", separador ? separador : "(null)");
+    imprimirMensaje_para_depurar("[concatenar_formato] formato: %s\n", formato ? formato : "(null)");
+
     if (destino == NULL || formato == NULL)
     {
         return -1;
     }
 
     size_t largo_actual = strlen(destino);
+    imprimirMensaje_para_depurar("[concatenar_formato] largo_actual: %zu\n", largo_actual);
 
     va_list args;
     va_start(args, formato);
+
+    va_list args_preview;
+    va_copy(args_preview, args);
+    int args_estimados = vsnprintf(NULL, 0, formato, args_preview);
+    va_end(args_preview);
+    imprimirMensaje_para_depurar("[concatenar_formato] args (estimado chars): %d\n", args_estimados);
+
     int escritos = vsprintf(destino + largo_actual, formato, args);
+    imprimirMensaje_para_depurar("[concatenar_formato] escritos: %d\n", escritos);
+
     va_end(args);
+
+    imprimirMensaje_para_depurar("[concatenar_formato] escritos: %d\n", escritos);
 
     if (escritos < 0)
     {
@@ -611,6 +629,8 @@ int concatenar_formato(char *destino, const char *separador, const char *formato
     {
         strcat(destino, separador);
     }
+
+    imprimirMensaje_para_depurar("[concatenar_formato] destino(final): %s\n", destino);
 
     return 0;
 }
@@ -863,6 +883,14 @@ char *generar_folio(const char *formato_fecha_hora)
     return folio;
 }
 
+/*extraer_separado_carpetas_nombreArchivo_extencion:
+    Entrada: "C:\carpeta1\carpeta2\archivo.txt"
+    Salida:
+        resultado[0] = "C:\carpeta1\carpeta2"
+        resultado[1] = "archivo"
+        resultado[2] = "txt"
+        resultado[3] = NULL
+
 char **extraer_separado_carpetas_nombreArchivo_extencion(const char *direccion_archivo)
 {
     char **resultado = malloc(3 * sizeof(char *));
@@ -903,6 +931,71 @@ char **extraer_separado_carpetas_nombreArchivo_extencion(const char *direccion_a
     }
 
     return resultado;
+}
+
+*/
+
+int desfragmentar_direccion(const char *direccion,
+                            char **retorna_directorios,
+                            char **retorna_nom_arch,
+                            char **retorna_extencion)
+{
+    // Arreglos temporales para almacenar partes de la ruta y nombre.ext.
+    char **partes = NULL;
+    char **nom_ext = NULL;
+
+    // Validacion basica de parametros de entrada/salida.
+    if (!direccion || !retorna_directorios || !retorna_nom_arch || !retorna_extencion)
+    {
+        return -1;
+    }
+
+    // Inicializar salidas en NULL para evitar punteros basura si algo falla.
+    *retorna_directorios = NULL;
+    *retorna_nom_arch = NULL;
+    *retorna_extencion = NULL;
+
+    // 1) Dividir la direccion completa por separador de carpetas.
+    int n_partes = split(direccion, "\\", &partes);
+    if (n_partes <= 0 || !partes)
+    {
+        return -1;
+    }
+
+    // 2) Unir todo menos la ultima parte como directorios.
+    for (int i = 0; i < n_partes - 1; i++)
+    {
+        if (concatenar_formato_separado_por_variable(retorna_directorios,
+                                                     NULL,
+                                                     (*retorna_directorios && (*retorna_directorios)[0] != '\0') ? "\\%s" : "%s",
+                                                     partes[i]) < 0)
+        {
+            free_split(partes);
+            return -1;
+        }
+    }
+
+    // 3) Tomar la ultima parte (archivo.ext) y dividirla por '.'.
+    int n_nom_ext = split(partes[n_partes - 1], ".", &nom_ext);
+    if (n_nom_ext <= 0 || !nom_ext || !nom_ext[0])
+    {
+        free_split(partes);
+        return -1;
+    }
+
+    // 4) Retornar nombre de archivo y extension (vacia si no existe).
+    if (concatenar_formato_separado_por_variable(retorna_nom_arch, NULL, "%s", nom_ext[0]) < 0 ||
+        concatenar_formato_separado_por_variable(retorna_extencion, NULL, "%s", (n_nom_ext > 1 && nom_ext[1]) ? nom_ext[1] : "") < 0)
+    {
+        free_split(nom_ext);
+        free_split(partes);
+        return -1;
+    }
+
+    // 5) Liberar temporales y terminar con exito.
+    free_split(nom_ext);
+    free_split(partes);
+    return 0;
 }
 
 char *ReemplazarCaracteres_de_texto_arreglo(const char *info,

@@ -367,14 +367,17 @@ void liberarStructura(StructurasDinamicas *s)
 /* Cargar estructura desde arreglo bidimensional */
 StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4])
 {
-    for (size_t i = 0; nombres_variables[i][0] != NULL; i++) // Recorre el arreglo de nombres de variables hasta encontrar un NULL(para depuración)
+    // Recorre el arreglo de configuración de campos (nombres_variables) hasta encontrar fila NULL.
+    // %zu se usa para imprimir valores de size_t.
+    for (size_t i = 0; nombres_variables[i][0] != NULL; i++)
     {
-        printf("Fila %zu:\n", i);
+        printf("Fila %zu:\n", i); // Índice de fila del campo (0,1,2,...)
 
         for (size_t j = 0; j < 4; j++)
         {
             if (nombres_variables[i][j] != NULL)
             {
+                // Imprime cada elemento: nombre, tipo, validación, valor por defecto
                 printf("Elemento [%zu][%zu]: %s\n", i, j, nombres_variables[i][j]);
             }
         }

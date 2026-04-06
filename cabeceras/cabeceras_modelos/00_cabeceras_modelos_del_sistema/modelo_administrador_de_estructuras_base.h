@@ -1,0 +1,6 @@
+#ifndef MODELO_ADMINISTRADOR_DE_ESTRUCTURAS_BASE_H
+#define MODELO_ADMINISTRADOR_DE_ESTRUCTURAS_BASE_H
+
+int modelo_creacion_de_estructura_base(char *nombre_de_structura, char *direccion_del_espacio);
+
+#endif

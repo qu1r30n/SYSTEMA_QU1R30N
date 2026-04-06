@@ -41,8 +41,7 @@ void agregarProducto(
     char *indices_mes_registro_produc_vendido,
     char *indices_anio_registro_produc_vendido,
     char *ultima_venta,
-    char *indices_total_registro_produc_vendido
-);
+    char *indices_total_registro_produc_vendido);
 
 int editarPrecio(char *codigo, char *precio, char *proveedor);
 int venta(char *codigo, int cantidad, char *sucursal);

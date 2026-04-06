@@ -123,6 +123,12 @@ char *recorrer_caracter_separacion_funciones_espesificas(const char *contenidoFi
 /* Extraer carpeta, nombre y extensión de ruta. */
 char **extraer_separado_carpetas_nombreArchivo_extencion(const char *direccion_archivo);
 
+/* Desfragmentar ruta y devolver por salida: directorios, nombre de archivo y extencion. */
+int desfragmentar_direccion(const char *direccion,
+                            char **retorna_directorios,
+                            char **retorna_nom_arch,
+                            char **retorna_extencion);
+
 /* Generar folio (ID único con timestamp). */
 char *generar_folio(const char *formato_fecha_hora);
 

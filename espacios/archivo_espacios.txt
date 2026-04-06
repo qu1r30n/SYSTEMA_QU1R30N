@@ -1,0 +1,2 @@
+ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel
+0|administrador_de_espacio|0||0

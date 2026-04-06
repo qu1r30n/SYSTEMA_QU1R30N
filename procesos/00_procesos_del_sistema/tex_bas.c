@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #ifdef _WIN32
 #include <sys/stat.h>
@@ -32,66 +33,368 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
+
+static int ruta_es_absoluta(const char *ruta)
+{
+    if (!ruta || !ruta[0])
+        return 0;
+
+#ifdef _WIN32
+    if ((ruta[0] && ruta[1] == ':') ||
+        (ruta[0] == '\\' && ruta[1] == '\\') ||
+        (ruta[0] == '/'))
+        return 1;
+#else
+    if (ruta[0] == '/')
+        return 1;
+#endif
+
+    return 0;
+}
+
+static char *buscar_ultimo_separador(char *ruta)
+{
+    char *sep_linux = strrchr(ruta, '/');
+    char *sep_windows = strrchr(ruta, '\\');
+
+    if (!sep_linux)
+        return sep_windows;
+    if (!sep_windows)
+        return sep_linux;
+
+    return (sep_linux > sep_windows) ? sep_linux : sep_windows;
+}
 
 /* =======================
    FUNCIONES BASE
    ======================== */
 
-void crearDirectorio(const char *ruta)
+int crearDirectorio(const char *ruta)
 {
 #if defined(_WIN32) || defined(__linux__)
-    char *tmp = malloc(strlen(ruta) + 1);
-    if (!tmp)
-        return;
+    char *ruta_trabajo = NULL;
 
-    strcpy(tmp, ruta);
-
-    char *p =
-#ifdef _WIN32
-        strrchr(tmp, '\\');
-#else
-        strrchr(tmp, '/');
-#endif
-
-    if (p)
+    if (!ruta)
     {
-        *p = 0;
-
-#ifdef _WIN32
-        mkdir(tmp);
-#else
-        mkdir(tmp, 0777);
-#endif
+        imprimirMensaje_para_depurar("[crearDirectorio] ruta es NULL\n");
+        return -1;
     }
 
-    free(tmp);
+    imprimirMensaje_para_depurar("[crearDirectorio] ruta: %s\n", ruta);
+
+    int es_absoluta = ruta_es_absoluta(ruta);
+    imprimirMensaje_para_depurar("[crearDirectorio] ruta absoluta: %d\n", es_absoluta);
+
+    if (es_absoluta)
+    {
+        ruta_trabajo = (char *)malloc(strlen(ruta) + 1);
+        if (!ruta_trabajo)
+        {
+            imprimirMensaje_para_depurar("[crearDirectorio] malloc fallo para ruta_trabajo completa\n");
+            return -1;
+        }
+        strcpy(ruta_trabajo, ruta);
+    }
+    else
+    {
+        ruta_trabajo = (char *)malloc(strlen(ruta) + 3);
+        if (!ruta_trabajo)
+        {
+            imprimirMensaje_para_depurar("[crearDirectorio] malloc fallo para ruta_trabajo local\n");
+            return -1;
+        }
+#ifdef _WIN32
+        strcpy(ruta_trabajo, ".\\");
+#else
+        strcpy(ruta_trabajo, "./");
+#endif
+        strcat(ruta_trabajo, ruta);
+    }
+
+    imprimirMensaje_para_depurar("[crearDirectorio] ruta_trabajo: %s\n", ruta_trabajo);
+
+    int estado_creacion = -1;
+
+#ifdef _WIN32
+    const char separador = '\\';
+#else
+    const char separador = '/';
+#endif
+
+    char separador_txt[2] = {separador, '\0'};
+    size_t len_ruta = strlen(ruta_trabajo);
+
+    char *ruta_normalizada = (char *)malloc(len_ruta + 1);
+    if (!ruta_normalizada)
+    {
+        imprimirMensaje_para_depurar("[crearDirectorio] malloc fallo para ruta_normalizada\n");
+        free(ruta_trabajo);
+        return -1;
+    }
+
+    for (size_t i = 0; i < len_ruta; i++)
+    {
+        char c = ruta_trabajo[i];
+        if (c == '/' || c == '\\')
+            ruta_normalizada[i] = separador;
+        else
+            ruta_normalizada[i] = c;
+    }
+    ruta_normalizada[len_ruta] = '\0';
+
+    char **partes = NULL;
+    int n_partes = split(ruta_normalizada, separador_txt, &partes);
+    if (n_partes < 0 || !partes)
+    {
+        free(ruta_normalizada);
+        free(ruta_trabajo);
+        return -1;
+    }
+
+    int indice_ultimo = -1;
+    for (int i = 0; i < n_partes; i++)
+    {
+        if (partes[i] && partes[i][0] != '\0')
+            indice_ultimo = i;
+    }
+
+    if (indice_ultimo < 0)
+    {
+        free_split(partes);
+        free(ruta_normalizada);
+        free(ruta_trabajo);
+        return -1;
+    }
+
+    char *acumulada = NULL;
+    int inicio = 0;
+
+#ifdef _WIN32
+    if (partes[0] && strlen(partes[0]) == 2 && partes[0][1] == ':')
+    {
+        if (concatenar_formato_separado_por_variable(&acumulada, NULL, "%s%s", partes[0], separador_txt) < 0)
+        {
+            free_split(partes);
+            free(ruta_normalizada);
+            free(ruta_trabajo);
+            return -1;
+        }
+        inicio = 1;
+    }
+#else
+    if (ruta_normalizada[0] == separador)
+    {
+        if (concatenar_formato_separado_por_variable(&acumulada, NULL, "%s", separador_txt) < 0)
+        {
+            free_split(partes);
+            free(ruta_normalizada);
+            free(ruta_trabajo);
+            return -1;
+        }
+    }
+#endif
+
+    estado_creacion = 1;
+    for (int i = inicio; i < n_partes; i++)
+    {
+        if (!partes[i] || partes[i][0] == '\0')
+            continue;
+
+        if (acumulada && acumulada[0])
+        {
+            const char *fin = acumulada;
+            while (*fin != '\0')
+                fin++;
+
+            if (*(fin - 1) != separador)
+            {
+                if (concatenar_formato_separado_por_variable(&acumulada, NULL, "%s", separador_txt) < 0)
+                {
+                    free(acumulada);
+                    free_split(partes);
+                    free(ruta_normalizada);
+                    free(ruta_trabajo);
+                    return -1;
+                }
+            }
+        }
+
+        if (concatenar_formato_separado_por_variable(&acumulada, NULL, "%s", partes[i]) < 0)
+        {
+            free(acumulada);
+            free_split(partes);
+            free(ruta_normalizada);
+            free(ruta_trabajo);
+            return -1;
+        }
+
+        errno = 0;
+        int resultado_mkdir =
+#ifdef _WIN32
+            mkdir(acumulada);
+#else
+            mkdir(acumulada, 0777);
+#endif
+
+        if (i == indice_ultimo)
+        {
+            if (resultado_mkdir == 0)
+                estado_creacion = 0;
+            else if (errno == EEXIST)
+                estado_creacion = 1;
+            else
+            {
+                free(acumulada);
+                free_split(partes);
+                free(ruta_normalizada);
+                free(ruta_trabajo);
+                return -1;
+            }
+        }
+        else if (resultado_mkdir != 0 && errno != EEXIST)
+        {
+            free(acumulada);
+            free_split(partes);
+            free(ruta_normalizada);
+            free(ruta_trabajo);
+            return -1;
+        }
+    }
+
+    free(acumulada);
+    free_split(partes);
+    free(ruta_normalizada);
+
+    if (estado_creacion == 0)
+    {
+        imprimirMensaje_para_depurar("[crearDirectorio] creado: %s\n", ruta_trabajo);
+        free(ruta_trabajo);
+        return 0;
+    }
+    else if (estado_creacion == 1)
+    {
+        imprimirMensaje_para_depurar("[crearDirectorio] ya existe, se omite: %s\n", ruta_trabajo);
+        free(ruta_trabajo);
+        return 1;
+    }
+    else
+    {
+        imprimirMensaje_para_depurar("[crearDirectorio] error al crear: %s\n", ruta_trabajo);
+        free(ruta_trabajo);
+        return -1;
+    }
 
 #elif defined(__XC)
     (void)ruta;
+    return -1;
 #endif
 }
 
-void crearArchivo(const char *ruta, const char *cabecera)
+int crearArchivo(const char *ruta, const char *cabecera)
 {
+    imprimirMensaje_para_depurar("%s\n", ruta);
 #if defined(_WIN32) || defined(__linux__)
-    crearDirectorio(ruta);
-    FILE *f = fopen(ruta, "r");
-    if (!f)
+    if (!ruta)
     {
-        f = fopen(ruta, "w");
-        if (f && cabecera)
-        {
-            fprintf(f, "%s\n", cabecera);
-        }
+        imprimirMensaje_para_depurar("[crearArchivo] ruta es NULL\n");
+        return -1;
     }
+
+    char *ruta_trabajo = NULL;
+    int es_absoluta = ruta_es_absoluta(ruta);
+
+    if (es_absoluta)
+    {
+        ruta_trabajo = (char *)malloc(strlen(ruta) + 1);
+        if (!ruta_trabajo)
+        {
+            imprimirMensaje_para_depurar("[crearArchivo] malloc fallo para ruta_trabajo completa\n");
+            return -1;
+        }
+        strcpy(ruta_trabajo, ruta);
+    }
+    else
+    {
+        ruta_trabajo = (char *)malloc(strlen(ruta) + 3);
+        if (!ruta_trabajo)
+        {
+            imprimirMensaje_para_depurar("[crearArchivo] malloc fallo para ruta_trabajo local\n");
+            return -1;
+        }
+#ifdef _WIN32
+        strcpy(ruta_trabajo, ".\\");
+#else
+        strcpy(ruta_trabajo, "./");
+#endif
+        strcat(ruta_trabajo, ruta);
+    }
+
+    imprimirMensaje_para_depurar("[crearArchivo] ruta original: %s\n", ruta);
+    imprimirMensaje_para_depurar("[crearArchivo] ruta_trabajo: %s\n", ruta_trabajo);
+
+    int estado_directorio = 0;
+
+    /* Crear el directorio padre si la ruta contiene un separador */
+    char *dir_padre = (char *)malloc(strlen(ruta_trabajo) + 1);
+    if (dir_padre)
+    {
+        strcpy(dir_padre, ruta_trabajo);
+        char *sep = buscar_ultimo_separador(dir_padre);
+        if (sep)
+        {
+            *sep = '\0';
+            imprimirMensaje_para_depurar("[crearArchivo] creando directorio padre: %s\n", dir_padre);
+
+            estado_directorio = crearDirectorio(dir_padre);
+            if (estado_directorio == -1)
+            {
+                imprimirMensaje_para_depurar("[crearArchivo] error al crear directorio padre: %s\n", dir_padre);
+                free(dir_padre);
+                free(ruta_trabajo);
+                return -2;
+            }
+        }
+        free(dir_padre);
+    }
+
+    /* Verificar si el archivo ya existe */
+    FILE *f = fopen(ruta_trabajo, "r");
     if (f)
     {
+        imprimirMensaje_para_depurar("[crearArchivo] el archivo ya existe: %s\n", ruta_trabajo);
         fclose(f);
+        free(ruta_trabajo);
+        return 1;
     }
+
+    /* Crear el archivo */
+    f = fopen(ruta_trabajo, "w");
+    if (f)
+    {
+        if (cabecera)
+            fprintf(f, "%s\n", cabecera);
+        fclose(f);
+        imprimirMensaje_para_depurar("[crearArchivo] archivo creado: %s\n", ruta_trabajo);
+    }
+    else
+    {
+        imprimirMensaje_para_depurar("[crearArchivo] error al crear archivo: %s\n", ruta_trabajo);
+        free(ruta_trabajo);
+        return -1;
+    }
+
+    free(ruta_trabajo);
+
+    if (estado_directorio == 1)
+        return 2;
+
+    return 0;
 
 #elif defined(__XC)
     (void)ruta;
     (void)cabecera;
+    return 0;
 #endif
 }
 
@@ -1098,6 +1401,184 @@ char *leer_info_dividida(const char *ruta)
 
 #elif defined(__XC)
     (void)ruta;
+    return NULL;
+
+#endif
+}
+
+char *agregar_info_dividida(const char *datos)
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    char **datos_espliteados = NULL;
+    int n_datos = 0;
+
+    if (!datos || !datos[0])
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+
+    n_datos = split(datos, GG_caracter_separacion_funciones_espesificas[3], &datos_espliteados);
+    if (n_datos <= 0 || !datos_espliteados || !datos_espliteados[0] || !datos_espliteados[0][0])
+    {
+        if (datos_espliteados)
+            free_split(datos_espliteados);
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+
+    const char *direccion_archivos = datos_espliteados[0];
+    const char *agregando = "";
+    const char *nom_columnas_si_no_existe_archivo = "";
+
+    if (n_datos >= 2 && datos_espliteados[1] && datos_espliteados[1][0])
+        agregando = datos_espliteados[1];
+
+    if (n_datos >= 3 && datos_espliteados[2] && datos_espliteados[2][0])
+        nom_columnas_si_no_existe_archivo = datos_espliteados[2];
+
+    char *cabecera_metadata = NULL;
+    if (concatenar_formato_separado_por_variable(
+            &cabecera_metadata, NULL,
+            "tipo_info%sinfo\nID_TOT%s0\nCOLUMNAS%s%s\nCANT_POR_ARCH%s%s",
+            GG_caracter_separacion[0], GG_caracter_separacion[0], GG_caracter_separacion[0],
+            nom_columnas_si_no_existe_archivo, GG_caracter_separacion[0], GG_cantidado_por_archivo) < 0)
+    {
+        free_split(datos_espliteados);
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+
+    int estado_creacion_metadata = crearArchivo(direccion_archivos, cabecera_metadata);
+    free(cabecera_metadata);
+
+    if (estado_creacion_metadata < 0)
+    {
+        free_split(datos_espliteados);
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror no pudo crear metadata", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+
+    int n_lineas = 0;
+    char **lineas = leer_archivo(direccion_archivos, &n_lineas);
+    if (!lineas || n_lineas <= 0)
+    {
+        free_split(datos_espliteados);
+        if (lineas)
+            free_lineas(lineas, n_lineas);
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror no pudo leer metadata", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+
+    long id_total = 0;
+    long cantidad_filas_por_archivo = atol(GG_cantidado_por_archivo);
+    char *columnas = NULL;
+
+    if (cantidad_filas_por_archivo <= 0)
+        cantidad_filas_por_archivo = 100;
+
+    for (int i = 0; i < n_lineas; i++)
+    {
+        char **partes = NULL;
+        int n_partes = split(lineas[i], GG_caracter_separacion[0], &partes);
+        if (n_partes >= 2 && partes)
+        {
+            if (strcmp(partes[0], "ID_TOT") == 0)
+                id_total = atol(partes[1]);
+            else if (strcmp(partes[0], "COLUMNAS") == 0)
+                columnas = partes[1];
+            else if (strcmp(partes[0], "CANT_POR_ARCH") == 0)
+            {
+                long tmp = atol(partes[1]);
+                if (tmp > 0)
+                    cantidad_filas_por_archivo = tmp;
+            }
+        }
+
+        if (partes)
+            free_split(partes);
+    }
+
+    char *ruta_base_sin_ext = NULL;
+    if (concatenar_formato_separado_por_variable(&ruta_base_sin_ext, NULL, "%s", direccion_archivos) < 0)
+    {
+        free_lineas(lineas, n_lineas);
+        free_split(datos_espliteados);
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+
+    char *sep = buscar_ultimo_separador(ruta_base_sin_ext);
+    char *punto = strrchr(ruta_base_sin_ext, '.');
+    if (punto && (!sep || punto > sep))
+        *punto = '\0';
+
+    char *carpeta_data = NULL;
+    if (concatenar_formato_separado_por_variable(&carpeta_data, NULL, "%s_DAT", ruta_base_sin_ext) < 0)
+    {
+        free(ruta_base_sin_ext);
+        free_lineas(lineas, n_lineas);
+        free_split(datos_espliteados);
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+    free(ruta_base_sin_ext);
+
+    size_t tam_ruta_data = strlen(carpeta_data) + 128;
+    char *ruta_data = (char *)malloc(tam_ruta_data);
+    if (!ruta_data)
+    {
+        free(carpeta_data);
+        free_lineas(lineas, n_lineas);
+        free_split(datos_espliteados);
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+
+    generar_ruta_archivo(carpeta_data, id_total, cantidad_filas_por_archivo, ruta_data, tam_ruta_data);
+    free(carpeta_data);
+
+    int estado_creacion_data = crearArchivo(ruta_data, columnas ? columnas : nom_columnas_si_no_existe_archivo);
+    if (estado_creacion_data < 0)
+    {
+        free(ruta_data);
+        free_lineas(lineas, n_lineas);
+        free_split(datos_espliteados);
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror no pudo crear archivo de datos", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+
+    char *fila_nueva = NULL;
+    if (concatenar_formato_separado_por_variable(&fila_nueva, NULL, "%ld%s%s",
+                                                 id_total + 1,
+                                                 GG_caracter_separacion[0],
+                                                 agregando) < 0)
+    {
+        free(ruta_data);
+        free_lineas(lineas, n_lineas);
+        free_split(datos_espliteados);
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
+        return respuesta;
+    }
+
+    agregar_fila(ruta_data, fila_nueva);
+
+    char nuevo_id_total[64];
+    snprintf(nuevo_id_total, sizeof(nuevo_id_total), "%ld", id_total + 1);
+    editar_celda_por_celda(direccion_archivos, 0, "ID_TOT", 1, nuevo_id_total);
+
+    concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s",
+                                             GG_caracter_para_confirmacion_o_error[0], fila_nueva);
+
+    free(fila_nueva);
+    free(ruta_data);
+    free_lineas(lineas, n_lineas);
+    free_split(datos_espliteados);
+    return respuesta;
+
+#elif defined(__XC)
+    (void)datos;
     return NULL;
 
 #endif

@@ -7,8 +7,8 @@
 #include "var_fun_GG.h"
 #include <stddef.h>
 
-void crearDirectorio(const char *ruta);
-void crearArchivo(const char *ruta, const char *cabecera);
+int crearDirectorio(const char *ruta);
+int crearArchivo(const char *ruta, const char *cabecera);
 
 /* Lee archivo y retorna arreglo dinámico de strings.
    El caller es responsable de llamar a free_lineas() cuando termine. */
@@ -94,6 +94,11 @@ void generar_ruta_archivo(const char *ruta, long id, long cant_por_arch,
 /* Leer archivo completo en una sola string (para procesos que requieren contenido completo).
    El caller debe liberar con free(). */
 char *leer_info_dividida(const char *ruta);
+
+/* Agregar informacion en archivo distribuido y actualizar metadata ID_TOT.
+   Retorna "1<sep_confirmacion>fila" en exito, o "0<sep_confirmacion>mensaje" en error.
+   El caller debe liberar con free(). */
+char *agregar_info_dividida(const char *datos);
 
 /* Incrementar celda solo si el programa (col 2) coincide con programa_id.
    Busca por col 0 (ID principal). */

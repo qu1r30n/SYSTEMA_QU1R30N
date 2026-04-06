@@ -35,13 +35,24 @@ char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝"};
 
 char *GG_id_programa = "CLASE_QU1R30N_2";
 
-char *GG_archivos[][2] = {
-    {"inventario.txt",
-     "ID|Producto|Contenido|TipoMedida|PrecioVenta|CodBarras|Cantidad|CostoCompra|Proveedor|Col10|Col11|Col12|Col13|Col14|Col15|Col16|Col17|Fecha"}};
+#ifdef _WIN32
+char *GG_archivos[][3] = {
+    {"espacios\\",
+     "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel",
+     "archivo_espacios.txt"},
+    {NULL, NULL, NULL}};
+#else
+char *GG_archivos[][3] = {
+    {"espacios/",
+     "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel",
+     "archivo_espacios.txt"},
+    {NULL, NULL, NULL}};
+#endif
 
 char *GG_archivos_registros[][2] = {
     {"registros_ventas.txt", ""},
-    {"registros_compras.txt", ""}};
+    {"registros_compras.txt", ""},
+    {NULL, NULL}};
 /* ===== VARIABLES STRING GLOBALES ===== */
 char *GG_variables_string[MAX_VAR_STRING] = {
     "", /* [0] codbar */
@@ -58,7 +69,8 @@ char *GG_variables_string[MAX_VAR_STRING] = {
 /* Ventana: Datos de Configuración (2 campos) */
 const char *GG_ventana_datos_conf[][5] = {
     {"2", "dato_de_configuracion", "", "", "TEXTO"},
-    {"2", "descripcion_de_configuracion", "", "", "TEXTO"}};
+    {"2", "descripcion_de_configuracion", "", "", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Productos (33 campos) */
 const char *GG_ventana_emergente_productos[][5] = {
@@ -95,12 +107,14 @@ const char *GG_ventana_emergente_productos[][5] = {
     {"2", "_29_INDICES_AÑO_REGISTRO_PRODUC_VENDIDO", "", "0", "TEXTO"},
     {"2", "_30_ULTIMA_VENTA", "", "", "TEXTO"},
     {"2", "_31_INDICES_TOTAL_REGISTRO_PRODUC_VENDIDO", "", "0", "TEXTO"},
-    {"2", "_32_NO_PONER_NADA", "", "", "TEXTO"}};
+    {"2", "_32_NO_PONER_NADA", "", "", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 /* Ventana: Cosas No Estaban en Inventario (3 campos) */
-const char *GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[3][5] = {
+const char *GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_COD_BAR", "", "NOSE", "TEXTO"},
-    {"1", "_02_NOMBRE", "", "NOSE", "TEXTO"}};
+    {"1", "_02_NOMBRE", "", "NOSE", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Proveedores (24 campos) */
 const char *GG_ventana_provedor[][5] = {
@@ -127,7 +141,8 @@ const char *GG_ventana_provedor[][5] = {
     {"1", "_20_SUCURSALES_QUE_LE_COMPRAN", "", "NOSE", "TEXTO"},
     {"1", "_21_DINERO_A_COMPRARLE", "0°SOLO_NUMEROS", "0", "TEXTO"},
     {"1", "_22_DIAS_DE_PREVENTA", "", "NOSE¬NOSE", "TEXTO"},
-    {"1", "_23_DIAS_DE_ENTREGA", "", "NOSE¬NOSE", "TEXTO"}};
+    {"1", "_23_DIAS_DE_ENTREGA", "", "NOSE¬NOSE", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Aprendices (32 campos) */
 const char *GG_ventana_APRENDICES_E[][5] = {
@@ -162,7 +177,8 @@ const char *GG_ventana_APRENDICES_E[][5] = {
     {"1", "_28_HISTORIAL_DE_CAPACITACIÓN", "", "NOSE", "TEXTO"},
     {"1", "_29_ÚLTIMO_AUMENTO_DE_SALARIO", "", "NOSE", "TEXTO"},
     {"1", "_30_TIPO_EMPLEADO", "", "NOSE", "TEXTO"},
-    {"1", "_31_RANGO_CALIF", "", "-0", "TEXTO"}};
+    {"1", "_31_RANGO_CALIF", "", "-0", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Afiliados Unificados (8 campos) */
 const char *GG_ventana_afiliados_unificados[][5] = {
@@ -173,13 +189,15 @@ const char *GG_ventana_afiliados_unificados[][5] = {
     {"1", "_04_DATOS", "", "NOSE", "TEXTO"},
     {"1", "_05_NIVEL", "", "0", "TEXTO"},
     {"1", "_06_ID_HORIZONTAL", "", "0", "TEXTO"},
-    {"1", "_07_TIPO_AFILIADO", "", "NOSE", "TEXTO"}};
+    {"1", "_07_TIPO_AFILIADO", "", "NOSE", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 /* Ventana: Niveles Afiliados Unificado (4 campos) */
 const char *GG_ventana_niv_afiliados_unificado[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_NIVEL", "", "0", "TEXTO"},
     {"1", "_02_ID_HORIZONTAL", "", "0", "TEXTO"},
-    {"1", "_03_VACIOS", "", "", "TEXTO"}};
+    {"1", "_03_VACIOS", "", "", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Sucursales (20 campos) */
 const char *GG_ventana_SUCUR[][5] = {
@@ -202,7 +220,8 @@ const char *GG_ventana_SUCUR[][5] = {
     {"1", "_16_NOTAS", "", "", "TEXTO"},
     {"1", "_17_RECORDATORIO", "", "NOSE", "TEXTO"},
     {"1", "_18_ACTIVO_O_NO_ACTIVO", "", "NOSE", "TEXTO"},
-    {"1", "_19_HORA_ABRIR_CERRAR", "", "NOSE", "TEXTO"}};
+    {"1", "_19_HORA_ABRIR_CERRAR", "", "NOSE", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Día (11 campos) */
 const char *GG_ventana_reg_dia[][5] = {
@@ -216,7 +235,8 @@ const char *GG_ventana_reg_dia[][5] = {
     {"1", "_07_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
     {"1", "_08_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
     {"1", "_09_TOTAL_DEDUSIBLES", "", "0", "TEXTO"},
-    {"1", "_10_PLATAFORMA", "", "NOSE", "TEXTO"}};
+    {"1", "_10_PLATAFORMA", "", "NOSE", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Mes (9 campos) */
 const char *GG_ventana_reg_mes[][5] = {
@@ -228,7 +248,8 @@ const char *GG_ventana_reg_mes[][5] = {
     {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"},
     {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
     {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
-    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}};
+    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Año (9 campos) */
 const char *GG_ventana_reg_año[][5] = {
@@ -240,7 +261,8 @@ const char *GG_ventana_reg_año[][5] = {
     {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"},
     {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
     {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
-    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}};
+    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Total (9 campos) */
 const char *GG_ventana_reg_total[][5] = {
@@ -252,7 +274,8 @@ const char *GG_ventana_reg_total[][5] = {
     {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"},
     {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
     {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
-    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}};
+    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Productos Día (12 campos) */
 const char *GG_ventana_reg_prod_dia[][5] = {
@@ -267,7 +290,8 @@ const char *GG_ventana_reg_prod_dia[][5] = {
     {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
     {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
     {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
-    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
+    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Productos Mes (12 campos) */
 const char *GG_ventana_reg_prod_mes[][5] = {
@@ -282,7 +306,8 @@ const char *GG_ventana_reg_prod_mes[][5] = {
     {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
     {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
     {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
-    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
+    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Productos Año (12 campos) */
 const char *GG_ventana_reg_prod_año[][5] = {
@@ -297,7 +322,8 @@ const char *GG_ventana_reg_prod_año[][5] = {
     {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
     {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
     {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
-    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
+    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Productos Total (12 campos) */
 const char *GG_ventana_reg_prod_total[][5] = {
@@ -312,7 +338,8 @@ const char *GG_ventana_reg_prod_total[][5] = {
     {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
     {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
     {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
-    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}};
+    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Impuestos (6 campos) */
 const char *GG_ventana_IMPUESTOS[][5] = {
@@ -321,7 +348,8 @@ const char *GG_ventana_IMPUESTOS[][5] = {
     {"1", "_02_PORCENTAGE", "", "0", "TEXTO"},
     {"1", "_03_DESCRIPCION", "", "NOSE", "TEXTO"},
     {"1", "_04_INFO_EXTRA", "", "NOSE", "TEXTO"},
-    {"1", "_05_TIPO_IMPUESTO", "", "3", "TEXTO"}};
+    {"1", "_05_TIPO_IMPUESTO", "", "3", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Deducibles (7 campos) */
 const char *GG_ventana_DEDUSIBLES[][5] = {
@@ -331,12 +359,14 @@ const char *GG_ventana_DEDUSIBLES[][5] = {
     {"1", "_03_DESCRIPCION", "", "NOSE", "TEXTO"},
     {"1", "_04_PROVEDOR", "", "NOSE", "TEXTO"},
     {"1", "_05_ARCHIVO_FACTURA", "", "NOSE", "TEXTO"},
-    {"1", "_06_FOLIO", "", "NOSE", "TEXTO"}};
+    {"1", "_06_FOLIO", "", "NOSE", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Herramientas (2 campos) */
 const char *GG_ventana_HERRAMIENTAS[][5] = {
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_COD_BAR", "", "", "TEXTO"}};
+    {"1", "_01_COD_BAR", "", "", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Trabajos por Día (8 campos) */
 const char *GG_trabajos_dia[][5] = {
@@ -347,7 +377,8 @@ const char *GG_trabajos_dia[][5] = {
     {"1", "_04_CANTIDAD", "", "", "TEXTO"},
     {"1", "_05_COSTO_COMP", "", "", "TEXTO"},
     {"1", "_06_ID_QUIENLOISO", "", "", "TEXTO"},
-    {"1", "_07_ID_PROGRAMA", "", "", "TEXTO"}};
+    {"1", "_07_ID_PROGRAMA", "", "", "TEXTO"},
+    {NULL, NULL, NULL, NULL, NULL}};
 
 void RecargarVentanaEmergenteDatosConfiguracion(const char *al_finalizar_que_borrar)
 {

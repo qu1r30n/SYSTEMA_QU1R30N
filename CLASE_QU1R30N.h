@@ -10,6 +10,7 @@
  * - cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h: Dependencia interna del proyecto
  * - cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_tex_bas.h: Dependencia interna del proyecto
  * - cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_var_fun_GG.h: Dependencia interna del proyecto
+ * - cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_gestor_de_permisos.h: Dependencia interna del proyecto
  * - cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h: Dependencia interna del proyecto
  * - cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h: Dependencia interna del proyecto
  * - cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h: Dependencia interna del proyecto
@@ -23,7 +24,10 @@
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_compu.h"
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_tex_bas.h"
+#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_administracion_espacios.h"
+#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_administrador_de_estructuras_base.h"
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_var_fun_GG.h"
+#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_gestor_de_permisos.h"
 
 // también incluimos algunos encabezados de procesos comunes
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"

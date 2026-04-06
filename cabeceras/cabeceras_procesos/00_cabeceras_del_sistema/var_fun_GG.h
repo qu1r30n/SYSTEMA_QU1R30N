@@ -4,8 +4,8 @@
 #define COLUMNAS 33
 #define MAX_PRODUCTOS 1000
 
-extern char *GG_archivos[1][2];
-extern char *GG_archivos_registros[2][2];
+extern char *GG_archivos[][3];
+extern char *GG_archivos_registros[][2];
 
 /* nuevas variables globales añadidas */
 extern int GG_indice_donde_comensar;

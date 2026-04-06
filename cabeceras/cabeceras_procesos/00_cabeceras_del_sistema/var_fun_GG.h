@@ -6,6 +6,23 @@
 
 extern char *GG_archivos[][3];
 extern char *GG_archivos_registros[][2];
+extern char *GG_direccion_carpetas_base[];
+
+typedef struct
+{
+    char *ruta;
+    char *cabecera;
+    char *extra;
+} GG_ArchivoBaseNegocio;
+
+typedef struct
+{
+    char *ruta;
+    char *cabecera;
+} GG_ArchivoInventarioPendiente;
+
+extern GG_ArchivoBaseNegocio *GG_dir_nom_archivos;
+extern GG_ArchivoInventarioPendiente *GG_direccion_hacer_inventarios;
 
 /* nuevas variables globales añadidas */
 extern int GG_indice_donde_comensar;
@@ -137,8 +154,10 @@ void RecargarVentanaEmergenteImpuestos(const char *al_finalizar_que_borrar);
 void RecargarVentanaEmergenteDedusibles(const char *al_finalizar_que_borrar);
 void RecargarVentanaEmergente_HERRAMIENTAS(const char *al_finalizar_que_borrar);
 void RecargarVentanaEmergente_TRABAJOS_DIA(const char *al_finalizar_que_borrar);
+void RecargarArregloArchivos_dir_nom_archivos(void);
+void RecargarArregloDireccionInventarios(void);
 
 /* Función auxiliar para concatenar columnas */
-char *columnas_concatenadas(ConfigField *arreglo, int filas, int id_columna, const char *caracter_separacion);
+char *columnas_concatenadas(const char *arreglo[][5], int filas, int id_columna, const char *caracter_separacion);
 
 #endif

@@ -1406,9 +1406,100 @@ char *leer_info_dividida(const char *ruta)
 #endif
 }
 
+/*crear_archivo_info_dividida
+ * 
+ * ------------------------------------------------------------
+ * Crea (si no existe) el archivo metadata para info dividida.
+ *
+ * ENTRADA:
+ * - direccion_archivos: ruta del metadata principal.
+ *   Ejemplo: "espacios\\mi_espacio.txt"
+ * - nom_columnas_si_no_existe_archivo: encabezados de columnas.
+ *   Ejemplo: "ID|NOMBRE|PRECIO"
+ *
+ * ARCHIVO QUE CREA (si no existe):
+ * - espacios\\mi_espacio.txt
+ *
+ * CONTENIDO INICIAL EJEMPLO:
+ * tipo_info|info
+ * ID_TOT|0
+ * COLUMNAS|ID|NOMBRE|PRECIO
+ * CANT_POR_ARCH|100
+ *
+ * RETORNO:
+ * - 0: metadata creado
+ * - 1 o 2: ya existia (segun crearArchivo/crearDirectorio)
+ * - <0: error
+ */
+static int crear_archivo_info_dividida(const char *direccion_archivos,
+                                       const char *nom_columnas_si_no_existe_archivo)
+{
+#if defined(_WIN32) || defined(__linux__)
+    if (!direccion_archivos || !direccion_archivos[0])
+        return -1;
+
+    if (!nom_columnas_si_no_existe_archivo)
+        nom_columnas_si_no_existe_archivo = "";
+
+    char *cabecera_metadata = NULL;
+    if (concatenar_formato_separado_por_variable(
+            &cabecera_metadata, NULL,
+            "tipo_info%sinfo\nID_TOT%s0\nCOLUMNAS%s%s\nCANT_POR_ARCH%s%s",
+            GG_caracter_separacion[0], GG_caracter_separacion[0], GG_caracter_separacion[0],
+            nom_columnas_si_no_existe_archivo, GG_caracter_separacion[0], GG_cantidado_por_archivo) < 0)
+    {
+        return -1;
+    }
+
+    int estado_creacion_metadata = crearArchivo(direccion_archivos, cabecera_metadata);
+    free(cabecera_metadata);
+    return estado_creacion_metadata;
+
+#elif defined(__XC)
+    (void)direccion_archivos;
+    (void)nom_columnas_si_no_existe_archivo;
+    return -1;
+
+#endif
+}
+
 char *agregar_info_dividida(const char *datos)
 {
 #if defined(_WIN32) || defined(__linux__)
+    /*
+     * agregar_info_dividida
+     * ------------------------------------------------------------
+     * Agrega una fila a un archivo de datos dividido por bloques,
+     * y actualiza ID_TOT en el metadata.
+     *
+     * ENTRADA (string "datos"):
+     * - Formato: direccion_archivos + SEP_FUNC[3] + fila + SEP_FUNC[3] + columnas
+     * - Ejemplo:
+     *   "espacios\\mi_espacio.txt╬laptop|acer|15000╬ID|NOMBRE|PRECIO"
+     *   (donde SEP_FUNC[3] actualmente es GG_caracter_separacion_funciones_espesificas[3])
+     *
+     * ARCHIVOS QUE PUEDE CREAR:
+     * 1) Metadata:
+     *    - espacios\\mi_espacio.txt
+     *    - Si no existe, se crea con:
+     *      tipo_info|info
+     *      ID_TOT|0
+     *      COLUMNAS|ID|NOMBRE|PRECIO
+     *      CANT_POR_ARCH|100
+     *
+     * 2) Archivo de datos dividido:
+     *    - espacios\\mi_espacio_DAT\\100.txt (o ruta generada equivalente)
+     *    - Si no existe, se crea con cabecera de columnas.
+     *
+     * FILA AGREGADA (ejemplo):
+     * - Si ID_TOT era 0 y agregando = "laptop|acer|15000",
+     *   se agrega: "1|laptop|acer|15000"
+     * - Luego metadata queda con: ID_TOT|1
+     *
+     * SALIDA:
+     * - Exito: "1<SEP_CONFIRMACION>1|laptop|acer|15000"
+     * - Error: "0<SEP_CONFIRMACION>mensaje"
+     */
     char *respuesta = NULL;
     char **datos_espliteados = NULL;
     int n_datos = 0;
@@ -1438,20 +1529,8 @@ char *agregar_info_dividida(const char *datos)
     if (n_datos >= 3 && datos_espliteados[2] && datos_espliteados[2][0])
         nom_columnas_si_no_existe_archivo = datos_espliteados[2];
 
-    char *cabecera_metadata = NULL;
-    if (concatenar_formato_separado_por_variable(
-            &cabecera_metadata, NULL,
-            "tipo_info%sinfo\nID_TOT%s0\nCOLUMNAS%s%s\nCANT_POR_ARCH%s%s",
-            GG_caracter_separacion[0], GG_caracter_separacion[0], GG_caracter_separacion[0],
-            nom_columnas_si_no_existe_archivo, GG_caracter_separacion[0], GG_cantidado_por_archivo) < 0)
-    {
-        free_split(datos_espliteados);
-        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
-        return respuesta;
-    }
-
-    int estado_creacion_metadata = crearArchivo(direccion_archivos, cabecera_metadata);
-    free(cabecera_metadata);
+    int estado_creacion_metadata = crear_archivo_info_dividida(direccion_archivos,
+                                                               nom_columnas_si_no_existe_archivo);
 
     if (estado_creacion_metadata < 0)
     {
@@ -1487,7 +1566,21 @@ char *agregar_info_dividida(const char *datos)
             if (strcmp(partes[0], "ID_TOT") == 0)
                 id_total = atol(partes[1]);
             else if (strcmp(partes[0], "COLUMNAS") == 0)
-                columnas = partes[1];
+            {
+                char *tmp_col = (char *)malloc(strlen(partes[1]) + 1);
+                if (!tmp_col)
+                {
+                    free_split(partes);
+                    free_lineas(lineas, n_lineas);
+                    free_split(datos_espliteados);
+                    concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
+                    return respuesta;
+                }
+                strcpy(tmp_col, partes[1]);
+                if (columnas)
+                    free(columnas);
+                columnas = tmp_col;
+            }
             else if (strcmp(partes[0], "CANT_POR_ARCH") == 0)
             {
                 long tmp = atol(partes[1]);
@@ -1503,6 +1596,8 @@ char *agregar_info_dividida(const char *datos)
     char *ruta_base_sin_ext = NULL;
     if (concatenar_formato_separado_por_variable(&ruta_base_sin_ext, NULL, "%s", direccion_archivos) < 0)
     {
+        if (columnas)
+            free(columnas);
         free_lineas(lineas, n_lineas);
         free_split(datos_espliteados);
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
@@ -1518,6 +1613,8 @@ char *agregar_info_dividida(const char *datos)
     if (concatenar_formato_separado_por_variable(&carpeta_data, NULL, "%s_DAT", ruta_base_sin_ext) < 0)
     {
         free(ruta_base_sin_ext);
+        if (columnas)
+            free(columnas);
         free_lineas(lineas, n_lineas);
         free_split(datos_espliteados);
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
@@ -1530,6 +1627,8 @@ char *agregar_info_dividida(const char *datos)
     if (!ruta_data)
     {
         free(carpeta_data);
+        if (columnas)
+            free(columnas);
         free_lineas(lineas, n_lineas);
         free_split(datos_espliteados);
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
@@ -1543,6 +1642,8 @@ char *agregar_info_dividida(const char *datos)
     if (estado_creacion_data < 0)
     {
         free(ruta_data);
+        if (columnas)
+            free(columnas);
         free_lineas(lineas, n_lineas);
         free_split(datos_espliteados);
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror no pudo crear archivo de datos", GG_caracter_para_confirmacion_o_error[0]);
@@ -1556,6 +1657,8 @@ char *agregar_info_dividida(const char *datos)
                                                  agregando) < 0)
     {
         free(ruta_data);
+        if (columnas)
+            free(columnas);
         free_lineas(lineas, n_lineas);
         free_split(datos_espliteados);
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]);
@@ -1573,6 +1676,8 @@ char *agregar_info_dividida(const char *datos)
 
     free(fila_nueva);
     free(ruta_data);
+    if (columnas)
+        free(columnas);
     free_lineas(lineas, n_lineas);
     free_split(datos_espliteados);
     return respuesta;

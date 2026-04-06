@@ -14,6 +14,8 @@
 
 int modelo_administracion_espacios_crear_espacio(char *texto)
 {
+    imprimirMensaje_para_depurar("\n\ntexto=%s\n", texto);
+
     if (!texto)
     {
         return -1;

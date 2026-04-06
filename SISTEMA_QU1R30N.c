@@ -23,7 +23,7 @@ void conmutador(char *texto_prueba)
         return;
     }
 
-    imprimirMensaje_para_depurar("\n\n%s\n%s\n%s\n%s\n%s", opciones[0], opciones[1], opciones[2], opciones[3], opciones[4]);
+    imprimirMensaje_para_depurar("\n\n%s\n%s\n%s\n%s", opciones[0], opciones[1], opciones[2], opciones[3]);
 
     char *texto_permiso = NULL;
 
@@ -178,7 +178,7 @@ int main()
     /* ejemplos de comandos que el sistema entrega al modelo */
     const char *ejemplos[] = {
         //"op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
-        "administracion_espacio~crear_espacio§nom_espacio⊓ferreteria_dan~id_de_espacio⊓20260330113640_ferreteria_dan§usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓0~usuario_de_negocio⊓administrador_negocio§contraseña_de_negocio⊓54321",
+        "administracion_espacio~crear_espacio§nom_espacio⊓ferreteria_dan~id_de_espacio⊓0§usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓0~usuario_de_negocio⊓administrador_negocio§contraseña_de_negocio⊓54321",
         "op_tienda~agregar_producto§producto⊓2¶contenido⊓3¶tipo_medida⊓4¶precio_venta⊓5⊓no_predeterminado¶cod_barras⊓6¶cantidad⊓7¶costo_compra⊓8¶proveedor⊓9~id_de_espacio⊓20260330113640_ferreteria_dan~usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓12345~usuario_de_negocio⊓administrador_negocio§contraseña_de_negocio⊓54321",
         "op_tienda~ventas§ABC123¶2§SucursalX",
         "op_tienda~compras§XYZ987¶5§Proveedor1",

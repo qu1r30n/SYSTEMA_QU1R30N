@@ -9,6 +9,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
@@ -70,6 +71,8 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
     crearArchivo(ruta_archivo, contenido_inicial); /* crea el directorio y archivo del espacio con su contenido inicial */
     printf("Espacio creado: %s (usuario: %s)\n", nombre_directorio, usuario);
 
+    crear_archivos_base_negocio(nombre_archivo); /* crea los archivos base del negocio dentro del nuevo espacio */
+
     if (concatenar_formato_separado_por_variable(&ruta_archivo_gg, NULL, "%s\\%s", GG_archivos[0][0], GG_archivos[0][2]) < 0) /* ruta_archivo_gg = ruta_base\archivo_maestro */
     {
         free(folio_fecha); /* fallo al construir ruta del archivo maestro de espacios */
@@ -118,4 +121,88 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
     free(ruta_archivo_gg);
     free(linea_gg);
     return 0; /* todo salio bien */
+}
+
+int crear_archivos_base_negocio(const char *id_espacio)
+{
+    int errores = 0;
+    const char *base_anterior = GG_direccion_carpetas_base[0];
+    char *base_dinamica = NULL;
+
+    if (!id_espacio || !id_espacio[0])
+        return -1;
+
+    if ((strchr(id_espacio, '\\') != NULL) || (strchr(id_espacio, '/') != NULL))
+    {
+        if (concatenar_formato_separado_por_variable(&base_dinamica, NULL, "%s", id_espacio) < 0)
+            return -1;
+    }
+    else
+    {
+        if (concatenar_formato_separado_por_variable(&base_dinamica, NULL, "%s%s", GG_archivos[0][0], id_espacio) < 0)
+            return -1;
+    }
+
+    if (base_dinamica[0])
+    {
+        size_t len = strlen(base_dinamica);
+        if (base_dinamica[len - 1] != '\\' && base_dinamica[len - 1] != '/')
+        {
+            char *tmp = (char *)realloc(base_dinamica, len + 2);
+            if (!tmp)
+            {
+                free(base_dinamica);
+                return -1;
+            }
+            base_dinamica = tmp;
+            base_dinamica[len] = '\\';
+            base_dinamica[len + 1] = '\0';
+        }
+    }
+
+    GG_direccion_carpetas_base[0] = base_dinamica;
+
+    RecargarArregloArchivos_dir_nom_archivos();
+    RecargarArregloDireccionInventarios();
+
+    for (int i = 0; GG_dir_nom_archivos && GG_dir_nom_archivos[i].ruta; i++)
+    {
+        const char *ruta = GG_dir_nom_archivos[i].ruta;
+        const char *cabecera = GG_dir_nom_archivos[i].cabecera;
+        imprimirMensaje_para_depurar("\n\n ruta: %s \n cabesera[%d]: %s\n", ruta, i, cabecera);
+
+        if (!ruta || !ruta[0])
+            continue;
+
+        int ret = crearArchivo(ruta, cabecera ? cabecera : "");
+        if (ret < 0)
+        {
+            imprimirMensaje_para_depurar("[crear_archivos_base_negocio] error creando base[%d]: %s\n", i, ruta);
+            errores++;
+        }
+    }
+
+    for (int i = 0; GG_direccion_hacer_inventarios && GG_direccion_hacer_inventarios[i].ruta; i++)
+    {
+        const char *ruta = GG_direccion_hacer_inventarios[i].ruta;
+        const char *cabecera = GG_direccion_hacer_inventarios[i].cabecera;
+
+        if (!ruta || !ruta[0])
+            continue;
+
+        int ret = crearArchivo(ruta, cabecera ? cabecera : "");
+        if (ret < 0)
+        {
+            imprimirMensaje_para_depurar("[crear_archivos_base_negocio] error creando inventario[%d]: %s\n", i, ruta);
+            errores++;
+        }
+    }
+
+    GG_direccion_carpetas_base[0] = (char *)base_anterior;
+    free(base_dinamica);
+
+    if (errores > 0)
+        return -1;
+
+    return 0;
 }

@@ -57,7 +57,7 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
     {
         return -1;
     }
-    imprimirMensaje_para_depurar("%s\n%s\n%s\n%s\n%s", partes[0], partes[1], partes[2], partes[3], partes[4]);
+    imprimirMensaje_para_depurar("%s\n%s\n%s\n%s", partes[0], partes[1], partes[2], partes[3]);
 
     int cuantas_partes = 0;
     while (partes[cuantas_partes])

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
 int GG_indice_donde_comensar = 1;
@@ -53,7 +54,9 @@ char *GG_archivos_registros[][2] = {
     {"registros_ventas.txt", ""},
     {"registros_compras.txt", ""},
     {NULL, NULL}};
+
 /* ===== VARIABLES STRING GLOBALES ===== */
+
 char *GG_variables_string[MAX_VAR_STRING] = {
     "", /* [0] codbar */
     "", /* [1] prov_anterior */
@@ -718,25 +721,372 @@ void RecargarVentanaEmergente_TRABAJOS_DIA(const char *al_finalizar_que_borrar)
 
 /* Función auxiliar para concatenar valores de columnas
    id_columna se pasa para futuras extensiones; actualmente no se usa. */
-char *columnas_concatenadas(ConfigField *arreglo, int filas, int id_columna, const char *caracter_separacion)
+char *columnas_concatenadas(const char *arreglo[][5], int filas, int id_columna, const char *caracter_separacion)
 {
-    (void)id_columna; /* evitar advertencia "unused parameter" */
     static char resultado[4096];
     memset(resultado, 0, sizeof(resultado));
+
+    if (!arreglo)
+    {
+        return resultado;
+    }
 
     if (caracter_separacion == NULL)
     {
         caracter_separacion = GG_caracter_separacion[1];
     }
 
-    for (int i = 0; i < filas; i++)
+    if (id_columna < 0 || id_columna >= 5)
     {
-        strcat(resultado, arreglo[i].nombre);
-        if (i < filas - 1)
+        id_columna = 1;
+    }
+
+    int total_filas = 0;
+    if (filas > 0)
+    {
+        total_filas = filas;
+    }
+    else
+    {
+        while (arreglo[total_filas][0] != NULL)
         {
-            strcat(resultado, caracter_separacion);
+            total_filas++;
         }
     }
 
+    for (int i = 0; i < total_filas; i++)
+    {
+        const char *valor = arreglo[i][id_columna];
+
+        if (!valor)
+        {
+            continue;
+        }
+
+        if (resultado[0] != '\0')
+        {
+            strcat(resultado, caracter_separacion);
+        }
+
+        strcat(resultado, valor);
+    }
+
     return resultado;
+}
+
+char *GG_direccion_carpetas_base[] = {
+    "",
+    NULL};
+
+GG_ArchivoBaseNegocio *GG_dir_nom_archivos = NULL;
+
+GG_ArchivoInventarioPendiente *GG_direccion_hacer_inventarios = NULL;
+
+static char *duplicar_texto(const char *txt)
+{
+    if (!txt)
+        return NULL;
+
+    char *salida = (char *)malloc(strlen(txt) + 1);
+    if (!salida)
+        return NULL;
+
+    strcpy(salida, txt);
+    return salida;
+}
+
+static char *crear_metadata_archivo_base(const char *columnas)
+{
+    const char *columnas_seguras = columnas ? columnas : "";
+    const char *cantidad_por_archivo = GG_cantidado_por_archivo ? GG_cantidado_por_archivo : "0";
+    size_t longitud_total = strlen("ID_TOT|0\nCOLUMNAS|\nCANT_POR_ARCH|") + strlen(columnas_seguras) + strlen(cantidad_por_archivo) + 1;
+    char *metadata = (char *)malloc(longitud_total);
+
+    if (!metadata)
+    {
+        return NULL;
+    }
+
+    snprintf(metadata, longitud_total, "ID_TOT|0\nCOLUMNAS|%s\nCANT_POR_ARCH|%s", columnas_seguras, cantidad_por_archivo);
+    return metadata;
+}
+
+static int agregar_archivo_base_negocio(const char *ruta, const char *cabecera, const char *extra)
+{
+    int cantidad = 0;
+    GG_ArchivoBaseNegocio *tmp = NULL;
+
+    if (GG_dir_nom_archivos)
+    {
+        while (GG_dir_nom_archivos[cantidad].ruta || GG_dir_nom_archivos[cantidad].cabecera || GG_dir_nom_archivos[cantidad].extra)
+        {
+            cantidad++;
+        }
+    }
+
+    tmp = (GG_ArchivoBaseNegocio *)realloc(GG_dir_nom_archivos, sizeof(GG_ArchivoBaseNegocio) * (cantidad + 2));
+    if (!tmp)
+    {
+        return -1;
+    }
+
+    GG_dir_nom_archivos = tmp;
+    GG_dir_nom_archivos[cantidad].ruta = NULL;
+    GG_dir_nom_archivos[cantidad].cabecera = NULL;
+    GG_dir_nom_archivos[cantidad].extra = NULL;
+    GG_dir_nom_archivos[cantidad + 1].ruta = NULL;
+    GG_dir_nom_archivos[cantidad + 1].cabecera = NULL;
+    GG_dir_nom_archivos[cantidad + 1].extra = NULL;
+
+    GG_dir_nom_archivos[cantidad].ruta = duplicar_texto(ruta ? ruta : "");
+    GG_dir_nom_archivos[cantidad].cabecera = duplicar_texto(cabecera ? cabecera : "");
+    GG_dir_nom_archivos[cantidad].extra = duplicar_texto(extra ? extra : "");
+
+    if (!GG_dir_nom_archivos[cantidad].ruta || !GG_dir_nom_archivos[cantidad].cabecera || !GG_dir_nom_archivos[cantidad].extra)
+    {
+        free(GG_dir_nom_archivos[cantidad].ruta);
+        free(GG_dir_nom_archivos[cantidad].cabecera);
+        free(GG_dir_nom_archivos[cantidad].extra);
+        GG_dir_nom_archivos[cantidad].ruta = NULL;
+        GG_dir_nom_archivos[cantidad].cabecera = NULL;
+        GG_dir_nom_archivos[cantidad].extra = NULL;
+        return -1;
+    }
+
+    return 0;
+}
+
+static int agregar_archivo_base_negocio_con_columnas(const char *ruta, const char *columnas, const char *extra)
+{
+    char *metadata = crear_metadata_archivo_base(columnas);
+    int resultado;
+
+    if (!metadata)
+    {
+        return -1;
+    }
+
+    resultado = agregar_archivo_base_negocio(ruta, metadata, extra);
+    free(metadata);
+    return resultado;
+}
+
+static int agregar_archivo_inventario(const char *ruta, const char *cabecera)
+{
+    int cantidad = 0;
+    GG_ArchivoInventarioPendiente *tmp = NULL;
+
+    if (GG_direccion_hacer_inventarios)
+    {
+        while (GG_direccion_hacer_inventarios[cantidad].ruta || GG_direccion_hacer_inventarios[cantidad].cabecera)
+        {
+            cantidad++;
+        }
+    }
+
+    tmp = (GG_ArchivoInventarioPendiente *)realloc(GG_direccion_hacer_inventarios, sizeof(GG_ArchivoInventarioPendiente) * (cantidad + 2));
+    if (!tmp)
+    {
+        return -1;
+    }
+
+    GG_direccion_hacer_inventarios = tmp;
+    GG_direccion_hacer_inventarios[cantidad].ruta = NULL;
+    GG_direccion_hacer_inventarios[cantidad].cabecera = NULL;
+    GG_direccion_hacer_inventarios[cantidad + 1].ruta = NULL;
+    GG_direccion_hacer_inventarios[cantidad + 1].cabecera = NULL;
+
+    GG_direccion_hacer_inventarios[cantidad].ruta = duplicar_texto(ruta ? ruta : "");
+    GG_direccion_hacer_inventarios[cantidad].cabecera = duplicar_texto(cabecera ? cabecera : "");
+
+    if (!GG_direccion_hacer_inventarios[cantidad].ruta || !GG_direccion_hacer_inventarios[cantidad].cabecera)
+    {
+        free(GG_direccion_hacer_inventarios[cantidad].ruta);
+        free(GG_direccion_hacer_inventarios[cantidad].cabecera);
+        GG_direccion_hacer_inventarios[cantidad].ruta = NULL;
+        GG_direccion_hacer_inventarios[cantidad].cabecera = NULL;
+        return -1;
+    }
+
+    return 0;
+}
+
+static void liberar_arreglo_dir_nom_archivos(void)
+{
+    if (!GG_dir_nom_archivos)
+    {
+        return;
+    }
+
+    for (int i = 0; GG_dir_nom_archivos[i].ruta || GG_dir_nom_archivos[i].cabecera || GG_dir_nom_archivos[i].extra; i++)
+    {
+        free(GG_dir_nom_archivos[i].ruta);
+        free(GG_dir_nom_archivos[i].cabecera);
+        free(GG_dir_nom_archivos[i].extra);
+    }
+
+    free(GG_dir_nom_archivos);
+    GG_dir_nom_archivos = NULL;
+}
+
+static void liberar_arreglo_direccion_inventarios(void)
+{
+    if (!GG_direccion_hacer_inventarios)
+    {
+        return;
+    }
+
+    for (int i = 0; GG_direccion_hacer_inventarios[i].ruta || GG_direccion_hacer_inventarios[i].cabecera; i++)
+    {
+        free(GG_direccion_hacer_inventarios[i].ruta);
+        free(GG_direccion_hacer_inventarios[i].cabecera);
+    }
+
+    free(GG_direccion_hacer_inventarios);
+    GG_direccion_hacer_inventarios = NULL;
+}
+
+void RecargarArregloArchivos_dir_nom_archivos(void)
+{
+    liberar_arreglo_dir_nom_archivos();
+
+    time_t ahora = time(NULL);
+    struct tm *t = localtime(&ahora);
+    char yyyy[5] = "0000";
+    char yyyymm[7] = "000000";
+    char yyyymmdd[9] = "00000000";
+
+    if (t)
+    {
+        strftime(yyyy, sizeof(yyyy), "%Y", t);
+        strftime(yyyymm, sizeof(yyyymm), "%Y%m", t);
+        strftime(yyyymmdd, sizeof(yyyymmdd), "%Y%m%d", t);
+    }
+
+    char tmp[512];
+    const char *base = GG_direccion_carpetas_base[0] ? GG_direccion_carpetas_base[0] : "";
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\INVENTARIO.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_emergente_productos, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\PROVEDORES.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_provedor, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\APRENDICES_E.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_APRENDICES_E, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\AFILIADOS_UNIFICADO.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REG_A_CONFIRMAR_.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\AFILIADOS_UNIFICADO.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\SUCUR.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_SUCUR, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s\\%s_REGISTRO.TXT", base, yyyy, yyyymm, yyyymmdd);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_dia, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s_REGISTRO.TXT", base, yyyy, yyyymm);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_mes, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s_REGISTRO.TXT", base, yyyy);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_año, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\ACUMULADO_REGISTRO.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_total, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s\\%s_PRODUC_REGISTRO.TXT", base, yyyy, yyyymm, yyyymmdd);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_dia, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s_PRODUC_REGISTRO.TXT", base, yyyy, yyyymm);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_mes, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s_PRODUC_REGISTRO.TXT", base, yyyy);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_año, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\ACUMULADO_PRODUC_REGISTRO.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_total, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\IMPUESTOS\\IMPUESTOS.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_IMPUESTOS, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\IMPUESTOS\\DEDUSIBLES.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_DEDUSIBLES, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\COSAS_NO_ESTABAN.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_COSAS_NO_ESTABAN_INVENTARIO, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\TIPOS_DE_MEDIDA.TXT", base);
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_HERRAMIENTAS, 0, 1, GG_caracter_separacion[1]), "") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\TRABAJOS_POR_DIA.TXT", base);
+    agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_trabajos_dia, 0, 1, GG_caracter_separacion[1]), "");
+}
+
+void RecargarArregloDireccionInventarios(void)
+{
+    liberar_arreglo_direccion_inventarios();
+
+    time_t ahora = time(NULL);
+    struct tm *t = localtime(&ahora);
+    char yyyymmdd[9] = "00000000";
+
+    if (t)
+        strftime(yyyymmdd, sizeof(yyyymmdd), "%Y%m%d", t);
+
+    char tmp[512];
+
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_VENTAS_DURANTE_INV.TXT", yyyymmdd);
+    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_SOBRANTES.TXT", yyyymmdd);
+    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_FALTANTES.TXT", yyyymmdd);
+    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_NO_ESTAN_EN_EL_FISICO.TXT", yyyymmdd);
+    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)
+        return;
+
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_NO_ESTAN_EN_EL_FISICO_PERO_PUEDE_QUE_FALTEN.TXT", yyyymmdd);
+    agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO");
 }

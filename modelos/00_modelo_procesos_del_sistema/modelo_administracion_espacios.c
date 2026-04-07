@@ -24,8 +24,8 @@ int modelo_administracion_espacios_crear_espacio(char *texto)
     char *nombres_variables[][4] =
         {
             {"nom_espacio", "string", "NOSE", ""},
-            {"usuario", "string", "NOSE", ""},
-            {"contraseña", "string", "NOSE", ""},
+            {"usuario_de_negocio", "string", "NOSE", ""},
+            {"contraseña_de_negocio", "string", "NOSE", ""},
             {NULL, NULL, NULL, NULL}};
 
     char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);

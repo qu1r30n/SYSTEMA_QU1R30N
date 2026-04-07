@@ -1,0 +1,2 @@
+ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel
+20260406224536_ferreteria_dan|administrador_negocio|54321||1

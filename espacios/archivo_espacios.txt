@@ -1,2 +1,3 @@
 ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel
 0|administrador_de_espacio|0||0
+20260406224536_ferreteria_dan|administrador_negocio|54321|espacios\20260406224536_ferreteria_dan\20260406224536_ferreteria_dan.txt|2

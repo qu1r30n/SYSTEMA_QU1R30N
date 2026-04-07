@@ -27,7 +27,7 @@ void conmutador(char *texto_prueba)
 
     char *texto_permiso = NULL;
 
-    concatenar_formato_separado_por_variable(&texto_permiso, NULL, "nivel_minimo%s1%sruta_archivo%s%s\\%s%s%s", GG_caracter_separacion_nom_parametro_de_valor[0], G_caracter_separacion_funciones_espesificas[1], GG_caracter_separacion_nom_parametro_de_valor[0], GG_archivos[0][0], GG_archivos[0][2], G_caracter_separacion_funciones_espesificas[1], opciones[2]);
+    concatenar_formato_separado_por_variable(&texto_permiso, NULL, "nivel_minimo%s1%sruta_archivo%s%s\\%s%s%s%s%s", GG_caracter_separacion_nom_parametro_de_valor[0], G_caracter_separacion_funciones_espesificas[1], GG_caracter_separacion_nom_parametro_de_valor[0], GG_archivos[0][0], GG_archivos[0][2], G_caracter_separacion_funciones_espesificas[1], opciones[2], G_caracter_separacion_funciones_espesificas[1], opciones[2]);
 
     imprimirMensaje_para_depurar("\n\n%s\n", texto_permiso);
 
@@ -122,7 +122,7 @@ void conmutador(char *texto_prueba)
 
                         imprimirMensaje_para_depurar("%s\n", direccion_archivo_espacios);
                         crearArchivo(direccion_archivo_espacios, GG_archivos[0][1]);
-
+                        imprimirMensaje_para_depurar("%s\n", sub_opcion[1]);
                         modelo_administracion_espacios_crear_espacio(sub_opcion[1]);
                         free(direccion_archivo_espacios);
                     }
@@ -178,7 +178,7 @@ int main()
     /* ejemplos de comandos que el sistema entrega al modelo */
     const char *ejemplos[] = {
         //"op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
-        "administracion_espacio~crear_espacio§nom_espacio⊓ferreteria_dan~id_de_espacio⊓0§usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓0~usuario_de_negocio⊓administrador_negocio§contraseña_de_negocio⊓54321",
+        "administracion_espacio~crear_espacio§nom_espacio⊓ferreteria_dan¶usuario_de_negocio⊓administrador_negocio¶contraseña_de_negocio⊓54321~id_de_espacio⊓0§usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓0",
         "op_tienda~agregar_producto§producto⊓2¶contenido⊓3¶tipo_medida⊓4¶precio_venta⊓5⊓no_predeterminado¶cod_barras⊓6¶cantidad⊓7¶costo_compra⊓8¶proveedor⊓9~id_de_espacio⊓20260330113640_ferreteria_dan~usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓12345~usuario_de_negocio⊓administrador_negocio§contraseña_de_negocio⊓54321",
         "op_tienda~ventas§ABC123¶2§SucursalX",
         "op_tienda~compras§XYZ987¶5§Proveedor1",

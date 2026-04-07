@@ -1,2 +1,0 @@
-ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel
-20260406163337_ferreteria_dan|NOSE|NOSE||1

@@ -8,6 +8,7 @@
 #include <string.h> /* strcmp, etc. */
 
 #include "CLASE_QU1R30N.h"
+#include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/ControladorMonitoreoArchivo.h"
 
 // Inicialización
 void inicializacion()
@@ -178,11 +179,20 @@ int main()
     /* ejemplos de comandos que el sistema entrega al modelo */
     const char *ejemplos[] = {
         //"op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
-        "administracion_espacio~crear_espacio§nom_espacio⊓ferreteria_dan¶usuario_de_negocio⊓administrador_negocio¶contraseña_de_negocio⊓54321~id_de_espacio⊓0§usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓0",
+        //"administracion_espacio~crear_espacio§nom_espacio⊓ferreteria_dan¶usuario_de_negocio⊓administrador_negocio¶contraseña_de_negocio⊓54321~id_de_espacio⊓0§usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓0",
         "op_tienda~agregar_producto§producto⊓2¶contenido⊓3¶tipo_medida⊓4¶precio_venta⊓5⊓no_predeterminado¶cod_barras⊓6¶cantidad⊓7¶costo_compra⊓8¶proveedor⊓9~id_de_espacio⊓20260330113640_ferreteria_dan~usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓12345~usuario_de_negocio⊓administrador_negocio§contraseña_de_negocio⊓54321",
         "op_tienda~ventas§ABC123¶2§SucursalX",
         "op_tienda~compras§XYZ987¶5§Proveedor1",
         NULL};
+
+    char *retorno_comando = NULL;
+    int estado_monitoreo = monitoreo_archivo_entrada(&retorno_comando);
+
+    if (estado_monitoreo == 1 && retorno_comando != NULL)
+    {
+        imprimirMensaje_para_depurar("Comando monitoreado: %s\n", retorno_comando);
+        free(retorno_comando);
+    }
 
     for (int i = 0; ejemplos[i]; i++)
     {

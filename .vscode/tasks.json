@@ -28,6 +28,7 @@
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/administracion_espacios.c",
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/administrador_de_estructuras_base.c",
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/gestor_de_permisos.c",
+                "${workspaceFolder}/procesos/00_procesos_del_sistema/ControladorMonitoreoArchivo.c",
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/var_fun_GG.c",
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/estructuras_dinamicas.c",
                 "${workspaceFolder}/procesos/00_procesos_del_sistema/nuestro_propio_administrador_de_memoria/core_memory.c",

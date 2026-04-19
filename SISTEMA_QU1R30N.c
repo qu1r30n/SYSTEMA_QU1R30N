@@ -10,9 +10,62 @@
 #include "CLASE_QU1R30N.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/ControladorMonitoreoArchivo.h"
 
+#if defined(_WIN32) || defined(__linux__)
+/* ============================================================
+   COMPILACIÓN PARA WINDOWS Y LINUX
+   (Sistema de archivos disponible)
+   ============================================================ */
+
+// Wrapper para atexit() - se ejecuta automáticamente al cerrar el programa
+static void limpieza_al_salir(void)
+{
+    quitar_id_prog_del_archivo();
+}
+
 // Inicialización
 void inicializacion()
 {
+    for (int i = 0; GG_archivos[i][0] != NULL && GG_archivos[i][1] != NULL && GG_archivos[i][2] != NULL; i++)
+    {
+        char *ruta_archivo = NULL;
+
+        if (concatenar_formato_separado_por_variable(&ruta_archivo, NULL, "%s%s", GG_archivos[i][0], GG_archivos[i][2]) < 0)
+        {
+            free(ruta_archivo);
+            continue;
+        }
+
+        crearArchivo(ruta_archivo, GG_archivos[i][1]);
+        free(ruta_archivo);
+    }
+
+    // aqui_agrega_el_id_al_archivo
+    char *ruta_banderas = NULL;
+    if (concatenar_formato_separado_por_variable(&ruta_banderas, NULL, "%s%s", GG_archivos[3][0], GG_archivos[3][2]) >= 0)
+    {
+        int n_lineas_banderas = 0;
+        char **lineas_banderas = leer_archivo(ruta_banderas, &n_lineas_banderas);
+
+        if (n_lineas_banderas == 0)
+        {
+            // archivo vacio: agregar 2 veces porque la linea 0 es la que se checa a quien le toca
+            agregar_fila(ruta_banderas, GG_id_programa);
+            agregar_fila(ruta_banderas, GG_id_programa);
+        }
+        else
+        {
+            agregar_sino_existe(ruta_banderas, 0, GG_id_programa, GG_id_programa);
+        }
+
+        if (lineas_banderas)
+        {
+            free_lineas(lineas_banderas, n_lineas_banderas);
+        }
+        free(ruta_banderas);
+    }
+
+    // Registrar limpieza automática al cerrar el programa
+    atexit(limpieza_al_salir);
 }
 
 void conmutador(char *texto_prueba)
@@ -160,22 +213,6 @@ int main()
 {
     inicializacion();
 
-    char *ruta_archivo_espacios = NULL;
-
-    char *direccion_archivo_espacios = NULL;
-
-    imprimirMensaje_para_depurar("\n\nGG_archivos[0][]: %s\\%s\n", GG_archivos[0][0], GG_archivos[0][2]);
-    concatenar_formato_separado_por_variable(&direccion_archivo_espacios, NULL, "%s\\%s", GG_archivos[0][0], GG_archivos[0][2]);
-    imprimirMensaje_para_depurar("direccion_archivo_espacios: %s\n\n", direccion_archivo_espacios);
-    char *contenido_inicial_archivo_espacio = NULL;
-    concatenar_formato_separado_por_variable(&contenido_inicial_archivo_espacio, NULL, "%s\n0%sadministrador_de_espacio%s0%s%s0", GG_archivos[0][1], GG_caracter_separacion[0], GG_caracter_separacion[0], GG_caracter_separacion[0], GG_caracter_separacion[0]);
-
-    crearArchivo(direccion_archivo_espacios, contenido_inicial_archivo_espacio);
-
-    free(ruta_archivo_espacios);
-    free(direccion_archivo_espacios);
-    free(contenido_inicial_archivo_espacio);
-
     /* ejemplos de comandos que el sistema entrega al modelo */
     const char *ejemplos[] = {
         //"op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
@@ -185,13 +222,20 @@ int main()
         "op_tienda~compras§XYZ987¶5§Proveedor1",
         NULL};
 
-    char *retorno_comando = NULL;
-    int estado_monitoreo = monitoreo_archivo_entrada(&retorno_comando);
+    char **retorno_comando = NULL;
+    int retorno_numero_lineas = 0;
+    int estado_monitoreo = datos_recibidos_a_procesar_y_borrar(&retorno_comando, &retorno_numero_lineas);
+
+    imprimirMensaje_para_depurar("Lineas detectadas en archivo de entrada: %d\n", retorno_numero_lineas);
 
     if (estado_monitoreo == 1 && retorno_comando != NULL)
     {
-        imprimirMensaje_para_depurar("Comando monitoreado: %s\n", retorno_comando);
-        free(retorno_comando);
+        for (int i = 0; i < retorno_numero_lineas; i++)
+        {
+            imprimirMensaje_para_depurar("Comando monitoreado[%d]: %s\n", i, retorno_comando[i]);
+            conmutador(retorno_comando[i]);
+        }
+        free_lineas(retorno_comando, retorno_numero_lineas);
     }
 
     for (int i = 0; ejemplos[i]; i++)
@@ -204,3 +248,106 @@ int main()
 
     return 0;
 }
+
+#elif defined(__XC)
+/* ============================================================
+   COMPILACIÓN PARA PIC16/18 - COMUNICACIÓN USB
+
+   NOTA: En PIC, la comunicación es por USB/UART en lugar
+   de archivos. Los stubs USB se implementarán en futuro.
+   ============================================================ */
+
+/* ============================================================
+   FUNCIONES USB STUB - A IMPLEMENTAR EN FUTURO
+   ============================================================ */
+
+/* Lee entrada desde USB/UART.
+   A IMPLEMENTAR: usb_leer_entrada() */
+static int usb_leer_entrada(char ***retorno_comando, int *retorno_numero_lineas)
+{
+    /* TODO: Implementar lectura desde UART/USB en PIC
+       - Configurar UART a velocidad adecuada
+       - Leer buffer de entrada
+       - Parsear comandos recibidos
+       - Llenar retorno_comando con comandos válidos
+       - Retornar total de comandos leídos
+    */
+    if (retorno_comando)
+        *retorno_comando = NULL;
+    if (retorno_numero_lineas)
+        *retorno_numero_lineas = 0;
+    return 0; /* Sin datos aún (implementar en futuro) */
+}
+
+void inicializacion(void)
+{
+    /* TODO: En PIC inicializar uart/USB cuando esté implementado */
+    /* Por ahora: stub vacío */
+}
+
+void conmutador(char *texto_prueba)
+{
+    /* PIC: Procesar comando desde USB */
+    /* TODO: En futuro, aquí procesar comandos pero
+             adaptados para limitaciones de memoria en PIC */
+    (void)texto_prueba;
+}
+
+int main(void)
+{
+    inicializacion();
+
+    /* En PIC, entrada continua desde USB/UART */
+    char **retorno_comando = NULL;
+    int retorno_numero_lineas = 0;
+
+    while (1)
+    {
+        /* Leer comandos desde USB */
+        int estado = usb_leer_entrada(&retorno_comando, &retorno_numero_lineas);
+
+        if (estado == 1 && retorno_comando != NULL)
+        {
+            /* Procesar cada comando recibido */
+            for (int i = 0; i < retorno_numero_lineas; i++)
+            {
+                if (retorno_comando[i] != NULL)
+                {
+                    conmutador(retorno_comando[i]);
+                }
+            }
+
+            /* Liberar comando (si hay malloc disponible) */
+            /* free_lineas(retorno_comando, retorno_numero_lineas); */
+            retorno_comando = NULL;
+            retorno_numero_lineas = 0;
+        }
+
+        /* En PIC, típicamente hay delays para no saturar */
+        /* delay_ms(100); */
+    }
+
+    return 0;
+
+#else
+/* ============================================================
+   COMPILACIÓN POR DEFECTO
+   ============================================================ */
+
+void inicializacion(void)
+{
+    /* Stubs por defecto */
+}
+
+void conmutador(char *texto_prueba)
+{
+    (void)texto_prueba;
+}
+
+int main(void)
+{
+    inicializacion();
+    return 0;
+}
+
+#endif /* Fin compilación condicional */

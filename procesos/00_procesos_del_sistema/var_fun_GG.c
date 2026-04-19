@@ -23,8 +23,8 @@ char *GG_caracter_separacion_funciones_espesificas_2[] = {"⚲", "⚳", "⚴", "
 char *GG_caracter_para_confirmacion_o_error[] = {"╣", "╠"};
 char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒"};
 
-char *GG_caracter_para_transferencia_entre_archivos[] = {"┴", "■"};
-char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘"};
+char *GG_caracter_para_transferencia_entre_archivos[] = {"┴", "■", "¤"};
+char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘", "⛍"};
 
 char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[] = {"•", "∆"};
 char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[] = {"⛙", "⛚"};
@@ -34,19 +34,34 @@ char *GG_caracter_separacion_nom_parametro_de_valor_2[] = {"⊑", "⊒"};
 
 char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝"};
 
-char *GG_id_programa = "CLASE_QU1R30N_2";
+char *GG_id_programa = "SISTEMA_QU1R30N";
 
 #ifdef _WIN32
 char *GG_archivos[][3] = {
     {"espacios\\",
      "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel",
      "archivo_espacios.txt"},
+    {"conexion_arc\\",
+     "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
+     "archivo_entrada.txt"},
+    {"conexion_arc\\",
+     "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
+     "archivo_salida.txt"},
+    {"conexion_arc\\",
+     NULL,
+     "banderas.txt"},
     {NULL, NULL, NULL}};
 #else
 char *GG_archivos[][3] = {
     {"espacios/",
      "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel",
      "archivo_espacios.txt"},
+    {"conexion_arc/",
+     "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
+     "archivo_entrada.txt"},
+    {"conexion_arc/",
+     "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
+     "archivo_salida.txt"},
     {NULL, NULL, NULL}};
 #endif
 

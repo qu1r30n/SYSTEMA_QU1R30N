@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../../cabeceras/codigos_retorno.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/ControladorMonitoreoArchivo.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
@@ -46,6 +47,181 @@ static int construir_ruta_transferencia(int indice_archivo, char **ruta_out)
     }
 
     return 0;
+}
+
+static char *duplicar_texto_local(const char *texto)
+{
+    char *copia = NULL;
+
+    if (texto == NULL)
+    {
+        return NULL;
+    }
+
+    copia = (char *)malloc(strlen(texto) + 1);
+    if (copia == NULL)
+    {
+        return NULL;
+    }
+
+    strcpy(copia, texto);
+    return copia;
+}
+
+static int extraer_comando_de_linea_transferencia(const char *linea_transferencia, char **comando_out)
+{
+    char **partes_transferencia = NULL;
+    char **partes_comando = NULL;
+    int n_partes_transferencia = 0;
+    int n_partes_comando = 0;
+    char *comando_final = NULL;
+
+    if (comando_out == NULL)
+    {
+        return RET_INVALID_ARG;
+    }
+
+    *comando_out = NULL;
+
+    if (linea_transferencia == NULL || linea_transferencia[0] == '\0')
+    {
+        return RET_NOT_FOUND;
+    }
+
+    n_partes_transferencia = split(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia);
+    if (n_partes_transferencia < 2 ||
+        partes_transferencia == NULL ||
+        partes_transferencia[0] == NULL ||
+        partes_transferencia[1] == NULL ||
+        strcmp(partes_transferencia[0], GG_id_programa) != 0)
+    {
+        free_split(partes_transferencia);
+        return RET_NOT_FOUND;
+    }
+
+    n_partes_comando = split(partes_transferencia[1], GG_caracter_para_transferencia_entre_archivos[1], &partes_comando);
+    if (n_partes_comando >= 3 && partes_comando != NULL && partes_comando[1] != NULL && partes_comando[2] != NULL)
+    {
+        if (concatenar_formato_separado_por_variable(&comando_final, NULL, "%s%s%s",
+                                                     partes_comando[1],
+                                                     GG_caracter_para_transferencia_entre_archivos[1],
+                                                     partes_comando[2]) < 0)
+        {
+            free_split(partes_comando);
+            free_split(partes_transferencia);
+            return RET_ERROR_GENERIC;
+        }
+    }
+    else
+    {
+        comando_final = duplicar_texto_local(partes_transferencia[1]);
+        if (comando_final == NULL)
+        {
+            free_split(partes_comando);
+            free_split(partes_transferencia);
+            return RET_ERROR_GENERIC;
+        }
+    }
+
+    free_split(partes_comando);
+    free_split(partes_transferencia);
+    *comando_out = comando_final;
+    return RET_OK;
+}
+
+static int buscar_linea_original_de_comando(const char *ruta, const char *comando, char **linea_original_out)
+{
+    char **lineas = NULL;
+    int total_lineas = 0;
+
+    if (ruta == NULL || comando == NULL || linea_original_out == NULL)
+    {
+        return RET_INVALID_ARG;
+    }
+
+    *linea_original_out = NULL;
+
+    lineas = leer_archivo(ruta, &total_lineas);
+    if (lineas == NULL)
+    {
+        return RET_NOT_FOUND;
+    }
+
+    for (int i = GG_indice_donde_comensar; i < total_lineas; i++)
+    {
+        char *comando_actual = NULL;
+        int resultado_extraer = extraer_comando_de_linea_transferencia(lineas[i], &comando_actual);
+
+        if (RET_IS_OK(resultado_extraer) && comando_actual != NULL && strcmp(comando_actual, comando) == 0)
+        {
+            *linea_original_out = duplicar_texto_local(lineas[i]);
+            free(comando_actual);
+            free_lineas(lineas, total_lineas);
+            return (*linea_original_out != NULL) ? RET_OK : RET_ERROR_GENERIC;
+        }
+
+        free(comando_actual);
+    }
+
+    free_lineas(lineas, total_lineas);
+    return RET_NOT_FOUND;
+}
+
+static int quitar_linea_exacta_del_archivo(const char *ruta, const char *linea_a_quitar)
+{
+    char **lineas = NULL;
+    char **resultado = NULL;
+    int total_lineas = 0;
+    int total_resultado = 0;
+    int eliminado = 0;
+
+    if (ruta == NULL || linea_a_quitar == NULL)
+    {
+        return RET_INVALID_ARG;
+    }
+
+    lineas = leer_archivo(ruta, &total_lineas);
+    if (lineas == NULL)
+    {
+        return RET_NOT_FOUND;
+    }
+
+    resultado = (char **)malloc(sizeof(char *) * ((total_lineas > 0) ? total_lineas : 1));
+    if (resultado == NULL)
+    {
+        free_lineas(lineas, total_lineas);
+        return RET_ERROR_GENERIC;
+    }
+
+    for (int i = 0; i < total_lineas; i++)
+    {
+        if (!eliminado && lineas[i] != NULL && strcmp(lineas[i], linea_a_quitar) == 0)
+        {
+            eliminado = 1;
+            continue;
+        }
+
+        resultado[total_resultado] = duplicar_texto_local(lineas[i] ? lineas[i] : "");
+        if (resultado[total_resultado] == NULL)
+        {
+            free_lineas(resultado, total_resultado);
+            free_lineas(lineas, total_lineas);
+            return RET_ERROR_GENERIC;
+        }
+        total_resultado++;
+    }
+
+    if (!eliminado)
+    {
+        free_lineas(resultado, total_resultado);
+        free_lineas(lineas, total_lineas);
+        return RET_NOT_FOUND;
+    }
+
+    guardar_archivo(ruta, resultado, total_resultado);
+    free_lineas(resultado, total_resultado);
+    free_lineas(lineas, total_lineas);
+    return RET_OK;
 }
 
 void respuesta(const char *folio_o_palabra_clave_a_del_que_lo_recibira,
@@ -139,73 +315,19 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
     for (int i = GG_indice_donde_comensar; i < total_lineas_archivo; i++)
     {
         imprimirMensaje_para_depurar("Leyendo linea %d: %s", i, lineas_archivo[i] ? lineas_archivo[i] : "(vacia)");
-        char **partes_transferencia = NULL;
-        int n_partes_transferencia = 0;
-
         if (lineas_archivo[i] == NULL || lineas_archivo[i][0] == '\0')
         {
             continue;
         }
 
-        n_partes_transferencia = split(lineas_archivo[i], GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia);
-        if (n_partes_transferencia >= 2 &&
-            partes_transferencia != NULL &&
-            partes_transferencia[0] != NULL &&
-            partes_transferencia[1] != NULL &&
-            strcmp(partes_transferencia[0], GG_id_programa) == 0)
+        char *comando_final = NULL;
+        int resultado_extraer = extraer_comando_de_linea_transferencia(lineas_archivo[i], &comando_final);
+        if (RET_IS_OK(resultado_extraer) && comando_final != NULL)
         {
-            char **partes_comando = NULL;
-            int n_partes_comando = split(partes_transferencia[1], GG_caracter_para_transferencia_entre_archivos[1], &partes_comando);
-            char *comando_final = NULL;
-
-            if (n_partes_comando >= 3 && partes_comando != NULL && partes_comando[1] != NULL && partes_comando[2] != NULL)
-            {
-                if (concatenar_formato_separado_por_variable(&comando_final, NULL, "%s%s%s",
-                                                             partes_comando[1],
-                                                             GG_caracter_para_transferencia_entre_archivos[1],
-                                                             partes_comando[2]) < 0)
-                {
-                    free_split(partes_comando);
-                    free_split(partes_transferencia);
-                    for (int j = 0; j < cantidad_comandos; j++)
-                    {
-                        free((*retorno_comando)[j]);
-                    }
-                    free(*retorno_comando);
-                    *retorno_comando = NULL;
-                    *retorno_numero_lineas = 0;
-                    free_lineas(lineas_archivo, total_lineas_archivo);
-                    return -1;
-                }
-            }
-            else
-            {
-                comando_final = (char *)malloc(strlen(partes_transferencia[1]) + 1);
-                if (comando_final == NULL)
-                {
-                    free_split(partes_comando);
-                    free_split(partes_transferencia);
-                    for (int j = 0; j < cantidad_comandos; j++)
-                    {
-                        free((*retorno_comando)[j]);
-                    }
-                    free(*retorno_comando);
-                    *retorno_comando = NULL;
-                    *retorno_numero_lineas = 0;
-                    free_lineas(lineas_archivo, total_lineas_archivo);
-                    return -1;
-                }
-
-                strcpy(comando_final, partes_transferencia[1]);
-            }
-
-            free_split(partes_comando);
-
             char **tmp = (char **)realloc(*retorno_comando, sizeof(char *) * (cantidad_comandos + 1));
             if (tmp == NULL)
             {
                 free(comando_final);
-                free_split(partes_transferencia);
                 for (int j = 0; j < cantidad_comandos; j++)
                 {
                     free((*retorno_comando)[j]);
@@ -221,8 +343,6 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
             (*retorno_comando)[cantidad_comandos] = comando_final;
             cantidad_comandos++;
         }
-
-        free_split(partes_transferencia);
     }
 
     free_lineas(lineas_archivo, total_lineas_archivo);
@@ -257,17 +377,55 @@ int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_nu
         return estado;
     }
 
-    char *ruta_entrada = NULL;
-    if (construir_ruta_transferencia(1, &ruta_entrada) == 0)
-    {
-        eliminar_fila_para_multiples_programas_solo_prog(ruta_entrada, "0", GG_id_programa);
-    }
-
-    free(ruta_entrada);
-
     *retorno_comando = comandos;
     *retorno_numero_lineas = total_comandos;
     return 1;
+}
+
+int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
+{
+    char *ruta_entrada = NULL;
+    char *linea_original = NULL;
+    int resultado = RET_ERROR_GENERIC;
+
+    if (comando == NULL || comando[0] == '\0')
+    {
+        return RET_INVALID_ARG;
+    }
+
+    if (construir_ruta_transferencia(1, &ruta_entrada) < 0)
+    {
+        return RET_ERROR_GENERIC;
+    }
+
+    resultado = buscar_linea_original_de_comando(ruta_entrada, comando, &linea_original);
+    if (RET_IS_ERROR(resultado) || linea_original == NULL)
+    {
+        free(ruta_entrada);
+        free(linea_original);
+        return RET_ERROR_GENERIC;
+    }
+
+    if (RET_IS_ERROR(estado_ejecucion))
+    {
+        char *ruta_errores = NULL;
+
+        if (construir_ruta_transferencia(4, &ruta_errores) < 0)
+        {
+            free(ruta_entrada);
+            free(linea_original);
+            return RET_ERROR_GENERIC;
+        }
+
+        crearArchivo(ruta_errores, GG_archivos[4][1]);
+        agregar_fila(ruta_errores, linea_original);
+        free(ruta_errores);
+    }
+
+    resultado = quitar_linea_exacta_del_archivo(ruta_entrada, linea_original);
+    free(ruta_entrada);
+    free(linea_original);
+    return resultado;
 }
 
 int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
@@ -463,6 +621,13 @@ int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_nu
     return usb_datos_recibidos_a_procesar_y_borrar(retorno_comando, retorno_numero_lineas);
 }
 
+int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
+{
+    (void)comando;
+    (void)estado_ejecucion;
+    return 0;
+}
+
 int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
 {
     /* En PIC, cambiar ID en buffer USB */
@@ -516,6 +681,13 @@ int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_nu
         *retorno_comando = NULL;
     if (retorno_numero_lineas)
         *retorno_numero_lineas = 0;
+    return 0;
+}
+
+int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
+{
+    (void)comando;
+    (void)estado_ejecucion;
     return 0;
 }
 

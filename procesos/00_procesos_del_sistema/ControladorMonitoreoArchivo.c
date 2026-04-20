@@ -129,6 +129,65 @@ static int extraer_comando_de_linea_transferencia(const char *linea_transferenci
     return RET_OK;
 }
 
+static int extraer_origen_y_espejo_de_linea_transferencia(const char *linea_transferencia,
+                                                          char **id_origen_out,
+                                                          char **espejo_out)
+{
+    char **partes_transferencia = NULL;
+    char **partes_comando = NULL;
+    int n_partes_transferencia = 0;
+    int n_partes_comando = 0;
+
+    if (id_origen_out == NULL || espejo_out == NULL)
+    {
+        return RET_INVALID_ARG;
+    }
+
+    *id_origen_out = NULL;
+    *espejo_out = NULL;
+
+    if (linea_transferencia == NULL || linea_transferencia[0] == '\0')
+    {
+        return RET_NOT_FOUND;
+    }
+
+    n_partes_transferencia = split(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia);
+    if (n_partes_transferencia < 2 ||
+        partes_transferencia == NULL ||
+        partes_transferencia[0] == NULL ||
+        partes_transferencia[1] == NULL ||
+        strcmp(partes_transferencia[0], GG_id_programa) != 0)
+    {
+        free_split(partes_transferencia);
+        return RET_NOT_FOUND;
+    }
+
+    n_partes_comando = split(partes_transferencia[1], GG_caracter_para_transferencia_entre_archivos[1], &partes_comando);
+    if (n_partes_comando < 3 || partes_comando == NULL || partes_comando[0] == NULL || partes_comando[2] == NULL)
+    {
+        free_split(partes_comando);
+        free_split(partes_transferencia);
+        return RET_NOT_FOUND;
+    }
+
+    *id_origen_out = duplicar_texto_local(partes_comando[0]);
+    *espejo_out = duplicar_texto_local(partes_comando[2]);
+
+    free_split(partes_comando);
+    free_split(partes_transferencia);
+
+    if (*id_origen_out == NULL || *espejo_out == NULL)
+    {
+        free(*id_origen_out);
+        free(*espejo_out);
+        *id_origen_out = NULL;
+        *espejo_out = NULL;
+        return RET_ERROR_GENERIC;
+    }
+
+    return RET_OK;
+}
+
 static int buscar_linea_original_de_comando(const char *ruta, const char *comando, char **linea_original_out)
 {
     char **lineas = NULL;
@@ -386,6 +445,9 @@ int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
 {
     char *ruta_entrada = NULL;
     char *linea_original = NULL;
+    char *id_origen = NULL;
+    char *espejo = NULL;
+    int mandar_a_errores = 0;
     int resultado = RET_ERROR_GENERIC;
 
     if (comando == NULL || comando[0] == '\0')
@@ -408,6 +470,24 @@ int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
 
     if (RET_IS_ERROR(estado_ejecucion))
     {
+        mandar_a_errores = 1;
+    }
+    else
+    {
+        resultado = extraer_origen_y_espejo_de_linea_transferencia(linea_original, &id_origen, &espejo);
+        if (RET_IS_OK(resultado))
+        {
+            // Si el comando se ejecuto bien, se responde al origen con la variable espejo.
+            respuesta("respuesta", espejo, id_origen);
+        }
+        else
+        {
+            mandar_a_errores = 1;
+        }
+    }
+
+    if (mandar_a_errores)
+    {
         char *ruta_errores = NULL;
 
         if (construir_ruta_transferencia(4, &ruta_errores) < 0)
@@ -425,6 +505,8 @@ int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
     resultado = quitar_linea_exacta_del_archivo(ruta_entrada, linea_original);
     free(ruta_entrada);
     free(linea_original);
+    free(id_origen);
+    free(espejo);
     return resultado;
 }
 

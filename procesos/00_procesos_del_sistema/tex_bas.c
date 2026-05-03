@@ -398,69 +398,77 @@ int crearArchivo(const char *ruta, const char *cabecera)
 #endif
 }
 
-char **leer_archivo(const char *ruta, int *n_lineas_out)
+char **leer_archivo(const char *ruta, int *n_lineas_out) // Función que lee un archivo y devuelve un arreglo de líneas
 {
-#if defined(_WIN32) || defined(__linux__)
-    if (n_lineas_out == NULL)
-        return NULL;
+    imprimirMensaje_para_depurar("\n\nruta: %s", ruta);
+#if defined(_WIN32) || defined(__linux__) // Solo compila este código en Windows o Linux
 
-    FILE *f = fopen(ruta, "r");
-    if (!f)
+    if (n_lineas_out == NULL) // Verifica que el puntero donde se guardará el número de líneas no sea NULL
+        return NULL;          // Si es NULL, no puede devolver el conteo → error
+
+    FILE *f = fopen(ruta, "r"); // Abre el archivo en modo lectura
+    if (!f)                     // Si no se pudo abrir el archivo
     {
-        *n_lineas_out = 0;
-        return NULL;
+        *n_lineas_out = 0; // No hay líneas
+        return NULL;       // Regresa NULL indicando error
     }
 
-    char **lineas = NULL;
-    int n = 0;
-    int capacidad = 10;
-    lineas = (char **)malloc(capacidad * sizeof(char *));
-    if (!lineas)
+    char **lineas = NULL; // Arreglo de cadenas (cada elemento será una línea)
+    int n = 0;            // Contador de líneas leídas
+    int capacidad = 10;   // Capacidad inicial del arreglo
+
+    lineas = (char **)malloc(capacidad * sizeof(char *)); // Reserva memoria para 10 punteros a char
+    if (!lineas)                                          // Si falla la asignación de memoria
     {
-        fclose(f);
-        *n_lineas_out = 0;
-        return NULL;
+        fclose(f);         // Cierra el archivo
+        *n_lineas_out = 0; // No hay líneas
+        return NULL;       // Regresa error
     }
 
-    char buffer[4096];
-    while (fgets(buffer, sizeof(buffer), f))
+    char buffer[4096]; // Buffer temporal para leer cada línea (máximo 4096 caracteres)
+
+    while (fgets(buffer, sizeof(buffer), f)) // Lee línea por línea del archivo
     {
-        if (n >= capacidad)
+        if (n >= capacidad) // Si ya no hay espacio en el arreglo agranda el arreglo
         {
-            capacidad *= 2;
-            char **temp = (char **)realloc(lineas, capacidad * sizeof(char *));
-            if (!temp)
+            capacidad *= 2; // Duplica la capacidad
+
+            char **temp = (char **)realloc(lineas, capacidad * sizeof(char *)); // Redimensiona el arreglo
+            if (!temp)                                                          // Si falla el realloc
             {
-                free_lineas(lineas, n);
-                fclose(f);
-                *n_lineas_out = 0;
-                return NULL;
+                free_lineas(lineas, n); // Libera las líneas ya guardadas
+                fclose(f);              // Cierra el archivo
+                *n_lineas_out = 0;      // Reinicia contador
+                return NULL;            // Error
             }
-            lineas = temp;
+            lineas = temp; // Actualiza el puntero con la nueva memoria
         }
 
-        buffer[strcspn(buffer, "\n")] = 0;
+        buffer[strcspn(buffer, "\n")] = 0; // Elimina el salto de línea '\n' si existe
 
-        lineas[n] = (char *)malloc(strlen(buffer) + 1);
-        if (!lineas[n])
+        lineas[n] = (char *)malloc(strlen(buffer) + 1); // Reserva memoria para la línea exacta (+1 por '\0')
+        if (!lineas[n])                                 // Si falla la asignación
         {
-            free_lineas(lineas, n);
-            fclose(f);
-            *n_lineas_out = 0;
-            return NULL;
+            free_lineas(lineas, n); // Libera lo ya asignado
+            fclose(f);              // Cierra archivo
+            *n_lineas_out = 0;      // Reinicia contador
+            return NULL;            // Error
         }
-        strcpy(lineas[n], buffer);
-        n++;
+
+        strcpy(lineas[n], buffer); // Copia el contenido del buffer a la nueva memoria
+        imprimirMensaje_para_depurar("\n%s", lineas[n]);
+        n++; // Incrementa el número de líneas leídas
     }
 
-    fclose(f);
-    *n_lineas_out = n;
-    return lineas;
+    fclose(f);         // Cierra el archivo después de terminar la lectura
+    *n_lineas_out = n; // Guarda el total de líneas leídas en el parámetro de salida
+    return lineas;     // Devuelve el arreglo de líneas
 
-#elif defined(__XC)
-    (void)ruta;
-    (void)n_lineas_out;
-    return NULL;
+#elif defined(__XC) // Caso especial (por ejemplo, compilador embebido XC)
+
+    (void)ruta;         // Evita advertencias por variable no usada
+    (void)n_lineas_out; // Evita advertencias por variable no usada
+    return NULL;        // No implementado en este entorno
 
 #endif
 }
@@ -1407,7 +1415,7 @@ char *leer_info_dividida(const char *ruta)
 }
 
 /*crear_archivo_info_dividida
- * 
+ *
  * ------------------------------------------------------------
  * Crea (si no existe) el archivo metadata para info dividida.
  *

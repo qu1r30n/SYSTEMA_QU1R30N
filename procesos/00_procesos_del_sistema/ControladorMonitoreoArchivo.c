@@ -330,89 +330,118 @@ void respuesta(const char *folio_o_palabra_clave_a_del_que_lo_recibira,
     free(ruta);
 }
 
-int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_lineas)
+int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_lineas) // Función que lee un archivo, extrae comandos y los devuelve en un arreglo dinámico
 {
-    const char *directorio = GG_archivos[1][0];
-    const char *archivo = GG_archivos[1][2];
-    char *ruta = NULL;
-    char **lineas_archivo = NULL;
-    int total_lineas_archivo = 0;
-    int cantidad_comandos = 0;
+    const char *directorio = GG_archivos[1][0]; // Obtiene el directorio desde una variable global
+    const char *archivo = GG_archivos[1][2];    // Obtiene el nombre del archivo desde una variable global
 
+    char *ruta = NULL;            // Aquí se construirá la ruta completa (directorio + archivo)
+    char **lineas_archivo = NULL; // Arreglo donde se guardarán las líneas del archivo
+    int total_lineas_archivo = 0; // Número total de líneas leídas del archivo
+    int cantidad_comandos = 0;    // Número de comandos válidos encontrados
+
+    // Validación de parámetros de salida
     if (retorno_comando == NULL || retorno_numero_lineas == NULL)
     {
-        return -1;
+        return -1; // Error si los punteros son inválidos
     }
 
-    *retorno_comando = NULL;
-    *retorno_numero_lineas = 0;
+    *retorno_comando = NULL;    // Inicializa el arreglo de salida
+    *retorno_numero_lineas = 0; // Inicializa el contador de salida
 
+    // Validar que existan directorio y archivo
     if (directorio == NULL || archivo == NULL)
     {
         return -1;
     }
 
+    // Construye la ruta completa usando formato (tipo sprintf dinámico)
     if (concatenar_formato_separado_por_variable(&ruta, NULL, "%s%s", directorio, archivo) < 0)
     {
-        free(ruta);
+        free(ruta); // Libera por si algo se alcanzó a asignar
         return -1;
     }
 
+    // Lee todas las líneas del archivo
     lineas_archivo = leer_archivo(ruta, &total_lineas_archivo);
-    free(ruta);
+    free(ruta); // Ya no se necesita la ruta
+
     if (lineas_archivo == NULL)
     {
-        return -1;
+        return -1; // Error al leer archivo
     }
 
+    // Si no hay suficientes líneas (por ejemplo, encabezado o índice inicial)
     if (total_lineas_archivo <= GG_indice_donde_comensar)
     {
-        free_lineas(lineas_archivo, total_lineas_archivo);
-        return 0;
+        free_lineas(lineas_archivo, total_lineas_archivo); // Libera memoria
+        return 0;                                          // No hay comandos que procesar
     }
 
+    // Recorre las líneas desde cierto índice
     for (int i = GG_indice_donde_comensar; i < total_lineas_archivo; i++)
     {
-        imprimirMensaje_para_depurar("Leyendo linea %d: %s", i, lineas_archivo[i] ? lineas_archivo[i] : "(vacia)");
+        // Mensaje de depuración
+        imprimirMensaje_para_depurar("\nLeyendo linea %d: %s", i,
+                                     lineas_archivo[i] ? lineas_archivo[i] : "(vacia)");
+
+        // Si la línea es NULL o está vacía, se ignora
         if (lineas_archivo[i] == NULL || lineas_archivo[i][0] == '\0')
         {
             continue;
         }
 
-        char *comando_final = NULL;
-        int resultado_extraer = extraer_comando_de_linea_transferencia(lineas_archivo[i], &comando_final);
+        char *comando_final = NULL; // Aquí se guardará el comando extraído
+
+        // Intenta extraer un comando de la línea
+        int resultado_extraer = extraer_comando_de_linea_transferencia(
+            lineas_archivo[i], &comando_final);
+
+        // Si se extrajo correctamente un comando
         if (RET_IS_OK(resultado_extraer) && comando_final != NULL)
         {
-            char **tmp = (char **)realloc(*retorno_comando, sizeof(char *) * (cantidad_comandos + 1));
-            if (tmp == NULL)
+            // Aumenta el tamaño del arreglo de comandos
+            char **tmp = (char **)realloc(
+                *retorno_comando, sizeof(char *) * (cantidad_comandos + 1));
+
+            if (tmp == NULL) // Si falla realloc
             {
-                free(comando_final);
+                free(comando_final); // Libera el comando actual
+
+                // Libera todos los comandos ya guardados
                 for (int j = 0; j < cantidad_comandos; j++)
                 {
                     free((*retorno_comando)[j]);
                 }
-                free(*retorno_comando);
+
+                free(*retorno_comando); // Libera el arreglo
                 *retorno_comando = NULL;
                 *retorno_numero_lineas = 0;
-                free_lineas(lineas_archivo, total_lineas_archivo);
-                return -1;
+
+                free_lineas(lineas_archivo, total_lineas_archivo); // Libera líneas
+                return -1;                                         // Error
             }
 
-            *retorno_comando = tmp;
+            *retorno_comando = tmp; // Actualiza el arreglo
+
+            // Guarda el nuevo comando
             (*retorno_comando)[cantidad_comandos] = comando_final;
-            cantidad_comandos++;
+
+            cantidad_comandos++; // Incrementa contador
         }
     }
 
+    // Libera las líneas del archivo (ya no se necesitan)
     free_lineas(lineas_archivo, total_lineas_archivo);
 
+    // Si no se encontró ningún comando
     if (cantidad_comandos == 0)
     {
         return 0;
     }
 
-    *retorno_numero_lineas = cantidad_comandos;
-    return 1;
+    *retorno_numero_lineas = cantidad_comandos; // Devuelve cuántos comandos hay
+    return 1;                                   // Indica éxito con comandos encontrados
 }
 
 int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_numero_lineas)

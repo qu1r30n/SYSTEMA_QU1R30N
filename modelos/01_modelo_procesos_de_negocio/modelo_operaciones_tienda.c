@@ -220,8 +220,10 @@ int modelo_agregarProducto(char *texto)
     }
 
     int cuantas_partes = 0;
+    imprimirMensaje_para_depurar("\n\n");
     while (partes[cuantas_partes]) // Cuenta cuántas partes del texto que se reccibio en el parametro hay en el arreglo de partes
     {
+        imprimirMensaje_para_depurar("partes[%d]: %s\n", cuantas_partes, partes[cuantas_partes]);
         cuantas_partes++;
     }
 

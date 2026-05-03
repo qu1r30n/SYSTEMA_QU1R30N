@@ -69,10 +69,11 @@ void inicializacion()
     atexit(limpieza_al_salir);
 }
 
-int conmutador(char *texto_prueba)
+int conmutador(char *info_a_conmutar)
 {
+    imprimirMensaje_para_depurar("%s", info_a_conmutar);
     int resultado = RET_ERROR_GENERIC;
-    char **opciones = modelo_split(texto_prueba, G_caracter_separacion_funciones_espesificas[0]);
+    char **opciones = modelo_split(info_a_conmutar, G_caracter_separacion_funciones_espesificas[0]);
     char **sub_opcion = NULL;
 
     if (!opciones || !opciones[0])
@@ -85,7 +86,7 @@ int conmutador(char *texto_prueba)
 
     char *texto_permiso = NULL;
 
-    if (concatenar_formato_separado_por_variable(&texto_permiso, NULL, "nivel_minimo%s1%sruta_archivo%s%s\\%s%s%s%s%s", GG_caracter_separacion_nom_parametro_de_valor[0], G_caracter_separacion_funciones_espesificas[1], GG_caracter_separacion_nom_parametro_de_valor[0], GG_archivos[0][0], GG_archivos[0][2], G_caracter_separacion_funciones_espesificas[1], opciones[2], G_caracter_separacion_funciones_espesificas[1], opciones[2]) < 0)
+    if (concatenar_formato_separado_por_variable(&texto_permiso, NULL, "nivel_minimo%s1%sruta_archivo%s%s\\%s%s%s%s%s", GG_caracter_separacion_nom_parametro_de_valor[0], G_caracter_separacion_funciones_espesificas[1], GG_caracter_separacion_nom_parametro_de_valor[0], GG_archivos[0][0], GG_archivos[0][2], G_caracter_separacion_funciones_espesificas[1], opciones[2], G_caracter_separacion_funciones_espesificas[1], opciones[3]) < 0)
     {
         free(texto_permiso);
         free_split(opciones);
@@ -100,7 +101,7 @@ int conmutador(char *texto_prueba)
     int nivel_del_usuario_espacio = -1;
     int tiene_permiso_espacio = modelo_checar_permiso(texto_permiso, &retorna_direccion_espacio_negocio, &nivel_del_usuario_espacio);
 
-    imprimirMensaje_para_depurar("tiene_permiso_espacio=%d\n", tiene_permiso_espacio);
+    imprimirMensaje_para_depurar("tiene_permiso_espacio=%d\n", tiene_permiso_espacio); // si es 0 significa que si lo tiene
     imprimirMensaje_para_depurar("nivel_del_usuario_espacio=%d\n", nivel_del_usuario_espacio);
     if (retorna_direccion_espacio_negocio)
     {
@@ -213,6 +214,7 @@ int conmutador(char *texto_prueba)
                 // pero talves impuestos y todo lo que un administrador y contador utilizaria lo mas general en realidad no se si esto iria aqui o en otro dedicado a eso
                 resultado = RET_OK;
             }
+
             else if (opciones && strcmp(opciones[0], "procesos_sistema") == 0)
             {
                 // aqui se habla directamente con el sistema solo el programador
@@ -249,7 +251,7 @@ int main()
         for (int i = 0; i < retorno_numero_lineas; i++)
         {
             int estado_conmutador = RET_ERROR_GENERIC;
-            imprimirMensaje_para_depurar("Comando monitoreado[%d]: %s\n", i, retorno_comando[i]);
+            imprimirMensaje_para_depurar("\n\nComando monitoreado[%d]: %s\n", i, retorno_comando[i]);
             estado_conmutador = conmutador(retorno_comando[i]);
             finalizar_comando_procesado(retorno_comando[i], estado_conmutador);
         }

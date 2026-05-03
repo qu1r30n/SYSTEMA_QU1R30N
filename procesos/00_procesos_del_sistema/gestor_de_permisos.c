@@ -82,11 +82,13 @@ int checar_permiso(int nivel_minimo, const char *ruta_archivo, const char *id_de
             for (int c = 0; columnas[c] != NULL; c++)
             {
                 // Traza de cada columna para revisar formato de datos.
-                imprimirMensaje_para_depurar("%s\n", columnas[c]);
+                imprimirMensaje_para_depurar("\n\n:%s", columnas[c]);
                 // Suma una columna valida.
                 n_columnas++;
             }
         }
+
+        imprimirMensaje_para_depurar("\n\n%s:%s\n%s:%s\n%s:%s\n", columnas[0], id_de_espacio, columnas[1], usuario, columnas[2], contrasena);
 
         // Se requieren 5 columnas: ID|Usuario|Contrasena|Directorio|Nivel
         if (n_columnas >= 5 &&

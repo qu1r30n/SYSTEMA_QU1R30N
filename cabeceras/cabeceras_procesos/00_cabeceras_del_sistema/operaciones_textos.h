@@ -166,56 +166,6 @@ char *editar_incr_string_funcion_recursiva(const char *texto,
                                            const char *info_sustituir,
                                            const char *edit_0_increm_1);
 
-/* Edición profunda múltiple con comparación final. */
-/*
- * Uso: Ejecuta editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string de forma segura.
- * Entrada ejemplo: editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(texto, indices_editar, info_editar, comparacion, edit_0_increm_1)
- */
-char *editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(
-    const char *texto,
-    const char *indices_editar,
-    const char *info_editar,
-    const char *comparacion,
-    const char *edit_0_increm_1);
-
-/* Edición profunda múltiple versión ARR_FUN (wrapper). */
-/*
- * Uso: Ejecuta ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple de forma segura.
- * Entrada ejemplo: ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(datos)
- */
-char *ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(const char *datos);
-
-/* Edición profunda múltiple con múltiples chequeos. */
-/*
- * Uso: Ejecuta editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR de forma segura.
- * Entrada ejemplo: editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(texto, indices_editar, comparacion_con_edicion, edit_0_increm_1)
- */
-char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(
-    const char *texto,
-    const char *indices_editar,
-    const char *comparacion_con_edicion,
-    const char *edit_0_increm_1);
-
-/* Edición profunda múltiple simple. */
-/*
- * Uso: Ejecuta editar_inc_edicion_profunda_multiple_string de forma segura.
- * Entrada ejemplo: editar_inc_edicion_profunda_multiple_string(texto, indices_editar, info_editar, edit_0_increm_1)
- */
-char *editar_inc_edicion_profunda_multiple_string(const char *texto,
-                                                  const char *indices_editar,
-                                                  const char *info_editar,
-                                                  const char *edit_0_increm_1);
-
-/* Edición profunda múltiple al final. */
-/*
- * Uso: Ejecuta editar_inc_edicion_profunda_multiple_AL_FINAL_string de forma segura.
- * Entrada ejemplo: editar_inc_edicion_profunda_multiple_AL_FINAL_string(texto, indices_editar, info_editar, edit_0_increm_1)
- */
-char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto,
-                                                           const char *indices_editar,
-                                                           const char *info_editar,
-                                                           const char *edit_0_increm_1);
-
 /* Recorrer y reemplazar caracteres de separación izq/dcha. */
 /*
  * Uso: Ejecuta recorrer_caracter_separacion de forma segura.

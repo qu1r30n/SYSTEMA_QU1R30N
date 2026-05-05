@@ -1,4 +1,4 @@
-#ifdef _WIN32
+﻿#ifdef _WIN32
 /* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
  * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
@@ -66,8 +66,13 @@
 /* ============================================= */
 /* CREAR ESTRUCTURA DIN??MICA VAC??A              */
 /* ============================================= */
+/*
+ * Uso: Ejecuta crearStructuraVacia de forma segura.
+ * Entrada ejemplo: crearStructuraVacia()
+ */
 StructurasDinamicas crearStructuraVacia(void)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     StructurasDinamicas s; // Variable local tipo StructurasDinamicas. Valor inicial = basura (memoria no inicializada)
 
     s.arreglo_char = NULL;  // Arreglo de strings. Valor = NULL porque aún no hay memoria reservada
@@ -89,8 +94,13 @@ StructurasDinamicas crearStructuraVacia(void)
 /* ============================================= */
 /* AGREGAR CAMPO DINÁMICO                       */
 /* ============================================= */
+/*
+ * Uso: Ejecuta agregarCampo de forma segura.
+ * Entrada ejemplo: agregarCampo(s, nombre, tipo)
+ */
 void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     imprimirMensaje_para_depurar("-------------------------------------------------------------------------------------------\n");
     imprimirMensaje_para_depurar("%s|%s\n", nombre, tipo); // Imprime el nombre y valor que se van a asignar (para depuración)
 
@@ -142,9 +152,9 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
         s->count_string++;                                                                                                                                                                                           // aumenta contador de strings
         imprimirMensaje_para_depurar("DESPUES: orden_tipo[%d]=%d\norden_indice[%d]=%d\ncount_string=%d\n", s->total - 1, s->orden_tipo[s->total - 1], s->total - 1, s->orden_indice[s->total - 1], s->count_string); // Imprime el tipo y el índice que se asigno (para depuración)
     }
-    else if (strcmp(tipo, "int") == 0)
+    else if (strcmp(tipo, "int") == 0) // si el tipo del campo es "int", se usa el arreglo_int
     {
-        imprimirMensaje_para_depurar("ANTES arreglo_int: %p, count_int: %d\n", (void *)s->arreglo_int, s->count_int);
+        imprimirMensaje_para_depurar("ANTES arreglo_int: %p, count_int: %d\n", (void *)s->arreglo_int, s->count_int);                                                     // Imprime la dirección del arreglo de enteros y el contador de enteros antes del realloc (para depuración)
         s->arreglo_int = (int *)realloc(s->arreglo_int, sizeof(int) * (s->count_int + 1));                                                                                // aumenta el arreglo de enteros para que tenga espacio para el nuevo campo
         s->arreglo_int[s->count_int] = 0;                                                                                                                                 // valor inicial = 0
         imprimirMensaje_para_depurar("DESPUES arreglo_int: %p, count_int: %d, nuevo elemento: %d\n", (void *)s->arreglo_int, s->count_int, s->arreglo_int[s->count_int]); // Imprime la dirección del arreglo de enteros, el contador de enteros y el valor del nuevo elemento después del realloc (para depuración)
@@ -155,7 +165,7 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
         s->count_int++;                                                                                                                                                                                            // aumenta contador de enteros
         imprimirMensaje_para_depurar("DESPUES arreglo_int: %p, count_int: %d, nuevo elemento: %d\n", (void *)s->arreglo_int, s->count_int, s->arreglo_int[s->count_int]);                                          // Imprime la dirección del arreglo de enteros, el contador de enteros y el valor del nuevo elemento después del realloc (para depuración)
     }
-    else if (strcmp(tipo, "float") == 0)
+    else if (strcmp(tipo, "float") == 0) // si el tipo del campo es "float", se usa el arreglo_float
     {
         imprimirMensaje_para_depurar("ANTES arreglo_float: %p, count_float: %d\n", (void *)s->arreglo_float, s->count_float);                                                           // Imprime la dirección del arreglo de floats y el contador de floats antes del realloc (para depuración)
         s->arreglo_float = (float *)realloc(s->arreglo_float, sizeof(float) * (s->count_float + 1));                                                                                    // aumenta el arreglo de floats para que tenga espacio para el nuevo campo
@@ -174,15 +184,20 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
 /* ============================================= */
 /* IMPRIMIR ESTRUCTURA DINÁMICA                  */
 /* ============================================= */
+/*
+ * Uso: Ejecuta imprimirStructura de forma segura.
+ * Entrada ejemplo: imprimirStructura(s)
+ */
 void imprimirStructura(StructurasDinamicas *s)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!s)
     {
         imprimirMensaje_para_depurar("imprimirStructura: estructura NULL\n");
         return;
     }
 
-    for (int i = 0; i < s->total; i++)
+    for (int i = 0; i < s->total; i++) // recorre cada campo registrado en la estructura para imprimirlo
     {
         imprimirMensaje_para_depurar("%s = ", s->nombres[i]); // Imprime el nombre del campo
 
@@ -205,8 +220,13 @@ void imprimirStructura(StructurasDinamicas *s)
 /* ============================================= */
 /* ASIGNAR VALOR STRING POR NOMBRE              */
 /* ============================================= */
+/*
+ * Uso: Ejecuta asignarValorString de forma segura.
+ * Entrada ejemplo: asignarValorString(s, nombre, valor)
+ */
 void asignarValorString(StructurasDinamicas *s, const char *nombre, const char *valor)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     imprimirMensaje_para_depurar("%s|%s\n", nombre, valor); // Imprime el nombre y valor que se van a asignar (para depuración)
 
     if (!s || !nombre) // Verifica si el puntero a la estructura o el nombre es NULL
@@ -240,8 +260,13 @@ void asignarValorString(StructurasDinamicas *s, const char *nombre, const char *
 /* ============================================= */
 /* ASIGNAR VALOR INT POR NOMBRE                 */
 /* ============================================= */
+/*
+ * Uso: Ejecuta asignarValorInt de forma segura.
+ * Entrada ejemplo: asignarValorInt(s, nombre, valor)
+ */
 void asignarValorInt(StructurasDinamicas *s, const char *nombre, int valor)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     imprimirMensaje_para_depurar("asignarValorInt: %s=%d\n", nombre ? nombre : "(null)", valor);
 
     if (!s || !nombre) // Verifica si el puntero a la estructura o el nombre es NULL
@@ -268,8 +293,13 @@ void asignarValorInt(StructurasDinamicas *s, const char *nombre, int valor)
 /* ============================================= */
 /* ASIGNAR VALOR FLOAT POR NOMBRE               */
 /* ============================================= */
+/*
+ * Uso: Ejecuta asignarValorFloat de forma segura.
+ * Entrada ejemplo: asignarValorFloat(s, nombre, valor)
+ */
 void asignarValorFloat(StructurasDinamicas *s, const char *nombre, float valor)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     imprimirMensaje_para_depurar("asignarValorFloat: %s=%.2f\n", nombre ? nombre : "(null)", valor);
 
     if (!s || !nombre) // Verifica si el puntero a la estructura o el nombre es NULL
@@ -296,8 +326,13 @@ void asignarValorFloat(StructurasDinamicas *s, const char *nombre, float valor)
 /* ============================================= */
 /* LIBERAR MEMORIA DE LA ESTRUCTURA              */
 /* ============================================= */
+/*
+ * Uso: Ejecuta liberarStructura de forma segura.
+ * Entrada ejemplo: liberarStructura(s)
+ */
 void liberarStructura(StructurasDinamicas *s)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!s) // Verifica si el puntero a la estructura es NULL
     {
         return;
@@ -365,6 +400,10 @@ void liberarStructura(StructurasDinamicas *s)
 }
 
 /* Cargar estructura desde arreglo bidimensional */
+/*
+ * Uso: Ejecuta cargarDesdeArreglo de forma segura.
+ * Entrada ejemplo: cargarDesdeArreglo(nombres_variables)
+ */
 StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4])
 {
     // Recorre el arreglo de configuración de campos (nombres_variables) hasta encontrar fila NULL.
@@ -418,8 +457,13 @@ StructurasDinamicas cargarDesdeArreglo(char *nombres_variables[][4])
 }
 
 /* Obtener valor de estructura por orden de inserci?n */
+/*
+ * Uso: Ejecuta obtenerValorPorOrden de forma segura.
+ * Entrada ejemplo: obtenerValorPorOrden(datos, orden)
+ */
 void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
 
     if (orden < 0 || orden >= datos->total) // Verifica que el orden solicitado esté dentro del rango de campos existentes en la estructura
     {
@@ -446,8 +490,13 @@ void *obtenerValorPorOrden(StructurasDinamicas *datos, int orden)
 }
 
 /* Procesar partes de texto y cargar en estructura */
+/*
+ * Uso: Ejecuta procesar_partes_del_texto de forma segura.
+ * Entrada ejemplo: procesar_partes_del_texto(partes, nombres_variables, separador, a_retornar)
+ */
 int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const char *separador, StructurasDinamicas *a_retornar)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!partes || !nombres_variables || !separador || !a_retornar)
     {
         return -2; // Si algún puntero es NULL, retorna un error específico para indicar parámetros inválidos

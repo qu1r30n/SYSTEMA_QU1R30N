@@ -1,4 +1,4 @@
-/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+﻿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
  * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
@@ -48,8 +48,13 @@
 // char **G_caracter_separacion = G_caracter_separacion;//dice que ya no por que ya fue definido en el main
 
 // Leer inventario completo
+/*
+ * Uso: Ejecuta modelo_leerInventario de forma segura.
+ * Entrada ejemplo: modelo_leerInventario(texto)
+ */
 int modelo_leerInventario(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return -1;
@@ -101,6 +106,10 @@ int modelo_leerInventario(char *texto)
 }
 
 // Guardar inventario
+/*
+ * Uso: Ejecuta modelo_guardarInventario de forma segura.
+ * Entrada ejemplo: modelo_guardarInventario(texto)
+ */
 void modelo_guardarInventario(char *texto)
 {
     // En el proceso: guardarInventario(inventario, cuantas_partes) requiere inventario[][][]
@@ -111,8 +120,13 @@ void modelo_guardarInventario(char *texto)
 }
 
 // Buscar producto
+/*
+ * Uso: Ejecuta modelo_buscarProducto de forma segura.
+ * Entrada ejemplo: modelo_buscarProducto(texto)
+ */
 int modelo_buscarProducto(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return -1;
@@ -165,8 +179,13 @@ int modelo_buscarProducto(char *texto)
 }
 
 // Agregar producto
+/*
+ * Uso: Ejecuta modelo_agregarProducto de forma segura.
+ * Entrada ejemplo: modelo_agregarProducto(texto)
+ */
 int modelo_agregarProducto(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto) // Verifica si el texto es NULL
     {
         return -1;
@@ -276,8 +295,13 @@ int modelo_agregarProducto(char *texto)
 }
 
 // Venta simple
+/*
+ * Uso: Ejecuta modelo_venta de forma segura.
+ * Entrada ejemplo: modelo_venta(texto)
+ */
 int modelo_venta(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return -1;
@@ -331,8 +355,13 @@ int modelo_venta(char *texto)
 }
 
 // Compra simple
+/*
+ * Uso: Ejecuta modelo_compra de forma segura.
+ * Entrada ejemplo: modelo_compra(texto)
+ */
 int modelo_compra(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return -1;

@@ -1,4 +1,4 @@
-#ifndef VAR_FUN_GG_H
+﻿#ifndef VAR_FUN_GG_H
 #define VAR_FUN_GG_H
 
 #define COLUMNAS 33
@@ -134,30 +134,114 @@ extern const char *GG_trabajos_dia[][5];
 #define G_trabajos_dia GG_trabajos_dia
 
 /* Funciones para reinicializar estructuras */
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteDatosConfiguracion de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteDatosConfiguracion(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteDatosConfiguracion(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteProductos de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteProductos(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteProductos(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_Cosas_que_no_estaban de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_Cosas_que_no_estaban(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_Cosas_que_no_estaban(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteProvedor de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteProvedor(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteProvedor(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteAPRENDICES_E de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteAPRENDICES_E(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteAPRENDICES_E(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_unificados de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteAfiliados_unificados(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteAfiliados_unificados(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_niv_afiliados_unificado de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_niv_afiliados_unificado(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_niv_afiliados_unificado(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteSUCUR de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteSUCUR(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteSUCUR(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteRegDia de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteRegDia(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteRegDia(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteRegMes de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteRegMes(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteRegMes(const char *al_finalizar_que_borrar);
 void RecargarVentanaEmergenteRegAño(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteRegTotal de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteRegTotal(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteRegTotal(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteReg_prod_Dia de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteReg_prod_Dia(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteReg_prod_Dia(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteReg_prod_Mes de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteReg_prod_Mes(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteReg_prod_Mes(const char *al_finalizar_que_borrar);
 void RecargarVentanaEmergenteReg_prod_Año(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteReg_prod_total de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteReg_prod_total(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteReg_prod_total(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteImpuestos de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteImpuestos(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteImpuestos(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteDedusibles de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteDedusibles(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteDedusibles(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_HERRAMIENTAS de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_HERRAMIENTAS(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_HERRAMIENTAS(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_TRABAJOS_DIA de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_TRABAJOS_DIA(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_TRABAJOS_DIA(const char *al_finalizar_que_borrar);
+/*
+ * Uso: Ejecuta RecargarArregloArchivos_dir_nom_archivos de forma segura.
+ * Entrada ejemplo: RecargarArregloArchivos_dir_nom_archivos()
+ */
 void RecargarArregloArchivos_dir_nom_archivos(void);
+/*
+ * Uso: Ejecuta RecargarArregloDireccionInventarios de forma segura.
+ * Entrada ejemplo: RecargarArregloDireccionInventarios()
+ */
 void RecargarArregloDireccionInventarios(void);
 
 /* Función auxiliar para concatenar columnas */
+/*
+ * Uso: Ejecuta columnas_concatenadas de forma segura.
+ * Entrada ejemplo: columnas_concatenadas(arreglo, filas, id_columna, caracter_separacion)
+ */
 char *columnas_concatenadas(const char *arreglo[][5], int filas, int id_columna, const char *caracter_separacion);
 
 #endif

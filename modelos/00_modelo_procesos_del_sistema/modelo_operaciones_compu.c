@@ -1,4 +1,4 @@
-/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+﻿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - ../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_compu.h: Dependencia interna del proyecto
  * - ../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h: Dependencia interna del proyecto
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h: Dependencia interna del proyecto
@@ -15,8 +15,13 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include <stddef.h>
 
+/*
+ * Uso: Ejecuta modelo_fechaActual de forma segura.
+ * Entrada ejemplo: modelo_fechaActual(texto)
+ */
 void modelo_fechaActual(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return;
@@ -64,8 +69,13 @@ void modelo_fechaActual(char *texto)
     liberarStructura(&datos);
 }
 
+/*
+ * Uso: Ejecuta modelo_delay_ms de forma segura.
+ * Entrada ejemplo: modelo_delay_ms(texto)
+ */
 void modelo_delay_ms(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return;

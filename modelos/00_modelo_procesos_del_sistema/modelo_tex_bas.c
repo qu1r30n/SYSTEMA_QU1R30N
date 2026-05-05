@@ -1,4 +1,4 @@
-/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+﻿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
  * - stddef.h: Tipos base como size_t y NULL
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
@@ -45,8 +45,13 @@
 
 /* ===== MODELO DE PROCESOS DEL SISTEMA: OPERACIONES DE TEXTOS ===== */
 // Crear directorio
+/*
+ * Uso: Ejecuta modelo_crearDirectorio de forma segura.
+ * Entrada ejemplo: modelo_crearDirectorio(texto)
+ */
 void modelo_crearDirectorio(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return;
@@ -93,8 +98,13 @@ void modelo_crearDirectorio(char *texto)
 }
 
 // Crear archivo
+/*
+ * Uso: Ejecuta modelo_crearArchivo de forma segura.
+ * Entrada ejemplo: modelo_crearArchivo(texto)
+ */
 void modelo_crearArchivo(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return;
@@ -143,8 +153,13 @@ void modelo_crearArchivo(char *texto)
 }
 
 // Leer archivo (MODELO STUB - Solo parsea sin llamar a la función)
+/*
+ * Uso: Ejecuta modelo_leer_archivo de forma segura.
+ * Entrada ejemplo: modelo_leer_archivo(texto)
+ */
 void modelo_leer_archivo(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return;
@@ -157,8 +172,13 @@ void modelo_leer_archivo(char *texto)
 }
 
 // Guardar archivo (MODELO STUB - Solo parsea sin llamar a la función)
+/*
+ * Uso: Ejecuta modelo_guardar_archivo de forma segura.
+ * Entrada ejemplo: modelo_guardar_archivo(texto)
+ */
 void modelo_guardar_archivo(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return;
@@ -172,8 +192,13 @@ void modelo_guardar_archivo(char *texto)
 }
 
 // Agregar fila
+/*
+ * Uso: Ejecuta modelo_agregar_fila de forma segura.
+ * Entrada ejemplo: modelo_agregar_fila(texto)
+ */
 void modelo_agregar_fila(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
         return;

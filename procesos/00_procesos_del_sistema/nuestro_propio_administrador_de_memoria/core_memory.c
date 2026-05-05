@@ -1,4 +1,4 @@
-/* 
+﻿/* 
    Incluimos el header donde está definida la estructura core_arena
    y los prototipos de las funciones públicas.
 */
@@ -59,6 +59,9 @@ unsigned char core_arena_memoria_default[CORE_ARENA_DEFAULT_SIZE];
      ptr   -> valor actual (offset)
      align -> alineación deseada (ej: 8)
 
+
+
+
    Retorna:
      Nuevo valor alineado correctamente.
 */
@@ -90,6 +93,10 @@ unsigned char core_arena_memoria_default[CORE_ARENA_DEFAULT_SIZE];
 ===============================================================================
 */
 
+/*
+ * Uso: Ejecuta core_arena_init de forma segura.
+ * Entrada ejemplo: core_arena_init(arena, memoria_externa, tamanio)
+ */
 void core_arena_init(core_arena* arena,
                      void* memoria_externa,
                      size_t tamanio)
@@ -136,6 +143,10 @@ void core_arena_init(core_arena* arena,
 ===============================================================================
 */
 
+/*
+ * Uso: Ejecuta core_arena_init_default de forma segura.
+ * Entrada ejemplo: core_arena_init_default(arena)
+ */
 void core_arena_init_default(core_arena* arena)
 {
     /*
@@ -185,6 +196,10 @@ size_t core_arena_snapshot(const core_arena* arena)
    Restaura el offset a un snapshot previo.
    Esto es como hacer "pop" en una pila de memoria.
 */
+/*
+ * Uso: Ejecuta core_arena_restore de forma segura.
+ * Entrada ejemplo: core_arena_restore(arena, snapshot)
+ */
 void core_arena_restore(core_arena* arena, size_t snapshot)
 {
     /*
@@ -208,6 +223,10 @@ void core_arena_restore(core_arena* arena, size_t snapshot)
 ===============================================================================
 */
 
+/*
+ * Uso: Ejecuta core_arena_alloc de forma segura.
+ * Entrada ejemplo: core_arena_alloc(arena, tamanio)
+ */
 void* core_arena_alloc(core_arena* arena, size_t tamanio)
 {
     /*
@@ -308,6 +327,10 @@ void* core_arena_alloc_fast(core_arena* arena, size_t tamanio)
 ===============================================================================
 */
 
+/*
+ * Uso: Ejecuta core_arena_reset de forma segura.
+ * Entrada ejemplo: core_arena_reset(arena)
+ */
 void core_arena_reset(core_arena* arena)
 {
     /*
@@ -340,6 +363,10 @@ void core_arena_reset(core_arena* arena)
 ===============================================================================
 */
 
+/*
+ * Uso: Ejecuta core_arena_usado de forma segura.
+ * Entrada ejemplo: core_arena_usado(arena)
+ */
 size_t core_arena_usado(const core_arena* arena)
 {
     /*
@@ -354,6 +381,10 @@ size_t core_arena_usado(const core_arena* arena)
     return arena->offset;
 }
 
+/*
+ * Uso: Ejecuta core_arena_disponible de forma segura.
+ * Entrada ejemplo: core_arena_disponible(arena)
+ */
 size_t core_arena_disponible(const core_arena* arena)
 {
     /*

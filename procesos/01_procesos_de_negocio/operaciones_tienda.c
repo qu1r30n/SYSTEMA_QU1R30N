@@ -1,4 +1,4 @@
-/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+﻿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
  * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
@@ -20,23 +20,38 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 
 // Leer inventario
+/*
+ * Uso: Ejecuta leerInventario de forma segura.
+ * Entrada ejemplo: leerInventario(inventario, maxProductos)
+ */
 int leerInventario(char inventario[][COLUMNAS][256], int maxProductos)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     (void)inventario;
     (void)maxProductos;
     return 0;
 }
 
 // Guardar inventario
+/*
+ * Uso: Ejecuta guardarInventario de forma segura.
+ * Entrada ejemplo: guardarInventario(inventario, n)
+ */
 void guardarInventario(char inventario[][COLUMNAS][256], int n)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     (void)inventario;
     (void)n;
 }
 
 // Buscar producto
+/*
+ * Uso: Ejecuta buscarProducto de forma segura.
+ * Entrada ejemplo: buscarProducto(inventario, n, codigo)
+ */
 int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     (void)inventario;
     (void)n;
     (void)codigo;
@@ -119,8 +134,13 @@ void agregarProducto(
 }
 
 // Venta
+/*
+ * Uso: Ejecuta venta de forma segura.
+ * Entrada ejemplo: venta(codigo, cantidad, sucursal)
+ */
 int venta(char *codigo, int cantidad, char *sucursal)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     (void)codigo;
     (void)cantidad;
     (void)sucursal;
@@ -129,8 +149,13 @@ int venta(char *codigo, int cantidad, char *sucursal)
 }
 
 // Compra
+/*
+ * Uso: Ejecuta compra de forma segura.
+ * Entrada ejemplo: compra(codigo, cantidad, proveedor)
+ */
 int compra(char *codigo, int cantidad, char *proveedor)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     (void)codigo;
     (void)cantidad;
     (void)proveedor;

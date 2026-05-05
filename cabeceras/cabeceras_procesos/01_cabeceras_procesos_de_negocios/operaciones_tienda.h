@@ -1,4 +1,4 @@
-#ifndef OPERACIONES_TIENDA_H
+﻿#ifndef OPERACIONES_TIENDA_H
 #define OPERACIONES_TIENDA_H
 
 /* LIBRERIAS USADAS EN ESTE ARCHIVO:
@@ -6,8 +6,20 @@
  */
 #include "../00_cabeceras_del_sistema/var_fun_GG.h" //NECESARIO para COLUMNAS y MAX_PRODUCTOS
 
+/*
+ * Uso: Ejecuta leerInventario de forma segura.
+ * Entrada ejemplo: leerInventario(inventario, maxProductos)
+ */
 int leerInventario(char inventario[][COLUMNAS][256], int maxProductos);
+/*
+ * Uso: Ejecuta guardarInventario de forma segura.
+ * Entrada ejemplo: guardarInventario(inventario, n)
+ */
 void guardarInventario(char inventario[][COLUMNAS][256], int n);
+/*
+ * Uso: Ejecuta buscarProducto de forma segura.
+ * Entrada ejemplo: buscarProducto(inventario, n, codigo)
+ */
 int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo);
 
 void agregarProducto(
@@ -43,8 +55,20 @@ void agregarProducto(
     char *ultima_venta,
     char *indices_total_registro_produc_vendido);
 
+/*
+ * Uso: Ejecuta editarPrecio de forma segura.
+ * Entrada ejemplo: editarPrecio(codigo, precio, proveedor)
+ */
 int editarPrecio(char *codigo, char *precio, char *proveedor);
+/*
+ * Uso: Ejecuta venta de forma segura.
+ * Entrada ejemplo: venta(codigo, cantidad, sucursal)
+ */
 int venta(char *codigo, int cantidad, char *sucursal);
+/*
+ * Uso: Ejecuta compra de forma segura.
+ * Entrada ejemplo: compra(codigo, cantidad, proveedor)
+ */
 int compra(char *codigo, int cantidad, char *proveedor);
 
 #endif

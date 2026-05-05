@@ -1,4 +1,4 @@
-/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+﻿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
  * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
  * - xc.h: Cabecera del compilador para microcontroladores PIC
@@ -27,8 +27,13 @@
 /* y los procesos que implementan la lógica */
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 
+/*
+ * Uso: Ejecuta modelo_split de forma segura.
+ * Entrada ejemplo: modelo_split(texto, sep)
+ */
 char **modelo_split(char *texto, const char *sep)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     char **salida = NULL;
 
     int resultado = split(texto, sep, &salida);
@@ -42,6 +47,10 @@ char **modelo_split(char *texto, const char *sep)
     return salida; // char** terminado en NULL
 }
 
+/*
+ * Uso: Ejecuta modelo_free_split de forma segura.
+ * Entrada ejemplo: modelo_free_split(arreglo)
+ */
 void modelo_free_split(char **arreglo)
 {
     /* Si es NULL, no hacer nada */
@@ -63,15 +72,25 @@ void modelo_free_split(char **arreglo)
     free(arreglo);
 }
 
+/*
+ * Uso: Ejecuta modelo_texto_a_int_seguro de forma segura.
+ * Entrada ejemplo: modelo_texto_a_int_seguro(texto)
+ */
 int modelo_texto_a_int_seguro(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     int valor_int;
     texto_a_int_seguro(texto, &valor_int);
     return valor_int;
 }
 
+/*
+ * Uso: Ejecuta modelo_texto_a_float_seguro de forma segura.
+ * Entrada ejemplo: modelo_texto_a_float_seguro(texto)
+ */
 float modelo_texto_a_float_seguro(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     float valor_float;
     texto_a_float_seguro(texto, &valor_float);
     return valor_float;

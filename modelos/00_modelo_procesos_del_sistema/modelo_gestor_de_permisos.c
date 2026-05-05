@@ -1,4 +1,4 @@
-/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+﻿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
  * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
@@ -21,6 +21,10 @@
 /* ===== MODELO DE PROCESOS DEL SISTEMA: GESTOR DE PERMISOS ===== */
 
 // Checar permiso
+/*
+ * Uso: Ejecuta modelo_checar_permiso de forma segura.
+ * Entrada ejemplo: modelo_checar_permiso(texto, retorna_direccion_espacio_negocio, retornar_nivel)
+ */
 int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio, int *retornar_nivel)
 // Función que recibe un texto con parámetros, los procesa y verifica permisos
 {

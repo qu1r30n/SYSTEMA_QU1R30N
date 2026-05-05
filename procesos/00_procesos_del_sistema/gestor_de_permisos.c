@@ -1,4 +1,4 @@
-/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+﻿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
  * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
@@ -16,8 +16,13 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"         // separadores globales GG_
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"  // imprimirMensaje_para_depurar
 
+/*
+ * Uso: Ejecuta checar_permiso de forma segura.
+ * Entrada ejemplo: checar_permiso(nivel_minimo, ruta_archivo, id_de_espacio, usuario, contrasena, retorna_direccion_espacio_negocio, retornar_nivel)
+ */
 int checar_permiso(int nivel_minimo, const char *ruta_archivo, const char *id_de_espacio, const char *usuario, const char *contrasena, char **retorna_direccion_espacio_negocio, int *retornar_nivel)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (retorna_direccion_espacio_negocio)
     {
         *retorna_direccion_espacio_negocio = NULL;

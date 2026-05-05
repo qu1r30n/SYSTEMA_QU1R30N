@@ -1,4 +1,4 @@
-/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+﻿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - ../../CLASE_QU1R30N.h: Dependencia interna del proyecto
  * - ../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h: Dependencia interna del proyecto
  * - ../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_administracion_espacios.h: Dependencia interna del proyecto
@@ -12,8 +12,13 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/administracion_espacios.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
 
+/*
+ * Uso: Ejecuta modelo_administracion_espacios_crear_espacio de forma segura.
+ * Entrada ejemplo: modelo_administracion_espacios_crear_espacio(texto)
+ */
 int modelo_administracion_espacios_crear_espacio(char *texto)
 {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     imprimirMensaje_para_depurar("\n\ntexto=%s\n", texto);
 
     if (!texto)

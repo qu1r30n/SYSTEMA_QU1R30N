@@ -1,4 +1,4 @@
-/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+﻿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
  * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
@@ -10,31 +10,31 @@
 #include <time.h>
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
-int GG_indice_donde_comensar = 1;
+int GG_indice_donde_comensar = 1; // índice de inicio para operaciones de listado; ejemplo: 1
 
-char *GG_cantidado_por_archivo = "100";
+char *GG_cantidado_por_archivo = "100"; // cantidad máxima de registros por archivo; ejemplo: "100"
 
-char *GG_caracter_separacion[] = {"|", "°", "¬", "╦", "╔"};
-char *GG_caracter_separacion_2[] = {"⚭", "⚮", "⚯", "⚰", "⚱"};
+char *GG_caracter_separacion[] = {"|", "°", "¬", "╦", "╔"};   // separadores de columna para archivos de datos; ejemplo: "|"
+char *GG_caracter_separacion_2[] = {"⚭", "⚮", "⚯", "⚰", "⚱"}; // separadores alternativos de columna (set 2); ejemplo: "⚭"
 
-char *GG_caracter_separacion_funciones_espesificas[] = {"~", "§", "¶", "╬", "╝", "╩", "║", "╗", "┐", "└", "┬", "├", "┼"};
-char *GG_caracter_separacion_funciones_espesificas_2[] = {"⚲", "⚳", "⚴", "⚵", "⚶", "⚷", "⚸", "⚺", "⚻", "⚼", "⚿", "⛊", "⛋"};
+char *GG_caracter_separacion_funciones_espesificas[] = {"~", "§", "¶", "╬", "╝", "╩", "║", "╗", "┐", "└", "┬", "├", "┼"};   // separadores para parsing de comandos del conmutador; ejemplo: "~"
+char *GG_caracter_separacion_funciones_espesificas_2[] = {"⚲", "⚳", "⚴", "⚵", "⚶", "⚷", "⚸", "⚺", "⚻", "⚼", "⚿", "⛊", "⛋"}; // separadores alternativos para parsing de comandos (set 2); ejemplo: "⚲"
 
-char *GG_caracter_para_confirmacion_o_error[] = {"╣", "╠"};
-char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒"};
+char *GG_caracter_para_confirmacion_o_error[] = {"╣", "╠"};   // caracteres para señalizar confirmación o error en comunicación; ejemplo: "╣"
+char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒"}; // caracteres alternativos para confirmación o error (set 2); ejemplo: "⛑"
 
-char *GG_caracter_para_transferencia_entre_archivos[] = {"■", "┴", "¤"};
-char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘", "⛍"};
+char *GG_caracter_para_transferencia_entre_archivos[] = {"■", "┴", "¤"};   // separadores para transferencia de datos entre archivos; ejemplo: "■"
+char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘", "⛍"}; // separadores alternativos para transferencia entre archivos (set 2); ejemplo: "⛕"
 
-char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[] = {"•", "∆"};
-char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[] = {"⛙", "⛚"};
+char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[] = {"•", "∆"};   // caracteres que simulan salto de línea y nuevo mensaje; ejemplo: "•"
+char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[] = {"⛙", "⛚"}; // caracteres alternativos para enter y nuevo mensaje (set 2); ejemplo: "⛙"
 
-char *GG_caracter_separacion_nom_parametro_de_valor[] = {"⊓", "⊔"};
-char *GG_caracter_separacion_nom_parametro_de_valor_2[] = {"⊑", "⊒"};
+char *GG_caracter_separacion_nom_parametro_de_valor[] = {"⊓", "⊔"};   // separadores entre nombre de parámetro y su valor; ejemplo: "⊓"
+char *GG_caracter_separacion_nom_parametro_de_valor_2[] = {"⊑", "⊒"}; // separadores alternativos entre nombre de parámetro y valor (set 2); ejemplo: "⊑"
 
-char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝"};
+char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝"}; // caracteres reservados para confirmación de guardado; ejemplo: "⛞"
 
-char *GG_id_programa = "SISTEMA_QU1R30N";
+char *GG_id_programa = "SISTEMA_QU1R30N"; // identificador único del programa; ejemplo: "SISTEMA_QU1R30N"
 
 #ifdef _WIN32
 char *GG_archivos[][3] = {
@@ -95,12 +95,14 @@ char *GG_variables_string[MAX_VAR_STRING] = {
 
 /* Ventana: Datos de Configuración (2 campos) */
 const char *GG_ventana_datos_conf[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "dato_de_configuracion", "", "", "TEXTO"},
     {"2", "descripcion_de_configuracion", "", "", "TEXTO"},
     {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Productos (33 campos) */
 const char *GG_ventana_emergente_productos[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
 
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_PRODUCTO", "", "NOSE", "TEXTO"},
@@ -138,6 +140,7 @@ const char *GG_ventana_emergente_productos[][5] = {
     {NULL, NULL, NULL, NULL, NULL}};
 /* Ventana: Cosas No Estaban en Inventario (3 campos) */
 const char *GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_COD_BAR", "", "NOSE", "TEXTO"},
     {"1", "_02_NOMBRE", "", "NOSE", "TEXTO"},
@@ -145,6 +148,7 @@ const char *GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[][5] = {
 
 /* Ventana: Proveedores (24 campos) */
 const char *GG_ventana_provedor[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID_EMPRESA", "", "-0", "TEXTO"},
     {"1", "_01_NOMBRE_EMPRESA", "", "NOSE", "TEXTO"},
     {"1", "_02_NOMBRE_ENCARGADO", "", "NOSE", "TEXTO"},
@@ -173,6 +177,7 @@ const char *GG_ventana_provedor[][5] = {
 
 /* Ventana: Aprendices (32 campos) */
 const char *GG_ventana_APRENDICES_E[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-0", "TEXTO"},
     {"1", "_01_NOMBRE", "", "NOSE", "TEXTO"},
     {"1", "_02_APELLIDO_PATERNO", "", "NOSE", "TEXTO"},
@@ -209,6 +214,7 @@ const char *GG_ventana_APRENDICES_E[][5] = {
 
 /* Ventana: Afiliados Unificados (8 campos) */
 const char *GG_ventana_afiliados_unificados[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"1", "_00_ID_USUARIO", "", "0", "TEXTO"},
     {"1", "_01_IDP", "", "0╔0╦0¬0╔1╦1", "TEXTO"},
     {"1", "_02_PUNTOS_D_R", "", "0╦0¬0╦0", "TEXTO"},
@@ -220,6 +226,7 @@ const char *GG_ventana_afiliados_unificados[][5] = {
     {NULL, NULL, NULL, NULL, NULL}};
 /* Ventana: Niveles Afiliados Unificado (4 campos) */
 const char *GG_ventana_niv_afiliados_unificado[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_NIVEL", "", "0", "TEXTO"},
     {"1", "_02_ID_HORIZONTAL", "", "0", "TEXTO"},
@@ -228,6 +235,7 @@ const char *GG_ventana_niv_afiliados_unificado[][5] = {
 
 /* Ventana: Sucursales (20 campos) */
 const char *GG_ventana_SUCUR[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_NOM_ID_SUCUR", "", "-0", "TEXTO"},
     {"1", "_02_NOMBRE_SUCUR", "", "NOSE", "TEXTO"},
@@ -252,6 +260,7 @@ const char *GG_ventana_SUCUR[][5] = {
 
 /* Ventana: Registro Día (11 campos) */
 const char *GG_ventana_reg_dia[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_HORA", "", "0", "TEXTO"},
     {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
@@ -267,6 +276,7 @@ const char *GG_ventana_reg_dia[][5] = {
 
 /* Ventana: Registro Mes (9 campos) */
 const char *GG_ventana_reg_mes[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_DIA", "", "0", "TEXTO"},
     {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
@@ -280,6 +290,7 @@ const char *GG_ventana_reg_mes[][5] = {
 
 /* Ventana: Registro Año (9 campos) */
 const char *GG_ventana_reg_año[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_MES", "", "0", "TEXTO"},
     {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
@@ -293,6 +304,7 @@ const char *GG_ventana_reg_año[][5] = {
 
 /* Ventana: Registro Total (9 campos) */
 const char *GG_ventana_reg_total[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_AÑO", "", "0", "TEXTO"},
     {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
@@ -306,6 +318,7 @@ const char *GG_ventana_reg_total[][5] = {
 
 /* Ventana: Registro Productos Día (12 campos) */
 const char *GG_ventana_reg_prod_dia[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
     {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
@@ -322,6 +335,7 @@ const char *GG_ventana_reg_prod_dia[][5] = {
 
 /* Ventana: Registro Productos Mes (12 campos) */
 const char *GG_ventana_reg_prod_mes[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
     {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
@@ -338,6 +352,7 @@ const char *GG_ventana_reg_prod_mes[][5] = {
 
 /* Ventana: Registro Productos Año (12 campos) */
 const char *GG_ventana_reg_prod_año[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
     {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
@@ -354,6 +369,7 @@ const char *GG_ventana_reg_prod_año[][5] = {
 
 /* Ventana: Registro Productos Total (12 campos) */
 const char *GG_ventana_reg_prod_total[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
     {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
@@ -370,6 +386,7 @@ const char *GG_ventana_reg_prod_total[][5] = {
 
 /* Ventana: Impuestos (6 campos) */
 const char *GG_ventana_IMPUESTOS[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_IMPUESTO", "", "0", "TEXTO"},
     {"1", "_02_PORCENTAGE", "", "0", "TEXTO"},
@@ -380,6 +397,7 @@ const char *GG_ventana_IMPUESTOS[][5] = {
 
 /* Ventana: Deducibles (7 campos) */
 const char *GG_ventana_DEDUSIBLES[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_FECHA", "", "0", "TEXTO"},
     {"1", "_02_MONTO", "", "0", "TEXTO"},
@@ -391,12 +409,14 @@ const char *GG_ventana_DEDUSIBLES[][5] = {
 
 /* Ventana: Herramientas (2 campos) */
 const char *GG_ventana_HERRAMIENTAS[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_COD_BAR", "", "", "TEXTO"},
     {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Trabajos por Día (8 campos) */
 const char *GG_trabajos_dia[][5] = {
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
     {"1", "_01_DIA", "", "", "TEXTO"},
     {"1", "_02_ID_TRABAJADOR", "", "", "TEXTO"},
@@ -407,197 +427,267 @@ const char *GG_trabajos_dia[][5] = {
     {"1", "_07_ID_PROGRAMA", "", "", "TEXTO"},
     {NULL, NULL, NULL, NULL, NULL}};
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteDatosConfiguracion de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteDatosConfiguracion(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteDatosConfiguracion(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteProductos de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteProductos(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteProductos(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_Cosas_que_no_estaban de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_Cosas_que_no_estaban(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_Cosas_que_no_estaban(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteProvedor de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteProvedor(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteProvedor(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteAPRENDICES_E de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteAPRENDICES_E(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteAPRENDICES_E(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_simples de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteAfiliados_simples(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteAfiliados_simples(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_complejos de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteAfiliados_complejos(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteAfiliados_complejos(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_niv_afiliados_simples de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_niv_afiliados_simples(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_niv_afiliados_simples(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_niv_afiliados_comp de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_niv_afiliados_comp(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_niv_afiliados_comp(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_unificados de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteAfiliados_unificados(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteAfiliados_unificados(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_niv_afiliados_unificado de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_niv_afiliados_unificado(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_niv_afiliados_unificado(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteSUCUR de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteSUCUR(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteSUCUR(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteRegDia de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteRegDia(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteRegDia(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteRegMes de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteRegMes(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteRegMes(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
@@ -605,55 +695,71 @@ void RecargarVentanaEmergenteRegMes(const char *al_finalizar_que_borrar)
 
 void RecargarVentanaEmergenteRegAño(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteRegTotal de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteRegTotal(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteRegTotal(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteReg_prod_Dia de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteReg_prod_Dia(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteReg_prod_Dia(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteReg_prod_Mes de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteReg_prod_Mes(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteReg_prod_Mes(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
@@ -661,83 +767,109 @@ void RecargarVentanaEmergenteReg_prod_Mes(const char *al_finalizar_que_borrar)
 
 void RecargarVentanaEmergenteReg_prod_Año(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteReg_prod_total de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteReg_prod_total(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteReg_prod_total(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteImpuestos de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteImpuestos(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteImpuestos(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergenteDedusibles de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergenteDedusibles(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergenteDedusibles(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_HERRAMIENTAS de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_HERRAMIENTAS(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_HERRAMIENTAS(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
 }
 
+/*
+ * Uso: Ejecuta RecargarVentanaEmergente_TRABAJOS_DIA de forma segura.
+ * Entrada ejemplo: RecargarVentanaEmergente_TRABAJOS_DIA(al_finalizar_que_borrar)
+ */
 void RecargarVentanaEmergente_TRABAJOS_DIA(const char *al_finalizar_que_borrar)
 {
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
     {
-        for (int i = 0; i < MAX_VAR_STRING; i++)
+        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
         {
-            if (GG_variables_string[i] != NULL)
+            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
             {
-                strcpy(GG_variables_string[i], "");
+                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
             }
         }
     }
@@ -745,372 +877,421 @@ void RecargarVentanaEmergente_TRABAJOS_DIA(const char *al_finalizar_que_borrar)
 
 /* Función auxiliar para concatenar valores de columnas
    id_columna se pasa para futuras extensiones; actualmente no se usa. */
+/*
+ * Uso: Ejecuta columnas_concatenadas de forma segura.
+ * Entrada ejemplo: columnas_concatenadas(arreglo, filas, id_columna, caracter_separacion)
+ */
 char *columnas_concatenadas(const char *arreglo[][5], int filas, int id_columna, const char *caracter_separacion)
 {
-    static char resultado[4096];
-    memset(resultado, 0, sizeof(resultado));
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    static char resultado[4096];             // buffer est\u00e1tico donde se acumula el resultado concatenado; ejemplo: "col1°col2°col3"
+    memset(resultado, 0, sizeof(resultado)); // limpia el buffer antes de usarlo para evitar basura de llamadas anteriores
 
-    if (!arreglo)
+    if (!arreglo) // valida que el arreglo de entrada no sea NULL
     {
-        return resultado;
+        return resultado; // retorna buffer vac\u00edo si no hay arreglo v\u00e1lido
     }
 
-    if (caracter_separacion == NULL)
+    if (caracter_separacion == NULL) // usa separador por defecto si no se proporcion\u00f3 uno
     {
-        caracter_separacion = GG_caracter_separacion[1];
+        caracter_separacion = GG_caracter_separacion[1]; // asigna el separador "°" como valor por defecto; ejemplo: "°"
     }
 
-    if (id_columna < 0 || id_columna >= 5)
+    if (id_columna < 0 || id_columna >= 5) // valida que el \u00edndice de columna est\u00e9 dentro del rango [0,4]
     {
-        id_columna = 1;
+        id_columna = 1; // restablece al \u00edndice de columna 1 (nombre) si el \u00edndice es inv\u00e1lido; ejemplo: 1
     }
 
-    int total_filas = 0;
-    if (filas > 0)
+    int total_filas = 0; // contador de filas del arreglo; ejemplo: 33
+    if (filas > 0)       // si se proporcion\u00f3 cantidad de filas expl\u00edcita, la usa directamente
     {
-        total_filas = filas;
+        total_filas = filas; // asigna el valor de filas pasado como par\u00e1metro; ejemplo: 33
     }
     else
     {
-        while (arreglo[total_filas][0] != NULL)
+        while (arreglo[total_filas][0] != NULL) // detecta autom\u00e1ticamente el fin del arreglo por NULL sentinel
         {
-            total_filas++;
+            total_filas++; // incrementa el contador hasta encontrar la fila terminadora NULL
         }
     }
 
-    for (int i = 0; i < total_filas; i++)
+    for (int i = 0; i < total_filas; i++) // itera sobre cada fila v\u00e1lida del arreglo
     {
-        const char *valor = arreglo[i][id_columna];
+        const char *valor = arreglo[i][id_columna]; // obtiene el valor de la columna solicitada en la fila i; ejemplo: "_01_PRODUCTO"
 
-        if (!valor)
+        if (!valor) // omite filas donde el valor de la columna sea NULL
         {
-            continue;
+            continue; // salta a la siguiente iteraci\u00f3n sin agregar nada
         }
 
-        if (resultado[0] != '\0')
+        if (resultado[0] != '\0') // agrega separador solo si ya hay contenido previo en el resultado
         {
-            strcat(resultado, caracter_separacion);
+            strcat(resultado, caracter_separacion); // concatena el separador entre columnas; ejemplo: "°"
         }
 
-        strcat(resultado, valor);
+        strcat(resultado, valor); // agrega el valor de la columna al resultado; ejemplo: "_01_PRODUCTO"
     }
 
-    return resultado;
+    return resultado; // retorna el string con todas las columnas concatenadas; ejemplo: "_00_ID°_01_PRODUCTO°..."
 }
 
 char *GG_direccion_carpetas_base[] = {
     "",
     NULL};
 
-GG_ArchivoBaseNegocio *GG_dir_nom_archivos = NULL;
+GG_ArchivoBaseNegocio *GG_dir_nom_archivos = NULL; // puntero dinámico al arreglo de archivos base del negocio; ejemplo: NULL al inicio
 
-GG_ArchivoInventarioPendiente *GG_direccion_hacer_inventarios = NULL;
+GG_ArchivoInventarioPendiente *GG_direccion_hacer_inventarios = NULL; // puntero dinámico al arreglo de archivos de inventario pendiente; ejemplo: NULL al inicio
 
+/*
+ * Uso: Ejecuta duplicar_texto de forma segura.
+ * Entrada ejemplo: duplicar_texto(txt)
+ */
 static char *duplicar_texto(const char *txt)
 {
-    if (!txt)
-        return NULL;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (!txt)        // valida que el puntero de entrada no sea NULL
+        return NULL; // retorna NULL si no hay texto que duplicar
 
-    char *salida = (char *)malloc(strlen(txt) + 1);
-    if (!salida)
-        return NULL;
+    char *salida = (char *)malloc(strlen(txt) + 1); // reserva memoria para la copia incluyendo el terminador nulo; ejemplo: malloc(6)
+    if (!salida)                                    // verifica que la asignación de memoria fue exitosa
+        return NULL;                                // retorna NULL si malloc falló por falta de memoria
 
-    strcpy(salida, txt);
-    return salida;
+    strcpy(salida, txt); // copia el texto fuente en el nuevo bloque de memoria; ejemplo: "hola"
+    return salida;       // retorna el puntero a la copia del texto
 }
 
+/*
+ * Uso: Ejecuta crear_metadata_archivo_base de forma segura.
+ * Entrada ejemplo: crear_metadata_archivo_base(columnas)
+ */
 static char *crear_metadata_archivo_base(const char *columnas)
 {
-    const char *columnas_seguras = columnas ? columnas : "";
-    const char *cantidad_por_archivo = GG_cantidado_por_archivo ? GG_cantidado_por_archivo : "0";
-    size_t longitud_total = strlen("ID_TOT|0\nCOLUMNAS|\nCANT_POR_ARCH|") + strlen(columnas_seguras) + strlen(cantidad_por_archivo) + 1;
-    char *metadata = (char *)malloc(longitud_total);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    const char *columnas_seguras = columnas ? columnas : "";                                                                             // usa string vacío si columnas es NULL para evitar crash; ejemplo: "_00_ID|_01_PRODUCTO"
+    const char *cantidad_por_archivo = GG_cantidado_por_archivo ? GG_cantidado_por_archivo : "0";                                        // usa "0" si la global es NULL; ejemplo: "100"
+    size_t longitud_total = strlen("ID_TOT|0\nCOLUMNAS|\nCANT_POR_ARCH|") + strlen(columnas_seguras) + strlen(cantidad_por_archivo) + 1; // calcula el tamaño exacto del string de metadata; ejemplo: 60
+    char *metadata = (char *)malloc(longitud_total);                                                                                     // reserva memoria para el string de metadata del archivo
 
-    if (!metadata)
+    if (!metadata) // verifica que malloc tuvo éxito
     {
-        return NULL;
+        return NULL; // retorna NULL si no hay memoria disponible
     }
 
-    snprintf(metadata, longitud_total, "ID_TOT|0\nCOLUMNAS|%s\nCANT_POR_ARCH|%s", columnas_seguras, cantidad_por_archivo);
-    return metadata;
+    snprintf(metadata, longitud_total, "ID_TOT|0\nCOLUMNAS|%s\nCANT_POR_ARCH|%s", columnas_seguras, cantidad_por_archivo); // formatea el string de metadata con las columnas y la cantidad; ejemplo: "ID_TOT|0\nCOLUMNAS|_00_ID°...\nCANT_POR_ARCH|100"
+    return metadata;                                                                                                       // retorna el string de metadata listo para usarse como cabecera
 }
 
+/*
+ * Uso: Ejecuta agregar_archivo_base_negocio de forma segura.
+ * Entrada ejemplo: agregar_archivo_base_negocio(ruta, cabecera, extra)
+ */
 static int agregar_archivo_base_negocio(const char *ruta, const char *cabecera, const char *extra)
 {
-    int cantidad = 0;
-    GG_ArchivoBaseNegocio *tmp = NULL;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    int cantidad = 0;                  // contador de entradas existentes en el arreglo; ejemplo: 3
+    GG_ArchivoBaseNegocio *tmp = NULL; // puntero temporal para realloc seguro; ejemplo: NULL
 
-    if (GG_dir_nom_archivos)
+    if (GG_dir_nom_archivos) // verifica si ya hay entradas previas en el arreglo
     {
-        while (GG_dir_nom_archivos[cantidad].ruta || GG_dir_nom_archivos[cantidad].cabecera || GG_dir_nom_archivos[cantidad].extra)
+        while (GG_dir_nom_archivos[cantidad].ruta || GG_dir_nom_archivos[cantidad].cabecera || GG_dir_nom_archivos[cantidad].extra) // recorre hasta encontrar el terminador NULL
         {
-            cantidad++;
+            cantidad++; // incrementa el \u00edndice de conteo de entradas v\u00e1lidas
         }
     }
 
-    tmp = (GG_ArchivoBaseNegocio *)realloc(GG_dir_nom_archivos, sizeof(GG_ArchivoBaseNegocio) * (cantidad + 2));
-    if (!tmp)
+    tmp = (GG_ArchivoBaseNegocio *)realloc(GG_dir_nom_archivos, sizeof(GG_ArchivoBaseNegocio) * (cantidad + 2)); // expande el arreglo para alojar la nueva entrada m\u00e1s el terminador
+    if (!tmp)                                                                                                    // verifica que realloc tuvo \u00e9xito
     {
-        return -1;
+        return -1; // retorna error si no se pudo reasignar memoria
     }
 
-    GG_dir_nom_archivos = tmp;
-    GG_dir_nom_archivos[cantidad].ruta = NULL;
-    GG_dir_nom_archivos[cantidad].cabecera = NULL;
-    GG_dir_nom_archivos[cantidad].extra = NULL;
-    GG_dir_nom_archivos[cantidad + 1].ruta = NULL;
-    GG_dir_nom_archivos[cantidad + 1].cabecera = NULL;
-    GG_dir_nom_archivos[cantidad + 1].extra = NULL;
+    GG_dir_nom_archivos = tmp;                         // actualiza el puntero global con la nueva memoria asignada
+    GG_dir_nom_archivos[cantidad].ruta = NULL;         // inicializa el nuevo slot con NULL antes de asignar
+    GG_dir_nom_archivos[cantidad].cabecera = NULL;     // inicializa campo cabecera del nuevo slot
+    GG_dir_nom_archivos[cantidad].extra = NULL;        // inicializa campo extra del nuevo slot
+    GG_dir_nom_archivos[cantidad + 1].ruta = NULL;     // inicializa el slot terminador NULL
+    GG_dir_nom_archivos[cantidad + 1].cabecera = NULL; // inicializa cabecera del terminador
+    GG_dir_nom_archivos[cantidad + 1].extra = NULL;    // inicializa extra del terminador
 
-    GG_dir_nom_archivos[cantidad].ruta = duplicar_texto(ruta ? ruta : "");
-    GG_dir_nom_archivos[cantidad].cabecera = duplicar_texto(cabecera ? cabecera : "");
-    GG_dir_nom_archivos[cantidad].extra = duplicar_texto(extra ? extra : "");
+    GG_dir_nom_archivos[cantidad].ruta = duplicar_texto(ruta ? ruta : "");             // duplica y asigna la ruta; ejemplo: "CONFIG\\INF\\INVENTARIO\\INVENTARIO.TXT"
+    GG_dir_nom_archivos[cantidad].cabecera = duplicar_texto(cabecera ? cabecera : ""); // duplica y asigna la cabecera con metadata del archivo
+    GG_dir_nom_archivos[cantidad].extra = duplicar_texto(extra ? extra : "");          // duplica y asigna informaci\u00f3n extra del archivo; ejemplo: ""
 
-    if (!GG_dir_nom_archivos[cantidad].ruta || !GG_dir_nom_archivos[cantidad].cabecera || !GG_dir_nom_archivos[cantidad].extra)
+    if (!GG_dir_nom_archivos[cantidad].ruta || !GG_dir_nom_archivos[cantidad].cabecera || !GG_dir_nom_archivos[cantidad].extra) // verifica que todos los campos se duplicaron correctamente
     {
-        free(GG_dir_nom_archivos[cantidad].ruta);
-        free(GG_dir_nom_archivos[cantidad].cabecera);
-        free(GG_dir_nom_archivos[cantidad].extra);
-        GG_dir_nom_archivos[cantidad].ruta = NULL;
-        GG_dir_nom_archivos[cantidad].cabecera = NULL;
-        GG_dir_nom_archivos[cantidad].extra = NULL;
-        return -1;
+        free(GG_dir_nom_archivos[cantidad].ruta);      // libera ruta si fall\u00f3 alguna asignaci\u00f3n
+        free(GG_dir_nom_archivos[cantidad].cabecera);  // libera cabecera para evitar memory leak
+        free(GG_dir_nom_archivos[cantidad].extra);     // libera extra para evitar memory leak
+        GG_dir_nom_archivos[cantidad].ruta = NULL;     // resetea puntero a NULL tras liberar
+        GG_dir_nom_archivos[cantidad].cabecera = NULL; // resetea puntero a NULL tras liberar
+        GG_dir_nom_archivos[cantidad].extra = NULL;    // resetea puntero a NULL tras liberar
+        return -1;                                     // retorna error indicando falla en la duplicaci\u00f3n de campos
     }
 
-    return 0;
+    return 0; // retorna \u00e9xito al haber agregado la entrada correctamente
 }
-
+/*
+ * Uso: Ejecuta agregar_archivo_base_negocio_con_columnas de forma segura.
+ * Entrada ejemplo: agregar_archivo_base_negocio_con_columnas(ruta, columnas, extra)
+ */
 static int agregar_archivo_base_negocio_con_columnas(const char *ruta, const char *columnas, const char *extra)
 {
-    char *metadata = crear_metadata_archivo_base(columnas);
-    int resultado;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    char *metadata = crear_metadata_archivo_base(columnas); // genera el string de metadata con columnas y cantidad por archivo
+    int resultado;                                          // almacena el código de retorno de agregar_archivo_base_negocio; ejemplo: 0
 
-    if (!metadata)
+    if (!metadata) // verifica que la creación de metadata fue exitosa
     {
-        return -1;
+        return -1; // retorna error si no se pudo crear el string de metadata
     }
 
-    resultado = agregar_archivo_base_negocio(ruta, metadata, extra);
-    free(metadata);
-    return resultado;
+    resultado = agregar_archivo_base_negocio(ruta, metadata, extra); // agrega la entrada al arreglo usando la metadata generada
+    free(metadata);                                                  // libera la memoria de metadata ya que fue copiada internamente
+    return resultado;                                                // retorna el resultado de la operación de agregado; ejemplo: 0
 }
 
+/*
+ * Uso: Ejecuta agregar_archivo_inventario de forma segura.
+ * Entrada ejemplo: agregar_archivo_inventario(ruta, cabecera)
+ */
 static int agregar_archivo_inventario(const char *ruta, const char *cabecera)
 {
-    int cantidad = 0;
-    GG_ArchivoInventarioPendiente *tmp = NULL;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    int cantidad = 0;                          // contador de entradas existentes en el arreglo de inventarios; ejemplo: 2
+    GG_ArchivoInventarioPendiente *tmp = NULL; // puntero temporal para realloc seguro; ejemplo: NULL
 
-    if (GG_direccion_hacer_inventarios)
+    if (GG_direccion_hacer_inventarios) // verifica si ya hay entradas previas en el arreglo
     {
-        while (GG_direccion_hacer_inventarios[cantidad].ruta || GG_direccion_hacer_inventarios[cantidad].cabecera)
+        while (GG_direccion_hacer_inventarios[cantidad].ruta || GG_direccion_hacer_inventarios[cantidad].cabecera) // recorre hasta encontrar el terminador NULL
         {
-            cantidad++;
+            cantidad++; // incrementa el contador de entradas v\u00e1lidas
         }
     }
 
-    tmp = (GG_ArchivoInventarioPendiente *)realloc(GG_direccion_hacer_inventarios, sizeof(GG_ArchivoInventarioPendiente) * (cantidad + 2));
-    if (!tmp)
+    tmp = (GG_ArchivoInventarioPendiente *)realloc(GG_direccion_hacer_inventarios, sizeof(GG_ArchivoInventarioPendiente) * (cantidad + 2)); // expande el arreglo para la nueva entrada m\u00e1s terminador
+    if (!tmp)                                                                                                                               // verifica que realloc tuvo \u00e9xito
     {
-        return -1;
+        return -1; // retorna error si no se pudo reasignar memoria
     }
 
-    GG_direccion_hacer_inventarios = tmp;
-    GG_direccion_hacer_inventarios[cantidad].ruta = NULL;
-    GG_direccion_hacer_inventarios[cantidad].cabecera = NULL;
-    GG_direccion_hacer_inventarios[cantidad + 1].ruta = NULL;
-    GG_direccion_hacer_inventarios[cantidad + 1].cabecera = NULL;
+    GG_direccion_hacer_inventarios = tmp;                         // actualiza el puntero global con la nueva memoria asignada
+    GG_direccion_hacer_inventarios[cantidad].ruta = NULL;         // inicializa el nuevo slot con NULL antes de asignar
+    GG_direccion_hacer_inventarios[cantidad].cabecera = NULL;     // inicializa cabecera del nuevo slot
+    GG_direccion_hacer_inventarios[cantidad + 1].ruta = NULL;     // inicializa el slot terminador NULL
+    GG_direccion_hacer_inventarios[cantidad + 1].cabecera = NULL; // inicializa cabecera del terminador
 
-    GG_direccion_hacer_inventarios[cantidad].ruta = duplicar_texto(ruta ? ruta : "");
-    GG_direccion_hacer_inventarios[cantidad].cabecera = duplicar_texto(cabecera ? cabecera : "");
+    GG_direccion_hacer_inventarios[cantidad].ruta = duplicar_texto(ruta ? ruta : "");             // duplica y asigna la ruta del archivo de inventario; ejemplo: "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\..."
+    GG_direccion_hacer_inventarios[cantidad].cabecera = duplicar_texto(cabecera ? cabecera : ""); // duplica y asigna la cabecera del archivo de inventario
 
-    if (!GG_direccion_hacer_inventarios[cantidad].ruta || !GG_direccion_hacer_inventarios[cantidad].cabecera)
+    if (!GG_direccion_hacer_inventarios[cantidad].ruta || !GG_direccion_hacer_inventarios[cantidad].cabecera) // verifica que ambos campos se duplicaron correctamente
     {
-        free(GG_direccion_hacer_inventarios[cantidad].ruta);
-        free(GG_direccion_hacer_inventarios[cantidad].cabecera);
-        GG_direccion_hacer_inventarios[cantidad].ruta = NULL;
-        GG_direccion_hacer_inventarios[cantidad].cabecera = NULL;
-        return -1;
+        free(GG_direccion_hacer_inventarios[cantidad].ruta);      // libera ruta para evitar memory leak
+        free(GG_direccion_hacer_inventarios[cantidad].cabecera);  // libera cabecera para evitar memory leak
+        GG_direccion_hacer_inventarios[cantidad].ruta = NULL;     // resetea puntero a NULL tras liberar
+        GG_direccion_hacer_inventarios[cantidad].cabecera = NULL; // resetea puntero a NULL tras liberar
+        return -1;                                                // retorna error indicando falla en la duplicaci\u00f3n de campos
     }
 
-    return 0;
+    return 0; // retorna \u00e9xito al haber agregado la entrada de inventario
 }
 
+/*
+ * Uso: Ejecuta liberar_arreglo_dir_nom_archivos de forma segura.
+ * Entrada ejemplo: liberar_arreglo_dir_nom_archivos()
+ */
 static void liberar_arreglo_dir_nom_archivos(void)
 {
-    if (!GG_dir_nom_archivos)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (!GG_dir_nom_archivos) // verifica que haya memoria que liberar antes de intentar liberarla
     {
-        return;
+        return; // sale sin hacer nada si el puntero ya es NULL
     }
 
-    for (int i = 0; GG_dir_nom_archivos[i].ruta || GG_dir_nom_archivos[i].cabecera || GG_dir_nom_archivos[i].extra; i++)
+    for (int i = 0; GG_dir_nom_archivos[i].ruta || GG_dir_nom_archivos[i].cabecera || GG_dir_nom_archivos[i].extra; i++) // itera sobre cada entrada hasta el terminador NULL
     {
-        free(GG_dir_nom_archivos[i].ruta);
-        free(GG_dir_nom_archivos[i].cabecera);
-        free(GG_dir_nom_archivos[i].extra);
+        free(GG_dir_nom_archivos[i].ruta);     // libera la ruta del archivo en la posición i
+        free(GG_dir_nom_archivos[i].cabecera); // libera la cabecera del archivo en la posición i
+        free(GG_dir_nom_archivos[i].extra);    // libera el campo extra del archivo en la posición i
     }
 
-    free(GG_dir_nom_archivos);
-    GG_dir_nom_archivos = NULL;
+    free(GG_dir_nom_archivos);  // libera el arreglo completo de punteros
+    GG_dir_nom_archivos = NULL; // resetea el puntero global a NULL para evitar uso tras liberación
 }
 
+/*
+ * Uso: Ejecuta liberar_arreglo_direccion_inventarios de forma segura.
+ * Entrada ejemplo: liberar_arreglo_direccion_inventarios()
+ */
 static void liberar_arreglo_direccion_inventarios(void)
 {
-    if (!GG_direccion_hacer_inventarios)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    if (!GG_direccion_hacer_inventarios) // verifica que haya memoria que liberar antes de intentar liberarla
     {
-        return;
+        return; // sale sin hacer nada si el puntero ya es NULL
     }
 
-    for (int i = 0; GG_direccion_hacer_inventarios[i].ruta || GG_direccion_hacer_inventarios[i].cabecera; i++)
+    for (int i = 0; GG_direccion_hacer_inventarios[i].ruta || GG_direccion_hacer_inventarios[i].cabecera; i++) // itera sobre cada entrada hasta el terminador NULL
     {
-        free(GG_direccion_hacer_inventarios[i].ruta);
-        free(GG_direccion_hacer_inventarios[i].cabecera);
+        free(GG_direccion_hacer_inventarios[i].ruta);     // libera la ruta del archivo de inventario en la posición i
+        free(GG_direccion_hacer_inventarios[i].cabecera); // libera la cabecera del archivo de inventario en la posición i
     }
 
-    free(GG_direccion_hacer_inventarios);
-    GG_direccion_hacer_inventarios = NULL;
+    free(GG_direccion_hacer_inventarios);  // libera el arreglo completo de punteros
+    GG_direccion_hacer_inventarios = NULL; // resetea el puntero global a NULL para evitar uso tras liberación
 }
 
+/*
+ * Uso: Ejecuta RecargarArregloArchivos_dir_nom_archivos de forma segura.
+ * Entrada ejemplo: RecargarArregloArchivos_dir_nom_archivos()
+ */
 void RecargarArregloArchivos_dir_nom_archivos(void)
 {
-    liberar_arreglo_dir_nom_archivos();
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    liberar_arreglo_dir_nom_archivos(); // libera el arreglo previo antes de reconstruirlo desde cero
 
-    time_t ahora = time(NULL);
-    struct tm *t = localtime(&ahora);
-    char yyyy[5] = "0000";
-    char yyyymm[7] = "000000";
-    char yyyymmdd[9] = "00000000";
+    time_t ahora = time(NULL);        // obtiene el tiempo actual del sistema en segundos desde epoch
+    struct tm *t = localtime(&ahora); // convierte el tiempo a estructura local con año, mes, día, etc.
+    char yyyy[5] = "0000";            // buffer para el año en formato YYYY; ejemplo: "2026"
+    char yyyymm[7] = "000000";        // buffer para año+mes en formato YYYYMM; ejemplo: "202605"
+    char yyyymmdd[9] = "00000000";    // buffer para año+mes+día en formato YYYYMMDD; ejemplo: "20260505"
 
-    if (t)
+    if (t) // verifica que localtime retornó una estructura válida
     {
-        strftime(yyyy, sizeof(yyyy), "%Y", t);
-        strftime(yyyymm, sizeof(yyyymm), "%Y%m", t);
-        strftime(yyyymmdd, sizeof(yyyymmdd), "%Y%m%d", t);
+        strftime(yyyy, sizeof(yyyy), "%Y", t);             // formatea el año de 4 dígitos; ejemplo: "2026"
+        strftime(yyyymm, sizeof(yyyymm), "%Y%m", t);       // formatea año y mes de 6 dígitos; ejemplo: "202605"
+        strftime(yyyymmdd, sizeof(yyyymmdd), "%Y%m%d", t); // formatea fecha completa de 8 dígitos; ejemplo: "20260505"
     }
 
-    char tmp[512];
-    const char *base = GG_direccion_carpetas_base[0] ? GG_direccion_carpetas_base[0] : "";
+    char tmp[512];                                                                         // buffer temporal para construir rutas de archivos; ejemplo: "CONFIG\INF\INVENTARIO\INVENTARIO.TXT"
+    const char *base = GG_direccion_carpetas_base[0] ? GG_direccion_carpetas_base[0] : ""; // prefijo de ruta base del espacio activo; ejemplo: "espacios\20260406224536_ferreteria_dan\"
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\INVENTARIO.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_emergente_productos, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\INVENTARIO.TXT", base);                                                                      // construye ruta al archivo de inventario principal
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_emergente_productos, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de inventario al arreglo global
+        return;                                                                                                                                         // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\PROVEDORES.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_provedor, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\PROVEDORES.TXT", base);                                                                  // construye ruta al archivo de proveedores
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_provedor, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de proveedores al arreglo global
+        return;                                                                                                                              // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\APRENDICES_E.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_APRENDICES_E, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\APRENDICES_E.TXT", base);                                                                    // construye ruta al archivo de aprendices
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_APRENDICES_E, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de aprendices al arreglo global
+        return;                                                                                                                                  // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\AFILIADOS_UNIFICADO.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\AFILIADOS_UNIFICADO.TXT", base);                                                                    // construye ruta al archivo de afiliados unificado
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de afiliados al arreglo global
+        return;                                                                                                                                          // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REG_A_CONFIRMAR_.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REG_A_CONFIRMAR_.TXT", base);                                                                             // construye ruta al archivo de registros a confirmar
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de registros a confirmar al arreglo global
+        return;                                                                                                                                          // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);                                               // construye ruta al archivo de niveles de afiliados
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de niveles de afiliados al arreglo global
+        return;                                                                                                                                             // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);                                               // construye ruta al archivo de niveles de afiliados (segunda referencia)
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega segunda referencia al archivo de niveles de afiliados
+        return;                                                                                                                                             // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\AFILIADOS_UNIFICADO.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\AFILIADOS_UNIFICADO.TXT", base);                                                                    // construye ruta al archivo de afiliados unificado (segunda referencia)
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega segunda referencia al archivo de afiliados
+        return;                                                                                                                                          // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);                                               // construye ruta al archivo de niveles de afiliados (tercera referencia)
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega tercera referencia al archivo de niveles de afiliados
+        return;                                                                                                                                             // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\SUCUR.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_SUCUR, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\SUCUR.TXT", base);                                                                    // construye ruta al archivo de sucursales
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_SUCUR, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de sucursales al arreglo global
+        return;                                                                                                                           // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s\\%s_REGISTRO.TXT", base, yyyy, yyyymm, yyyymmdd);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_dia, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s\\%s_REGISTRO.TXT", base, yyyy, yyyymm, yyyymmdd);                  // construye ruta al registro diario con la fecha actual
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_dia, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el registro diario al arreglo global
+        return;                                                                                                                             // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s_REGISTRO.TXT", base, yyyy, yyyymm);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_mes, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s_REGISTRO.TXT", base, yyyy, yyyymm);                                // construye ruta al registro mensual con año y mes actuales
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_mes, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el registro mensual al arreglo global
+        return;                                                                                                                             // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s_REGISTRO.TXT", base, yyyy);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_año, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s_REGISTRO.TXT", base, yyyy);                                            // construye ruta al registro anual con el año actual
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_año, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el registro anual al arreglo global
+        return;                                                                                                                             // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\ACUMULADO_REGISTRO.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_total, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\ACUMULADO_REGISTRO.TXT", base);                                                     // construye ruta al registro acumulado total
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_total, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el registro acumulado total al arreglo global
+        return;                                                                                                                               // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s\\%s_PRODUC_REGISTRO.TXT", base, yyyy, yyyymm, yyyymmdd);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_dia, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s\\%s_PRODUC_REGISTRO.TXT", base, yyyy, yyyymm, yyyymmdd);                // construye ruta al registro de productos diario con la fecha actual
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_dia, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el registro de productos diario al arreglo global
+        return;                                                                                                                                  // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s_PRODUC_REGISTRO.TXT", base, yyyy, yyyymm);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_mes, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s\\%s_PRODUC_REGISTRO.TXT", base, yyyy, yyyymm);                              // construye ruta al registro de productos mensual
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_mes, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el registro de productos mensual al arreglo global
+        return;                                                                                                                                  // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s_PRODUC_REGISTRO.TXT", base, yyyy);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_año, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\FECHAS\\%s_PRODUC_REGISTRO.TXT", base, yyyy);                                          // construye ruta al registro de productos anual
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_año, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el registro de productos anual al arreglo global
+        return;                                                                                                                                  // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\ACUMULADO_PRODUC_REGISTRO.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_total, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\REGISTROS\\ACUMULADO_PRODUC_REGISTRO.TXT", base);                                                   // construye ruta al registro acumulado de productos
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_reg_prod_total, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el registro acumulado de productos al arreglo global
+        return;                                                                                                                                    // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\IMPUESTOS\\IMPUESTOS.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_IMPUESTOS, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\IMPUESTOS\\IMPUESTOS.TXT", base);                                                              // construye ruta al archivo de impuestos
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_IMPUESTOS, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de impuestos al arreglo global
+        return;                                                                                                                               // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\IMPUESTOS\\DEDUSIBLES.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_DEDUSIBLES, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\IMPUESTOS\\DEDUSIBLES.TXT", base);                                                              // construye ruta al archivo de deducibles
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_DEDUSIBLES, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de deducibles al arreglo global
+        return;                                                                                                                                // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\COSAS_NO_ESTABAN.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_COSAS_NO_ESTABAN_INVENTARIO, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\COSAS_NO_ESTABAN.TXT", base);                                                                        // construye ruta al archivo de cosas no encontradas en inventario
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_COSAS_NO_ESTABAN_INVENTARIO, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de cosas no encontradas al arreglo global
+        return;                                                                                                                                                 // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\TIPOS_DE_MEDIDA.TXT", base);
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_HERRAMIENTAS, 0, 1, GG_caracter_separacion[1]), "") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\TIPOS_DE_MEDIDA.TXT", base);                                                          // construye ruta al archivo de tipos de medida (herramientas)
+    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_HERRAMIENTAS, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de tipos de medida al arreglo global
+        return;                                                                                                                                  // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\TRABAJOS_POR_DIA.TXT", base);
-    agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_trabajos_dia, 0, 1, GG_caracter_separacion[1]), "");
+    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\TRABAJOS_POR_DIA.TXT", base);                                                // construye ruta al archivo de trabajos por día
+    agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_trabajos_dia, 0, 1, GG_caracter_separacion[1]), ""); // agrega el archivo de trabajos por día (último, sin verificar retorno)
 }
 
+/*
+ * Uso: Ejecuta RecargarArregloDireccionInventarios de forma segura.
+ * Entrada ejemplo: RecargarArregloDireccionInventarios()
+ */
 void RecargarArregloDireccionInventarios(void)
 {
-    liberar_arreglo_direccion_inventarios();
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    liberar_arreglo_direccion_inventarios(); // libera el arreglo previo antes de reconstruirlo
 
-    time_t ahora = time(NULL);
-    struct tm *t = localtime(&ahora);
-    char yyyymmdd[9] = "00000000";
+    time_t ahora = time(NULL);        // obtiene el tiempo actual del sistema
+    struct tm *t = localtime(&ahora); // convierte a estructura de tiempo local
+    char yyyymmdd[9] = "00000000";    // buffer para la fecha en formato YYYYMMDD; ejemplo: "20260505"
 
-    if (t)
-        strftime(yyyymmdd, sizeof(yyyymmdd), "%Y%m%d", t);
+    if (t)                                                 // verifica que localtime retornó una estructura válida
+        strftime(yyyymmdd, sizeof(yyyymmdd), "%Y%m%d", t); // formatea la fecha de 8 dígitos; ejemplo: "20260505"
 
-    char tmp[512];
+    char tmp[512]; // buffer temporal para construir rutas de archivos de inventario
 
-    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_VENTAS_DURANTE_INV.TXT", yyyymmdd);
-    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_VENTAS_DURANTE_INV.TXT", yyyymmdd); // construye ruta al archivo de ventas durante inventario
+    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)                  // agrega el archivo de ventas durante inventario al arreglo
+        return;                                                                                                   // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_SOBRANTES.TXT", yyyymmdd);
-    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_SOBRANTES.TXT", yyyymmdd); // construye ruta al archivo de productos sobrantes en inventario
+    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)         // agrega el archivo de sobrantes al arreglo
+        return;                                                                                          // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_FALTANTES.TXT", yyyymmdd);
-    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_FALTANTES.TXT", yyyymmdd); // construye ruta al archivo de productos faltantes en inventario
+    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)         // agrega el archivo de faltantes al arreglo
+        return;                                                                                          // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_NO_ESTAN_EN_EL_FISICO.TXT", yyyymmdd);
-    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)
-        return;
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_NO_ESTAN_EN_EL_FISICO.TXT", yyyymmdd); // construye ruta al archivo de productos no encontrados en físico
+    if (agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO") < 0)                     // agrega el archivo de no encontrados en físico al arreglo
+        return;                                                                                                      // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_NO_ESTAN_EN_EL_FISICO_PERO_PUEDE_QUE_FALTEN.TXT", yyyymmdd);
-    agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO");
+    snprintf(tmp, sizeof(tmp), "CONFIG\\INF\\INVENTARIO\\HACER_INVENTARIO\\%s_NO_ESTAN_EN_EL_FISICO_PERO_PUEDE_QUE_FALTEN.TXT", yyyymmdd); // construye ruta al archivo de posibles faltantes en físico
+    agregar_archivo_inventario(tmp, "CODBAR°nombre_producto°CANTIDA°ULTIMO_MOVIMIENTO");                                                   // agrega el último archivo (sin verificar retorno porque es el final de la función)
 }

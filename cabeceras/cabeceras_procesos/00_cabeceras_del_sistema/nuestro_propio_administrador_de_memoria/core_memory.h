@@ -1,4 +1,4 @@
-#ifndef CORE_MEMORY_H
+﻿#ifndef CORE_MEMORY_H
 #define CORE_MEMORY_H
 /* 
    Evita inclusión múltiple del archivo.
@@ -93,24 +93,48 @@ typedef struct
 */
 
 /* Inicializa arena usando memoria externa */
+/*
+ * Uso: Ejecuta core_arena_init de forma segura.
+ * Entrada ejemplo: core_arena_init(arena, memoria_externa, tamanio)
+ */
 void core_arena_init(core_arena* arena,
 					void* memoria_externa,
 					size_t tamanio);
 
 
 /* Inicializa arena usando memoria interna por defecto */
+/*
+ * Uso: Ejecuta core_arena_init_default de forma segura.
+ * Entrada ejemplo: core_arena_init_default(arena)
+ */
 void core_arena_init_default(core_arena* arena);
 
 /* Solicita memoria dentro del arena */
+/*
+ * Uso: Ejecuta core_arena_alloc de forma segura.
+ * Entrada ejemplo: core_arena_alloc(arena, tamanio)
+ */
 void* core_arena_alloc(core_arena* arena, size_t tamanio);
 
 /* Reinicia el arena (libera todo de golpe) */
+/*
+ * Uso: Ejecuta core_arena_reset de forma segura.
+ * Entrada ejemplo: core_arena_reset(arena)
+ */
 void core_arena_reset(core_arena* arena);
 
 /* Devuelve cantidad de memoria usada */
+/*
+ * Uso: Ejecuta core_arena_usado de forma segura.
+ * Entrada ejemplo: core_arena_usado(arena)
+ */
 size_t core_arena_usado(const core_arena* arena);
 
 /* Devuelve memoria disponible restante */
+/*
+ * Uso: Ejecuta core_arena_disponible de forma segura.
+ * Entrada ejemplo: core_arena_disponible(arena)
+ */
 size_t core_arena_disponible(const core_arena* arena);
 
 #endif

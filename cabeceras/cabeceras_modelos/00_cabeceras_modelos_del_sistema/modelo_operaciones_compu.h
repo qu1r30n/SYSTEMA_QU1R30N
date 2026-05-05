@@ -1,4 +1,4 @@
-#ifndef MODELO_OPERACIONES_COMPU_H
+﻿#ifndef MODELO_OPERACIONES_COMPU_H
 #define MODELO_OPERACIONES_COMPU_H
 
 /* Alias del modulo (portabilidad al mover esta clase a otro proyecto). */
@@ -7,7 +7,15 @@ extern char *GG_caracter_separacion_nom_parametro_de_valor[];
 #define G_caracter_separacion_nom_parametro_de_valor GG_caracter_separacion_nom_parametro_de_valor
 #endif
 
+/*
+ * Uso: Ejecuta modelo_fechaActual de forma segura.
+ * Entrada ejemplo: modelo_fechaActual(texto)
+ */
 void modelo_fechaActual(char *texto);
+/*
+ * Uso: Ejecuta modelo_delay_ms de forma segura.
+ * Entrada ejemplo: modelo_delay_ms(texto)
+ */
 void modelo_delay_ms(char *texto);
 
 #endif

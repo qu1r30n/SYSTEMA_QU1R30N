@@ -5,7 +5,6 @@
 #define MAX_PRODUCTOS 1000
 
 extern char *GG_archivos[][3];
-extern char *GG_archivos_registros[][2];
 extern char *GG_direccion_carpetas_base[];
 
 typedef struct
@@ -29,25 +28,15 @@ extern int GG_indice_donde_comensar;
 extern char *GG_cantidado_por_archivo;
 
 extern char *GG_caracter_separacion[];
-extern char *GG_caracter_separacion_2[];
 
 /* separadores para funciones específicas (13 elementos) */
 extern char *GG_caracter_separacion_funciones_espesificas[];
-extern char *GG_caracter_separacion_funciones_espesificas_2[];
 
 extern char *GG_caracter_para_confirmacion_o_error[];
-extern char *GG_caracter_para_confirmacion_o_error_2[];
 
 extern char *GG_caracter_para_transferencia_entre_archivos[];
-extern char *GG_caracter_para_transferencia_entre_archivos_2[];
-
-extern char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[];
-extern char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[];
 
 extern char *GG_caracter_separacion_nom_parametro_de_valor[];
-extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
-
-extern char *GG_caracter_guardado_para_confirmacion[];
 
 extern char *GG_id_programa;
 extern char *GG_ultimo_retorno_estandar;
@@ -128,22 +117,13 @@ extern const char *GG_trabajos_dia[][5];
 
 /* Alias globales: usar G_* en el codigo y mantener GG_* como fuente real. */
 #define G_archivos GG_archivos
-#define G_archivos_registros GG_archivos_registros
 #define G_indice_donde_comensar GG_indice_donde_comensar
 #define G_cantidado_por_archivo GG_cantidado_por_archivo
 #define G_caracter_separacion GG_caracter_separacion
-#define G_caracter_separacion_2 GG_caracter_separacion_2
 #define G_caracter_separacion_funciones_espesificas GG_caracter_separacion_funciones_espesificas
-#define G_caracter_separacion_funciones_espesificas_2 GG_caracter_separacion_funciones_espesificas_2
 #define G_caracter_para_confirmacion_o_error GG_caracter_para_confirmacion_o_error
-#define G_caracter_para_confirmacion_o_error_2 GG_caracter_para_confirmacion_o_error_2
 #define G_caracter_para_transferencia_entre_archivos GG_caracter_para_transferencia_entre_archivos
-#define G_caracter_para_transferencia_entre_archivos_2 GG_caracter_para_transferencia_entre_archivos_2
-#define G_caracter_para_usar_como_enter_y_nuevo_mensaje GG_caracter_para_usar_como_enter_y_nuevo_mensaje
-#define G_caracter_para_usar_como_enter_y_nuevo_mensaje_2 GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2
 #define G_caracter_separacion_nom_parametro_de_valor GG_caracter_separacion_nom_parametro_de_valor
-#define G_caracter_separacion_nom_parametro_de_valor_2 GG_caracter_separacion_nom_parametro_de_valor_2
-#define G_caracter_guardado_para_confirmacion GG_caracter_guardado_para_confirmacion
 #define G_id_programa GG_id_programa
 #define G_variables_string GG_variables_string
 #define G_ventana_datos_conf GG_ventana_datos_conf
@@ -218,7 +198,6 @@ void RecargarVentanaEmergenteRegDia(const char *al_finalizar_que_borrar);
  * Entrada ejemplo: RecargarVentanaEmergenteRegMes(al_finalizar_que_borrar)
  */
 void RecargarVentanaEmergenteRegMes(const char *al_finalizar_que_borrar);
-void RecargarVentanaEmergenteRegAño(const char *al_finalizar_que_borrar);
 /*
  * Uso: Ejecuta RecargarVentanaEmergenteRegTotal de forma segura.
  * Entrada ejemplo: RecargarVentanaEmergenteRegTotal(al_finalizar_que_borrar)
@@ -234,7 +213,6 @@ void RecargarVentanaEmergenteReg_prod_Dia(const char *al_finalizar_que_borrar);
  * Entrada ejemplo: RecargarVentanaEmergenteReg_prod_Mes(al_finalizar_que_borrar)
  */
 void RecargarVentanaEmergenteReg_prod_Mes(const char *al_finalizar_que_borrar);
-void RecargarVentanaEmergenteReg_prod_Año(const char *al_finalizar_que_borrar);
 /*
  * Uso: Ejecuta RecargarVentanaEmergenteReg_prod_total de forma segura.
  * Entrada ejemplo: RecargarVentanaEmergenteReg_prod_total(al_finalizar_que_borrar)

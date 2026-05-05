@@ -177,24 +177,14 @@ int GG_indice_donde_comensar = 1; // índice de inicio para operaciones de lista
 char *GG_cantidado_por_archivo = "100"; // cantidad máxima de registros por archivo; ejemplo: "100"
 
 char *GG_caracter_separacion[] = {"|", "°", "¬", "╦", "╔"};   // separadores de columna para archivos de datos; ejemplo: "|"
-char *GG_caracter_separacion_2[] = {"⚭", "⚮", "⚯", "⚰", "⚱"}; // separadores alternativos de columna (set 2); ejemplo: "⚭"
 
 char *GG_caracter_separacion_funciones_espesificas[] = {"~", "§", "¶", "╬", "╝", "╩", "║", "╗", "┐", "└", "┬", "├", "┼"};   // separadores para parsing de comandos del conmutador; ejemplo: "~"
-char *GG_caracter_separacion_funciones_espesificas_2[] = {"⚲", "⚳", "⚴", "⚵", "⚶", "⚷", "⚸", "⚺", "⚻", "⚼", "⚿", "⛊", "⛋"}; // separadores alternativos para parsing de comandos (set 2); ejemplo: "⚲"
 
 char *GG_caracter_para_confirmacion_o_error[] = {"╣", "╠", "⛐", "⛔", "⛟"};   // caracteres para señalizar confirmación o error en comunicación; ejemplo: "╣"
-char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒", "⛠", "⛡", "⛎" }; // caracteres alternativos para confirmación o error (set 2); ejemplo: "⛑"
 
 char *GG_caracter_para_transferencia_entre_archivos[] = {"■", "┴", "¤"};   // separadores para transferencia de datos entre archivos; ejemplo: "■"
-char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘", "⛍"}; // separadores alternativos para transferencia entre archivos (set 2); ejemplo: "⛕"
-
-char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[] = {"•", "∆"};   // caracteres que simulan salto de línea y nuevo mensaje; ejemplo: "•"
-char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[] = {"⛙", "⛚"}; // caracteres alternativos para enter y nuevo mensaje (set 2); ejemplo: "⛙"
 
 char *GG_caracter_separacion_nom_parametro_de_valor[] = {"⊓", "⊔"};   // separadores entre nombre de parámetro y su valor; ejemplo: "⊓"
-char *GG_caracter_separacion_nom_parametro_de_valor_2[] = {"⊑", "⊒"}; // separadores alternativos entre nombre de parámetro y valor (set 2); ejemplo: "⊑"
-
-char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝"}; // caracteres reservados para confirmación de guardado; ejemplo: "⛞"
 
 char *GG_id_programa = "SISTEMA_QU1R30N"; // identificador único del programa; ejemplo: "SISTEMA_QU1R30N"
 
@@ -235,11 +225,6 @@ char *GG_archivos[][3] = {
      "errores_de_com.txt"},
     {NULL, NULL, NULL}};
 #endif
-
-char *GG_archivos_registros[][2] = {
-    {"registros_ventas.txt", ""},
-    {"registros_compras.txt", ""},
-    {NULL, NULL}};
 
 /* ===== VARIABLES STRING GLOBALES ===== */
 
@@ -685,82 +670,6 @@ void RecargarVentanaEmergenteAPRENDICES_E(const char *al_finalizar_que_borrar)
 }
 
 /*
- * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_simples de forma segura.
- * Entrada ejemplo: RecargarVentanaEmergenteAfiliados_simples(al_finalizar_que_borrar)
- */
-void RecargarVentanaEmergenteAfiliados_simples(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
-
-/*
- * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_complejos de forma segura.
- * Entrada ejemplo: RecargarVentanaEmergenteAfiliados_complejos(al_finalizar_que_borrar)
- */
-void RecargarVentanaEmergenteAfiliados_complejos(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
-
-/*
- * Uso: Ejecuta RecargarVentanaEmergente_niv_afiliados_simples de forma segura.
- * Entrada ejemplo: RecargarVentanaEmergente_niv_afiliados_simples(al_finalizar_que_borrar)
- */
-void RecargarVentanaEmergente_niv_afiliados_simples(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
-
-/*
- * Uso: Ejecuta RecargarVentanaEmergente_niv_afiliados_comp de forma segura.
- * Entrada ejemplo: RecargarVentanaEmergente_niv_afiliados_comp(al_finalizar_que_borrar)
- */
-void RecargarVentanaEmergente_niv_afiliados_comp(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
-
-/*
  * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_unificados de forma segura.
  * Entrada ejemplo: RecargarVentanaEmergenteAfiliados_unificados(al_finalizar_que_borrar)
  */
@@ -855,21 +764,6 @@ void RecargarVentanaEmergenteRegMes(const char *al_finalizar_que_borrar)
     }
 }
 
-void RecargarVentanaEmergenteRegAño(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
-
 /*
  * Uso: Ejecuta RecargarVentanaEmergenteRegTotal de forma segura.
  * Entrada ejemplo: RecargarVentanaEmergenteRegTotal(al_finalizar_que_borrar)
@@ -913,21 +807,6 @@ void RecargarVentanaEmergenteReg_prod_Dia(const char *al_finalizar_que_borrar)
  * Entrada ejemplo: RecargarVentanaEmergenteReg_prod_Mes(al_finalizar_que_borrar)
  */
 void RecargarVentanaEmergenteReg_prod_Mes(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
-
-void RecargarVentanaEmergenteReg_prod_Año(const char *al_finalizar_que_borrar)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"

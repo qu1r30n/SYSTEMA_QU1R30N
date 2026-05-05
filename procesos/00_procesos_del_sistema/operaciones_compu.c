@@ -9,6 +9,7 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 
 #ifdef _WIN32
@@ -46,6 +47,41 @@ void imprimirMensaje_para_depurar(const char *format, ...)
 #endif
 
     va_end(args); // Libera la lista de argumentos variables. Siempre debe llamarse al final// para limpiar cualquier recurso interno usado por la lista.
+}
+
+char *variable_string(const char *format, ...)
+{
+    va_list args;
+    va_list args_copia;
+    char *buffer = NULL;
+    int longitud = 0;
+
+    if (format == NULL)
+    {
+        return NULL;
+    }
+
+    va_start(args, format);
+    va_copy(args_copia, args);
+    longitud = vsnprintf(NULL, 0, format, args_copia);
+    va_end(args_copia);
+
+    if (longitud < 0)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    buffer = (char *)malloc((size_t)longitud + 1);
+    if (buffer == NULL)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    vsnprintf(buffer, (size_t)longitud + 1, format, args);
+    va_end(args);
+    return buffer;
 }
 
 /* =========================

@@ -92,11 +92,25 @@ static int extraer_comando_de_linea_transferencia(const char *linea_transferenci
     if (n_partes_transferencia < 2 ||
         partes_transferencia == NULL ||
         partes_transferencia[0] == NULL ||
-        partes_transferencia[1] == NULL ||
-        strcmp(partes_transferencia[0], GG_id_programa) != 0)
+        partes_transferencia[1] == NULL)
     {
         free_split(partes_transferencia);
         return RET_NOT_FOUND;
+    }
+
+    {
+        /* Separar "ID_DESTINO┴ID_ORIGEN" y verificar que el destino sea este programa */
+        char **partes_destino = NULL;
+        int n_partes_destino = split(partes_transferencia[0], GG_caracter_para_transferencia_entre_archivos[1], &partes_destino);
+        int es_para_mi = (n_partes_destino >= 1 && partes_destino != NULL &&
+                          partes_destino[0] != NULL &&
+                          strcmp(partes_destino[0], GG_id_programa) == 0);
+        free_split(partes_destino);
+        if (!es_para_mi)
+        {
+            free_split(partes_transferencia);
+            return RET_NOT_FOUND;
+        }
     }
 
     n_partes_comando = split(partes_transferencia[1], GG_caracter_para_transferencia_entre_archivos[1], &partes_comando);
@@ -127,103 +141,6 @@ static int extraer_comando_de_linea_transferencia(const char *linea_transferenci
     free_split(partes_transferencia);
     *comando_out = comando_final;
     return RET_OK;
-}
-
-static int extraer_origen_y_espejo_de_linea_transferencia(const char *linea_transferencia,
-                                                          char **id_origen_out,
-                                                          char **espejo_out)
-{
-    char **partes_transferencia = NULL;
-    char **partes_comando = NULL;
-    int n_partes_transferencia = 0;
-    int n_partes_comando = 0;
-
-    if (id_origen_out == NULL || espejo_out == NULL)
-    {
-        return RET_INVALID_ARG;
-    }
-
-    *id_origen_out = NULL;
-    *espejo_out = NULL;
-
-    if (linea_transferencia == NULL || linea_transferencia[0] == '\0')
-    {
-        return RET_NOT_FOUND;
-    }
-
-    n_partes_transferencia = split(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia);
-    if (n_partes_transferencia < 2 ||
-        partes_transferencia == NULL ||
-        partes_transferencia[0] == NULL ||
-        partes_transferencia[1] == NULL ||
-        strcmp(partes_transferencia[0], GG_id_programa) != 0)
-    {
-        free_split(partes_transferencia);
-        return RET_NOT_FOUND;
-    }
-
-    n_partes_comando = split(partes_transferencia[1], GG_caracter_para_transferencia_entre_archivos[1], &partes_comando);
-    if (n_partes_comando < 3 || partes_comando == NULL || partes_comando[0] == NULL || partes_comando[2] == NULL)
-    {
-        free_split(partes_comando);
-        free_split(partes_transferencia);
-        return RET_NOT_FOUND;
-    }
-
-    *id_origen_out = duplicar_texto_local(partes_comando[0]);
-    *espejo_out = duplicar_texto_local(partes_comando[2]);
-
-    free_split(partes_comando);
-    free_split(partes_transferencia);
-
-    if (*id_origen_out == NULL || *espejo_out == NULL)
-    {
-        free(*id_origen_out);
-        free(*espejo_out);
-        *id_origen_out = NULL;
-        *espejo_out = NULL;
-        return RET_ERROR_GENERIC;
-    }
-
-    return RET_OK;
-}
-
-static int buscar_linea_original_de_comando(const char *ruta, const char *comando, char **linea_original_out)
-{
-    char **lineas = NULL;
-    int total_lineas = 0;
-
-    if (ruta == NULL || comando == NULL || linea_original_out == NULL)
-    {
-        return RET_INVALID_ARG;
-    }
-
-    *linea_original_out = NULL;
-
-    lineas = leer_archivo(ruta, &total_lineas);
-    if (lineas == NULL)
-    {
-        return RET_NOT_FOUND;
-    }
-
-    for (int i = GG_indice_donde_comensar; i < total_lineas; i++)
-    {
-        char *comando_actual = NULL;
-        int resultado_extraer = extraer_comando_de_linea_transferencia(lineas[i], &comando_actual);
-
-        if (RET_IS_OK(resultado_extraer) && comando_actual != NULL && strcmp(comando_actual, comando) == 0)
-        {
-            *linea_original_out = duplicar_texto_local(lineas[i]);
-            free(comando_actual);
-            free_lineas(lineas, total_lineas);
-            return (*linea_original_out != NULL) ? RET_OK : RET_ERROR_GENERIC;
-        }
-
-        free(comando_actual);
-    }
-
-    free_lineas(lineas, total_lineas);
-    return RET_NOT_FOUND;
 }
 
 static int quitar_linea_exacta_del_archivo(const char *ruta, const char *linea_a_quitar)
@@ -283,11 +200,15 @@ static int quitar_linea_exacta_del_archivo(const char *ruta, const char *linea_a
     return RET_OK;
 }
 
-void respuesta(const char *folio_o_palabra_clave_a_del_que_lo_recibira,
-               const char *info,
-               const char *programa_enviar)
+void respuesta(const char *info,
+               const char *programa_enviar,
+               const char *info_espejo)
 {
+    imprimirMensaje_para_depurar("parametros recibidos en respuesta(): \n\nprograma_enviar='%s', \ninfo='%s', \ninfo_espejo='%s'\n", programa_enviar ? programa_enviar : "(null)", info ? info : "(null)", info_espejo ? info_espejo : "(null)");
+
     const char *programa = programa_enviar;
+    const char *texto_info = info;
+    const char *texto_espejo = info_espejo;
     char *ruta = NULL;
     char *info_a_enviar = NULL;
 
@@ -296,9 +217,17 @@ void respuesta(const char *folio_o_palabra_clave_a_del_que_lo_recibira,
         programa = "NEXOPORTALARCANO";
     }
 
-    if (folio_o_palabra_clave_a_del_que_lo_recibira == NULL ||
-        folio_o_palabra_clave_a_del_que_lo_recibira[0] == '\0' ||
-        info == NULL || info[0] == '\0')
+    if (texto_info == NULL)
+    {
+        texto_info = "";
+    }
+
+    if (texto_espejo == NULL)
+    {
+        texto_espejo = "";
+    }
+
+    if (texto_info[0] == '\0' && texto_espejo[0] == '\0')
     {
         return;
     }
@@ -313,12 +242,12 @@ void respuesta(const char *folio_o_palabra_clave_a_del_que_lo_recibira,
             NULL,
             "%s%s%s%s%s%s%s",
             programa,
-            GG_caracter_para_transferencia_entre_archivos[0],
+            GG_caracter_para_transferencia_entre_archivos[1],
             GG_id_programa,
-            GG_caracter_para_transferencia_entre_archivos[1],
-            folio_o_palabra_clave_a_del_que_lo_recibira,
-            GG_caracter_para_transferencia_entre_archivos[1],
-            info) < 0)
+            GG_caracter_para_transferencia_entre_archivos[0],
+            texto_info,
+            GG_caracter_para_transferencia_entre_archivos[0],
+            texto_espejo) < 0)
     {
         free(info_a_enviar);
         free(ruta);
@@ -330,8 +259,10 @@ void respuesta(const char *folio_o_palabra_clave_a_del_que_lo_recibira,
     free(ruta);
 }
 
-int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_lineas) // Función que lee un archivo, extrae comandos y los devuelve en un arreglo dinámico
+// Función que lee un archivo, extrae comandos y los devuelve en un arreglo dinámico
+int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_lineas)
 {
+
     const char *directorio = GG_archivos[1][0]; // Obtiene el directorio desde una variable global
     const char *archivo = GG_archivos[1][2];    // Obtiene el nombre del archivo desde una variable global
 
@@ -392,6 +323,7 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
         }
 
         char *comando_final = NULL; // Aquí se guardará el comando extraído
+        char *linea_original = NULL;
 
         // Intenta extraer un comando de la línea
         int resultado_extraer = extraer_comando_de_linea_transferencia(
@@ -407,6 +339,7 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
             if (tmp == NULL) // Si falla realloc
             {
                 free(comando_final); // Libera el comando actual
+                free(linea_original);
 
                 // Libera todos los comandos ya guardados
                 for (int j = 0; j < cantidad_comandos; j++)
@@ -424,10 +357,29 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
 
             *retorno_comando = tmp; // Actualiza el arreglo
 
-            // Guarda el nuevo comando
-            (*retorno_comando)[cantidad_comandos] = comando_final;
+            linea_original = duplicar_texto_local(lineas_archivo[i]);
+            if (linea_original == NULL)
+            {
+                free(comando_final);
+
+                for (int j = 0; j < cantidad_comandos; j++)
+                {
+                    free((*retorno_comando)[j]);
+                }
+
+                free(*retorno_comando);
+                *retorno_comando = NULL;
+                *retorno_numero_lineas = 0;
+
+                free_lineas(lineas_archivo, total_lineas_archivo);
+                return -1;
+            }
+
+            // Guarda la linea completa para que el caller pueda separar origen, comando y espejo.
+            (*retorno_comando)[cantidad_comandos] = linea_original;
 
             cantidad_comandos++; // Incrementa contador
+            free(comando_final);
         }
     }
 
@@ -470,16 +422,13 @@ int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_nu
     return 1;
 }
 
-int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
+int finalizar_comando_procesado(const char *linea_original, int estado_ejecucion)
 {
     char *ruta_entrada = NULL;
-    char *linea_original = NULL;
-    char *id_origen = NULL;
-    char *espejo = NULL;
     int mandar_a_errores = 0;
     int resultado = RET_ERROR_GENERIC;
 
-    if (comando == NULL || comando[0] == '\0')
+    if (linea_original == NULL || linea_original[0] == '\0')
     {
         return RET_INVALID_ARG;
     }
@@ -489,30 +438,9 @@ int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
         return RET_ERROR_GENERIC;
     }
 
-    resultado = buscar_linea_original_de_comando(ruta_entrada, comando, &linea_original);
-    if (RET_IS_ERROR(resultado) || linea_original == NULL)
-    {
-        free(ruta_entrada);
-        free(linea_original);
-        return RET_ERROR_GENERIC;
-    }
-
     if (RET_IS_ERROR(estado_ejecucion))
     {
         mandar_a_errores = 1;
-    }
-    else
-    {
-        resultado = extraer_origen_y_espejo_de_linea_transferencia(linea_original, &id_origen, &espejo);
-        if (RET_IS_OK(resultado))
-        {
-            // Si el comando se ejecuto bien, se responde al origen con la variable espejo.
-            respuesta("respuesta", espejo, id_origen);
-        }
-        else
-        {
-            mandar_a_errores = 1;
-        }
     }
 
     if (mandar_a_errores)
@@ -522,7 +450,6 @@ int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
         if (construir_ruta_transferencia(4, &ruta_errores) < 0)
         {
             free(ruta_entrada);
-            free(linea_original);
             return RET_ERROR_GENERIC;
         }
 
@@ -533,9 +460,6 @@ int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
 
     resultado = quitar_linea_exacta_del_archivo(ruta_entrada, linea_original);
     free(ruta_entrada);
-    free(linea_original);
-    free(id_origen);
-    free(espejo);
     return resultado;
 }
 
@@ -718,12 +642,13 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
     return usb_monitoreo_archivo_entrada(retorno_comando, retorno_numero_lineas);
 }
 
-void respuesta(const char *folio_o_palabra_clave_a_del_que_lo_recibira,
-               const char *info,
-               const char *programa_enviar)
+void respuesta(const char *info,
+               const char *programa_enviar,
+               const char *info_espejo)
 {
     /* En PIC, enviar por USB en lugar de archivo */
-    usb_respuesta(folio_o_palabra_clave_a_del_que_lo_recibira, info, programa_enviar);
+    usb_respuesta(info, info_espejo, programa_enviar);
+    (void)info_espejo;
 }
 
 int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_numero_lineas)
@@ -732,9 +657,9 @@ int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_nu
     return usb_datos_recibidos_a_procesar_y_borrar(retorno_comando, retorno_numero_lineas);
 }
 
-int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
+int finalizar_comando_procesado(const char *linea_original, int estado_ejecucion)
 {
-    (void)comando;
+    (void)linea_original;
     (void)estado_ejecucion;
     return 0;
 }
@@ -777,13 +702,13 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
     return 0;
 }
 
-void respuesta(const char *folio_o_palabra_clave_a_del_que_lo_recibira,
-               const char *info,
-               const char *programa_enviar)
+void respuesta(const char *info,
+               const char *programa_enviar,
+               const char *info_espejo)
 {
-    (void)folio_o_palabra_clave_a_del_que_lo_recibira;
     (void)info;
     (void)programa_enviar;
+    (void)info_espejo;
 }
 
 int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_numero_lineas)
@@ -795,9 +720,9 @@ int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_nu
     return 0;
 }
 
-int finalizar_comando_procesado(const char *comando, int estado_ejecucion)
+int finalizar_comando_procesado(const char *linea_original, int estado_ejecucion)
 {
-    (void)comando;
+    (void)linea_original;
     (void)estado_ejecucion;
     return 0;
 }

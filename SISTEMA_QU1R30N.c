@@ -27,6 +27,41 @@ static void limpieza_al_salir(void)
     quitar_id_prog_del_archivo(); // elimina el ID de este programa del archivo de banderas al cerrar; asi otros programas saben que este ya no esta corriendo
 }
 
+static int acumular_texto_con_separador(char **acumulador, const char *nuevo_texto, const char *separador)
+{
+    if (acumulador == NULL || nuevo_texto == NULL || nuevo_texto[0] == '\0') // evita operar con punteros invalidos o texto vacio
+    {
+        return RET_INVALID_ARG; // informa que la entrada recibida no era valida
+    }
+
+    if (*acumulador == NULL) // si aun no hay lista de modelos, este texto sera el primero
+    {
+        *acumulador = variable_string("%s", nuevo_texto); // duplica el primer retorno de modelo en memoria nueva
+        return (*acumulador != NULL) ? RET_OK : RET_ERROR_GENERIC; // reporta exito o error de memoria
+    }
+
+    size_t largo_actual = strlen(*acumulador); // mide la cadena acumulada hasta este momento
+    size_t largo_nuevo = strlen(nuevo_texto); // mide el nuevo retorno de modelo a anexar
+    size_t largo_sep = (separador != NULL) ? strlen(separador) : 0; // mide el separador entre modelos o usa cero
+    char *tmp = (char *)realloc(*acumulador, largo_actual + largo_sep + largo_nuevo + 1); // redimensiona el buffer para el contenido total
+
+    if (tmp == NULL)
+    {
+        return RET_ERROR_GENERIC; // reporta fallo de memoria sin destruir el acumulador anterior
+    }
+
+    *acumulador = tmp; // actualiza el acumulador con el nuevo bloque de memoria valido
+
+    if (largo_sep > 0) // si existe separador, lo inserta antes del nuevo retorno
+    {
+        memcpy(*acumulador + largo_actual, separador, largo_sep); // copia el separador despues del contenido actual
+        largo_actual += largo_sep; // mueve la posicion al final del separador copiado
+    }
+
+    memcpy(*acumulador + largo_actual, nuevo_texto, largo_nuevo + 1); // copia el nuevo retorno incluyendo el terminador nulo
+    return RET_OK; // confirma que la acumulacion se hizo correctamente
+}
+
 // Inicialización
 /*
  * Uso: Ejecuta inicializacion de forma segura.
@@ -89,6 +124,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
     const char *detalle_resultado = "No se pudo ejecutar el comando.";                               // texto que se devolvera; cambia segun la operacion; ejemplo final: "Producto agregado."
     char *detalle_capa_modelo = NULL;                                                                // guarda el retorno estandarizado de la capa modelo; ejemplo: "0╠todo salio bien en este modelo llamado ventas╠ok"
     char *detalle_capa_proceso = NULL;                                                               // guarda el retorno estandarizado de la capa proceso; ejemplo: "0⛐todo salio bien en este proseso llamado procesos_generales⛐ok"
+    char *acumulador_modelos = NULL;                                                                 // junta todos los retornos de modelos separados por ⛐ para incrustarlos en el retorno del conmutador
     char *retorno_conmutador = NULL;                                                                 // string final de retorno del conmutador; ejemplo: "0╣todo salio bien en el conmutador╣..."
     char **opciones = modelo_split(info_a_conmutar, G_caracter_separacion_funciones_espesificas[0]); // divide el comando por "~"; ejemplo: opciones[0]="op_tienda", opciones[1]="agregar_producto§...", opciones[2]="id_de_espacio⊓20260330_ferreteria_dan", opciones[3]="usuario_de_espacio⊓administrador§contraseña⊓12345"
     char **sub_opcion = NULL;                                                                        // se usara despues para dividir opciones[1] por "§"; ejemplo: sub_opcion[0]="agregar_producto", sub_opcion[1]="producto⊓2¶contenido⊓3¶..."
@@ -167,22 +203,43 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 {
                     resultado = modelo_venta(sub_opcion[1]);                                                      // ejecuta el modelo de venta con los parametros; ejemplo sub_opcion[1]: "ABC123¶2§SucursalX"
                     detalle_resultado = RET_IS_OK(resultado) ? "Venta procesada." : "Fallo en proceso de venta."; // asigna mensaje segun si el resultado es OK
-                    free(detalle_capa_modelo);
-                    detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], RET_IS_OK(resultado) ? "todo salio bien en este modelo llamado ventas" : "error en este modelo llamado ventas", detalle_resultado);
+                    const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
+                    if (retorno_modelo_actual != NULL)
+                    {
+                        if (acumular_texto_con_separador(&acumulador_modelos, retorno_modelo_actual, GG_caracter_para_confirmacion_o_error[2]) != RET_OK)
+                        {
+                            resultado = RET_ERROR_GENERIC;
+                            detalle_resultado = "Error al acumular retorno de modelo ventas.";
+                        }
+                    }
                 }
                 else if (strcmp(sub_opcion[0], "compras") == 0) // si la sub-operacion es "compras"
                 {
                     resultado = modelo_compra(sub_opcion[1]); // ejecuta el modelo de compra; ejemplo sub_opcion[1]: "XYZ987¶5§Proveedor1"
                     detalle_resultado = RET_IS_OK(resultado) ? "Compra procesada." : "Fallo en proceso de compra.";
-                    free(detalle_capa_modelo);
-                    detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], RET_IS_OK(resultado) ? "todo salio bien en este modelo llamado compras" : "error en este modelo llamado compras", detalle_resultado);
+                    const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
+                    if (retorno_modelo_actual != NULL)
+                    {
+                        if (acumular_texto_con_separador(&acumulador_modelos, retorno_modelo_actual, GG_caracter_para_confirmacion_o_error[2]) != RET_OK)
+                        {
+                            resultado = RET_ERROR_GENERIC;
+                            detalle_resultado = "Error al acumular retorno de modelo compras.";
+                        }
+                    }
                 }
                 else if (strcmp(sub_opcion[0], "agregar_producto") == 0) // si la sub-operacion es "agregar_producto"
                 {
                     resultado = modelo_agregarProducto(sub_opcion[1]); // ejecuta el modelo de agregar producto; ejemplo sub_opcion[1]: "producto⊓2¶contenido⊓3¶tipo_medida⊓4¶precio_venta⊓5⊓no_predeterminado¶..."
                     detalle_resultado = RET_IS_OK(resultado) ? "Producto agregado." : "No se pudo agregar producto.";
-                    free(detalle_capa_modelo);
-                    detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], RET_IS_OK(resultado) ? "todo salio bien en este modelo llamado agregar_producto" : "error en este modelo llamado agregar_producto", detalle_resultado);
+                    const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
+                    if (retorno_modelo_actual != NULL)
+                    {
+                        if (acumular_texto_con_separador(&acumulador_modelos, retorno_modelo_actual, GG_caracter_para_confirmacion_o_error[2]) != RET_OK)
+                        {
+                            resultado = RET_ERROR_GENERIC;
+                            detalle_resultado = "Error al acumular retorno de modelo agregar_producto.";
+                        }
+                    }
                 }
                 else // sub-operacion desconocida dentro de op_tienda
                 {
@@ -248,8 +305,15 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         imprimirMensaje_para_depurar("%s\n", sub_opcion[1]);                                                         // muestra los parametros del espacio a crear
                         resultado = modelo_administracion_espacios_crear_espacio(sub_opcion[1]);                                     // ejecuta la creacion del espacio con los parametros; ejemplo sub_opcion[1]: "nom_espacio⊓ferreteria_dan¶usuario_de_negocio⊓administrador_negocio¶contraseña_de_negocio⊓54321"
                         detalle_resultado = RET_IS_OK(resultado) ? "Espacio creado correctamente." : "No se pudo crear el espacio."; // mensaje segun resultado
-                        free(detalle_capa_modelo);
-                        detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], RET_IS_OK(resultado) ? "todo salio bien en este modelo llamado administracion_espacios_crear_espacio" : "error en este modelo llamado administracion_espacios_crear_espacio", detalle_resultado);
+                        const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
+                        if (retorno_modelo_actual != NULL)
+                        {
+                            if (acumular_texto_con_separador(&acumulador_modelos, retorno_modelo_actual, GG_caracter_para_confirmacion_o_error[2]) != RET_OK)
+                            {
+                                resultado = RET_ERROR_GENERIC;
+                                detalle_resultado = "Error al acumular retorno de modelo crear_espacio.";
+                            }
+                        }
                         free(direccion_archivo_espacios);                                                                            // libera la ruta construida
                     }
                     else // sub-operacion de administracion_espacio desconocida
@@ -281,7 +345,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 resultado = RET_OK; // por ahora marca exito; logica pendiente de implementar
                 detalle_resultado = "Proceso general ejecutado.";
                 free(detalle_capa_proceso);
-                detalle_capa_proceso = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[2], "todo salio bien en este proseso llamado procesos_generales", detalle_resultado);
+                detalle_capa_proceso = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[4], "todo salio bien en este proseso llamado procesos_generales", detalle_resultado);
             }
 
             else if (opciones && strcmp(opciones[0], "procesos_sistema") == 0) // si el comando es "procesos_sistema" (comunicacion directa con el sistema, solo programador)
@@ -290,7 +354,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 resultado = RET_OK; // por ahora marca exito; logica pendiente de implementar
                 detalle_resultado = "Proceso de sistema ejecutado.";
                 free(detalle_capa_proceso);
-                detalle_capa_proceso = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[2], "todo salio bien en este proseso llamado procesos_sistema", detalle_resultado);
+                detalle_capa_proceso = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[4], "todo salio bien en este proseso llamado procesos_sistema", detalle_resultado);
             }
         }
     }
@@ -306,21 +370,26 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
         *estado_out = resultado; // guarda el resultado final (RET_OK o RET_ERROR_GENERIC) en el puntero del llamador
     }
 
-    if (detalle_capa_modelo != NULL)
+    if (acumulador_modelos != NULL) // si hubo uno o varios modelos ejecutados, el conmutador devuelve esa cadena como detalle principal
     {
-        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_capa_modelo);
+        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", acumulador_modelos); // arma el retorno final del conmutador incrustando todos los modelos separados por ⛐
     }
-    else if (detalle_capa_proceso != NULL)
+    else if (detalle_capa_modelo != NULL) // si no hubo acumulador pero si un detalle individual de modelo, usa ese detalle
     {
-        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_capa_proceso);
+        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_capa_modelo); // arma el retorno final usando un solo modelo como detalle
     }
-    else
+    else if (detalle_capa_proceso != NULL) // si la ruta fue directa a proceso, reutiliza ese detalle como extra del conmutador
     {
-        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_resultado);
+        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_capa_proceso); // arma el retorno final reutilizando el detalle de proceso
+    }
+    else // si no existe detalle de capas internas, devuelve el mensaje general acumulado en detalle_resultado
+    {
+        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_resultado); // usa el texto general como ultimo respaldo del retorno final
     }
 
     free(detalle_capa_modelo);
     free(detalle_capa_proceso);
+    free(acumulador_modelos);
     return retorno_conmutador; // retorna formato estandarizado del conmutador
 }
 

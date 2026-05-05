@@ -32,6 +32,69 @@
 #endif
 
 /*
+ * Uso: construye una respuesta estandar con codigo y separadores especiales.
+ * Formato: codigo + separador + mensaje + separador + datos_extra.
+ */
+char *construir_retorno_estandar(int codigo, const char *separador, const char *mensaje, const char *datos_extra)
+{
+    char *retorno = NULL;                                                                 // string final que se devolvera al llamador; ejemplo: "0╣todo salio bien en el conmutador╣detalle"
+    const char *mensaje_final = (mensaje != NULL) ? mensaje : "sin_mensaje";            // mensaje seguro por si llega NULL; ejemplo: "sin_mensaje"
+    const char *datos_extra_final = (datos_extra != NULL) ? datos_extra : "sin_datos"; // datos extra seguros por si llega NULL; ejemplo: "sin_datos"
+
+    if (separador == NULL)
+    {
+        separador = GG_caracter_para_confirmacion_o_error[0]; // usa el separador principal por defecto si no se especifica; ejemplo: "╣"
+    }
+
+    if (concatenar_formato_separado_por_variable(&retorno, NULL, "%d%s%s%s%s", codigo, separador, mensaje_final, separador, datos_extra_final) < 0)
+    {
+        free(retorno);
+        return NULL;
+    }
+
+    return retorno;
+}
+
+/*
+ * Uso: Ejecuta variable_string de forma segura.
+ * Entrada ejemplo: variable_string(format, arg2)
+ */
+char *variable_string(const char *format, ...) // define una funcion que crea y retorna una cadena dinamica formateada // ejemplo: "ID=15"
+{
+    va_list args;        // declara la lista principal de argumentos variables para el formato recibido // ejemplo: "ID=%d"
+    va_list args_copia;  // declara una copia de la lista para medir longitud sin consumir la original // ejemplo: copia de args
+    char *buffer = NULL; // prepara el puntero que almacenará el texto final reservado dinámicamente // ejemplo: "hola mundo"
+    int longitud = 0;    // guardará la cantidad exacta de caracteres que requiere el texto formateado // ejemplo: 12
+
+    if (format == NULL)
+    {
+        return NULL; // retorna NULL para indicar que no se pudo construir ninguna cadena // ejemplo: formato ausente
+    }
+
+    va_start(args, format);                            // inicia la lectura de los argumentos variables reales enviados a la función // ejemplo: "%s-%d"
+    va_copy(args_copia, args);                         // duplica la lista para usarla en el cálculo de longitud sin perder la original // ejemplo: copia de args
+    longitud = vsnprintf(NULL, 0, format, args_copia); // calcula cuántos caracteres necesita la salida sin escribirla todavía // ejemplo: 8
+    va_end(args_copia);                                // finaliza la copia temporal de argumentos porque ya no se seguirá usando // ejemplo: fin de args_copia
+
+    if (longitud < 0)
+    {
+        va_end(args); // cierra la lista principal antes de salir por error de formato // ejemplo: formato inválido
+        return NULL;  // retorna NULL para indicar fallo al medir el texto de salida // ejemplo: error de vsnprintf
+    }
+
+    buffer = (char *)malloc((size_t)longitud + 1); // reserva memoria suficiente para la cadena final incluyendo el terminador nulo // ejemplo: 9 bytes
+    if (buffer == NULL)
+    {
+        va_end(args); // cierra la lista principal porque no se podrá continuar sin memoria // ejemplo: sin heap disponible
+        return NULL;  // retorna NULL para avisar que la reserva dinámica no se logró // ejemplo: malloc falló
+    }
+
+    vsnprintf(buffer, (size_t)longitud + 1, format, args); // construye la cadena final dentro de buffer usando los argumentos originales // ejemplo: "ID=15"
+    va_end(args);                                          // cierra la lista principal de argumentos una vez completado el formateo // ejemplo: fin de args
+    return buffer;                                         // entrega al llamador la cadena recién creada en memoria dinámica // ejemplo: puntero a "ID=15"
+}
+
+/*
 ===============================================================================
  CORE_STRING_SPLIT
 ===============================================================================
@@ -75,7 +138,7 @@ int split(const char *txt, const char *sep, char ***salida)
     ----------------------------------------------------------------------- */
     if (txt == NULL || sep == NULL || salida == NULL) // al menos uno de los punteros obligatorios es nulo // ejemplo: txt=NULL al llamar split mal
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     /* Obtener longitud del separador */
@@ -84,7 +147,7 @@ int split(const char *txt, const char *sep, char ***salida)
     /* Si el separador está vacío, no tiene sentido dividir */
     if (len_sep == 0) // separador vacio imposibilita la division
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     /* Capacidad inicial del arreglo dinámico
@@ -100,7 +163,7 @@ int split(const char *txt, const char *sep, char ***salida)
     /* Si falla malloc → error */
     if (resultado == NULL) // verificacion de fallo en la asignacion de memoria
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     /* inicio apunta al comienzo del fragmento actual */
@@ -128,7 +191,7 @@ int split(const char *txt, const char *sep, char ***salida)
                 free(resultado[i]); // libera cada fragmento ya guardado antes del fallo // ejemplo: libera resultado[0], resultado[1]
 
             free(resultado); // libera el arreglo de punteros principal
-            return -1;
+            RETORNAR_PROCESO_ESTANDAR(-1);
         }
 
         /* Copiar contenido del fragmento */
@@ -152,7 +215,7 @@ int split(const char *txt, const char *sep, char ***salida)
                     free(resultado[i]); // libera fragmentos ya almacenados antes del fallo
 
                 free(resultado); // libera el arreglo de punteros original
-                return -1;
+                RETORNAR_PROCESO_ESTANDAR(-1);
             }
 
             resultado = temp; // apunta al bloque redimensionado valido // ejemplo: nuevo puntero con 8 slots
@@ -184,7 +247,7 @@ int split(const char *txt, const char *sep, char ***salida)
             free(resultado[i]); // libera todos los fragmentos previos ya almacenados
 
         free(resultado); // libera el arreglo principal de punteros
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     /* Copiar último fragmento incluyendo '\0' */
@@ -203,7 +266,7 @@ int split(const char *txt, const char *sep, char ***salida)
                 free(resultado[i]); // libera todos los fragmentos previos
 
             free(resultado); // libera el arreglo principal
-            return -1;
+            RETORNAR_PROCESO_ESTANDAR(-1);
         }
 
         resultado = temp; // apunta al bloque expandido con espacio para el ultimo fragmento
@@ -227,7 +290,7 @@ int split(const char *txt, const char *sep, char ***salida)
             free(resultado[i]); // libera todos los fragmentos almacenados
 
         free(resultado); // libera el arreglo de punteros
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     resultado = temp; // apunta al bloque final con espacio para el NULL centinela
@@ -237,7 +300,7 @@ int split(const char *txt, const char *sep, char ***salida)
     *salida = resultado; // escribe el arreglo resultante en el puntero de salida // ejemplo: *salida apunta a {"7501020304050","5","SucursalNorte",NULL}
 
     /* Retornar cantidad de fragmentos encontrados */
-    return cantidad; // cantidad total de fragmentos (sin contar el NULL final) // ejemplo: 3
+    RETORNAR_PROCESO_ESTANDAR(cantidad); // cantidad total de fragmentos (sin contar el NULL final) // ejemplo: 3
 }
 
 /*
@@ -307,7 +370,7 @@ int main()
     if (n == -1)
     {
         printf("Error al dividir\n");
-        return 1;
+        RETORNAR_PROCESO_ESTANDAR(1);
     }
 
     printf("Fragmentos encontrados: %d\n", n);
@@ -321,7 +384,7 @@ int main()
 
     free_split(partes);
 
-    return 0;
+    RETORNAR_PROCESO_ESTANDAR(0);
 }
 
 ===============================================================================
@@ -338,7 +401,7 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
     long temp = 0; // usamos long para detectar overflow
 
     if (texto == 0 || var_a_retornar == 0) // alguno de los punteros requeridos es nulo
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
 
     if (*texto == '-') // detecta signo negativo al inicio // ejemplo: "-15"
     {
@@ -352,7 +415,7 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
 
     if (*texto < '0' || *texto > '9')
     {
-        return -1; // no empieza con número
+        RETORNAR_PROCESO_ESTANDAR(-1); // no empieza con número
     }
 
     while (*texto >= '0' && *texto <= '9') // procesa cada digito decimal del texto
@@ -363,7 +426,7 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
         /* Detectar overflow para int 16-bit (PIC16F) */
         if (temp > 32767) // supera el maximo de int de 16 bits, invalido para PIC
         {
-            return -1;
+            RETORNAR_PROCESO_ESTANDAR(-1);
         }
 
         texto++; // avanza al siguiente caracter del texto
@@ -371,11 +434,11 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
 
     if (*texto != '\0')
     {
-        return -1; // caracteres inválidos al final
+        RETORNAR_PROCESO_ESTANDAR(-1); // caracteres inválidos al final
     }
 
     *var_a_retornar = (int)(temp * signo); // escribe el resultado con signo en la variable de salida // ejemplo: -42
-    return 0; // conversion exitosa sin errores
+    RETORNAR_PROCESO_ESTANDAR(0); // conversion exitosa sin errores
 }
 
 /*
@@ -391,7 +454,7 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
     int tiene_decimal = 0; // bandera que indica si ya se proceso el punto decimal // ejemplo: 0 antes del '.', 1 despues
 
     if (texto == 0 || var_a_retornar == 0) // alguno de los punteros requeridos es nulo
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
 
     if (*texto == '-') // detecta signo negativo al inicio // ejemplo: "-9.5"
     {
@@ -405,7 +468,7 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
 
     if ((*texto < '0' || *texto > '9') && *texto != '.') // primer caracter invalido: ni digito ni punto decimal
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     while (*texto != '\0') // procesa caracter a caracter hasta el fin de la cadena
@@ -429,21 +492,21 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
 
             if (tiene_decimal) // segundo punto decimal encontrado: numero invalido
             {
-                return -1; // dos puntos decimales
+                RETORNAR_PROCESO_ESTANDAR(-1); // dos puntos decimales
             }
 
             tiene_decimal = 1; // activa la bandera de procesamiento decimal
         }
         else
         {
-            return -1; // carácter inválido
+            RETORNAR_PROCESO_ESTANDAR(-1); // carácter inválido
         }
 
         texto++; // avanza al siguiente caracter del texto
     }
 
     *var_a_retornar = valor * signo; // escribe el resultado con signo en la variable de salida // ejemplo: -9.5
-    return 0; // conversion exitosa sin errores
+    RETORNAR_PROCESO_ESTANDAR(0); // conversion exitosa sin errores
 }
 
 /*
@@ -465,7 +528,7 @@ int concatenar_formato_separado_por_variable(char **destino, const char *separad
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (destino == NULL || formato == NULL) // parametros obligatorios nulos
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     if (*destino == NULL) // el destino aun no tiene buffer asignado, se inicializa
@@ -473,7 +536,7 @@ int concatenar_formato_separado_por_variable(char **destino, const char *separad
         *destino = malloc(1); // reserva un byte para la cadena vacia inicial
         if (*destino == NULL) // fallo al reservar el buffer inicial
         {
-            return -1;
+            RETORNAR_PROCESO_ESTANDAR(-1);
         }
         (*destino)[0] = '\0'; // inicializa el buffer como cadena vacia
     }
@@ -524,7 +587,7 @@ int concatenar_formato_separado_por_variable(char **destino, const char *separad
 
             if (formato_expandido == NULL) // fallo al reservar el formato expandido
             {
-                return -1;
+                RETORNAR_PROCESO_ESTANDAR(-1);
             }
 
             size_t j = 0; // indice de escritura en el formato expandido
@@ -583,7 +646,7 @@ int concatenar_formato_separado_por_variable(char **destino, const char *separad
     {
         va_end(args);
         free(formato_expandido);
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     char *tmp = realloc(*destino, largo_actual + (size_t)necesarios + 1); // redimensiona el buffer destino para el texto nuevo // ejemplo: 7 + 14 + 1 = 22 bytes
@@ -591,7 +654,7 @@ int concatenar_formato_separado_por_variable(char **destino, const char *separad
     {
         va_end(args);
         free(formato_expandido);
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     *destino = tmp; // apunta al buffer redimensionado con espacio para el nuevo texto
@@ -602,10 +665,10 @@ int concatenar_formato_separado_por_variable(char **destino, const char *separad
 
     if (escritos < 0) // vsnprintf fallo durante la escritura real
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
-    return 0; // concatenacion exitosa
+    RETORNAR_PROCESO_ESTANDAR(0); // concatenacion exitosa
 }
 
 /*
@@ -622,7 +685,7 @@ int concatenar_formato(char *destino, const char *separador, const char *formato
 
     if (destino == NULL || formato == NULL) // parametros obligatorios nulos, no se puede continuar
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     size_t largo_actual = strlen(destino); // longitud actual del texto en el buffer destino // ejemplo: 8 si destino = "Tornillo"
@@ -646,7 +709,7 @@ int concatenar_formato(char *destino, const char *separador, const char *formato
 
     if (escritos < 0) // vsprintf fallo durante la escritura
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     /* Agregar separador al final del valor recien concatenado. */
@@ -657,7 +720,7 @@ int concatenar_formato(char *destino, const char *separador, const char *formato
 
     imprimirMensaje_para_depurar("[concatenar_formato] destino(final): %s\n", destino);
 
-    return 0; // concatenacion exitosa
+    RETORNAR_PROCESO_ESTANDAR(0); // concatenacion exitosa
 }
 
 /* =======================
@@ -1011,7 +1074,7 @@ int desfragmentar_direccion(const char *direccion,
     // Validacion basica de parametros de entrada/salida.
     if (!direccion || !retorna_directorios || !retorna_nom_arch || !retorna_extencion)
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     // Inicializar salidas en NULL para evitar punteros basura si algo falla.
@@ -1023,7 +1086,7 @@ int desfragmentar_direccion(const char *direccion,
     int n_partes = split(direccion, "\\", &partes); // divide la ruta completa por backslash // ejemplo: 3 partes para "C:\espacios\inventario.txt"
     if (n_partes <= 0 || !partes) // la ruta no pudo dividirse
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     // 2) Unir todo menos la ultima parte como directorios.
@@ -1035,7 +1098,7 @@ int desfragmentar_direccion(const char *direccion,
                                                      partes[i]) < 0) // fallo al concatenar el segmento de directorio
         {
             free_split(partes); // libera los segmentos antes de retornar error
-            return -1;
+            RETORNAR_PROCESO_ESTANDAR(-1);
         }
     }
 
@@ -1044,7 +1107,7 @@ int desfragmentar_direccion(const char *direccion,
     if (n_nom_ext <= 0 || !nom_ext || !nom_ext[0]) // no se pudo extraer el nombre del archivo
     {
         free_split(partes); // libera los segmentos de ruta
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     // 4) Retornar nombre de archivo y extension (vacia si no existe).
@@ -1053,13 +1116,13 @@ int desfragmentar_direccion(const char *direccion,
     {
         free_split(nom_ext); // libera nombre.ext antes de retornar error
         free_split(partes); // libera la ruta antes de retornar error
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     // 5) Liberar temporales y terminar con exito.
     free_split(nom_ext); // libera los fragmentos de nombre.extension
     free_split(partes); // libera los segmentos de la ruta completa
-    return 0; // desfragmentacion exitosa
+    RETORNAR_PROCESO_ESTANDAR(0); // desfragmentacion exitosa
 }
 
 /*

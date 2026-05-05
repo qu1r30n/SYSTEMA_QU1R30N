@@ -53,46 +53,6 @@ void imprimirMensaje_para_depurar(const char *format, ...) // define una funcion
     va_end(args); // cierra el uso de la lista variádica para liberar su estado interno // ejemplo: fin de lectura de args
 }
 
-/*
- * Uso: Ejecuta variable_string de forma segura.
- * Entrada ejemplo: variable_string(format, arg2)
- */
-char *variable_string(const char *format, ...) // define una funcion que crea y retorna una cadena dinamica formateada // ejemplo: "ID=15"
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    va_list args;        // declara la lista principal de argumentos variables para el formato recibido // ejemplo: "ID=%d"
-    va_list args_copia;  // declara una copia de la lista para medir longitud sin consumir la original // ejemplo: copia de args
-    char *buffer = NULL; // prepara el puntero que almacenará el texto final reservado dinámicamente // ejemplo: "hola mundo"
-    int longitud = 0;    // guardará la cantidad exacta de caracteres que requiere el texto formateado // ejemplo: 12
-
-    if (format == NULL) // verifica que exista una cadena de formato válida antes de procesar argumentos
-    {
-        return NULL; // retorna NULL para indicar que no se pudo construir ninguna cadena // ejemplo: formato ausente
-    }
-
-    va_start(args, format);                            // inicia la lectura de los argumentos variables reales enviados a la función // ejemplo: "%s-%d"
-    va_copy(args_copia, args);                         // duplica la lista para usarla en el cálculo de longitud sin perder la original // ejemplo: copia de args
-    longitud = vsnprintf(NULL, 0, format, args_copia); // calcula cuántos caracteres necesita la salida sin escribirla todavía // ejemplo: 8
-    va_end(args_copia);                                // finaliza la copia temporal de argumentos porque ya no se seguirá usando // ejemplo: fin de args_copia
-
-    if (longitud < 0) // detecta un error de formateo cuando vsnprintf no pudo calcular la longitud
-    {
-        va_end(args); // cierra la lista principal antes de salir por error de formato // ejemplo: formato inválido
-        return NULL;  // retorna NULL para indicar fallo al medir el texto de salida // ejemplo: error de vsnprintf
-    }
-
-    buffer = (char *)malloc((size_t)longitud + 1); // reserva memoria suficiente para la cadena final incluyendo el terminador nulo // ejemplo: 9 bytes
-    if (buffer == NULL)                            // comprueba si la reserva de memoria falló antes de escribir en buffer
-    {
-        va_end(args); // cierra la lista principal porque no se podrá continuar sin memoria // ejemplo: sin heap disponible
-        return NULL;  // retorna NULL para avisar que la reserva dinámica no se logró // ejemplo: malloc falló
-    }
-
-    vsnprintf(buffer, (size_t)longitud + 1, format, args); // construye la cadena final dentro de buffer usando los argumentos originales // ejemplo: "ID=15"
-    va_end(args);                                          // cierra la lista principal de argumentos una vez completado el formateo // ejemplo: fin de args
-    return buffer;                                         // entrega al llamador la cadena recién creada en memoria dinámica // ejemplo: puntero a "ID=15"
-}
-
 /* =========================
    DELAY PORTABLE
 ========================= */

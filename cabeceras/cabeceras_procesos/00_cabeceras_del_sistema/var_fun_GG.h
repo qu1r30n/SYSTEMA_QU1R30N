@@ -50,6 +50,37 @@ extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
 extern char *GG_caracter_guardado_para_confirmacion[];
 
 extern char *GG_id_programa;
+extern char *GG_ultimo_retorno_estandar;
+
+/*
+ * Guarda el ultimo retorno textual estandar con formato:
+ * codigo + separador + mensaje + separador + datos_extra.
+ */
+void establecer_ultimo_retorno_formateado(int codigo,
+                                          int indice_capa,
+                                          const char *nombre_funcion,
+                                          const char *datos_extra);
+
+/*
+ * Devuelve el ultimo retorno textual estandar generado.
+ */
+const char *obtener_ultimo_retorno_formateado(void);
+
+#define RETORNAR_MODELO_ESTANDAR(codigo)                                                                  \
+    do                                                                                                    \
+    {                                                                                                     \
+        int _retorno_tmp = (int)(codigo);                                                                 \
+        establecer_ultimo_retorno_formateado(_retorno_tmp, 1, __func__, "otros datos extra");          \
+        return _retorno_tmp;                                                                              \
+    } while (0)
+
+#define RETORNAR_PROCESO_ESTANDAR(codigo)                                                                 \
+    do                                                                                                    \
+    {                                                                                                     \
+        int _retorno_tmp = (int)(codigo);                                                                 \
+        establecer_ultimo_retorno_formateado(_retorno_tmp, 2, __func__, "otros datos extra");          \
+        return _retorno_tmp;                                                                              \
+    } while (0)
 
 #define ARCH_INVENTARIO 0
 

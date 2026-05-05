@@ -26,6 +26,7 @@
 
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 #include "../../cabeceras/codigos_retorno.h"
 
@@ -499,7 +500,7 @@ int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!partes || !nombres_variables || !separador || !a_retornar)
     {
-        return -2; // Si algún puntero es NULL, retorna un error específico para indicar parámetros inválidos
+        RETORNAR_PROCESO_ESTANDAR(-2); // Si algún puntero es NULL, retorna un error específico para indicar parámetros inválidos
     }
 
     StructurasDinamicas datos = cargarDesdeArreglo(nombres_variables);
@@ -512,7 +513,7 @@ int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const
         if (!nom_parametro_dato)
         {
             liberarStructura(&datos);
-            return -1; // Si la división del texto en nombre de parámetro y valor falla (modelo_split devuelve NULL), libera la estructura creada y retorna un error genérico
+            RETORNAR_PROCESO_ESTANDAR(-1); // Si la división del texto en nombre de parámetro y valor falla (modelo_split devuelve NULL), libera la estructura creada y retorna un error genérico
         }
 
         int contador_elementos_parametro = 0;
@@ -533,7 +534,7 @@ int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const
                 {
                     modelo_free_split(nom_parametro_dato);
                     liberarStructura(&datos);
-                    return -1; // si no se quiere el valor predeterminado y el valor está vacío, se retorna un error -1 para indicar que no se asignará ningún valor a ese campo y no prosedera con el agregado
+                    RETORNAR_PROCESO_ESTANDAR(-1); // si no se quiere el valor predeterminado y el valor está vacío, se retorna un error -1 para indicar que no se asignará ningún valor a ese campo y no prosedera con el agregado
                 }
 
                 if (strcmp(nombres_variables[j][0], nom_parametro_dato[0]) == 0) // Compara el nombre del parámetro con el nombre de la variable
@@ -571,5 +572,5 @@ int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const
     }
 
     *a_retornar = datos;
-    return 0; // Retorna 0 para indicar que el procesamiento fue exitoso
+    RETORNAR_PROCESO_ESTANDAR(0); // Retorna 0 para indicar que el procesamiento fue exitoso
 }

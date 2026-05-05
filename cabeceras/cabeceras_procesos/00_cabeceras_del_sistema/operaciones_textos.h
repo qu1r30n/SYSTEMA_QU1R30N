@@ -47,6 +47,20 @@ int concatenar_formato_separado_por_variable(char **destino, const char *separad
  */
 int concatenar_formato(char *destino, const char *separador, const char *formato, ...);
 
+/* Construye un retorno estandarizado: codigo + separador + mensaje + separador + datos extra. */
+/*
+ * Uso: Ejecuta construir_retorno_estandar de forma segura.
+ * Entrada ejemplo: construir_retorno_estandar(0, GG_caracter_para_confirmacion_o_error[0], "ok", "detalle")
+ */
+char *construir_retorno_estandar(int codigo, const char *separador, const char *mensaje, const char *datos_extra);
+
+/* Retorna un texto formateado en heap. El caller debe liberarlo con free(). */
+/*
+ * Uso: Ejecuta variable_string de forma segura.
+ * Entrada ejemplo: variable_string(format, arg2)
+ */
+char *variable_string(const char *format, ...);
+
 /* =======================
    FUNCIONES NUEVAS DEL C#
    ======================== */

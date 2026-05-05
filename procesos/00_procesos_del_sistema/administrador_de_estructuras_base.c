@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/administrador_de_estructuras_base.h"
 
 /*
@@ -28,7 +29,7 @@ int creacion_de_estructura_base(char *nombre_de_structura, char *direccion_del_e
         free(directorios); // libera directorios si desfragmentar_direccion retorno 0 (error o sin datos)
         free(nom_arch); // libera nom_arch si desfragmentar_direccion retorno 0 (error o sin datos)
         free(extencion); // libera extencion si desfragmentar_direccion retorno 0 (error o sin datos)
-        return -1; // retorna error: no se pudo desfragmentar la direccion del espacio
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo desfragmentar la direccion del espacio
     }
 
     char *nom_columnas = NULL; // cadena que acumula los nombres de columnas del inventario separados por GG_caracter_separacion[0]
@@ -47,7 +48,7 @@ int creacion_de_estructura_base(char *nombre_de_structura, char *direccion_del_e
 
     if (!nombre_de_structura || !direccion_del_espacio) // valida que los parametros de entrada no sean nulos
     {
-        return -1; // retorna error si alguno de los parametros es nulo
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si alguno de los parametros es nulo
     }
 
     for (int i = 0; archivos_base[i][0] != NULL; i++) // itera sobre cada entrada de archivos_base hasta el centinela NULL
@@ -59,7 +60,7 @@ int creacion_de_estructura_base(char *nombre_de_structura, char *direccion_del_e
             free(directorios); // libera directorios al abortar por error al construir la ruta del archivo base
             free(nom_arch); // libera nom_arch al abortar por error al construir la ruta del archivo base
             free(extencion); // libera extencion al abortar por error al construir la ruta del archivo base
-            return -1; // retorna error: no se pudo construir la ruta del archivo base
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo construir la ruta del archivo base
         }
 
         if (crearArchivo(ruta_archivo, archivos_base[i][1]) < 0) // crea el archivo base con su cabecera de columnas
@@ -68,7 +69,7 @@ int creacion_de_estructura_base(char *nombre_de_structura, char *direccion_del_e
             free(directorios); // libera directorios al abortar por error al crear el archivo base
             free(nom_arch); // libera nom_arch al abortar por error al crear el archivo base
             free(extencion); // libera extencion al abortar por error al crear el archivo base
-            return -1; // retorna error: no se pudo crear el archivo base en el espacio
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo crear el archivo base en el espacio
         }
 
         free(ruta_archivo); // libera la ruta del archivo creado en esta iteracion antes de continuar con la siguiente
@@ -79,5 +80,5 @@ int creacion_de_estructura_base(char *nombre_de_structura, char *direccion_del_e
     free(extencion); // libera extencion al finalizar correctamente todos los archivos de la estructura
 
     printf("Creacion de estructura base: %s\n", nombre_de_structura); // informa que la estructura base fue creada exitosamente // ejemplo: "Creacion de estructura base: tienda"
-    return 0; // retorna exito: todos los archivos de la estructura base fueron creados correctamente
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna exito: todos los archivos de la estructura base fueron creados correctamente
 }

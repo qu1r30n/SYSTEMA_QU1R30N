@@ -10,6 +10,95 @@
 #include <time.h>
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
+char *GG_ultimo_retorno_estandar = NULL; // ultimo retorno textual estandar generado por modelo/proceso/conmutador; ejemplo: "0╠todo salio bien en este modelo llamado x╠otros datos extra"
+
+static char *duplicar_texto_retorno(const char *texto)
+{
+    if (texto == NULL)
+    {
+        return NULL;
+    }
+
+    size_t largo = strlen(texto) + 1;
+    char *copia = (char *)malloc(largo);
+    if (copia == NULL)
+    {
+        return NULL;
+    }
+
+    memcpy(copia, texto, largo);
+    return copia;
+}
+
+void establecer_ultimo_retorno_formateado(int codigo,
+                                          int indice_capa,
+                                          const char *nombre_funcion,
+                                          const char *datos_extra)
+{
+    const char *nombre_seguro = (nombre_funcion != NULL) ? nombre_funcion : "funcion_desconocida";
+    const char *extra_seguro = (datos_extra != NULL) ? datos_extra : "otros datos extra";
+    const char *separador = GG_caracter_para_confirmacion_o_error[0];
+    const char *plantilla_ok = "todo salio bien en el conmutador";
+    const char *plantilla_error = "error en el conmutador";
+    char mensaje[256];
+    int escritos_mensaje = 0;
+    int necesarios = 0;
+    char *nuevo = NULL;
+
+    if (indice_capa == 1)
+    {
+        separador = GG_caracter_para_confirmacion_o_error[1];
+        plantilla_ok = "todo salio bien en este modelo llamado %s";
+        plantilla_error = "error en este modelo llamado %s";
+        escritos_mensaje = snprintf(mensaje, sizeof(mensaje), (codigo >= 0) ? plantilla_ok : plantilla_error, nombre_seguro);
+    }
+    else if (indice_capa == 2)
+    {
+        separador = GG_caracter_para_confirmacion_o_error[2];
+        plantilla_ok = "todo salio bien en este proseso llamado %s";
+        plantilla_error = "error en este proseso llamado %s";
+        escritos_mensaje = snprintf(mensaje, sizeof(mensaje), (codigo >= 0) ? plantilla_ok : plantilla_error, nombre_seguro);
+    }
+    else
+    {
+        separador = GG_caracter_para_confirmacion_o_error[0];
+        escritos_mensaje = snprintf(mensaje, sizeof(mensaje), "%s", (codigo >= 0) ? plantilla_ok : plantilla_error);
+    }
+
+    if (escritos_mensaje < 0)
+    {
+        free(GG_ultimo_retorno_estandar);
+        GG_ultimo_retorno_estandar = duplicar_texto_retorno("-1╣error al construir mensaje╣otros datos extra");
+        return;
+    }
+
+    necesarios = snprintf(NULL, 0, "%d%s%s%s%s", codigo, separador, mensaje, separador, extra_seguro);
+    if (necesarios < 0)
+    {
+        free(GG_ultimo_retorno_estandar);
+        GG_ultimo_retorno_estandar = duplicar_texto_retorno("-1╣error al calcular retorno╣otros datos extra");
+        return;
+    }
+
+    nuevo = (char *)malloc((size_t)necesarios + 1);
+    if (nuevo == NULL)
+    {
+        free(GG_ultimo_retorno_estandar);
+        GG_ultimo_retorno_estandar = duplicar_texto_retorno("-1╣error de memoria╣otros datos extra");
+        return;
+    }
+
+    snprintf(nuevo, (size_t)necesarios + 1, "%d%s%s%s%s", codigo, separador, mensaje, separador, extra_seguro);
+
+    free(GG_ultimo_retorno_estandar);
+    GG_ultimo_retorno_estandar = nuevo;
+}
+
+const char *obtener_ultimo_retorno_formateado(void)
+{
+    return GG_ultimo_retorno_estandar;
+}
+
 int GG_indice_donde_comensar = 1; // índice de inicio para operaciones de listado; ejemplo: 1
 
 char *GG_cantidado_por_archivo = "100"; // cantidad máxima de registros por archivo; ejemplo: "100"
@@ -1003,7 +1092,7 @@ static int agregar_archivo_base_negocio(const char *ruta, const char *cabecera, 
     tmp = (GG_ArchivoBaseNegocio *)realloc(GG_dir_nom_archivos, sizeof(GG_ArchivoBaseNegocio) * (cantidad + 2)); // expande el arreglo para alojar la nueva entrada m\u00e1s el terminador
     if (!tmp)                                                                                                    // verifica que realloc tuvo \u00e9xito
     {
-        return -1; // retorna error si no se pudo reasignar memoria
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si no se pudo reasignar memoria
     }
 
     GG_dir_nom_archivos = tmp;                         // actualiza el puntero global con la nueva memoria asignada
@@ -1026,10 +1115,10 @@ static int agregar_archivo_base_negocio(const char *ruta, const char *cabecera, 
         GG_dir_nom_archivos[cantidad].ruta = NULL;     // resetea puntero a NULL tras liberar
         GG_dir_nom_archivos[cantidad].cabecera = NULL; // resetea puntero a NULL tras liberar
         GG_dir_nom_archivos[cantidad].extra = NULL;    // resetea puntero a NULL tras liberar
-        return -1;                                     // retorna error indicando falla en la duplicaci\u00f3n de campos
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error indicando falla en la duplicaci\u00f3n de campos
     }
 
-    return 0; // retorna \u00e9xito al haber agregado la entrada correctamente
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna \u00e9xito al haber agregado la entrada correctamente
 }
 /*
  * Uso: Ejecuta agregar_archivo_base_negocio_con_columnas de forma segura.
@@ -1043,12 +1132,12 @@ static int agregar_archivo_base_negocio_con_columnas(const char *ruta, const cha
 
     if (!metadata) // verifica que la creación de metadata fue exitosa
     {
-        return -1; // retorna error si no se pudo crear el string de metadata
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si no se pudo crear el string de metadata
     }
 
     resultado = agregar_archivo_base_negocio(ruta, metadata, extra); // agrega la entrada al arreglo usando la metadata generada
     free(metadata);                                                  // libera la memoria de metadata ya que fue copiada internamente
-    return resultado;                                                // retorna el resultado de la operación de agregado; ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(resultado); // retorna el resultado de la operación de agregado; ejemplo: 0
 }
 
 /*
@@ -1072,7 +1161,7 @@ static int agregar_archivo_inventario(const char *ruta, const char *cabecera)
     tmp = (GG_ArchivoInventarioPendiente *)realloc(GG_direccion_hacer_inventarios, sizeof(GG_ArchivoInventarioPendiente) * (cantidad + 2)); // expande el arreglo para la nueva entrada m\u00e1s terminador
     if (!tmp)                                                                                                                               // verifica que realloc tuvo \u00e9xito
     {
-        return -1; // retorna error si no se pudo reasignar memoria
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si no se pudo reasignar memoria
     }
 
     GG_direccion_hacer_inventarios = tmp;                         // actualiza el puntero global con la nueva memoria asignada
@@ -1090,10 +1179,10 @@ static int agregar_archivo_inventario(const char *ruta, const char *cabecera)
         free(GG_direccion_hacer_inventarios[cantidad].cabecera);  // libera cabecera para evitar memory leak
         GG_direccion_hacer_inventarios[cantidad].ruta = NULL;     // resetea puntero a NULL tras liberar
         GG_direccion_hacer_inventarios[cantidad].cabecera = NULL; // resetea puntero a NULL tras liberar
-        return -1;                                                // retorna error indicando falla en la duplicaci\u00f3n de campos
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error indicando falla en la duplicaci\u00f3n de campos
     }
 
-    return 0; // retorna \u00e9xito al haber agregado la entrada de inventario
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna \u00e9xito al haber agregado la entrada de inventario
 }
 
 /*

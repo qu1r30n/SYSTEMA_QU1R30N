@@ -34,12 +34,12 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
 
     if (!nom_espacio || !usuario || !contrasena) /* parametros obligatorios nulos */
     {
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     folio_fecha = generar_folio("%Y%m%d%H%M%S"); /* genera timestamp unico para el nombre del espacio */
     if (!folio_fecha)                            /* fallo al generar folio de fecha */
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     int res; // variable temporal para capturar codigos de retorno de concatenar_formato_separado_por_variable
 
     res = concatenar_formato_separado_por_variable(&nombre_archivo, NULL, "%s_%s", folio_fecha, nom_espacio); /* nombre_archivo = folio_nom_espacio */
@@ -50,7 +50,7 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
     {
         free(folio_fecha); // libera folio_fecha al abortar por error en nombre_directorio
         free(nombre_archivo); // libera nombre_archivo al abortar por error en nombre_directorio
-        return -1; // retorna error: no se pudo construir nombre_directorio
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo construir nombre_directorio
     }
 
     if (concatenar_formato_separado_por_variable(&ruta_archivo, NULL, "%s\\%s.txt", nombre_directorio, nombre_archivo) < 0) /* ruta_archivo = nombre_directorio\nombre_archivo.txt */
@@ -58,7 +58,7 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
         free(folio_fecha); /* fallo al construir ruta del archivo del espacio */
         free(nombre_directorio); // libera nombre_directorio al abortar por error en ruta_archivo
         free(nombre_archivo); // libera nombre_archivo al abortar por error en ruta_archivo
-        return -1; // retorna error: no se pudo construir la ruta del archivo del espacio
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo construir la ruta del archivo del espacio
     }
 
     imprimirMensaje_para_depurar("%s\n", ruta_archivo); // imprime la ruta completa del archivo del espacio en modo depuracion // ejemplo: "espacios\\20260406224536_ferreteria_dan\\20260406224536_ferreteria_dan.txt"
@@ -69,7 +69,7 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
         free(nombre_directorio); // libera nombre_directorio al abortar por error en contenido_inicial
         free(ruta_archivo); // libera ruta_archivo al abortar por error en contenido_inicial
         free(nombre_archivo); // libera nombre_archivo al abortar por error en contenido_inicial
-        return -1; // retorna error: no se pudo construir el contenido inicial del archivo del espacio
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo construir el contenido inicial del archivo del espacio
     }
 
     imprimirMensaje_para_depurar("%s\n", contenido_inicial); // imprime el contenido inicial del archivo del espacio en modo depuracion
@@ -85,7 +85,7 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
         free(ruta_archivo); // libera ruta_archivo al abortar por error en ruta_archivo_gg
         free(nombre_archivo); // libera nombre_archivo al abortar por error en ruta_archivo_gg
         free(contenido_inicial); // libera contenido_inicial al abortar por error en ruta_archivo_gg
-        return -1; // retorna error: no se pudo construir la ruta del archivo maestro de espacios
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo construir la ruta del archivo maestro de espacios
     }
 
     if (concatenar_formato_separado_por_variable(&linea_gg, NULL, "%s|%s|%s|%s|2", nombre_archivo, usuario, contrasena, ruta_archivo) < 0) /* linea_gg = nombre|usuario|contrasena|ruta_archivo|2 */
@@ -96,7 +96,7 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
         free(nombre_archivo); // libera nombre_archivo al abortar por error en linea_gg
         free(contenido_inicial); // libera contenido_inicial al abortar por error en linea_gg
         free(ruta_archivo_gg); // libera ruta_archivo_gg al abortar por error en linea_gg
-        return -1; // retorna error: no se pudo construir la linea para el archivo maestro de espacios
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo construir la linea para el archivo maestro de espacios
     }
 
     imprimirMensaje_para_depurar("%s\n", ruta_archivo_gg); // imprime la ruta del archivo maestro en modo depuracion // ejemplo: "espacios\\archivo_espacios.txt"
@@ -114,7 +114,7 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
             free(contenido_inicial); // libera contenido_inicial al abortar por error al copiar el nombre de retorno
             free(ruta_archivo_gg); // libera ruta_archivo_gg al abortar por error al copiar el nombre de retorno
             free(linea_gg); // libera linea_gg al abortar por error al copiar el nombre de retorno
-            return -1; // retorna error: no se pudo copiar el nombre del espacio al parametro de retorno
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo copiar el nombre del espacio al parametro de retorno
         }
     }
 
@@ -125,7 +125,7 @@ int crear_espacios(char *nom_espacio, char *usuario, char *contrasena, char **re
     free(contenido_inicial); // libera contenido_inicial al finalizar correctamente la creacion del espacio
     free(ruta_archivo_gg); // libera ruta_archivo_gg al finalizar correctamente la creacion del espacio
     free(linea_gg); // libera linea_gg al finalizar correctamente la creacion del espacio
-    return 0; /* todo salio bien */
+    RETORNAR_PROCESO_ESTANDAR(0); /* todo salio bien */
 }
 
 /*
@@ -140,17 +140,17 @@ int crear_archivos_base_negocio(const char *id_espacio) // crea todos los archiv
     char *base_dinamica = NULL; // ruta base temporal apuntando al espacio recien creado
 
     if (!id_espacio || !id_espacio[0]) // valida que id_espacio no sea nulo ni cadena vacia
-        return -1; // retorna error si id_espacio es invalido
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si id_espacio es invalido
 
     if ((strchr(id_espacio, '\\') != NULL) || (strchr(id_espacio, '/') != NULL)) // detecta si id_espacio ya es una ruta completa con separadores de directorio
     {
         if (concatenar_formato_separado_por_variable(&base_dinamica, NULL, "%s", id_espacio) < 0) // usa id_espacio directamente como base_dinamica si ya es una ruta completa
-            return -1; // retorna error si fallo la copia de la ruta completa a base_dinamica
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si fallo la copia de la ruta completa a base_dinamica
     }
     else
     {
         if (concatenar_formato_separado_por_variable(&base_dinamica, NULL, "%s%s", GG_archivos[0][0], id_espacio) < 0) // construye base_dinamica concatenando la ruta base con el id del espacio // ejemplo: "espacios\\20260406224536_ferreteria_dan"
-            return -1; // retorna error si fallo la construccion de base_dinamica
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si fallo la construccion de base_dinamica
     }
 
     if (base_dinamica[0]) // verifica que base_dinamica no sea una cadena vacia antes de operar
@@ -162,7 +162,7 @@ int crear_archivos_base_negocio(const char *id_espacio) // crea todos los archiv
             if (!tmp) // verifica si fallo el realloc
             {
                 free(base_dinamica); // libera base_dinamica si fallo el realloc
-                return -1; // retorna error si no se pudo redimensionar base_dinamica
+                RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si no se pudo redimensionar base_dinamica
             }
             base_dinamica = tmp; // actualiza el puntero de base_dinamica al nuevo bloque de memoria
             base_dinamica[len] = '\\'; // agrega separador de directorio al final // ejemplo: "espacios\\20260406224536_ferreteria_dan\\"
@@ -212,7 +212,7 @@ int crear_archivos_base_negocio(const char *id_espacio) // crea todos los archiv
     free(base_dinamica); // libera la memoria de la ruta base dinamica del espacio creado
 
     if (errores > 0) // verifica si hubo errores durante la creacion de algun archivo
-        return -1; // retorna error si al menos un archivo base o de inventario no pudo crearse
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si al menos un archivo base o de inventario no pudo crearse
 
-    return 0; // retorna exito: todos los archivos base e inventarios del espacio fueron creados correctamente
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna exito: todos los archivos base e inventarios del espacio fueron creados correctamente
 }

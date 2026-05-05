@@ -43,7 +43,7 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
     // Validación: si no hay texto, no se puede procesar
     if (!texto)
     {
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
     // Definición de los parámetros esperados:
@@ -70,7 +70,7 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
     // Si falla el split → error
     if (!partes)
     {
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
     // Imprime las primeras partes para depuración
@@ -99,7 +99,7 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
     {
         modelo_free_split(partes); // Libera memoria del split
         liberarStructura(&datos);  // Libera estructura dinámica
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
     // Obtiene los valores en orden desde la estructura
@@ -128,5 +128,5 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
     liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 
     // Devuelve el resultado de la validación (1, 0 o -1)
-    return tiene_permiso;
+    RETORNAR_MODELO_ESTANDAR(tiene_permiso);
 }

@@ -19,11 +19,4 @@ void fechaActual(char *b, const char *f);
  */
 void imprimirMensaje_para_depurar(const char *format, ...);
 
-/* Retorna un texto formateado en heap. El caller debe liberarlo con free(). */
-/*
- * Uso: Ejecuta variable_string de forma segura.
- * Entrada ejemplo: variable_string(format, arg2)
- */
-char *variable_string(const char *format, ...);
-
 #endif

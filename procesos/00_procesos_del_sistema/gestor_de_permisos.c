@@ -39,14 +39,14 @@ int checar_permiso(int nivel_minimo, const char *ruta_archivo, const char *id_de
     if (!ruta_archivo || !id_de_espacio || !usuario || !contrasena)
     {
         // Retorno -1: error de argumentos.
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     // Validar que el archivo de permisos exista antes de intentar leerlo.
     if (!existe_archivo(ruta_archivo))
     {
         // Retorno -1: archivo inexistente o inaccesible.
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     // Variable de salida: cantidad de lineas encontradas en el archivo.
@@ -56,7 +56,7 @@ int checar_permiso(int nivel_minimo, const char *ruta_archivo, const char *id_de
     if (!lineas)
     {
         // Retorno -1: fallo al leer archivo.
-        return -1;
+        RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     // Resultado por defecto: no tiene permiso (1 = denegado, 0 = permitido).
@@ -133,5 +133,5 @@ int checar_permiso(int nivel_minimo, const char *ruta_archivo, const char *id_de
     // Liberar todas las lineas leidas del archivo.
     free_lineas(lineas, n_lineas);
     // Retornar 0 si tiene permiso, 1 si no tiene, -1 en errores previos.
-    return tiene_permiso;
+    RETORNAR_PROCESO_ESTANDAR(tiene_permiso);
 }

@@ -29,7 +29,7 @@ int leerInventario(char inventario[][COLUMNAS][256], int maxProductos)
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     (void)inventario;
     (void)maxProductos;
-    return 0;
+    RETORNAR_PROCESO_ESTANDAR(0);
 }
 
 // Guardar inventario
@@ -55,7 +55,7 @@ int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo)
     (void)inventario;
     (void)n;
     (void)codigo;
-    return -1;
+    RETORNAR_PROCESO_ESTANDAR(-1);
 }
 
 // Agregar producto
@@ -145,7 +145,7 @@ int venta(char *codigo, int cantidad, char *sucursal)
     (void)cantidad;
     (void)sucursal;
 
-    return 0;
+    RETORNAR_PROCESO_ESTANDAR(0);
 }
 
 // Compra
@@ -159,5 +159,5 @@ int compra(char *codigo, int cantidad, char *proveedor)
     (void)codigo;
     (void)cantidad;
     (void)proveedor;
-    return 0;
+    RETORNAR_PROCESO_ESTANDAR(0);
 }

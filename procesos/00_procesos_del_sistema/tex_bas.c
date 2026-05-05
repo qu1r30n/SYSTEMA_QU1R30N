@@ -43,19 +43,19 @@ static int ruta_es_absoluta(const char *ruta) // ejecuta la llamada o condición
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!ruta || !ruta[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #ifdef _WIN32
     if ((ruta[0] && ruta[1] == ':') || // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         (ruta[0] == '\\' && ruta[1] == '\\') || // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
         (ruta[0] == '/')) // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
-        return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+        RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
 #else
     if (ruta[0] == '/') // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+        RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
 #endif
 
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 }
 
 /*
@@ -93,7 +93,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
     if (!ruta) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         imprimirMensaje_para_depurar("[crearDirectorio] ruta es NULL\n"); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
     }
 
     imprimirMensaje_para_depurar("[crearDirectorio] ruta: %s\n", ruta); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
@@ -107,7 +107,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
         if (!ruta_trabajo) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             imprimirMensaje_para_depurar("[crearDirectorio] malloc fallo para ruta_trabajo completa\n"); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
-            return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
         }
         strcpy(ruta_trabajo, ruta); // copia una cadena completa al destino indicado // ejemplo: duplicar la ruta original
     }
@@ -117,7 +117,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
         if (!ruta_trabajo) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             imprimirMensaje_para_depurar("[crearDirectorio] malloc fallo para ruta_trabajo local\n"); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
-            return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
         }
 #ifdef _WIN32
         strcpy(ruta_trabajo, ".\\"); // copia una cadena completa al destino indicado // ejemplo: duplicar la ruta original
@@ -145,7 +145,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
     {
         imprimirMensaje_para_depurar("[crearDirectorio] malloc fallo para ruta_normalizada\n"); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
         free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
     }
 
     for (size_t i = 0; i < len_ruta; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
@@ -164,7 +164,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
     {
         free(ruta_normalizada); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
     }
 
     int indice_ultimo = -1; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
@@ -179,7 +179,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
         free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         free(ruta_normalizada); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
     }
 
     char *acumulada = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
@@ -193,7 +193,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
             free(ruta_normalizada); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-            return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
         }
         inicio = 1; // actualiza la variable con el nuevo valor calculado en esta etapa // ejemplo: total = 0
     }
@@ -205,7 +205,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
             free(ruta_normalizada); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-            return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
         }
     }
 #endif
@@ -230,7 +230,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
                     free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
                     free(ruta_normalizada); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
                     free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-                    return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+                    RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
                 }
             }
         }
@@ -241,7 +241,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
             free(ruta_normalizada); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-            return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
         }
 
         errno = 0; // actualiza la variable con el nuevo valor calculado en esta etapa // ejemplo: total = 0
@@ -264,7 +264,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
                 free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
                 free(ruta_normalizada); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
                 free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-                return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+                RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
             }
         }
         else if (resultado_mkdir != 0 && errno != EEXIST) // ejecuta la rama alternativa cuando la condición previa no se cumplió // ejemplo: usar valor por defecto
@@ -273,7 +273,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
             free(ruta_normalizada); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-            return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
         }
     }
 
@@ -285,24 +285,24 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
     {
         imprimirMensaje_para_depurar("[crearDirectorio] creado: %s\n", ruta_trabajo); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
         free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
     else if (estado_creacion == 1) // ejecuta la rama alternativa cuando la condición previa no se cumplió // ejemplo: usar valor por defecto
     {
         imprimirMensaje_para_depurar("[crearDirectorio] ya existe, se omite: %s\n", ruta_trabajo); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
         free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-        return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+        RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
     }
     else // ejecuta la rama alternativa cuando la condición previa no se cumplió // ejemplo: usar valor por defecto
     {
         imprimirMensaje_para_depurar("[crearDirectorio] error al crear: %s\n", ruta_trabajo); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
         free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
     }
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
-    return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+    RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
 #endif
 }
 
@@ -318,7 +318,7 @@ int crearArchivo(const char *ruta, const char *cabecera) // crea el archivo si t
     if (!ruta) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         imprimirMensaje_para_depurar("[crearArchivo] ruta es NULL\n"); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
     }
 
     char *ruta_trabajo = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
@@ -330,7 +330,7 @@ int crearArchivo(const char *ruta, const char *cabecera) // crea el archivo si t
         if (!ruta_trabajo) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             imprimirMensaje_para_depurar("[crearArchivo] malloc fallo para ruta_trabajo completa\n"); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
-            return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
         }
         strcpy(ruta_trabajo, ruta); // copia una cadena completa al destino indicado // ejemplo: duplicar la ruta original
     }
@@ -340,7 +340,7 @@ int crearArchivo(const char *ruta, const char *cabecera) // crea el archivo si t
         if (!ruta_trabajo) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             imprimirMensaje_para_depurar("[crearArchivo] malloc fallo para ruta_trabajo local\n"); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
-            return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+            RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
         }
 #ifdef _WIN32
         strcpy(ruta_trabajo, ".\\"); // copia una cadena completa al destino indicado // ejemplo: duplicar la ruta original
@@ -372,7 +372,7 @@ int crearArchivo(const char *ruta, const char *cabecera) // crea el archivo si t
                 imprimirMensaje_para_depurar("[crearArchivo] error al crear directorio padre: %s\n", dir_padre); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
                 free(dir_padre); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
                 free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-                return -2; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -2
+                RETORNAR_PROCESO_ESTANDAR(-2); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -2
             }
         }
         free(dir_padre); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
@@ -385,7 +385,7 @@ int crearArchivo(const char *ruta, const char *cabecera) // crea el archivo si t
         imprimirMensaje_para_depurar("[crearArchivo] el archivo ya existe: %s\n", ruta_trabajo); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
         fclose(f); // cierra el archivo abierto para liberar el descriptor del sistema // ejemplo: termina la lectura
         free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-        return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+        RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
     }
 
     /* Crear el archivo */
@@ -401,20 +401,20 @@ int crearArchivo(const char *ruta, const char *cabecera) // crea el archivo si t
     {
         imprimirMensaje_para_depurar("[crearArchivo] error al crear archivo: %s\n", ruta_trabajo); // envía un mensaje de depuración para seguir el flujo de ejecución // ejemplo: ruta creada
         free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
     }
 
     free(ruta_trabajo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
 
     if (estado_directorio == 1) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 2; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 2
+        RETORNAR_PROCESO_ESTANDAR(2); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 2
 
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
     (void)cabecera; // marca el parámetro como no usado en esta rama de compilación // ejemplo: cabecera
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 #endif
 }
 
@@ -582,13 +582,13 @@ int existe_archivo(const char *ruta) // declara una variable que se usará en la
     if (f) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         fclose(f); // cierra el archivo abierto para liberar el descriptor del sistema // ejemplo: termina la lectura
-        return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+        RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
     }
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #endif
 }
@@ -608,14 +608,14 @@ int seleccionar_fila_por_celda(const char *ruta, int col_buscar, // declara una 
     /* Paso a paso: validar entradas, procesar y manejar errores. */
 #if defined(_WIN32) || defined(__linux__)
     if (salida_out == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
     int n_total = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     char **lineas = leer_archivo(ruta, &n_total); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
     if (lineas == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         *salida_out = NULL; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     char **resultado = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
@@ -626,7 +626,7 @@ int seleccionar_fila_por_celda(const char *ruta, int col_buscar, // declara una 
     {
         free_lineas(lineas, n_total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         *salida_out = NULL; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     for (int i = 0; i < n_total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
@@ -648,7 +648,7 @@ int seleccionar_fila_por_celda(const char *ruta, int col_buscar, // declara una 
                     free_lineas(resultado, encontrados); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                     free_lineas(lineas, n_total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                     *salida_out = NULL; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-                    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+                    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
                 }
                 resultado = temp; // actualiza la variable con el nuevo valor calculado en esta etapa // ejemplo: total = 0
             }
@@ -660,7 +660,7 @@ int seleccionar_fila_por_celda(const char *ruta, int col_buscar, // declara una 
                 free_lineas(resultado, encontrados); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                 free_lineas(lineas, n_total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                 *salida_out = NULL; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-                return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+                RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
             }
             strcpy(resultado[encontrados], lineas[i]); // copia una cadena completa al destino indicado // ejemplo: duplicar la ruta original
             encontrados++; // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
@@ -671,14 +671,14 @@ int seleccionar_fila_por_celda(const char *ruta, int col_buscar, // declara una 
 
     free_lineas(lineas, n_total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
     *salida_out = resultado; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-    return encontrados; // retorna el valor calculado en esta ruta de ejecución // ejemplo: encontrados
+    RETORNAR_PROCESO_ESTANDAR(encontrados); // retorna el valor calculado en esta ruta de ejecución // ejemplo: encontrados
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
     (void)col_buscar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: col_buscar
     (void)valor_buscar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: valor_buscar
     (void)salida_out; // marca el parámetro como no usado en esta rama de compilación // ejemplo: salida_out
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #endif
 }
@@ -1165,7 +1165,7 @@ int buscar_fila(const char *ruta, int colBuscar, const char *valorBuscar, // dec
     int total = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     char **lineas = leer_archivo(ruta, &total); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
     if (lineas == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
 
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
@@ -1186,19 +1186,19 @@ int buscar_fila(const char *ruta, int colBuscar, const char *valorBuscar, // dec
                     strcpy(*salida_out, lineas[i]); // copia una cadena completa al destino indicado // ejemplo: duplicar la ruta original
             }
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-            return i; // retorna el valor calculado en esta ruta de ejecución // ejemplo: i
+            RETORNAR_PROCESO_ESTANDAR(i); // retorna el valor calculado en esta ruta de ejecución // ejemplo: i
         }
     }
 
     free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-    return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+    RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
     (void)colBuscar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: colBuscar
     (void)valorBuscar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: valorBuscar
     (void)salida_out; // marca el parámetro como no usado en esta rama de compilación // ejemplo: salida_out
-    return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+    RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
 
 #endif
 }
@@ -1214,17 +1214,17 @@ int agregar_sino_existe(const char *ruta, int colBuscar, const char *valorBuscar
 #if defined(_WIN32) || defined(__linux__)
     int idx = buscar_fila(ruta, colBuscar, valorBuscar, NULL); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     if (idx >= 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
     agregar_fila(ruta, fila_nueva); // agrega una nueva fila al final del archivo de destino // ejemplo: nuevo producto
-    return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+    RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
     (void)colBuscar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: colBuscar
     (void)valorBuscar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: valorBuscar
     (void)fila_nueva; // marca el parámetro como no usado en esta rama de compilación // ejemplo: fila_nueva
-    return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+    RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
 
 #endif
 }
@@ -1241,12 +1241,12 @@ int editar_celda_id_fila(const char *ruta, int id_fila, int col, // declara una 
     int total = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     char **lineas = leer_archivo(ruta, &total); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
     if (lineas == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
     if (id_fila < 0 || id_fila >= total) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     char **partes = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
@@ -1256,7 +1256,7 @@ int editar_celda_id_fila(const char *ruta, int id_fila, int col, // declara una 
         if (n > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     char *nueva_linea = malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
@@ -1264,7 +1264,7 @@ int editar_celda_id_fila(const char *ruta, int id_fila, int col, // declara una 
     {
         free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
     nueva_linea[0] = '\0'; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
 
@@ -1283,14 +1283,14 @@ int editar_celda_id_fila(const char *ruta, int id_fila, int col, // declara una 
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
     free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-    return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+    RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
     (void)id_fila; // marca el parámetro como no usado en esta rama de compilación // ejemplo: id_fila
     (void)col; // marca el parámetro como no usado en esta rama de compilación // ejemplo: col
     (void)nuevo_valor; // marca el parámetro como no usado en esta rama de compilación // ejemplo: nuevo_valor
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #endif
 }
@@ -1307,12 +1307,12 @@ int incrementar_celda_id_fila(const char *ruta, int id_fila, int col, // declara
     int total = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     char **lineas = leer_archivo(ruta, &total); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
     if (lineas == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
     if (id_fila < 0 || id_fila >= total) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     char **partes = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
@@ -1322,7 +1322,7 @@ int incrementar_celda_id_fila(const char *ruta, int id_fila, int col, // declara
         if (n > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     double valor_actual = atof(partes[col]); // convierte el texto numérico a double para operar con él // ejemplo: 15.5
@@ -1334,7 +1334,7 @@ int incrementar_celda_id_fila(const char *ruta, int id_fila, int col, // declara
     {
         free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
     nueva_linea[0] = '\0'; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
 
@@ -1353,14 +1353,14 @@ int incrementar_celda_id_fila(const char *ruta, int id_fila, int col, // declara
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
     free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-    return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+    RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
     (void)id_fila; // marca el parámetro como no usado en esta rama de compilación // ejemplo: id_fila
     (void)col; // marca el parámetro como no usado en esta rama de compilación // ejemplo: col
     (void)incremento; // marca el parámetro como no usado en esta rama de compilación // ejemplo: incremento
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #endif
 }
@@ -1584,7 +1584,7 @@ static int crear_archivo_info_dividida(const char *direccion_archivos, // contin
     /* Paso a paso: validar entradas, procesar y manejar errores. */
 #if defined(_WIN32) || defined(__linux__)
     if (!direccion_archivos || !direccion_archivos[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
 
     if (!nom_columnas_si_no_existe_archivo) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         nom_columnas_si_no_existe_archivo = ""; // actualiza la variable con el nuevo valor calculado en esta etapa // ejemplo: total = 0
@@ -1596,17 +1596,17 @@ static int crear_archivo_info_dividida(const char *direccion_archivos, // contin
             GG_caracter_separacion[0], GG_caracter_separacion[0], GG_caracter_separacion[0], // continúa enviando argumentos o elementos dentro de la expresión actual // ejemplo: siguiente parámetro de la llamada
             nom_columnas_si_no_existe_archivo, GG_caracter_separacion[0], GG_cantidado_por_archivo) < 0) // ejecuta la llamada o condición representada en esta línea // ejemplo: operación completada
     {
-        return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
     }
 
     int estado_creacion_metadata = crearArchivo(direccion_archivos, cabecera_metadata); // crea el archivo si todavía no existe usando la cabecera indicada // ejemplo: metadata inicial
     free(cabecera_metadata); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-    return estado_creacion_metadata; // retorna el valor calculado en esta ruta de ejecución // ejemplo: estado_creacion_metadata
+    RETORNAR_PROCESO_ESTANDAR(estado_creacion_metadata); // retorna el valor calculado en esta ruta de ejecución // ejemplo: estado_creacion_metadata
 
 #elif defined(__XC)
     (void)direccion_archivos; // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion_archivos
     (void)nom_columnas_si_no_existe_archivo; // marca el parámetro como no usado en esta rama de compilación // ejemplo: nom_columnas_si_no_existe_archivo
-    return -1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+    RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
 
 #endif
 }
@@ -1854,7 +1854,7 @@ int incrementa_celda_solo_prog(const char *ruta, const char *id_principal, // de
     int total = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     char **lineas = leer_archivo(ruta, &total); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
     if (lineas == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
     int encontrados = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
 
@@ -1891,7 +1891,7 @@ int incrementa_celda_solo_prog(const char *ruta, const char *id_principal, // de
         {
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-            return encontrados; // retorna el valor calculado en esta ruta de ejecución // ejemplo: encontrados
+            RETORNAR_PROCESO_ESTANDAR(encontrados); // retorna el valor calculado en esta ruta de ejecución // ejemplo: encontrados
         }
         nueva_linea[0] = '\0'; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
 
@@ -1912,7 +1912,7 @@ int incrementa_celda_solo_prog(const char *ruta, const char *id_principal, // de
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
     free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-    return encontrados; // retorna el valor calculado en esta ruta de ejecución // ejemplo: encontrados
+    RETORNAR_PROCESO_ESTANDAR(encontrados); // retorna el valor calculado en esta ruta de ejecución // ejemplo: encontrados
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
@@ -1920,7 +1920,7 @@ int incrementa_celda_solo_prog(const char *ruta, const char *id_principal, // de
     (void)programa_id; // marca el parámetro como no usado en esta rama de compilación // ejemplo: programa_id
     (void)col_editar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: col_editar
     (void)incremento; // marca el parámetro como no usado en esta rama de compilación // ejemplo: incremento
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #endif
 }
@@ -2014,7 +2014,7 @@ int editar_fila_espesifica_sin_arreglo_gg(const char *ruta, const char *id_fila,
     int total = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     char **lineas = leer_archivo(ruta, &total); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
     if (lineas == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
@@ -2034,7 +2034,7 @@ int editar_fila_espesifica_sin_arreglo_gg(const char *ruta, const char *id_fila,
         {
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-            return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+            RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
         }
         nueva_linea[0] = '\0'; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
 
@@ -2053,18 +2053,18 @@ int editar_fila_espesifica_sin_arreglo_gg(const char *ruta, const char *id_fila,
 
         guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+        RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
     }
 
     free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
     (void)id_fila; // marca el parámetro como no usado en esta rama de compilación // ejemplo: id_fila
     (void)col_editar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: col_editar
     (void)nuevo_valor; // marca el parámetro como no usado en esta rama de compilación // ejemplo: nuevo_valor
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #endif
 }
@@ -2078,14 +2078,14 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
     /* Paso a paso: validar entradas, procesar y manejar errores. */
 #if defined(_WIN32) || defined(__linux__)
     if (salida_out == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
     int total = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     char **lineas = leer_archivo(ruta, &total); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
     if (lineas == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         *salida_out = NULL; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     char **resultado = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
@@ -2096,7 +2096,7 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
     {
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         *salida_out = NULL; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
@@ -2122,7 +2122,7 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
                 free_lineas(resultado, encontrados); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                 free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                 *salida_out = NULL; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-                return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+                RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
             }
             resultado = temp; // actualiza la variable con el nuevo valor calculado en esta etapa // ejemplo: total = 0
         }
@@ -2134,7 +2134,7 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
             free_lineas(resultado, encontrados); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             *salida_out = NULL; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-            return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+            RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
         }
         strcpy(resultado[encontrados], lineas[i]); // copia una cadena completa al destino indicado // ejemplo: duplicar la ruta original
         encontrados++; // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
@@ -2143,13 +2143,13 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
 
     free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
     *salida_out = resultado; // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
-    return encontrados; // retorna el valor calculado en esta ruta de ejecución // ejemplo: encontrados
+    RETORNAR_PROCESO_ESTANDAR(encontrados); // retorna el valor calculado en esta ruta de ejecución // ejemplo: encontrados
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
     (void)programa_id; // marca el parámetro como no usado en esta rama de compilación // ejemplo: programa_id
     (void)salida_out; // marca el parámetro como no usado en esta rama de compilación // ejemplo: salida_out
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #endif
 }
@@ -2167,12 +2167,12 @@ int editar_celda_id_fila_solo_prog(const char *ruta, int id_fila, // declara una
     int total = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     char **lineas = leer_archivo(ruta, &total); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
     if (lineas == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
     if (id_fila < 0 || id_fila >= total) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     char **partes = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
@@ -2182,7 +2182,7 @@ int editar_celda_id_fila_solo_prog(const char *ruta, int id_fila, // declara una
         if (n > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     char *nueva_linea = (char *)malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
@@ -2190,7 +2190,7 @@ int editar_celda_id_fila_solo_prog(const char *ruta, int id_fila, // declara una
     {
         free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
     nueva_linea[0] = '\0'; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
 
@@ -2209,7 +2209,7 @@ int editar_celda_id_fila_solo_prog(const char *ruta, int id_fila, // declara una
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
     free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-    return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+    RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
@@ -2217,7 +2217,7 @@ int editar_celda_id_fila_solo_prog(const char *ruta, int id_fila, // declara una
     (void)col_editar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: col_editar
     (void)nuevo_valor; // marca el parámetro como no usado en esta rama de compilación // ejemplo: nuevo_valor
     (void)programa_id; // marca el parámetro como no usado en esta rama de compilación // ejemplo: programa_id
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #endif
 }
@@ -2234,12 +2234,12 @@ int incrementa_celda_id_fila_solo_prog(const char *ruta, int id_fila, int col, /
     int total = 0; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     char **lineas = leer_archivo(ruta, &total); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
     if (lineas == NULL) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
     if (id_fila < 0 || id_fila >= total) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     char **partes = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
@@ -2249,7 +2249,7 @@ int incrementa_celda_id_fila_solo_prog(const char *ruta, int id_fila, int col, /
         if (n > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
             free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
 
     double valor_actual = atof(partes[col]); // convierte el texto numérico a double para operar con él // ejemplo: 15.5
@@ -2261,7 +2261,7 @@ int incrementa_celda_id_fila_solo_prog(const char *ruta, int id_fila, int col, /
     {
         free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
     nueva_linea[0] = '\0'; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
 
@@ -2280,7 +2280,7 @@ int incrementa_celda_id_fila_solo_prog(const char *ruta, int id_fila, int col, /
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
     free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-    return 1; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
+    RETORNAR_PROCESO_ESTANDAR(1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 1
 
 #elif defined(__XC)
     (void)ruta; // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
@@ -2288,7 +2288,7 @@ int incrementa_celda_id_fila_solo_prog(const char *ruta, int id_fila, int col, /
     (void)col; // marca el parámetro como no usado en esta rama de compilación // ejemplo: col
     (void)incremento; // marca el parámetro como no usado en esta rama de compilación // ejemplo: incremento
     (void)programa_id; // marca el parámetro como no usado en esta rama de compilación // ejemplo: programa_id
-    return 0; // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
 
 #endif
 }

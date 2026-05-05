@@ -11,48 +11,6 @@
 #include "CLASE_QU1R30N.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/ControladorMonitoreoArchivo.h"
 
-/*
- * Uso: Ejecuta duplicar_texto_local de forma segura.
- * Entrada ejemplo: duplicar_texto_local(texto)
- */
-static char *duplicar_texto_local(const char *texto)
-{
-    char *copia = NULL; // puntero donde se guardara la copia del texto; ejemplo: apunta a "hola mundo"
-
-    if (texto == NULL) // si el texto de entrada es nulo, no hay nada que copiar
-    {
-        return NULL; // retorna nulo para indicar que no habia texto
-    }
-
-    copia = (char *)malloc(strlen(texto) + 1); // reserva memoria: largo del texto + 1 para el caracter nulo '\0'; ejemplo: "hola" necesita 5 bytes
-    if (copia == NULL)                         // si malloc fallo por falta de memoria
-    {
-        return NULL; // retorna nulo para indicar el fallo
-    }
-
-    strcpy(copia, texto); // copia el contenido de texto a la nueva memoria; ejemplo: copia queda como "hola mundo"
-    return copia;         // retorna el puntero a la copia; IMPORTANTE: el llamador debe usar free() cuando ya no la necesite
-}
-
-/*
- * Uso: construye una respuesta estandar con codigo y separadores especiales.
- * Formato: codigo + separador + mensaje + separador + datos_extra.
- */
-static char *construir_retorno_estandar(int codigo, const char *separador, const char *mensaje, const char *datos_extra)
-{
-    char *retorno = NULL;                                                                 // string final que se devolvera al llamador; ejemplo: "0╣todo salio bien en el conmutador╣detalle"
-    const char *mensaje_final = (mensaje != NULL) ? mensaje : "sin_mensaje";            // mensaje seguro por si llega NULL; ejemplo: "sin_mensaje"
-    const char *datos_extra_final = (datos_extra != NULL) ? datos_extra : "sin_datos"; // datos extra seguros por si llega NULL; ejemplo: "sin_datos"
-
-    if (concatenar_formato_separado_por_variable(&retorno, NULL, "%d%s%s%s%s", codigo, separador, mensaje_final, separador, datos_extra_final) < 0)
-    {
-        free(retorno);
-        return duplicar_texto_local("-1╣error al construir retorno╣sin_datos");
-    }
-
-    return retorno;
-}
-
 #if defined(_WIN32) || defined(__linux__)
 /* ============================================================
    COMPILACIÓN PARA WINDOWS Y LINUX
@@ -404,9 +362,9 @@ static int extraer_datos_transferencia(const char *linea_transferencia,
             partes_comando[0] != NULL && strcmp(partes_comando[0], GG_id_programa) == 0 &&                                        // el destino debe ser este programa: "SISTEMA_QU1R30N"
             partes_comando[1] != NULL)                                                                                            // el origen debe existir
         {
-            *programa_respuesta_out = duplicar_texto_local(partes_comando[1]); /* ID_ORIGEN: quien envio el comando; ejemplo: "NEXOPORTALARCANO" */
-            *comando_out = duplicar_texto_local(partes_transferencia[1]);      /* COMANDO: cuerpo del comando; ejemplo: "op_tienda~agregar_producto§..." */
-            *info_espejo_out = duplicar_texto_local(partes_transferencia[2]);  /* ESPEJO: se retornara intacto al emisor; ejemplo: "PREGUNTAS_WS¤" */
+            *programa_respuesta_out = variable_string("%s", partes_comando[1]);      /* ID_ORIGEN: quien envio el comando; ejemplo: "NEXOPORTALARCANO" */
+            *comando_out = variable_string("%s", partes_transferencia[1]);            /* COMANDO: cuerpo del comando; ejemplo: "op_tienda~agregar_producto§..." */
+            *info_espejo_out = variable_string("%s", partes_transferencia[2]);        /* ESPEJO: se retornara intacto al emisor; ejemplo: "PREGUNTAS_WS¤" */
 
             free_split(partes_comando);       // libera el arreglo de destino/origen
             free_split(partes_transferencia); // libera el arreglo de columnas
@@ -559,7 +517,7 @@ char *conmutador(char *texto_prueba, int *estado_out)
     {
         *estado_out = RET_OK;
     }
-    return duplicar_texto_local("Stub PIC: comando aceptado.");
+    return variable_string("%s", "Stub PIC: comando aceptado.");
 }
 
 /*
@@ -622,7 +580,7 @@ char *conmutador(char *texto_prueba, int *estado_out)
     {
         *estado_out = RET_OK;
     }
-    return duplicar_texto_local("Stub por defecto: comando aceptado.");
+    return variable_string("%s", "Stub por defecto: comando aceptado.");
 }
 
 int main(void)

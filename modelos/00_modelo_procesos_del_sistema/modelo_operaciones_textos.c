@@ -26,6 +26,7 @@
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 /* y los procesos que implementan la lógica */
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
 /*
  * Uso: Ejecuta modelo_split de forma segura.
@@ -81,7 +82,7 @@ int modelo_texto_a_int_seguro(char *texto)
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     int valor_int;
     texto_a_int_seguro(texto, &valor_int);
-    return valor_int;
+    RETORNAR_MODELO_ESTANDAR(valor_int);
 }
 
 /*

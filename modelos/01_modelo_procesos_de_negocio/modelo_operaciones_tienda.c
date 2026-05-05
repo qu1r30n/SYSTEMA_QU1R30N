@@ -57,7 +57,7 @@ int modelo_leerInventario(char *texto)
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
     char *nombres_variables[][4] =
@@ -74,7 +74,7 @@ int modelo_leerInventario(char *texto)
     char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
-        return -2;
+        RETORNAR_MODELO_ESTANDAR(-2);
     }
 
     int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
@@ -90,7 +90,7 @@ int modelo_leerInventario(char *texto)
     {
         modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
         liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-        return (ret_parse < 0) ? ret_parse : -3; // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
+        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
 
     // texto: "maxProductos"
@@ -102,7 +102,7 @@ int modelo_leerInventario(char *texto)
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
     liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-    return cantidad;
+    RETORNAR_MODELO_ESTANDAR(cantidad);
 }
 
 // Guardar inventario
@@ -129,7 +129,7 @@ int modelo_buscarProducto(char *texto)
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
     char *nombres_variables[][4] =
@@ -146,7 +146,7 @@ int modelo_buscarProducto(char *texto)
     char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
-        return -2;
+        RETORNAR_MODELO_ESTANDAR(-2);
     }
 
     int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
@@ -162,7 +162,7 @@ int modelo_buscarProducto(char *texto)
     {
         modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
         liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-        return (ret_parse < 0) ? ret_parse : -3; // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
+        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
 
     // texto: "codigo"
@@ -175,7 +175,7 @@ int modelo_buscarProducto(char *texto)
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
     liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-    return resultado;
+    RETORNAR_MODELO_ESTANDAR(resultado);
 }
 
 // Agregar producto
@@ -188,7 +188,7 @@ int modelo_agregarProducto(char *texto)
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto) // Verifica si el texto es NULL
     {
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
     char *nombres_variables[][4] = // Arreglo de campos esperados con su tipo y valor por defecto
@@ -235,7 +235,7 @@ int modelo_agregarProducto(char *texto)
     char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
     if (!partes)
     {
-        return -2;
+        RETORNAR_MODELO_ESTANDAR(-2);
     }
 
     int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
@@ -253,7 +253,7 @@ int modelo_agregarProducto(char *texto)
     {
         modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
         liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-        return (ret_parse < 0) ? ret_parse : -3; // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
+        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
 
     agregarProducto(
@@ -291,7 +291,7 @@ int modelo_agregarProducto(char *texto)
 
     modelo_free_split(partes); // Libera la memoria del arreglo de partes
     liberarStructura(&datos);  // Libera la memoria de la estructura dinámica
-    return 0;
+    RETORNAR_MODELO_ESTANDAR(0);
 }
 
 // Venta simple
@@ -304,7 +304,7 @@ int modelo_venta(char *texto)
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
     char *nombres_variables[][4] =
@@ -323,7 +323,7 @@ int modelo_venta(char *texto)
     char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
-        return -2;
+        RETORNAR_MODELO_ESTANDAR(-2);
     }
 
     int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
@@ -339,7 +339,7 @@ int modelo_venta(char *texto)
     {
         modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
         liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-        return (ret_parse < 0) ? ret_parse : -3; // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
+        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
 
     // texto: "codigo|cantidad|sucursal"
@@ -351,7 +351,7 @@ int modelo_venta(char *texto)
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
     liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-    return ok;
+    RETORNAR_MODELO_ESTANDAR(ok);
 }
 
 // Compra simple
@@ -364,7 +364,7 @@ int modelo_compra(char *texto)
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto)
     {
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
     char *nombres_variables[][4] =
@@ -383,7 +383,7 @@ int modelo_compra(char *texto)
     char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
-        return -2;
+        RETORNAR_MODELO_ESTANDAR(-2);
     }
 
     int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
@@ -399,7 +399,7 @@ int modelo_compra(char *texto)
     {
         modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
         liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-        return (ret_parse < 0) ? ret_parse : -3; // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
+        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
 
     // texto: "codigo|cantidad|proveedor"
@@ -411,5 +411,5 @@ int modelo_compra(char *texto)
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
     liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-    return ok;
+    RETORNAR_MODELO_ESTANDAR(ok);
 }

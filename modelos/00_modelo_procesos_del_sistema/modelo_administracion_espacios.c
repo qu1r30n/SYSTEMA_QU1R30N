@@ -23,7 +23,7 @@ int modelo_administracion_espacios_crear_espacio(char *texto)
 
     if (!texto)
     {
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
     char *nombres_variables[][4] =
@@ -36,7 +36,7 @@ int modelo_administracion_espacios_crear_espacio(char *texto)
     char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
     if (!partes)
     {
-        return -2;
+        RETORNAR_MODELO_ESTANDAR(-2);
     }
 
     int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
@@ -52,7 +52,7 @@ int modelo_administracion_espacios_crear_espacio(char *texto)
     {
         modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
         liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-        return (ret_parse < 0) ? ret_parse : -3; // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
+        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
     char *retorno_nombre_completo_espacio = NULL;
     int ret_crear_espacio = crear_espacios(
@@ -71,8 +71,8 @@ int modelo_administracion_espacios_crear_espacio(char *texto)
 
     if (ret_crear_espacio < 0)
     {
-        return -1;
+        RETORNAR_MODELO_ESTANDAR(-1);
     }
 
-    return 0;
+    RETORNAR_MODELO_ESTANDAR(0);
 }

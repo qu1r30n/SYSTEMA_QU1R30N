@@ -83,7 +83,7 @@ unsigned char core_arena_memoria_default[CORE_ARENA_DEFAULT_SIZE];
     /*
        Retornamos el valor corregido.
     */
-    return ptr;
+    return ptr; // retorna el puntero al bloque de memoria asignado y alineado // ejemplo: 0x...
 }
 
 
@@ -119,7 +119,7 @@ void core_arena_init(core_arena* arena,
     /*
        Guardamos el tamanio total del bloque.
     */
-    arena->capacidad = tamanio;
+    arena->capacidad = tamanio; // guarda el tamano total del bloque de memoria disponible // ejemplo: 4096
 
     /*
        Iniciamos el offset en 0.
@@ -131,8 +131,8 @@ void core_arena_init(core_arena* arena,
     /*
        Reiniciamos estadísticas si están activadas.
     */
-    arena->max_usado = 0;
-    arena->total_allocs = 0;
+    arena->max_usado = 0; // reinicia estadistica de uso maximo // ejemplo: 0
+    arena->total_allocs = 0; // reinicia contador de asignaciones // ejemplo: 0
 #endif
 }
 
@@ -176,13 +176,13 @@ size_t core_arena_snapshot(const core_arena* arena)
     /*
        Si arena es NULL, retornamos 0 por seguridad.
     */
-    if (arena == NULL)
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
         return 0;
 
     /*
        Retornamos el offset actual.
     */
-    return arena->offset;
+    return arena->offset; // devuelve el offset actual para poder restaurarlo despues (snapshot) // ejemplo: 256
 }
 
 
@@ -205,15 +205,15 @@ void core_arena_restore(core_arena* arena, size_t snapshot)
     /*
        Validar que arena no sea NULL.
     */
-    if (arena == NULL)
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
         return;
 
     /*
        Solo restauramos si el snapshot es válido
        (no puede exceder la capacidad total).
     */
-    if (snapshot <= arena->capacidad)
-        arena->offset = snapshot;
+    if (snapshot <= arena->capacidad) // verifica que el snapshot sea un offset valido dentro del bloque // ejemplo: 256 <= 4096
+        arena->offset = snapshot; // restaura el offset al punto guardado liberando lo asignado despues // ejemplo: offset=256
 }
 
 
@@ -232,7 +232,7 @@ void* core_arena_alloc(core_arena* arena, size_t tamanio)
     /*
        Validamos parámetros.
     */
-    if (arena == NULL || tamanio == 0)
+    if (arena == NULL || tamanio == 0) // valida que los parametros sean validos antes de asignar memoria // ejemplo: NULL -> retorna NULL
         return NULL;
 
     /*
@@ -244,37 +244,37 @@ void* core_arena_alloc(core_arena* arena, size_t tamanio)
     /*
        Verificamos que haya espacio suficiente.
     */
-    if (offset_alineado + tamanio > arena->capacidad)
+    if (offset_alineado + tamanio > arena->capacidad) // verifica que haya espacio suficiente en el bloque antes de asignar // ejemplo: 256+64 > 4096 -> false
         return NULL;
 
     /*
        Calculamos la dirección final dentro del bloque.
     */
-    void* ptr = arena->memoria + offset_alineado;
+    void* ptr = arena->memoria + offset_alineado; // calcula la direccion de inicio del bloque que se va a retornar // ejemplo: base+256
 
     /*
        Avanzamos el offset.
     */
-    arena->offset = offset_alineado + tamanio;
+    arena->offset = offset_alineado + tamanio; // avanza el offset para que la proxima asignacion empiece despues de esta // ejemplo: 256+64=320
 
 #if CORE_ARENA_STATS
     /*
        Incrementamos contador de asignaciones.
     */
-    arena->total_allocs++;
+    arena->total_allocs++; // incrementa el contador de asignaciones para estadisticas // ejemplo: total_allocs=5
 
     /*
        Si este uso supera el pico anterior,
        actualizamos max_usado.
     */
     if (arena->offset > arena->max_usado)
-        arena->max_usado = arena->offset;
+        arena->max_usado = arena->offset; // actualiza el pico de uso maximo del arena // ejemplo: max_usado=320
 #endif
 
     /*
        Retornamos puntero válido.
     */
-    return ptr;
+    return ptr; // retorna el puntero al bloque de memoria asignado y alineado // ejemplo: 0x...
 }
 
 
@@ -289,7 +289,7 @@ void* core_arena_alloc_fast(core_arena* arena, size_t tamanio)
     /*
        Validación básica.
     */
-    if (arena == NULL || tamanio == 0)
+    if (arena == NULL || tamanio == 0) // valida que los parametros sean validos antes de asignar memoria // ejemplo: NULL -> retorna NULL
         return NULL;
 
     /*
@@ -301,23 +301,23 @@ void* core_arena_alloc_fast(core_arena* arena, size_t tamanio)
     /*
        Verificamos espacio.
     */
-    if (offset_alineado + tamanio > arena->capacidad)
+    if (offset_alineado + tamanio > arena->capacidad) // verifica que haya espacio suficiente en el bloque antes de asignar // ejemplo: 256+64 > 4096 -> false
         return NULL;
 
     /*
        Calculamos dirección.
     */
-    void* ptr = arena->memoria + offset_alineado;
+    void* ptr = arena->memoria + offset_alineado; // calcula la direccion de inicio del bloque que se va a retornar // ejemplo: base+256
 
     /*
        Avanzamos offset.
     */
-    arena->offset = offset_alineado + tamanio;
+    arena->offset = offset_alineado + tamanio; // avanza el offset para que la proxima asignacion empiece despues de esta // ejemplo: 256+64=320
 
     /*
        Retornamos puntero.
     */
-    return ptr;
+    return ptr; // retorna el puntero al bloque de memoria asignado y alineado // ejemplo: 0x...
 }
 
 
@@ -336,7 +336,7 @@ void core_arena_reset(core_arena* arena)
     /*
        Validación.
     */
-    if (arena == NULL)
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
         return;
 
 #ifdef CORE_ARENA_DEBUG
@@ -372,13 +372,13 @@ size_t core_arena_usado(const core_arena* arena)
     /*
        Validación.
     */
-    if (arena == NULL)
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
         return 0;
 
     /*
        Retornamos bytes usados.
     */
-    return arena->offset;
+    return arena->offset; // devuelve el offset actual para poder restaurarlo despues (snapshot) // ejemplo: 256
 }
 
 /*
@@ -390,7 +390,7 @@ size_t core_arena_disponible(const core_arena* arena)
     /*
        Validación.
     */
-    if (arena == NULL)
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
         return 0;
 
     /*

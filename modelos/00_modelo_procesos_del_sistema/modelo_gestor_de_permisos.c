@@ -58,10 +58,10 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
             {NULL, NULL, NULL, NULL}}; // Marca el final del arreglo
 
     // Cuenta cuántos parámetros hay definidos
-    int cuantos_parametros_hay = 0;
+    int cuantos_parametros_hay = 0; // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 3
     while (nombres_variables[cuantos_parametros_hay][0])
     {
-        cuantos_parametros_hay++;
+        cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->2->NULL
     }
 
     // Divide el texto en partes usando un separador global
@@ -77,14 +77,14 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
     imprimirMensaje_para_depurar("%s\n%s\n%s\n%s", partes[0], partes[1], partes[2], partes[3]);
 
     // Cuenta cuántas partes se generaron
-    int cuantas_partes = 0;
+    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
     while (partes[cuantas_partes])
     {
-        cuantas_partes++;
+        cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
     }
 
     // Crea una estructura dinámica donde se guardarán los valores parseados
-    StructurasDinamicas datos = crearStructuraVacia();
+    StructurasDinamicas datos = crearStructuraVacia(); // crea estructura dinamica vacia para guardar los valores parseados // ejemplo: datos con 0 campos
 
     // Procesa las partes del texto:
     // interpreta "parametro=valor" y llena la estructura
@@ -95,7 +95,7 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
         &datos);
 
     // Si falla el parseo o no hay partes → error
-    if (ret_parse < 0 || cuantas_partes <= 0)
+    if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
         modelo_free_split(partes); // Libera memoria del split
         liberarStructura(&datos);  // Libera estructura dinámica
@@ -124,8 +124,8 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
         retornar_nivel);
 
     // Libera memoria usada
-    modelo_free_split(partes);
-    liberarStructura(&datos);
+    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+    liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 
     // Devuelve el resultado de la validación (1, 0 o -1)
     return tiene_permiso;

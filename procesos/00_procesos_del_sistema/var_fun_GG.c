@@ -20,8 +20,8 @@ char *GG_caracter_separacion_2[] = {"⚭", "⚮", "⚯", "⚰", "⚱"}; // separ
 char *GG_caracter_separacion_funciones_espesificas[] = {"~", "§", "¶", "╬", "╝", "╩", "║", "╗", "┐", "└", "┬", "├", "┼"};   // separadores para parsing de comandos del conmutador; ejemplo: "~"
 char *GG_caracter_separacion_funciones_espesificas_2[] = {"⚲", "⚳", "⚴", "⚵", "⚶", "⚷", "⚸", "⚺", "⚻", "⚼", "⚿", "⛊", "⛋"}; // separadores alternativos para parsing de comandos (set 2); ejemplo: "⚲"
 
-char *GG_caracter_para_confirmacion_o_error[] = {"╣", "╠"};   // caracteres para señalizar confirmación o error en comunicación; ejemplo: "╣"
-char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒"}; // caracteres alternativos para confirmación o error (set 2); ejemplo: "⛑"
+char *GG_caracter_para_confirmacion_o_error[] = {"╣", "╠", "⛐", "⛟"};   // caracteres para señalizar confirmación o error en comunicación; ejemplo: "╣"
+char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒", "⛠", "⛡"}; // caracteres alternativos para confirmación o error (set 2); ejemplo: "⛑"
 
 char *GG_caracter_para_transferencia_entre_archivos[] = {"■", "┴", "¤"};   // separadores para transferencia de datos entre archivos; ejemplo: "■"
 char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘", "⛍"}; // separadores alternativos para transferencia entre archivos (set 2); ejemplo: "⛕"

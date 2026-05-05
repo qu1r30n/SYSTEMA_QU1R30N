@@ -92,9 +92,9 @@ void agregarProducto(
     char *ultima_venta,
     char *indices_total_registro_produc_vendido)
 {
-    char *fila = NULL;
+    char *fila = NULL; // puntero donde se armará la fila completa lista para guardar en el archivo; ejemplo: "Leche|1.00|L|25.50|..."
 
-    concatenar_formato_separado_por_variable(&fila, "|", "%s%.2f%s%.2f%s%.2f%.2f%s%s%.2f%s%s%s%s%s%s%s%s%s%.2f%s%s%s%s%s%.2f%s%s%s%s%s",
+    concatenar_formato_separado_por_variable(&fila, "|", "%s%.2f%s%.2f%s%.2f%.2f%s%s%.2f%s%s%s%s%s%s%s%s%s%.2f%s%s%s%s%s%.2f%s%s%s%s%s", // une todos los campos del producto separados por "|"; ejemplo resultado: "Leche|1.00|L|25.50|123456|50.00|..."
                                              producto,
                                              contenido,
                                              tipo_medida,

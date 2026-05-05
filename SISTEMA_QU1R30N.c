@@ -34,6 +34,25 @@ static char *duplicar_texto_local(const char *texto)
     return copia;         // retorna el puntero a la copia; IMPORTANTE: el llamador debe usar free() cuando ya no la necesite
 }
 
+/*
+ * Uso: construye una respuesta estandar con codigo y separadores especiales.
+ * Formato: codigo + separador + mensaje + separador + datos_extra.
+ */
+static char *construir_retorno_estandar(int codigo, const char *separador, const char *mensaje, const char *datos_extra)
+{
+    char *retorno = NULL;                                                                 // string final que se devolvera al llamador; ejemplo: "0╣todo salio bien en el conmutador╣detalle"
+    const char *mensaje_final = (mensaje != NULL) ? mensaje : "sin_mensaje";            // mensaje seguro por si llega NULL; ejemplo: "sin_mensaje"
+    const char *datos_extra_final = (datos_extra != NULL) ? datos_extra : "sin_datos"; // datos extra seguros por si llega NULL; ejemplo: "sin_datos"
+
+    if (concatenar_formato_separado_por_variable(&retorno, NULL, "%d%s%s%s%s", codigo, separador, mensaje_final, separador, datos_extra_final) < 0)
+    {
+        free(retorno);
+        return duplicar_texto_local("-1╣error al construir retorno╣sin_datos");
+    }
+
+    return retorno;
+}
+
 #if defined(_WIN32) || defined(__linux__)
 /* ============================================================
    COMPILACIÓN PARA WINDOWS Y LINUX
@@ -106,10 +125,13 @@ void inicializacion()
  */
 char *conmutador(char *info_a_conmutar, int *estado_out)
 {
-    return variable_string("prueba de retortno");                                                    // TEMPORAL: mientras se desarrolla, siempre retorna este texto; ejemplo resultado: "prueba de retortno"
+    // return variable_string("prueba de retortno");                                                    // TEMPORAL: mientras se desarrolla, siempre retorna este texto; ejemplo resultado: "prueba de retortno"
     imprimirMensaje_para_depurar("%s", info_a_conmutar);                                             // muestra en consola el comando completo recibido; ejemplo: "op_tienda~agregar_producto§producto⊓2¶..."
     int resultado = RET_ERROR_GENERIC;                                                               // guarda el codigo de resultado de la operacion; valor inicial: -1 (error)
     const char *detalle_resultado = "No se pudo ejecutar el comando.";                               // texto que se devolvera; cambia segun la operacion; ejemplo final: "Producto agregado."
+    char *detalle_capa_modelo = NULL;                                                                // guarda el retorno estandarizado de la capa modelo; ejemplo: "0╠todo salio bien en este modelo llamado ventas╠ok"
+    char *detalle_capa_proceso = NULL;                                                               // guarda el retorno estandarizado de la capa proceso; ejemplo: "0⛐todo salio bien en este proseso llamado procesos_generales⛐ok"
+    char *retorno_conmutador = NULL;                                                                 // string final de retorno del conmutador; ejemplo: "0╣todo salio bien en el conmutador╣..."
     char **opciones = modelo_split(info_a_conmutar, G_caracter_separacion_funciones_espesificas[0]); // divide el comando por "~"; ejemplo: opciones[0]="op_tienda", opciones[1]="agregar_producto§...", opciones[2]="id_de_espacio⊓20260330_ferreteria_dan", opciones[3]="usuario_de_espacio⊓administrador§contraseña⊓12345"
     char **sub_opcion = NULL;                                                                        // se usara despues para dividir opciones[1] por "§"; ejemplo: sub_opcion[0]="agregar_producto", sub_opcion[1]="producto⊓2¶contenido⊓3¶..."
 
@@ -125,7 +147,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
         {
             *estado_out = RET_ERROR_GENERIC; // marca error en el estado de salida
         }
-        return duplicar_texto_local("Comando invalido: no se pudo separar la solicitud."); // retorna mensaje de error al llamador
+        return construir_retorno_estandar(RET_ERROR_GENERIC, GG_caracter_para_confirmacion_o_error[0], "error en el conmutador", "Comando invalido: no se pudo separar la solicitud.");
     }
 
     imprimirMensaje_para_depurar("\n\n%s\n%s\n%s\n%s", opciones[0], opciones[1], opciones[2], opciones[3]); // muestra las 4 partes del comando; ejemplo: "op_tienda" / "agregar_producto§..." / "id_de_espacio⊓..." / "usuario_de_espacio⊓..."
@@ -140,7 +162,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
         {
             *estado_out = RET_ERROR_GENERIC; // marca error en la salida
         }
-        return duplicar_texto_local("Error al construir texto de permiso."); // retorna error al llamador
+        return construir_retorno_estandar(RET_ERROR_GENERIC, GG_caracter_para_confirmacion_o_error[0], "error en el conmutador", "Error al construir texto de permiso.");
     }
 
     imprimirMensaje_para_depurar("\n\n%s\n", texto_permiso); // muestra el string de permiso construido para depuracion
@@ -173,7 +195,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 {
                     *estado_out = RET_ERROR_GENERIC;
                 }
-                return duplicar_texto_local("Falta sub-opcion en op_tienda."); // retorna error
+                return construir_retorno_estandar(RET_ERROR_GENERIC, GG_caracter_para_confirmacion_o_error[0], "error en el conmutador", "Falta sub-opcion en op_tienda.");
             }
 
             sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]); // divide opciones[1] por "§"; ejemplo: "agregar_producto§producto⊓2¶..." → sub_opcion[0]="agregar_producto", sub_opcion[1]="producto⊓2¶contenido⊓3¶..."
@@ -187,22 +209,30 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 {
                     resultado = modelo_venta(sub_opcion[1]);                                                      // ejecuta el modelo de venta con los parametros; ejemplo sub_opcion[1]: "ABC123¶2§SucursalX"
                     detalle_resultado = RET_IS_OK(resultado) ? "Venta procesada." : "Fallo en proceso de venta."; // asigna mensaje segun si el resultado es OK
+                    free(detalle_capa_modelo);
+                    detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], RET_IS_OK(resultado) ? "todo salio bien en este modelo llamado ventas" : "error en este modelo llamado ventas", detalle_resultado);
                 }
                 else if (strcmp(sub_opcion[0], "compras") == 0) // si la sub-operacion es "compras"
                 {
                     resultado = modelo_compra(sub_opcion[1]); // ejecuta el modelo de compra; ejemplo sub_opcion[1]: "XYZ987¶5§Proveedor1"
                     detalle_resultado = RET_IS_OK(resultado) ? "Compra procesada." : "Fallo en proceso de compra.";
+                    free(detalle_capa_modelo);
+                    detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], RET_IS_OK(resultado) ? "todo salio bien en este modelo llamado compras" : "error en este modelo llamado compras", detalle_resultado);
                 }
                 else if (strcmp(sub_opcion[0], "agregar_producto") == 0) // si la sub-operacion es "agregar_producto"
                 {
                     resultado = modelo_agregarProducto(sub_opcion[1]); // ejecuta el modelo de agregar producto; ejemplo sub_opcion[1]: "producto⊓2¶contenido⊓3¶tipo_medida⊓4¶precio_venta⊓5⊓no_predeterminado¶..."
                     detalle_resultado = RET_IS_OK(resultado) ? "Producto agregado." : "No se pudo agregar producto.";
+                    free(detalle_capa_modelo);
+                    detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], RET_IS_OK(resultado) ? "todo salio bien en este modelo llamado agregar_producto" : "error en este modelo llamado agregar_producto", detalle_resultado);
                 }
                 else // sub-operacion desconocida dentro de op_tienda
                 {
                     printf("Opción no válida: %s\n", sub_opcion[0]); // muestra la sub-opcion invalida; ejemplo: "Opción no válida: eliminar_tienda"
                     resultado = RET_ERROR_GENERIC;                   // marca error
                     detalle_resultado = "Sub-opcion de op_tienda no valida.";
+                    free(detalle_capa_modelo);
+                    detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], "error en este modelo llamado op_tienda", detalle_resultado);
                 }
             }
             else // el split no dio suficientes partes (falta el "§" o los datos)
@@ -210,6 +240,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 printf("Sub-opcion incompleta en op_tienda.\n");
                 resultado = RET_ERROR_GENERIC;
                 detalle_resultado = "Sub-opcion incompleta en op_tienda.";
+                free(detalle_capa_modelo);
+                detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], "error en este modelo llamado op_tienda", detalle_resultado);
             }
 
             free_split(sub_opcion); // libera el arreglo de sub-opciones
@@ -229,7 +261,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     {
                         *estado_out = RET_ERROR_GENERIC;
                     }
-                    return duplicar_texto_local("Falta sub-opcion en administracion_espacio.");
+                    return construir_retorno_estandar(RET_ERROR_GENERIC, GG_caracter_para_confirmacion_o_error[0], "error en el conmutador", "Falta sub-opcion en administracion_espacio.");
                 }
 
                 sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]); // divide por "§"; ejemplo: "crear_espacio§nom_espacio⊓ferreteria_dan¶..." → sub_opcion[0]="crear_espacio", sub_opcion[1]="nom_espacio⊓ferreteria_dan¶..."
@@ -250,7 +282,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                             {
                                 *estado_out = RET_ERROR_GENERIC;
                             }
-                            return duplicar_texto_local("Error al preparar archivo de espacios.");
+                            return construir_retorno_estandar(RET_ERROR_GENERIC, GG_caracter_para_confirmacion_o_error[0], "error en el conmutador", "Error al preparar archivo de espacios.");
                         }
 
                         imprimirMensaje_para_depurar("%s\n", direccion_archivo_espacios);                                            // ejemplo: "espacios\\archivo_espacios.txt"
@@ -258,6 +290,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         imprimirMensaje_para_depurar("%s\n", sub_opcion[1]);                                                         // muestra los parametros del espacio a crear
                         resultado = modelo_administracion_espacios_crear_espacio(sub_opcion[1]);                                     // ejecuta la creacion del espacio con los parametros; ejemplo sub_opcion[1]: "nom_espacio⊓ferreteria_dan¶usuario_de_negocio⊓administrador_negocio¶contraseña_de_negocio⊓54321"
                         detalle_resultado = RET_IS_OK(resultado) ? "Espacio creado correctamente." : "No se pudo crear el espacio."; // mensaje segun resultado
+                        free(detalle_capa_modelo);
+                        detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], RET_IS_OK(resultado) ? "todo salio bien en este modelo llamado administracion_espacios_crear_espacio" : "error en este modelo llamado administracion_espacios_crear_espacio", detalle_resultado);
                         free(direccion_archivo_espacios);                                                                            // libera la ruta construida
                     }
                     else // sub-operacion de administracion_espacio desconocida
@@ -265,6 +299,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         printf("Sub-opcion no valida en administracion_espacio: %s\n", sub_opcion[0]); // ejemplo: "Sub-opcion no valida en administracion_espacio: borrar_espacio"
                         resultado = RET_ERROR_GENERIC;
                         detalle_resultado = "Sub-opcion no valida en administracion_espacio.";
+                        free(detalle_capa_modelo);
+                        detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], "error en este modelo llamado administracion_espacio", detalle_resultado);
                     }
                 }
                 else // el split no dio suficientes partes
@@ -272,6 +308,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     printf("Sub-opcion incompleta en administracion_espacio.\n");
                     resultado = RET_ERROR_GENERIC;
                     detalle_resultado = "Sub-opcion incompleta en administracion_espacio.";
+                    free(detalle_capa_modelo);
+                    detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], "error en este modelo llamado administracion_espacio", detalle_resultado);
                 }
 
                 free_split(sub_opcion); // libera sub-opciones
@@ -284,6 +322,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 // pero talves impuestos y todo lo que un administrador y contador utilizaria lo mas general en realidad no se si esto iria aqui o en otro dedicado a eso
                 resultado = RET_OK; // por ahora marca exito; logica pendiente de implementar
                 detalle_resultado = "Proceso general ejecutado.";
+                free(detalle_capa_proceso);
+                detalle_capa_proceso = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[2], "todo salio bien en este proseso llamado procesos_generales", detalle_resultado);
             }
 
             else if (opciones && strcmp(opciones[0], "procesos_sistema") == 0) // si el comando es "procesos_sistema" (comunicacion directa con el sistema, solo programador)
@@ -291,6 +331,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 // aqui se habla directamente con el sistema solo el programador
                 resultado = RET_OK; // por ahora marca exito; logica pendiente de implementar
                 detalle_resultado = "Proceso de sistema ejecutado.";
+                free(detalle_capa_proceso);
+                detalle_capa_proceso = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[2], "todo salio bien en este proseso llamado procesos_sistema", detalle_resultado);
             }
         }
     }
@@ -305,7 +347,23 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
     {
         *estado_out = resultado; // guarda el resultado final (RET_OK o RET_ERROR_GENERIC) en el puntero del llamador
     }
-    return duplicar_texto_local(detalle_resultado); // retorna una copia del mensaje de resultado; ejemplo: "Producto agregado." — el llamador debe llamar free()
+
+    if (detalle_capa_modelo != NULL)
+    {
+        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_capa_modelo);
+    }
+    else if (detalle_capa_proceso != NULL)
+    {
+        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_capa_proceso);
+    }
+    else
+    {
+        retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_resultado);
+    }
+
+    free(detalle_capa_modelo);
+    free(detalle_capa_proceso);
+    return retorno_conmutador; // retorna formato estandarizado del conmutador
 }
 
 /*

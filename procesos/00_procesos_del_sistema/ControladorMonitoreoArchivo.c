@@ -71,9 +71,7 @@ static char *duplicar_texto_local(const char *texto)
 static int extraer_comando_de_linea_transferencia(const char *linea_transferencia, char **comando_out)
 {
     char **partes_transferencia = NULL;
-    char **partes_comando = NULL;
     int n_partes_transferencia = 0;
-    int n_partes_comando = 0;
     char *comando_final = NULL;
 
     if (comando_out == NULL)
@@ -89,10 +87,11 @@ static int extraer_comando_de_linea_transferencia(const char *linea_transferenci
     }
 
     n_partes_transferencia = split(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia);
-    if (n_partes_transferencia < 2 ||
+    if (n_partes_transferencia < 3 ||
         partes_transferencia == NULL ||
         partes_transferencia[0] == NULL ||
-        partes_transferencia[1] == NULL)
+        partes_transferencia[1] == NULL ||
+        partes_transferencia[2] == NULL)
     {
         free_split(partes_transferencia);
         return RET_NOT_FOUND;
@@ -113,31 +112,13 @@ static int extraer_comando_de_linea_transferencia(const char *linea_transferenci
         }
     }
 
-    n_partes_comando = split(partes_transferencia[1], GG_caracter_para_transferencia_entre_archivos[1], &partes_comando);
-    if (n_partes_comando >= 3 && partes_comando != NULL && partes_comando[1] != NULL && partes_comando[2] != NULL)
+    comando_final = duplicar_texto_local(partes_transferencia[1]);
+    if (comando_final == NULL)
     {
-        if (concatenar_formato_separado_por_variable(&comando_final, NULL, "%s%s%s",
-                                                     partes_comando[1],
-                                                     GG_caracter_para_transferencia_entre_archivos[1],
-                                                     partes_comando[2]) < 0)
-        {
-            free_split(partes_comando);
-            free_split(partes_transferencia);
-            return RET_ERROR_GENERIC;
-        }
-    }
-    else
-    {
-        comando_final = duplicar_texto_local(partes_transferencia[1]);
-        if (comando_final == NULL)
-        {
-            free_split(partes_comando);
-            free_split(partes_transferencia);
-            return RET_ERROR_GENERIC;
-        }
+        free_split(partes_transferencia);
+        return RET_ERROR_GENERIC;
     }
 
-    free_split(partes_comando);
     free_split(partes_transferencia);
     *comando_out = comando_final;
     return RET_OK;

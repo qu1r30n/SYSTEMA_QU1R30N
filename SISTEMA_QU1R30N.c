@@ -36,13 +36,13 @@ static int acumular_texto_con_separador(char **acumulador, const char *nuevo_tex
 
     if (*acumulador == NULL) // si aun no hay lista de modelos, este texto sera el primero
     {
-        *acumulador = variable_string("%s", nuevo_texto); // duplica el primer retorno de modelo en memoria nueva
+        *acumulador = variable_string("%s", nuevo_texto);          // duplica el primer retorno de modelo en memoria nueva
         return (*acumulador != NULL) ? RET_OK : RET_ERROR_GENERIC; // reporta exito o error de memoria
     }
 
-    size_t largo_actual = strlen(*acumulador); // mide la cadena acumulada hasta este momento
-    size_t largo_nuevo = strlen(nuevo_texto); // mide el nuevo retorno de modelo a anexar
-    size_t largo_sep = (separador != NULL) ? strlen(separador) : 0; // mide el separador entre modelos o usa cero
+    size_t largo_actual = strlen(*acumulador);                                            // mide la cadena acumulada hasta este momento
+    size_t largo_nuevo = strlen(nuevo_texto);                                             // mide el nuevo retorno de modelo a anexar
+    size_t largo_sep = (separador != NULL) ? strlen(separador) : 0;                       // mide el separador entre modelos o usa cero
     char *tmp = (char *)realloc(*acumulador, largo_actual + largo_sep + largo_nuevo + 1); // redimensiona el buffer para el contenido total
 
     if (tmp == NULL)
@@ -55,11 +55,11 @@ static int acumular_texto_con_separador(char **acumulador, const char *nuevo_tex
     if (largo_sep > 0) // si existe separador, lo inserta antes del nuevo retorno
     {
         memcpy(*acumulador + largo_actual, separador, largo_sep); // copia el separador despues del contenido actual
-        largo_actual += largo_sep; // mueve la posicion al final del separador copiado
+        largo_actual += largo_sep;                                // mueve la posicion al final del separador copiado
     }
 
     memcpy(*acumulador + largo_actual, nuevo_texto, largo_nuevo + 1); // copia el nuevo retorno incluyendo el terminador nulo
-    return RET_OK; // confirma que la acumulacion se hizo correctamente
+    return RET_OK;                                                    // confirma que la acumulacion se hizo correctamente
 }
 
 // Inicialización
@@ -144,7 +144,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
         return construir_retorno_estandar(RET_ERROR_GENERIC, GG_caracter_para_confirmacion_o_error[0], "error en el conmutador", "Comando invalido: no se pudo separar la solicitud.");
     }
 
-    imprimirMensaje_para_depurar("\n\n%s\n%s\n%s\n%s", opciones[0], opciones[1], opciones[2], opciones[3]); // muestra las 4 partes del comando; ejemplo: "op_tienda" / "agregar_producto§..." / "id_de_espacio⊓..." / "usuario_de_espacio⊓..."
+    imprimirMensaje_para_depurar("\n\n%s\n%s\n%s\n%s\n%s", opciones[0], opciones[1], opciones[2], opciones[3], opciones[4]); // muestra las 5 partes del comando; ejemplo: "op_tienda" / "agregar_producto§..." / "id_de_espacio⊓..." / "usuario_de_espacio⊓..." / "contraseña_de_espacio⊓..."
 
     char *texto_permiso = NULL; // string con datos de permiso a verificar; se construye a continuacion
 
@@ -169,12 +169,23 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
 
     imprimirMensaje_para_depurar("tiene_permiso_espacio=%d\n", tiene_permiso_espacio);         // si es 0 significa que si lo tiene; ejemplo: tiene_permiso_espacio=0
     imprimirMensaje_para_depurar("nivel_del_usuario_espacio=%d\n", nivel_del_usuario_espacio); // muestra el nivel obtenido; ejemplo: nivel_del_usuario_espacio=1
-    if (retorna_direccion_espacio_negocio)                                                     // si se obtuvo la direccion del espacio, mostrarla y liberarla
+    free(texto_permiso);                                                                       // libera el string de permiso que ya fue utilizado
+
+    // --- resumen de lo que llego antes de decidir que hacer ---
+    imprimirMensaje_para_depurar("\n=== ANTES DEL CONMUTADOR ===\n");
+    imprimirMensaje_para_depurar("operacion                    opciones[0] = %s\n", opciones[0] ? opciones[0] : "(nulo)");                                              // posicion 0: op_tienda, op_sistema, etc.
+    imprimirMensaje_para_depurar("comando/params               opciones[1] = %s\n", opciones[1] ? opciones[1] : "(nulo)");                                              // posicion 1: sub-operacion y sus parametros
+    imprimirMensaje_para_depurar("id_espacio_negocio           opciones[2] = %s\n", opciones[2] ? opciones[2] : "(nulo)");                                              // posicion 2: identificador del espacio de negocio
+    imprimirMensaje_para_depurar("usuario/contraseña_espacio   opciones[3] = %s\n", opciones[3] ? opciones[3] : "(nulo)");                                              // posicion 3: usuario y contraseña del administrador del espacio
+    imprimirMensaje_para_depurar("usuario/contraseña_negocio   opciones[4] = %s\n", opciones[4] ? opciones[4] : "(nulo)");                                              // posicion 4: usuario y contraseña del administrador del negocio
+    imprimirMensaje_para_depurar("dir_espacio_negocio                       = %s\n", retorna_direccion_espacio_negocio ? retorna_direccion_espacio_negocio : "(nulo)"); // ruta del espacio si el permiso fue valido; ejemplo: "espacios\\20260330113640_ferreteria_dan\\"
+    imprimirMensaje_para_depurar("nivel_usuario de espacio                  = %d\n", nivel_del_usuario_espacio);                                                        // -1=sin permiso, 0=programador, 1=administrador
+    imprimirMensaje_para_depurar("============================\n\n");
+
+    if (retorna_direccion_espacio_negocio) // libera la direccion del espacio despues de haberla impreso
     {
-        imprimirMensaje_para_depurar("direccion_espacio_negocio=%s\n", retorna_direccion_espacio_negocio); // ejemplo: "espacios\\20260330113640_ferreteria_dan\\"
-        free(retorna_direccion_espacio_negocio);                                                           // libera la memoria de la direccion ya que no se usa aqui
+        free(retorna_direccion_espacio_negocio); // libera la memoria de la direccion ya que no se usa en el conmutador
     }
-    free(texto_permiso); // libera el string de permiso que ya fue utilizado
 
     if (nivel_del_usuario_espacio <= 1 && nivel_del_usuario_espacio > -1) // entra solo si el nivel es 0 o 1 (valido); nivel -1 significa acceso denegado
     {
@@ -314,7 +325,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                                 detalle_resultado = "Error al acumular retorno de modelo crear_espacio.";
                             }
                         }
-                        free(direccion_archivo_espacios);                                                                            // libera la ruta construida
+                        free(direccion_archivo_espacios); // libera la ruta construida
                     }
                     else // sub-operacion de administracion_espacio desconocida
                     {
@@ -431,9 +442,9 @@ static int extraer_datos_transferencia(const char *linea_transferencia,
             partes_comando[0] != NULL && strcmp(partes_comando[0], GG_id_programa) == 0 &&                                        // el destino debe ser este programa: "SISTEMA_QU1R30N"
             partes_comando[1] != NULL)                                                                                            // el origen debe existir
         {
-            *programa_respuesta_out = variable_string("%s", partes_comando[1]);      /* ID_ORIGEN: quien envio el comando; ejemplo: "NEXOPORTALARCANO" */
-            *comando_out = variable_string("%s", partes_transferencia[1]);            /* COMANDO: cuerpo del comando; ejemplo: "op_tienda~agregar_producto§..." */
-            *info_espejo_out = variable_string("%s", partes_transferencia[2]);        /* ESPEJO: se retornara intacto al emisor; ejemplo: "PREGUNTAS_WS¤" */
+            *programa_respuesta_out = variable_string("%s", partes_comando[1]); /* ID_ORIGEN: quien envio el comando; ejemplo: "NEXOPORTALARCANO" */
+            *comando_out = variable_string("%s", partes_transferencia[1]);      /* COMANDO: cuerpo del comando; ejemplo: "op_tienda~agregar_producto§..." */
+            *info_espejo_out = variable_string("%s", partes_transferencia[2]);  /* ESPEJO: se retornara intacto al emisor; ejemplo: "PREGUNTAS_WS¤" */
 
             free_split(partes_comando);       // libera el arreglo de destino/origen
             free_split(partes_transferencia); // libera el arreglo de columnas

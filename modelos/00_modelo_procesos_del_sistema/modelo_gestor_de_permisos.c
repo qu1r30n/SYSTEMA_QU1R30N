@@ -125,8 +125,92 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
 
     // Libera memoria usada
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-    liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
+    liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 
     // Devuelve el resultado de la validación (1, 0 o -1)
+    RETORNAR_MODELO_ESTANDAR(tiene_permiso);
+}
+
+/*
+ * Uso: Verifica permiso del negocio sin retornar directorio; se usa cuando ya se tiene la ruta y solo se validan las credenciales.
+ * Entrada ejemplo: modelo_checar_permiso_negocios(texto, &nivel_del_usuario_negocio)
+ */
+int modelo_checar_permiso_negocios(char *texto, int *retornar_nivel)
+{
+    if (retornar_nivel)
+    {
+        *retornar_nivel = -1;
+    }
+
+    if (!texto)
+    {
+        RETORNAR_MODELO_ESTANDAR(-1);
+    }
+    imprimirMensaje_para_depurar("\n\n%s\n", texto);
+
+    char *nombres_variables[][4] =
+        {
+            {"nivel_minimo", "int", "0", ""},
+            {"ruta_archivo", "string", "nose", ""},
+            {"id_usuario_negocio", "string", "nose", ""},
+            {"usuario_de_negocio", "string", "nose", ""},
+            {"contraseña_de_negocio", "string", "nose", ""},
+            {NULL, NULL, NULL, NULL}};
+
+    int cuantos_parametros_hay = 0;
+    while (nombres_variables[cuantos_parametros_hay][0])
+    {
+        cuantos_parametros_hay++;
+    }
+
+    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[1]);
+    if (!partes)
+    {
+        RETORNAR_MODELO_ESTANDAR(-1);
+    }
+
+    imprimirMensaje_para_depurar("\n\n%s\n%s\n%s\n%s\n%s", partes[0], partes[1], partes[2], partes[3], partes[4]);
+
+    int cuantas_partes = 0;
+    while (partes[cuantas_partes])
+    {
+        cuantas_partes++;
+    }
+
+    StructurasDinamicas datos = crearStructuraVacia();
+
+    int ret_parse = procesar_partes_del_texto(
+        partes,
+        nombres_variables,
+        G_caracter_separacion_nom_parametro_de_valor[0],
+        &datos);
+
+    if (ret_parse < 0 || cuantas_partes <= 0)
+    {
+        modelo_free_split(partes);
+        liberarStructura(&datos);
+        RETORNAR_MODELO_ESTANDAR(-1);
+    }
+
+    int nivel_minimo = *(int *)obtenerValorPorOrden(&datos, 0);
+    char *ruta_archivo = (char *)obtenerValorPorOrden(&datos, 1);
+    char *id_de_espacio = (char *)obtenerValorPorOrden(&datos, 2);
+    char *usuario = (char *)obtenerValorPorOrden(&datos, 3);
+    char *contrasena = (char *)obtenerValorPorOrden(&datos, 4);
+
+    imprimirMensaje_para_depurar("%s\n%s\n%s\n%s\n%d",
+                                 ruta_archivo, id_de_espacio, usuario, contrasena, nivel_minimo);
+
+    int tiene_permiso = checar_permiso_negocios(
+        nivel_minimo,
+        ruta_archivo,
+        id_de_espacio,
+        usuario,
+        contrasena,
+        retornar_nivel);
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
+
     RETORNAR_MODELO_ESTANDAR(tiene_permiso);
 }

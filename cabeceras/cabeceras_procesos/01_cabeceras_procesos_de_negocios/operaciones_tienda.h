@@ -10,18 +10,26 @@
  * Uso: Ejecuta leerInventario de forma segura.
  * Entrada ejemplo: leerInventario(inventario, maxProductos)
  */
-int leerInventario(char inventario[][COLUMNAS][256], int maxProductos);
+/*
+ * Uso: Ejecuta leerInventario de forma segura.
+ * Entrada ejemplo: leerInventario(inventario, maxProductos, dir_espacio)
+ */
+int leerInventario(char inventario[][COLUMNAS][256], int maxProductos, char *dir_espacio);
 /*
  * Uso: Ejecuta guardarInventario de forma segura.
- * Entrada ejemplo: guardarInventario(inventario, n)
+ * Entrada ejemplo: guardarInventario(inventario, n, dir_espacio)
  */
-void guardarInventario(char inventario[][COLUMNAS][256], int n);
+void guardarInventario(char inventario[][COLUMNAS][256], int n, char *dir_espacio);
 /*
  * Uso: Ejecuta buscarProducto de forma segura.
- * Entrada ejemplo: buscarProducto(inventario, n, codigo)
+ * Entrada ejemplo: buscarProducto(inventario, n, codigo, dir_espacio)
  */
-int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo);
+int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo, char *dir_espacio);
 
+/*
+ * Uso: Ejecuta agregarProducto de forma segura.
+ * Entrada ejemplo: agregarProducto(producto, ..., dir_espacio)
+ */
 void agregarProducto(
     char *producto,
     float contenido,
@@ -53,22 +61,23 @@ void agregarProducto(
     char *indices_mes_registro_produc_vendido,
     char *indices_anio_registro_produc_vendido,
     char *ultima_venta,
-    char *indices_total_registro_produc_vendido);
+    char *indices_total_registro_produc_vendido,
+    char *dir_espacio);
 
 /*
  * Uso: Ejecuta editarPrecio de forma segura.
- * Entrada ejemplo: editarPrecio(codigo, precio, proveedor)
+ * Entrada ejemplo: editarPrecio(codigo, precio, proveedor, dir_espacio)
  */
-int editarPrecio(char *codigo, char *precio, char *proveedor);
+int editarPrecio(char *codigo, char *precio, char *proveedor, char *dir_espacio);
 /*
  * Uso: Ejecuta venta de forma segura.
- * Entrada ejemplo: venta(codigo, cantidad, sucursal)
+ * Entrada ejemplo: venta(codigo, cantidad, sucursal, dir_espacio)
  */
-int venta(char *codigo, int cantidad, char *sucursal);
+int venta(char *codigo, int cantidad, char *sucursal, char *dir_espacio);
 /*
  * Uso: Ejecuta compra de forma segura.
- * Entrada ejemplo: compra(codigo, cantidad, proveedor)
+ * Entrada ejemplo: compra(codigo, cantidad, proveedor, dir_espacio)
  */
-int compra(char *codigo, int cantidad, char *proveedor);
+int compra(char *codigo, int cantidad, char *proveedor, char *dir_espacio);
 
 #endif

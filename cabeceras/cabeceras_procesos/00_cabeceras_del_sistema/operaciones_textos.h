@@ -62,8 +62,8 @@ char *construir_retorno_estandar(int codigo, const char *separador, const char *
 char *variable_string(const char *format, ...);
 
 /* =======================
-   FUNCIONES NUEVAS DEL C#
-   ======================== */
+FUNCIONES NUEVAS DEL C#
+======================== */
 
 /* Unir filas con carácter separador, extrayendo columnas específicas opcionalmente. */
 /*

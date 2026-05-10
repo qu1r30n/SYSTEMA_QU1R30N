@@ -71,18 +71,20 @@ const char *obtener_ultimo_retorno_formateado(void);
  * que la instruccion continua en la siguiente linea. Si se quita una de esas barras,
  * el macro se corta ahi mismo y lo de abajo queda como codigo suelto, generando errores.
  */
-#define RETORNAR_MODELO_ESTANDAR(codigo) do /* inicia un bloque seguro para poder usar el macro como si fuera una sola instruccion */ \
-    { /* abre el bloque local del macro para no contaminar variables externas; la barra final mantiene esta linea dentro del macro */ \
-        int _retorno_tmp = (int)(codigo); /* convierte y guarda el codigo antes de retornarlo; la barra final une esta linea con la siguiente */ \
+#define RETORNAR_MODELO_ESTANDAR(codigo)                                                                                                                                                                                                \
+    do                                                                                        /* inicia un bloque seguro para poder usar el macro como si fuera una sola instruccion */                                                 \
+    {                                                                                         /* abre el bloque local del macro para no contaminar variables externas; la barra final mantiene esta linea dentro del macro */           \
+        int _retorno_tmp = (int)(codigo);                                                     /* convierte y guarda el codigo antes de retornarlo; la barra final une esta linea con la siguiente */                                    \
         establecer_ultimo_retorno_formateado(_retorno_tmp, 1, __func__, "otros datos extra"); /* guarda el retorno textual del modelo usando el nombre real de la funcion; la barra final evita que el macro termine antes de tiempo */ \
-        return _retorno_tmp; /* devuelve el mismo codigo int original sin cambiar la firma; la barra final hace que el cierre while siga perteneciendo al macro */ \
+        return _retorno_tmp;                                                                  /* devuelve el mismo codigo int original sin cambiar la firma; la barra final hace que el cierre while siga perteneciendo al macro */     \
     } while (0) /* cierra el patron clasico de macro seguro */
 
-#define RETORNAR_PROCESO_ESTANDAR(codigo) do /* inicia un bloque seguro para encapsular el retorno estandar del proceso */ \
-    { /* abre el alcance local del macro del proceso; la barra final mantiene el bloque unido */ \
-        int _retorno_tmp = (int)(codigo); /* guarda el codigo que regresara la funcion; la barra final indica que el macro aun no termina */ \
+#define RETORNAR_PROCESO_ESTANDAR(codigo)                                                                                                                                                                                           \
+    do                                                                                        /* inicia un bloque seguro para encapsular el retorno estandar del proceso */                                                         \
+    {                                                                                         /* abre el alcance local del macro del proceso; la barra final mantiene el bloque unido */                                            \
+        int _retorno_tmp = (int)(codigo);                                                     /* guarda el codigo que regresara la funcion; la barra final indica que el macro aun no termina */                                    \
         establecer_ultimo_retorno_formateado(_retorno_tmp, 2, __func__, "otros datos extra"); /* registra el retorno textual del proceso con el nombre de la funcion actual; la barra final conserva esta linea dentro del macro */ \
-        return _retorno_tmp; /* retorna el codigo int del proceso al llamador; la barra final une esta instruccion con el cierre while */ \
+        return _retorno_tmp;                                                                  /* retorna el codigo int del proceso al llamador; la barra final une esta instruccion con el cierre while */                          \
     } while (0) /* cierra el macro seguro */
 
 #define ARCH_INVENTARIO 0

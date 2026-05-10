@@ -31,32 +31,32 @@
 #include "../../cabeceras/codigos_retorno.h"
 
 /* ============================================= */
-/* EJEMPLO DE USO                                */
+/* EJEMPLO DE USO  */
 /* ============================================= */
 
 /*
-    int main() {
+ int main() {
 
-        StructurasDinamicas s = crearStructuraVacia();
+  StructurasDinamicas s = crearStructuraVacia();
 
-        // Agregar campos en tiempo de ejecuci??n
-        agregarCampo(&s, "producto", "string");
-        agregarCampo(&s, "precio", "float");
-        agregarCampo(&s, "stock", "int");
-        agregarCampo(&s, "proveedor", "string");
+  // Agregar campos en tiempo de ejecuci??n
+  agregarCampo(&s, "producto", "string");
+  agregarCampo(&s, "precio", "float");
+  agregarCampo(&s, "stock", "int");
+  agregarCampo(&s, "proveedor", "string");
 
-        // Asignar valores
-        asignarValorString(&s, "producto", "Leche");
-        asignarValorFloat(&s, "precio", 1.5);
-        asignarValorInt(&s, "stock", 20);
-        asignarValorString(&s, "proveedor", "ProveedorX");
+  // Asignar valores
+  asignarValorString(&s, "producto", "Leche");
+  asignarValorFloat(&s, "precio", 1.5);
+  asignarValorInt(&s, "stock", 20);
+  asignarValorString(&s, "proveedor", "ProveedorX");
 
-        imprimirStructura(&s);
+  imprimirStructura(&s);
 
-        liberarStructura(&s);
+  liberarStructura(&s);
 
-        return 0;
-    }
+  return 0;
+ }
 */
 
 /* Macros para tipos */
@@ -65,7 +65,7 @@
 #define TIPO_FLOAT 2  /* float */
 
 /* ============================================= */
-/* CREAR ESTRUCTURA DIN??MICA VAC??A              */
+/* CREAR ESTRUCTURA DIN??MICA VAC??A  */
 /* ============================================= */
 /*
  * Uso: Ejecuta crearStructuraVacia de forma segura.
@@ -93,7 +93,7 @@ StructurasDinamicas crearStructuraVacia(void)
 }
 
 /* ============================================= */
-/* AGREGAR CAMPO DINÁMICO                       */
+/* AGREGAR CAMPO DINÁMICO  */
 /* ============================================= */
 /*
  * Uso: Ejecuta agregarCampo de forma segura.
@@ -183,7 +183,7 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
 }
 
 /* ============================================= */
-/* IMPRIMIR ESTRUCTURA DINÁMICA                  */
+/* IMPRIMIR ESTRUCTURA DINÁMICA*/
 /* ============================================= */
 /*
  * Uso: Ejecuta imprimirStructura de forma segura.
@@ -219,7 +219,7 @@ void imprimirStructura(StructurasDinamicas *s)
 }
 
 /* ============================================= */
-/* ASIGNAR VALOR STRING POR NOMBRE              */
+/* ASIGNAR VALOR STRING POR NOMBRE  */
 /* ============================================= */
 /*
  * Uso: Ejecuta asignarValorString de forma segura.
@@ -259,7 +259,7 @@ void asignarValorString(StructurasDinamicas *s, const char *nombre, const char *
 }
 
 /* ============================================= */
-/* ASIGNAR VALOR INT POR NOMBRE                 */
+/* ASIGNAR VALOR INT POR NOMBRE  */
 /* ============================================= */
 /*
  * Uso: Ejecuta asignarValorInt de forma segura.
@@ -292,7 +292,7 @@ void asignarValorInt(StructurasDinamicas *s, const char *nombre, int valor)
 }
 
 /* ============================================= */
-/* ASIGNAR VALOR FLOAT POR NOMBRE               */
+/* ASIGNAR VALOR FLOAT POR NOMBRE*/
 /* ============================================= */
 /*
  * Uso: Ejecuta asignarValorFloat de forma segura.
@@ -325,7 +325,7 @@ void asignarValorFloat(StructurasDinamicas *s, const char *nombre, float valor)
 }
 
 /* ============================================= */
-/* LIBERAR MEMORIA DE LA ESTRUCTURA              */
+/* LIBERAR MEMORIA DE LA ESTRUCTURA  */
 /* ============================================= */
 /*
  * Uso: Ejecuta liberarStructura de forma segura.

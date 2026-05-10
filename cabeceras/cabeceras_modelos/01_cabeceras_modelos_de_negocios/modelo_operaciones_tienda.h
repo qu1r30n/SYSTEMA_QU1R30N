@@ -91,39 +91,39 @@ void modelo_inicializacion(char *texto);
 // Inventario
 /*
  * Uso: Ejecuta modelo_leerInventario de forma segura.
- * Entrada ejemplo: modelo_leerInventario(texto)
+ * Entrada ejemplo: modelo_leerInventario(texto, dir_espacio, usuario_contraseña_negocio)
  */
-int modelo_leerInventario(char *texto);
+int modelo_leerInventario(char *texto, char *dir_espacio, char *usuario_contraseña_negocio);
 /*
  * Uso: Ejecuta modelo_guardarInventario de forma segura.
- * Entrada ejemplo: modelo_guardarInventario(texto)
+ * Entrada ejemplo: modelo_guardarInventario(texto, dir_espacio, usuario_contraseña_negocio)
  */
-void modelo_guardarInventario(char *texto);
+void modelo_guardarInventario(char *texto, char *dir_espacio, char *usuario_contraseña_negocio);
 /*
  * Uso: Ejecuta modelo_buscarProducto de forma segura.
- * Entrada ejemplo: modelo_buscarProducto(texto)
+ * Entrada ejemplo: modelo_buscarProducto(texto, dir_espacio, usuario_contraseña_negocio)
  */
-int modelo_buscarProducto(char *texto);
+int modelo_buscarProducto(char *texto, char *dir_espacio, char *usuario_contraseña_negocio);
 /*
  * Uso: Ejecuta modelo_agregarProducto de forma segura.
- * Entrada ejemplo: modelo_agregarProducto(texto)
+ * Entrada ejemplo: modelo_agregarProducto(texto, dir_espacio, usuario_contraseña_negocio)
  */
-int modelo_agregarProducto(char *texto);
+int modelo_agregarProducto(char *texto, char *dir_espacio, char *usuario_contraseña_negocio);
 /*
  * Uso: Ejecuta modelo_editarPrecio de forma segura.
- * Entrada ejemplo: modelo_editarPrecio(texto)
+ * Entrada ejemplo: modelo_editarPrecio(texto, dir_espacio, usuario_contraseña_negocio)
  */
-int modelo_editarPrecio(char *texto);
+int modelo_editarPrecio(char *texto, char *dir_espacio, char *usuario_contraseña_negocio);
 /*
  * Uso: Ejecuta modelo_venta de forma segura.
- * Entrada ejemplo: modelo_venta(texto)
+ * Entrada ejemplo: modelo_venta(texto, dir_espacio, usuario_contraseña_negocio)
  */
-int modelo_venta(char *texto);
+int modelo_venta(char *texto, char *dir_espacio, char *usuario_contraseña_negocio);
 /*
  * Uso: Ejecuta modelo_compra de forma segura.
- * Entrada ejemplo: modelo_compra(texto)
+ * Entrada ejemplo: modelo_compra(texto, dir_espacio, usuario_contraseña_negocio)
  */
-int modelo_compra(char *texto);
+int modelo_compra(char *texto, char *dir_espacio, char *usuario_contraseña_negocio);
 
 // Fecha
 /*

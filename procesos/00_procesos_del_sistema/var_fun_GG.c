@@ -10,7 +10,7 @@
 #include <time.h>
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
-char *GG_ultimo_retorno_estandar = NULL; // ultimo retorno textual estandar generado por modelo/proceso/conmutador; ejemplo: "0╠todo salio bien en este modelo llamado x╠otros datos extra"
+char *GG_ultimo_retorno_estandar = NULL;            // ultimo retorno textual estandar generado por modelo/proceso/conmutador; ejemplo: "0╠todo salio bien en este modelo llamado x╠otros datos extra"
 static char *GG_acumulador_retorno_procesos = NULL; // acumula respuestas de procesos para incrustarlas en el retorno del modelo
 
 static char *duplicar_texto_retorno(const char *texto)
@@ -20,7 +20,7 @@ static char *duplicar_texto_retorno(const char *texto)
         return NULL; // retorna nulo para indicar que no pudo generarse una copia valida
     }
 
-    size_t largo = strlen(texto) + 1; // calcula el largo total incluyendo el terminador nulo
+    size_t largo = strlen(texto) + 1;    // calcula el largo total incluyendo el terminador nulo
     char *copia = (char *)malloc(largo); // reserva memoria dinamica para la copia del texto
     if (copia == NULL)
     {
@@ -28,7 +28,7 @@ static char *duplicar_texto_retorno(const char *texto)
     }
 
     memcpy(copia, texto, largo); // copia el contenido completo del texto original a la nueva memoria
-    return copia; // entrega la copia al llamador
+    return copia;                // entrega la copia al llamador
 }
 
 static void acumular_texto_con_separador(char **acumulador, const char *nuevo_texto, const char *separador)
@@ -41,12 +41,12 @@ static void acumular_texto_con_separador(char **acumulador, const char *nuevo_te
     if (*acumulador == NULL) // si aun no existe acumulado, el nuevo texto sera la base
     {
         *acumulador = duplicar_texto_retorno(nuevo_texto); // crea una copia independiente del primer retorno recibido
-        return; // termina porque ya quedo inicializado el acumulador
+        return;                                            // termina porque ya quedo inicializado el acumulador
     }
 
-    size_t largo_actual = strlen(*acumulador); // mide cuanto texto hay actualmente acumulado
-    size_t largo_nuevo = strlen(nuevo_texto); // mide el nuevo texto que sera agregado
-    size_t largo_sep = (separador != NULL) ? strlen(separador) : 0; // mide el separador o usa cero si no hay
+    size_t largo_actual = strlen(*acumulador);                                            // mide cuanto texto hay actualmente acumulado
+    size_t largo_nuevo = strlen(nuevo_texto);                                             // mide el nuevo texto que sera agregado
+    size_t largo_sep = (separador != NULL) ? strlen(separador) : 0;                       // mide el separador o usa cero si no hay
     char *tmp = (char *)realloc(*acumulador, largo_actual + largo_sep + largo_nuevo + 1); // expande el buffer para texto actual, separador, nuevo texto y terminador
 
     if (tmp == NULL)
@@ -58,7 +58,7 @@ static void acumular_texto_con_separador(char **acumulador, const char *nuevo_te
     if (largo_sep > 0) // agrega separador solo cuando exista uno configurado
     {
         memcpy(*acumulador + largo_actual, separador, largo_sep); // copia el separador al final del texto actual
-        largo_actual += largo_sep; // avanza la posicion de escritura despues del separador
+        largo_actual += largo_sep;                                // avanza la posicion de escritura despues del separador
     }
 
     memcpy(*acumulador + largo_actual, nuevo_texto, largo_nuevo + 1); // pega el nuevo texto incluyendo el terminador final
@@ -70,41 +70,41 @@ void establecer_ultimo_retorno_formateado(int codigo,
                                           const char *datos_extra)
 {
     const char *nombre_seguro = (nombre_funcion != NULL) ? nombre_funcion : "funcion_desconocida"; // garantiza un nombre valido aunque el macro no lo mande
-    const char *extra_seguro = (datos_extra != NULL) ? datos_extra : "otros datos extra"; // garantiza un bloque extra por defecto
-    const char *separador = GG_caracter_para_confirmacion_o_error[0]; // inicia con el separador del conmutador
-    const char *plantilla_ok = "todo salio bien en el conmutador"; // mensaje base para casos exitosos
-    const char *plantilla_error = "error en el conmutador"; // mensaje base para casos de error
-    char mensaje[256]; // buffer temporal donde se arma el mensaje legible de la capa
-    int escritos_mensaje = 0; // guarda cuantos caracteres escribio snprintf en mensaje
-    int necesarios = 0; // guarda el tamaño exacto necesario para reservar el retorno final
-    char *nuevo = NULL; // recibira el retorno completo de modelo o conmutador
-    char *retorno_proceso = NULL; // recibira el retorno atomico del proceso
+    const char *extra_seguro = (datos_extra != NULL) ? datos_extra : "otros datos extra";          // garantiza un bloque extra por defecto
+    const char *separador = GG_caracter_para_confirmacion_o_error[0];                              // inicia con el separador del conmutador
+    const char *plantilla_ok = "todo salio bien en el conmutador";                                 // mensaje base para casos exitosos
+    const char *plantilla_error = "error en el conmutador";                                        // mensaje base para casos de error
+    char mensaje[256];                                                                             // buffer temporal donde se arma el mensaje legible de la capa
+    int escritos_mensaje = 0;                                                                      // guarda cuantos caracteres escribio snprintf en mensaje
+    int necesarios = 0;                                                                            // guarda el tamaño exacto necesario para reservar el retorno final
+    char *nuevo = NULL;                                                                            // recibira el retorno completo de modelo o conmutador
+    char *retorno_proceso = NULL;                                                                  // recibira el retorno atomico del proceso
 
     if (indice_capa == 1) // configura textos y separador de la capa modelo
     {
-        separador = GG_caracter_para_confirmacion_o_error[1]; // cambia al separador especifico del modelo
-        plantilla_ok = "todo salio bien en este modelo llamado %s"; // define plantilla de exito del modelo
-        plantilla_error = "error en este modelo llamado %s"; // define plantilla de error del modelo
+        separador = GG_caracter_para_confirmacion_o_error[1];                                                                 // cambia al separador especifico del modelo
+        plantilla_ok = "todo salio bien en este modelo llamado %s";                                                           // define plantilla de exito del modelo
+        plantilla_error = "error en este modelo llamado %s";                                                                  // define plantilla de error del modelo
         escritos_mensaje = snprintf(mensaje, sizeof(mensaje), (codigo >= 0) ? plantilla_ok : plantilla_error, nombre_seguro); // construye el mensaje usando el nombre de la funcion
     }
     else if (indice_capa == 2) // configura textos y separador de la capa proceso
     {
-        separador = GG_caracter_para_confirmacion_o_error[4]; // usa el separador atomico codigo⛟mensaje del proceso
-        plantilla_ok = "todo salio bien en este proseso llamado %s"; // plantilla de exito del proceso
-        plantilla_error = "error en este proseso llamado %s"; // plantilla de error del proceso
+        separador = GG_caracter_para_confirmacion_o_error[4];                                                                 // usa el separador atomico codigo⛟mensaje del proceso
+        plantilla_ok = "todo salio bien en este proseso llamado %s";                                                          // plantilla de exito del proceso
+        plantilla_error = "error en este proseso llamado %s";                                                                 // plantilla de error del proceso
         escritos_mensaje = snprintf(mensaje, sizeof(mensaje), (codigo >= 0) ? plantilla_ok : plantilla_error, nombre_seguro); // construye el mensaje final del proceso
     }
     else // deja configurado el caso del conmutador u otra capa base
     {
-        separador = GG_caracter_para_confirmacion_o_error[0]; // reafirma el separador del conmutador
+        separador = GG_caracter_para_confirmacion_o_error[0];                                                        // reafirma el separador del conmutador
         escritos_mensaje = snprintf(mensaje, sizeof(mensaje), "%s", (codigo >= 0) ? plantilla_ok : plantilla_error); // copia el mensaje fijo del conmutador
     }
 
     if (escritos_mensaje < 0) // detecta error al construir el texto base del mensaje
     {
-        free(GG_ultimo_retorno_estandar); // libera cualquier retorno previo antes de reemplazarlo
+        free(GG_ultimo_retorno_estandar);                                                                       // libera cualquier retorno previo antes de reemplazarlo
         GG_ultimo_retorno_estandar = duplicar_texto_retorno("-1╣error al construir mensaje╣otros datos extra"); // guarda un retorno de falla controlada
-        return; // termina porque no puede continuar sin mensaje base
+        return;                                                                                                 // termina porque no puede continuar sin mensaje base
     }
 
     if (indice_capa == 2) // ruta especial: el proceso produce retorno atomico y se acumula para el modelo
@@ -112,26 +112,26 @@ void establecer_ultimo_retorno_formateado(int codigo,
         necesarios = snprintf(NULL, 0, "%d%s%s", codigo, separador, mensaje); // calcula el tamaño exacto de codigo⛟mensaje
         if (necesarios < 0)
         {
-            free(GG_ultimo_retorno_estandar); // libera el retorno previo antes de dejar el error actual
+            free(GG_ultimo_retorno_estandar);                                                                      // libera el retorno previo antes de dejar el error actual
             GG_ultimo_retorno_estandar = duplicar_texto_retorno("-1╣error al calcular retorno╣otros datos extra"); // registra un error controlado de tamaño
-            return; // sale porque no puede reservar memoria correctamente
+            return;                                                                                                // sale porque no puede reservar memoria correctamente
         }
 
         retorno_proceso = (char *)malloc((size_t)necesarios + 1); // reserva memoria exacta para el retorno del proceso
         if (retorno_proceso == NULL)
         {
-            free(GG_ultimo_retorno_estandar); // libera el retorno anterior antes de reportar falta de memoria
+            free(GG_ultimo_retorno_estandar);                                                             // libera el retorno anterior antes de reportar falta de memoria
             GG_ultimo_retorno_estandar = duplicar_texto_retorno("-1╣error de memoria╣otros datos extra"); // deja un retorno textual claro de fallo de memoria
-            return; // termina porque no existe buffer donde escribir
+            return;                                                                                       // termina porque no existe buffer donde escribir
         }
 
-        snprintf(retorno_proceso, (size_t)necesarios + 1, "%d%s%s", codigo, separador, mensaje); // escribe el retorno atomico del proceso en memoria reservada
+        snprintf(retorno_proceso, (size_t)necesarios + 1, "%d%s%s", codigo, separador, mensaje);                                  // escribe el retorno atomico del proceso en memoria reservada
         acumular_texto_con_separador(&GG_acumulador_retorno_procesos, retorno_proceso, GG_caracter_para_confirmacion_o_error[3]); // lo agrega al acumulador de procesos separado por ⛔
 
-        free(GG_ultimo_retorno_estandar); // libera el ultimo retorno global antes de sustituirlo
+        free(GG_ultimo_retorno_estandar);                                     // libera el ultimo retorno global antes de sustituirlo
         GG_ultimo_retorno_estandar = duplicar_texto_retorno(retorno_proceso); // guarda el proceso actual como ultimo retorno observable
-        free(retorno_proceso); // libera el buffer temporal del proceso porque ya fue duplicado
-        return; // termina aqui porque la capa proceso ya quedo registrada
+        free(retorno_proceso);                                                // libera el buffer temporal del proceso porque ya fue duplicado
+        return;                                                               // termina aqui porque la capa proceso ya quedo registrada
     }
 
     if (indice_capa == 1 && GG_acumulador_retorno_procesos != NULL && GG_acumulador_retorno_procesos[0] != '\0') // si el modelo ejecuto procesos, reemplaza su extra por esa cadena acumulada
@@ -142,27 +142,27 @@ void establecer_ultimo_retorno_formateado(int codigo,
     necesarios = snprintf(NULL, 0, "%d%s%s%s%s", codigo, separador, mensaje, separador, extra_seguro); // calcula el tamaño para el retorno completo de modelo o conmutador
     if (necesarios < 0)
     {
-        free(GG_ultimo_retorno_estandar); // libera el contenido previo antes de reportar el error nuevo
+        free(GG_ultimo_retorno_estandar);                                                                      // libera el contenido previo antes de reportar el error nuevo
         GG_ultimo_retorno_estandar = duplicar_texto_retorno("-1╣error al calcular retorno╣otros datos extra"); // deja un retorno de error por calculo fallido
-        return; // aborta porque no se puede reservar el bloque exacto
+        return;                                                                                                // aborta porque no se puede reservar el bloque exacto
     }
 
     nuevo = (char *)malloc((size_t)necesarios + 1); // reserva memoria para el retorno final completo
     if (nuevo == NULL)
     {
-        free(GG_ultimo_retorno_estandar); // limpia el retorno anterior antes de registrar la falla actual
+        free(GG_ultimo_retorno_estandar);                                                             // limpia el retorno anterior antes de registrar la falla actual
         GG_ultimo_retorno_estandar = duplicar_texto_retorno("-1╣error de memoria╣otros datos extra"); // deja un retorno textual de error de memoria
-        return; // termina porque no hay buffer disponible
+        return;                                                                                       // termina porque no hay buffer disponible
     }
 
     snprintf(nuevo, (size_t)necesarios + 1, "%d%s%s%s%s", codigo, separador, mensaje, separador, extra_seguro); // escribe el retorno completo con su separador de capa y datos extra
 
-    free(GG_ultimo_retorno_estandar); // libera el ultimo retorno global antes de reemplazarlo por el nuevo
+    free(GG_ultimo_retorno_estandar);   // libera el ultimo retorno global antes de reemplazarlo por el nuevo
     GG_ultimo_retorno_estandar = nuevo; // actualiza el puntero global con el retorno ya armado
 
     if (indice_capa == 1) // al terminar el modelo se debe limpiar el acumulado de procesos para el siguiente comando
     {
-        free(GG_acumulador_retorno_procesos); // libera la cadena acumulada de procesos usada por este modelo
+        free(GG_acumulador_retorno_procesos);  // libera la cadena acumulada de procesos usada por este modelo
         GG_acumulador_retorno_procesos = NULL; // deja el acumulador listo y vacio para la siguiente ejecucion
     }
 }
@@ -183,7 +183,7 @@ char *GG_caracter_separacion_funciones_espesificas[] = {"~", "§", "¶", "╬", 
 char *GG_caracter_separacion_funciones_espesificas_2[] = {"⚲", "⚳", "⚴", "⚵", "⚶", "⚷", "⚸", "⚺", "⚻", "⚼", "⚿", "⛊", "⛋"}; // separadores alternativos para parsing de comandos (set 2); ejemplo: "⚲"
 
 char *GG_caracter_para_confirmacion_o_error[] = {"╣", "╠", "⛐", "⛔", "⛟"};   // caracteres para señalizar confirmación o error en comunicación; ejemplo: "╣"
-char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒", "⛠", "⛡", "⛎" }; // caracteres alternativos para confirmación o error (set 2); ejemplo: "⛑"
+char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒", "⛠", "⛡", "⛎"}; // caracteres alternativos para confirmación o error (set 2); ejemplo: "⛑"
 
 char *GG_caracter_para_transferencia_entre_archivos[] = {"■", "┴", "¤"};   // separadores para transferencia de datos entre archivos; ejemplo: "■"
 char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘", "⛍"}; // separadores alternativos para transferencia entre archivos (set 2); ejemplo: "⛕"
@@ -1038,7 +1038,7 @@ void RecargarVentanaEmergente_TRABAJOS_DIA(const char *al_finalizar_que_borrar)
 }
 
 /* Función auxiliar para concatenar valores de columnas
-   id_columna se pasa para futuras extensiones; actualmente no se usa. */
+id_columna se pasa para futuras extensiones; actualmente no se usa. */
 /*
  * Uso: Ejecuta columnas_concatenadas de forma segura.
  * Entrada ejemplo: columnas_concatenadas(arreglo, filas, id_columna, caracter_separacion)
@@ -1188,7 +1188,7 @@ static int agregar_archivo_base_negocio(const char *ruta, const char *cabecera, 
         GG_dir_nom_archivos[cantidad].ruta = NULL;     // resetea puntero a NULL tras liberar
         GG_dir_nom_archivos[cantidad].cabecera = NULL; // resetea puntero a NULL tras liberar
         GG_dir_nom_archivos[cantidad].extra = NULL;    // resetea puntero a NULL tras liberar
-        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error indicando falla en la duplicaci\u00f3n de campos
+        RETORNAR_PROCESO_ESTANDAR(-1);                 // retorna error indicando falla en la duplicaci\u00f3n de campos
     }
 
     RETORNAR_PROCESO_ESTANDAR(0); // retorna \u00e9xito al haber agregado la entrada correctamente
@@ -1210,7 +1210,7 @@ static int agregar_archivo_base_negocio_con_columnas(const char *ruta, const cha
 
     resultado = agregar_archivo_base_negocio(ruta, metadata, extra); // agrega la entrada al arreglo usando la metadata generada
     free(metadata);                                                  // libera la memoria de metadata ya que fue copiada internamente
-    RETORNAR_PROCESO_ESTANDAR(resultado); // retorna el resultado de la operación de agregado; ejemplo: 0
+    RETORNAR_PROCESO_ESTANDAR(resultado);                            // retorna el resultado de la operación de agregado; ejemplo: 0
 }
 
 /*
@@ -1252,7 +1252,7 @@ static int agregar_archivo_inventario(const char *ruta, const char *cabecera)
         free(GG_direccion_hacer_inventarios[cantidad].cabecera);  // libera cabecera para evitar memory leak
         GG_direccion_hacer_inventarios[cantidad].ruta = NULL;     // resetea puntero a NULL tras liberar
         GG_direccion_hacer_inventarios[cantidad].cabecera = NULL; // resetea puntero a NULL tras liberar
-        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error indicando falla en la duplicaci\u00f3n de campos
+        RETORNAR_PROCESO_ESTANDAR(-1);                            // retorna error indicando falla en la duplicaci\u00f3n de campos
     }
 
     RETORNAR_PROCESO_ESTANDAR(0); // retorna \u00e9xito al haber agregado la entrada de inventario

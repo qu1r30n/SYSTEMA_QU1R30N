@@ -1,13 +1,13 @@
 ﻿#ifndef CORE_MEMORY_H
 #define CORE_MEMORY_H
-/* 
-   Evita inclusión múltiple del archivo.
-   Si ya fue incluido antes, no se vuelve a procesar.
+/*
+Evita inclusión múltiple del archivo.
+Si ya fue incluido antes, no se vuelve a procesar.
 */
 
-/* 
-   size_t es el tipo estándar para tamanios de memoria.
-   Está definido en stddef.h.
+/*
+size_t es el tipo estándar para tamanios de memoria.
+Está definido en stddef.h.
 */
 /* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - stddef.h: Tipos base como size_t y NULL
@@ -20,28 +20,28 @@
 ===============================================================================
 */
 
-/* 
-   Tamanio por defecto del bloque interno.
-   Solo se usa si NO pasamos memoria externa.
-   Puede modificarse antes de incluir este archivo.
+/*
+Tamanio por defecto del bloque interno.
+Solo se usa si NO pasamos memoria externa.
+Puede modificarse antes de incluir este archivo.
 */
 #ifndef CORE_ARENA_DEFAULT_SIZE
 #define CORE_ARENA_DEFAULT_SIZE (1024 * 64) /* 64 KB */
 #endif
 
 /*
-   Alineación por defecto.
-   8 bytes es seguro para la mayoría de CPUs modernas.
-   Puede aumentarse si se usan tipos más grandes.
+Alineación por defecto.
+8 bytes es seguro para la mayoría de CPUs modernas.
+Puede aumentarse si se usan tipos más grandes.
 */
 #ifndef CORE_ARENA_ALIGNMENT
 #define CORE_ARENA_ALIGNMENT 8
 #endif
 
 /*
-   Activa estadísticas internas del allocator.
-   1 = activar
-   0 = desactivar (más ligero)
+Activa estadísticas internas del allocator.
+1 = activar
+0 = desactivar (más ligero)
 */
 #ifndef CORE_ARENA_STATS
 #define CORE_ARENA_STATS 1
@@ -55,33 +55,33 @@
 
 typedef struct
 {
-    /* 
-       Puntero al bloque base de memoria.
-       Puede ser memoria estática o externa.
-    */
-    unsigned char* memoria;
+   /*
+   Puntero al bloque base de memoria.
+   Puede ser memoria estática o externa.
+   */
+   unsigned char *memoria;
 
-    /*
-       Tamanio total del bloque de memoria.
-    */
-    size_t capacidad;
+   /*
+   Tamanio total del bloque de memoria.
+   */
+   size_t capacidad;
 
-    /*
-       Offset actual dentro del bloque.
-       Indica cuánto se ha usado.
-    */
-    size_t offset;
+   /*
+   Offset actual dentro del bloque.
+   Indica cuánto se ha usado.
+   */
+   size_t offset;
 
 #if CORE_ARENA_STATS
-    /*
-       Máximo pico de uso alcanzado.
-    */
-    size_t max_usado;
+   /*
+   Máximo pico de uso alcanzado.
+   */
+   size_t max_usado;
 
-    /*
-       Número total de asignaciones realizadas.
-    */
-    size_t total_allocs;
+   /*
+   Número total de asignaciones realizadas.
+   */
+   size_t total_allocs;
 #endif
 
 } core_arena;
@@ -97,44 +97,43 @@ typedef struct
  * Uso: Ejecuta core_arena_init de forma segura.
  * Entrada ejemplo: core_arena_init(arena, memoria_externa, tamanio)
  */
-void core_arena_init(core_arena* arena,
-					void* memoria_externa,
-					size_t tamanio);
-
+void core_arena_init(core_arena *arena,
+                     void *memoria_externa,
+                     size_t tamanio);
 
 /* Inicializa arena usando memoria interna por defecto */
 /*
  * Uso: Ejecuta core_arena_init_default de forma segura.
  * Entrada ejemplo: core_arena_init_default(arena)
  */
-void core_arena_init_default(core_arena* arena);
+void core_arena_init_default(core_arena *arena);
 
 /* Solicita memoria dentro del arena */
 /*
  * Uso: Ejecuta core_arena_alloc de forma segura.
  * Entrada ejemplo: core_arena_alloc(arena, tamanio)
  */
-void* core_arena_alloc(core_arena* arena, size_t tamanio);
+void *core_arena_alloc(core_arena *arena, size_t tamanio);
 
 /* Reinicia el arena (libera todo de golpe) */
 /*
  * Uso: Ejecuta core_arena_reset de forma segura.
  * Entrada ejemplo: core_arena_reset(arena)
  */
-void core_arena_reset(core_arena* arena);
+void core_arena_reset(core_arena *arena);
 
 /* Devuelve cantidad de memoria usada */
 /*
  * Uso: Ejecuta core_arena_usado de forma segura.
  * Entrada ejemplo: core_arena_usado(arena)
  */
-size_t core_arena_usado(const core_arena* arena);
+size_t core_arena_usado(const core_arena *arena);
 
 /* Devuelve memoria disponible restante */
 /*
  * Uso: Ejecuta core_arena_disponible de forma segura.
  * Entrada ejemplo: core_arena_disponible(arena)
  */
-size_t core_arena_disponible(const core_arena* arena);
+size_t core_arena_disponible(const core_arena *arena);
 
 #endif

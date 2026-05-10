@@ -1,13 +1,13 @@
-Ôªø#ifndef CORE_MEMORY_H
+#ifndef CORE_MEMORY_H
 #define CORE_MEMORY_H
 /*
-Evita inclusi√≥n m√∫ltiple del archivo.
+Evita inclusiÛn m˙ltiple del archivo.
 Si ya fue incluido antes, no se vuelve a procesar.
 */
 
 /*
-size_t es el tipo est√°ndar para tamanios de memoria.
-Est√° definido en stddef.h.
+size_t es el tipo est·ndar para tamanios de memoria.
+Est· definido en stddef.h.
 */
 /* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - stddef.h: Tipos base como size_t y NULL
@@ -16,7 +16,7 @@ Est√° definido en stddef.h.
 
 /*
 ===============================================================================
- CONFIGURACI√ìN GLOBAL DEL ARENA
+ CONFIGURACI”N GLOBAL DEL ARENA
 ===============================================================================
 */
 
@@ -30,18 +30,18 @@ Puede modificarse antes de incluir este archivo.
 #endif
 
 /*
-Alineaci√≥n por defecto.
-8 bytes es seguro para la mayor√≠a de CPUs modernas.
-Puede aumentarse si se usan tipos m√°s grandes.
+AlineaciÛn por defecto.
+8 bytes es seguro para la mayorÌa de CPUs modernas.
+Puede aumentarse si se usan tipos m·s grandes.
 */
 #ifndef CORE_ARENA_ALIGNMENT
 #define CORE_ARENA_ALIGNMENT 8
 #endif
 
 /*
-Activa estad√≠sticas internas del allocator.
+Activa estadÌsticas internas del allocator.
 1 = activar
-0 = desactivar (m√°s ligero)
+0 = desactivar (m·s ligero)
 */
 #ifndef CORE_ARENA_STATS
 #define CORE_ARENA_STATS 1
@@ -55,33 +55,33 @@ Activa estad√≠sticas internas del allocator.
 
 typedef struct
 {
-   /*
-   Puntero al bloque base de memoria.
-   Puede ser memoria est√°tica o externa.
-   */
-   unsigned char *memoria;
+    /*
+    Puntero al bloque base de memoria.
+    Puede ser memoria est·tica o externa.
+    */
+    unsigned char *memoria;
 
-   /*
-   Tamanio total del bloque de memoria.
-   */
-   size_t capacidad;
+    /*
+    Tamanio total del bloque de memoria.
+    */
+    size_t capacidad;
 
-   /*
-   Offset actual dentro del bloque.
-   Indica cu√°nto se ha usado.
-   */
-   size_t offset;
+    /*
+    Offset actual dentro del bloque.
+    Indica cu·nto se ha usado.
+    */
+    size_t offset;
 
 #if CORE_ARENA_STATS
-   /*
-   M√°ximo pico de uso alcanzado.
-   */
-   size_t max_usado;
+    /*
+    M·ximo pico de uso alcanzado.
+    */
+    size_t max_usado;
 
-   /*
-   N√∫mero total de asignaciones realizadas.
-   */
-   size_t total_allocs;
+    /*
+    N˙mero total de asignaciones realizadas.
+    */
+    size_t total_allocs;
 #endif
 
 } core_arena;
@@ -97,9 +97,7 @@ typedef struct
  * Uso: Ejecuta core_arena_init de forma segura.
  * Entrada ejemplo: core_arena_init(arena, memoria_externa, tamanio)
  */
-void core_arena_init(core_arena *arena,
-                     void *memoria_externa,
-                     size_t tamanio);
+void core_arena_init(core_arena *arena, void *memoria_externa, size_t tamanio);
 
 /* Inicializa arena usando memoria interna por defecto */
 /*

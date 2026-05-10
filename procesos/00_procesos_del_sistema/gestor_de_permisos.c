@@ -11,10 +11,10 @@
 #include <string.h> // strcmp para comparar texto
 
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/gestor_de_permisos.h" // firma publica de checar_permiso
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"            // leer_archivo, free_lineas, existe_archivo
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h" // split() y free_split()
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"         // separadores globales GG_
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"  // imprimirMensaje_para_depurar
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h" // split() y free_split()
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"            // leer_archivo, free_lineas, existe_archivo
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"         // separadores globales GG_
 
 /*
  * Uso: Ejecuta checar_permiso de forma segura.
@@ -161,12 +161,12 @@ int checar_permiso_negocios(int nivel_minimo, const char *ruta_archivo, const ch
 
     int n_lineas = 0;
     char **lineas = leer_archivo(ruta_archivo, &n_lineas); // carga todas las filas del archivo en memoria; ejemplo archivo: "ID|Usuario|Contraseña|Directorio|Nivel"
-    if (!lineas) // si fallo la lectura no hay nada que procesar
+    if (!lineas)                                           // si fallo la lectura no hay nada que procesar
     {
         RETORNAR_PROCESO_ESTANDAR(-1); // error: fallo al leer el archivo
     }
 
-    int tiene_permiso = 1;            // valor por defecto: sin permiso (1=denegado, 0=permitido)
+    int tiene_permiso = 1;                       // valor por defecto: sin permiso (1=denegado, 0=permitido)
     const char *sep = GG_caracter_separacion[0]; // separador de columnas del archivo; normalmente '|'
 
     for (int i = 1; i < n_lineas; i++) // inicia en 1 para saltar la cabecera (fila 0 con nombres de columnas)
@@ -193,10 +193,9 @@ int checar_permiso_negocios(int nivel_minimo, const char *ruta_archivo, const ch
 
         // el archivo de negocio tiene estructura: ID|Usuario|Contraseña|Directorio|Nivel
         // columna 0 = id del usuario, columna 1 = nombre de usuario, columna 2 = contraseña, columna 4 = nivel
-        if (n_columnas >= 5 &&
-            strcmp(columnas[0], id_de_espacio) == 0 && // columna 0 debe coincidir con el id_usuario_negocio; ejemplo: "0"
-            strcmp(columnas[1], usuario) == 0 &&        // columna 1 debe coincidir con el nombre de usuario; ejemplo: "administrador_negocio"
-            strcmp(columnas[2], contrasena) == 0)       // columna 2 debe coincidir con la contraseña; ejemplo: "54321"
+        if (n_columnas >= 5 && strcmp(columnas[0], id_de_espacio) == 0 && // columna 0 debe coincidir con el id_usuario_negocio; ejemplo: "0"
+            strcmp(columnas[1], usuario) == 0 &&                          // columna 1 debe coincidir con el nombre de usuario; ejemplo: "administrador_negocio"
+            strcmp(columnas[2], contrasena) == 0)                         // columna 2 debe coincidir con la contraseña; ejemplo: "54321"
         {
             int nivel_usuario = atoi(columnas[4]); // convierte el nivel de texto a entero; ejemplo: "2" → 2
             if (retornar_nivel)
@@ -205,13 +204,13 @@ int checar_permiso_negocios(int nivel_minimo, const char *ruta_archivo, const ch
             }
             // columna 3 (directorio) se ignora: no se retorna porque el caller ya tiene la ruta
             tiene_permiso = (nivel_usuario <= nivel_minimo) ? 0 : 1; // 0=permitido si su nivel es <= nivel_minimo; 1=denegado si es mayor
-            free_split(columnas); // libera antes de salir del ciclo
-            break;                // usuario encontrado, no es necesario seguir buscando
+            free_split(columnas);                                    // libera antes de salir del ciclo
+            break;                                                   // usuario encontrado, no es necesario seguir buscando
         }
 
         free_split(columnas); // libera columnas si esta fila no coincidio
     }
 
-    free_lineas(lineas, n_lineas); // libera todas las filas leidas del archivo
+    free_lineas(lineas, n_lineas);            // libera todas las filas leidas del archivo
     RETORNAR_PROCESO_ESTANDAR(tiene_permiso); // 0=tiene permiso, 1=no tiene, -1=error
 }

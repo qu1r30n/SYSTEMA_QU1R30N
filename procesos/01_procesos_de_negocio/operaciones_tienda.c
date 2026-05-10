@@ -9,15 +9,15 @@
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h: Dependencia interna del proyecto
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h: Dependencia interna del proyecto
  */
+#include "../../cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_tienda.h"
+#include "../../CLASE_QU1R30N.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../CLASE_QU1R30N.h"
-#include "../../cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_tienda.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 
 // Leer inventario
 /*
@@ -66,39 +66,8 @@ int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo, char *
  * Uso: Ejecuta agregarProducto de forma segura.
  * Entrada ejemplo: agregarProducto(producto, ..., dir_espacio)
  */
-void agregarProducto(
-    char *producto,
-    float contenido,
-    char *tipo_medida,
-    float precio_venta,
-    char *cod_barras,
-    float cantidad,
-    float costo_compra,
-    char *proveedor,
-    char *grupo,
-    float cant_x_paquet,
-    char *es_paquete,
-    char *codbar_paquete_e_id,
-    char *cod_bar_individual_es_paq_e_id,
-    char *ligar_prod_sab,
-    char *impuestos,
-    char *ingredientes,
-    char *caducidad,
-    char *ultimo_mov,
-    char *sucur_vent,
-    float claf_prod,
-    char *dir_img_inter,
-    char *dir_img_comp,
-    char *info_extra,
-    char *proceso_crear,
-    char *dir_vid_proc_crear,
-    float tiempo_fabricacion,
-    char *indices_dia_registro_produc_vendido,
-    char *indices_mes_registro_produc_vendido,
-    char *indices_anio_registro_produc_vendido,
-    char *ultima_venta,
-    char *indices_total_registro_produc_vendido,
-    char *dir_espacio) // ruta del espacio de negocio donde se guardara el producto; ejemplo: "espacios\\20260330113640_ferreteria_dan\\"
+void agregarProducto(char *producto, float contenido, char *tipo_medida, float precio_venta, char *cod_barras, float cantidad, float costo_compra, char *proveedor, char *grupo, float cant_x_paquet, char *es_paquete, char *codbar_paquete_e_id, char *cod_bar_individual_es_paq_e_id, char *ligar_prod_sab, char *impuestos, char *ingredientes, char *caducidad, char *ultimo_mov, char *sucur_vent, float claf_prod, char *dir_img_inter, char *dir_img_comp, char *info_extra, char *proceso_crear, char *dir_vid_proc_crear, float tiempo_fabricacion, char *indices_dia_registro_produc_vendido, char *indices_mes_registro_produc_vendido, char *indices_anio_registro_produc_vendido, char *ultima_venta, char *indices_total_registro_produc_vendido,
+                     char *dir_espacio) // ruta del espacio de negocio donde se guardara el producto; ejemplo: "espacios\\20260330113640_ferreteria_dan\\"
 {
     if (!dir_espacio) // valida que se haya recibido la ruta del espacio
     {
@@ -109,37 +78,7 @@ void agregarProducto(
     char *ruta_inventario = NULL; // ruta completa del archivo de inventario dentro del espacio; ejemplo: "espacios\\20260330113640_ferreteria_dan\\inventario.txt"
 
     concatenar_formato_separado_por_variable(&fila, "|", "%s%.2f%s%.2f%s%.2f%.2f%s%s%.2f%s%s%s%s%s%s%s%s%s%.2f%s%s%s%s%s%.2f%s%s%s%s%s", // une todos los campos del producto separados por "|"; ejemplo resultado: "Leche|1.00|L|25.50|123456|50.00|..."
-                                             producto,
-                                             contenido,
-                                             tipo_medida,
-                                             precio_venta,
-                                             cod_barras,
-                                             cantidad,
-                                             costo_compra,
-                                             proveedor,
-                                             grupo,
-                                             cant_x_paquet,
-                                             es_paquete,
-                                             codbar_paquete_e_id,
-                                             cod_bar_individual_es_paq_e_id,
-                                             ligar_prod_sab,
-                                             impuestos,
-                                             ingredientes,
-                                             caducidad,
-                                             ultimo_mov,
-                                             sucur_vent,
-                                             claf_prod,
-                                             dir_img_inter,
-                                             dir_img_comp,
-                                             info_extra,
-                                             proceso_crear,
-                                             dir_vid_proc_crear,
-                                             tiempo_fabricacion,
-                                             indices_dia_registro_produc_vendido,
-                                             indices_mes_registro_produc_vendido,
-                                             indices_anio_registro_produc_vendido,
-                                             ultima_venta,
-                                             indices_total_registro_produc_vendido);
+                                             producto, contenido, tipo_medida, precio_venta, cod_barras, cantidad, costo_compra, proveedor, grupo, cant_x_paquet, es_paquete, codbar_paquete_e_id, cod_bar_individual_es_paq_e_id, ligar_prod_sab, impuestos, ingredientes, caducidad, ultimo_mov, sucur_vent, claf_prod, dir_img_inter, dir_img_comp, info_extra, proceso_crear, dir_vid_proc_crear, tiempo_fabricacion, indices_dia_registro_produc_vendido, indices_mes_registro_produc_vendido, indices_anio_registro_produc_vendido, ultima_venta, indices_total_registro_produc_vendido);
 
     if (!fila) // si la concatenacion fallo, no hay nada que guardar
     {

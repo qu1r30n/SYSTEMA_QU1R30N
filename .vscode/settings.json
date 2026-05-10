@@ -7,8 +7,15 @@
     "C_Cpp.debugShortcut": true,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "ms-vscode.cpptools",
+    "files.encoding": "utf8",
+    "files.autoGuessEncoding": false,
     "[c]": {
-        "editor.defaultFormatter": "ms-vscode.cpptools"
+        "editor.defaultFormatter": "ms-vscode.cpptools",
+        "editor.formatOnSave": false
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools",
+        "editor.formatOnSave": false
     },
     "files.exclude": {
         "**/*.o": true,

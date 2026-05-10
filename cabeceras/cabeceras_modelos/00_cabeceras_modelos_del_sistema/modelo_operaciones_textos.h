@@ -5,13 +5,13 @@
  * Uso: Ejecuta modelo_split de forma segura.
  * Entrada ejemplo: modelo_split(texto, sep)
  */
-char** modelo_split(char *texto, const char* sep);
+char **modelo_split(char *texto, const char *sep);
 /* libera un arreglo terminado en NULL, no necesita pasar la longitud */
 /*
  * Uso: Ejecuta modelo_free_split de forma segura.
  * Entrada ejemplo: modelo_free_split(a)
  */
-void modelo_free_split(char** a);
+void modelo_free_split(char **a);
 
 /*
  * Uso: Ejecuta modelo_texto_a_int_seguro de forma segura.

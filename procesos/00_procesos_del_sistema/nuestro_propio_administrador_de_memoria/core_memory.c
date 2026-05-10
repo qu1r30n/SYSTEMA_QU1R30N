@@ -1,6 +1,6 @@
-Ôªø/*
-Incluimos el header donde est√° definida la estructura core_arena
-y los prototipos de las funciones p√∫blicas.
+/*
+Incluimos el header donde est· definida la estructura core_arena
+y los prototipos de las funciones p˙blicas.
 */
 /* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - ../../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/nuestro_propio_administrador_de_memoria/core_memory.h: Dependencia interna del proyecto
@@ -9,29 +9,29 @@ y los prototipos de las funciones p√∫blicas.
 
 /*
 ===============================================================================
- CONFIGURACI√ìN INTERNA DE DEBUG
+ CONFIGURACI”N INTERNA DE DEBUG
 ===============================================================================
 */
 
 /*
-Definimos un patr√≥n hexadecimal que se usar√° para rellenar memoria
+Definimos un patrÛn hexadecimal que se usar· para rellenar memoria
 cuando se haga reset en modo debug.
 
-0xCD es un patr√≥n cl√°sico usado en depuraci√≥n (Visual Studio usa algo similar).
+0xCD es un patrÛn cl·sico usado en depuraciÛn (Visual Studio usa algo similar).
 Sirve para detectar uso de memoria no inicializada.
 */
 #define CORE_DEBUG_PATTERN 0xCD
 
 /*
 ===============================================================================
- MEMORIA INTERNA EST√ÅTICA
+ MEMORIA INTERNA EST¡TICA
 ===============================================================================
 */
 
 /*
-Declaramos un bloque de memoria est√°tico global.
+Declaramos un bloque de memoria est·tico global.
 
-- Vive en la secci√≥n de datos del programa.
+- Vive en la secciÛn de datos del programa.
 - No usa malloc.
 - Funciona incluso sin sistema operativo.
 - Se usa si el usuario llama core_arena_init_default().
@@ -42,19 +42,19 @@ unsigned char core_arena_memoria_default[CORE_ARENA_DEFAULT_SIZE];
 
 /*
 ===============================================================================
- FUNCI√ìN INTERNA: ALINEACI√ìN
+ FUNCI”N INTERNA: ALINEACI”N
 ===============================================================================
 */
 
 /*
-Ajusta un valor "ptr" al siguiente m√∫ltiplo de "align".
+Ajusta un valor "ptr" al siguiente m˙ltiplo de "align".
 
 Esto es importante porque algunas arquitecturas (ARM, etc.)
-requieren que ciertos tipos est√©n alineados a 4, 8 o m√°s bytes.
+requieren que ciertos tipos estÈn alineados a 4, 8 o m·s bytes.
 
-Par√°metros:
+Par·metros:
   ptr-> valor actual (offset)
-  align -> alineaci√≥n deseada (ej: 8)
+  align -> alineaciÛn deseada (ej: 8)
 
 
 
@@ -64,28 +64,28 @@ Retorna:
 */
 size_t core_align_forward(size_t ptr, size_t align)
 {
-   /*
-   Calculamos el residuo de ptr dividido por align.
-   Si es 0 ‚Üí ya est√° alineado.
-   */
-   size_t mod = ptr % align;
+    /*
+    Calculamos el residuo de ptr dividido por align.
+    Si es 0 ? ya est· alineado.
+    */
+    size_t mod = ptr % align;
 
-   /*
-   Si no est√° alineado,
-   sumamos lo que falta para que lo est√©.
-   */
-   if (mod != 0)
-      ptr += (align - mod);
+    /*
+    Si no est· alineado,
+    sumamos lo que falta para que lo estÈ.
+    */
+    if (mod != 0)
+        ptr += (align - mod);
 
-   /*
-   Retornamos el valor corregido.
-   */
-   return ptr; // retorna el puntero al bloque de memoria asignado y alineado // ejemplo: 0x...
+    /*
+    Retornamos el valor corregido.
+    */
+    return ptr; // retorna el puntero al bloque de memoria asignado y alineado // ejemplo: 0x...
 }
 
 /*
 ===============================================================================
- INICIALIZACI√ìN DEL ARENA CON MEMORIA EXTERNA
+ INICIALIZACI”N DEL ARENA CON MEMORIA EXTERNA
 ===============================================================================
 */
 
@@ -93,48 +93,46 @@ size_t core_align_forward(size_t ptr, size_t align)
  * Uso: Ejecuta core_arena_init de forma segura.
  * Entrada ejemplo: core_arena_init(arena, memoria_externa, tamanio)
  */
-void core_arena_init(core_arena *arena,
-                     void *memoria_externa,
-                     size_t tamanio)
+void core_arena_init(core_arena *arena, void *memoria_externa, size_t tamanio)
 {
-   /*
-   Validamos que:
-   - arena no sea NULL
-   - memoria_externa no sea NULL
-   - tamanio no sea 0
-   */
-   if (arena == NULL || memoria_externa == NULL || tamanio == 0)
-      return;
+    /*
+    Validamos que:
+    - arena no sea NULL
+    - memoria_externa no sea NULL
+    - tamanio no sea 0
+    */
+    if (arena == NULL || memoria_externa == NULL || tamanio == 0)
+        return;
 
-   /*
-   Guardamos la direcci√≥n base de memoria.
-   Se convierte a unsigned char* para operar byte por byte.
-   */
-   arena->memoria = (unsigned char *)memoria_externa;
+    /*
+    Guardamos la direcciÛn base de memoria.
+    Se convierte a unsigned char* para operar byte por byte.
+    */
+    arena->memoria = (unsigned char *)memoria_externa;
 
-   /*
-   Guardamos el tamanio total del bloque.
-   */
-   arena->capacidad = tamanio; // guarda el tamano total del bloque de memoria disponible // ejemplo: 4096
+    /*
+    Guardamos el tamanio total del bloque.
+    */
+    arena->capacidad = tamanio; // guarda el tamano total del bloque de memoria disponible // ejemplo: 4096
 
-   /*
-   Iniciamos el offset en 0.
-   Eso significa que el arena est√° vac√≠o.
-   */
-   arena->offset = 0;
+    /*
+    Iniciamos el offset en 0.
+    Eso significa que el arena est· vacÌo.
+    */
+    arena->offset = 0;
 
 #if CORE_ARENA_STATS
-   /*
-   Reiniciamos estad√≠sticas si est√°n activadas.
-   */
-   arena->max_usado = 0;    // reinicia estadistica de uso maximo // ejemplo: 0
-   arena->total_allocs = 0; // reinicia contador de asignaciones // ejemplo: 0
+    /*
+    Reiniciamos estadÌsticas si est·n activadas.
+    */
+    arena->max_usado = 0;    // reinicia estadistica de uso maximo // ejemplo: 0
+    arena->total_allocs = 0; // reinicia contador de asignaciones // ejemplo: 0
 #endif
 }
 
 /*
 ===============================================================================
- INICIALIZACI√ìN CON MEMORIA INTERNA
+ INICIALIZACI”N CON MEMORIA INTERNA
 ===============================================================================
 */
 
@@ -144,13 +142,11 @@ void core_arena_init(core_arena *arena,
  */
 void core_arena_init_default(core_arena *arena)
 {
-   /*
-   Llamamos a la funci√≥n principal,
-   usando el bloque est√°tico interno como memoria base.
-   */
-   core_arena_init(arena,
-                   core_arena_memoria_default,
-                   CORE_ARENA_DEFAULT_SIZE);
+    /*
+    Llamamos a la funciÛn principal,
+    usando el bloque est·tico interno como memoria base.
+    */
+    core_arena_init(arena, core_arena_memoria_default, CORE_ARENA_DEFAULT_SIZE);
 }
 
 /*
@@ -167,16 +163,16 @@ Luego puedes restaurarlo con core_arena_restore().
 */
 size_t core_arena_snapshot(const core_arena *arena)
 {
-   /*
-   Si arena es NULL, retornamos 0 por seguridad.
-   */
-   if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
-      return 0;
+    /*
+    Si arena es NULL, retornamos 0 por seguridad.
+    */
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
+        return 0;
 
-   /*
-   Retornamos el offset actual.
-   */
-   return arena->offset; // devuelve el offset actual para poder restaurarlo despues (snapshot) // ejemplo: 256
+    /*
+    Retornamos el offset actual.
+    */
+    return arena->offset; // devuelve el offset actual para poder restaurarlo despues (snapshot) // ejemplo: 256
 }
 
 /*
@@ -195,23 +191,23 @@ Esto es como hacer "pop" en una pila de memoria.
  */
 void core_arena_restore(core_arena *arena, size_t snapshot)
 {
-   /*
-   Validar que arena no sea NULL.
-   */
-   if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
-      return;
+    /*
+    Validar que arena no sea NULL.
+    */
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
+        return;
 
-   /*
-   Solo restauramos si el snapshot es v√°lido
-   (no puede exceder la capacidad total).
-   */
-   if (snapshot <= arena->capacidad) // verifica que el snapshot sea un offset valido dentro del bloque // ejemplo: 256 <= 4096
-      arena->offset = snapshot;      // restaura el offset al punto guardado liberando lo asignado despues // ejemplo: offset=256
+    /*
+    Solo restauramos si el snapshot es v·lido
+    (no puede exceder la capacidad total).
+    */
+    if (snapshot <= arena->capacidad) // verifica que el snapshot sea un offset valido dentro del bloque // ejemplo: 256 <= 4096
+        arena->offset = snapshot;     // restaura el offset al punto guardado liberando lo asignado despues // ejemplo: offset=256
 }
 
 /*
 ===============================================================================
- ASIGNACI√ìN NORMAL
+ ASIGNACI”N NORMAL
 ===============================================================================
 */
 
@@ -221,94 +217,92 @@ void core_arena_restore(core_arena *arena, size_t snapshot)
  */
 void *core_arena_alloc(core_arena *arena, size_t tamanio)
 {
-   /*
-   Validamos par√°metros.
-   */
-   if (arena == NULL || tamanio == 0) // valida que los parametros sean validos antes de asignar memoria // ejemplo: NULL -> retorna NULL
-      return NULL;
+    /*
+    Validamos par·metros.
+    */
+    if (arena == NULL || tamanio == 0) // valida que los parametros sean validos antes de asignar memoria // ejemplo: NULL -> retorna NULL
+        return NULL;
 
-   /*
-   Alineamos el offset actual para cumplir reglas de CPU.
-   */
-   size_t offset_alineado =
-       core_align_forward(arena->offset, CORE_ARENA_ALIGNMENT);
+    /*
+    Alineamos el offset actual para cumplir reglas de CPU.
+    */
+    size_t offset_alineado = core_align_forward(arena->offset, CORE_ARENA_ALIGNMENT);
 
-   /*
-   Verificamos que haya espacio suficiente.
-   */
-   if (offset_alineado + tamanio > arena->capacidad) // verifica que haya espacio suficiente en el bloque antes de asignar // ejemplo: 256+64 > 4096 -> false
-      return NULL;
+    /*
+    Verificamos que haya espacio suficiente.
+    */
+    if (offset_alineado + tamanio > arena->capacidad) // verifica que haya espacio suficiente en el bloque antes de asignar // ejemplo: 256+64 > 4096 -> false
+        return NULL;
 
-   /*
-   Calculamos la direcci√≥n final dentro del bloque.
-   */
-   void *ptr = arena->memoria + offset_alineado; // calcula la direccion de inicio del bloque que se va a retornar // ejemplo: base+256
+    /*
+    Calculamos la direcciÛn final dentro del bloque.
+    */
+    void *ptr = arena->memoria + offset_alineado; // calcula la direccion de inicio del bloque que se va a retornar // ejemplo: base+256
 
-   /*
-   Avanzamos el offset.
-   */
-   arena->offset = offset_alineado + tamanio; // avanza el offset para que la proxima asignacion empiece despues de esta // ejemplo: 256+64=320
+    /*
+    Avanzamos el offset.
+    */
+    arena->offset = offset_alineado + tamanio; // avanza el offset para que la proxima asignacion empiece despues de esta // ejemplo: 256+64=320
 
 #if CORE_ARENA_STATS
-   /*
-   Incrementamos contador de asignaciones.
-   */
-   arena->total_allocs++; // incrementa el contador de asignaciones para estadisticas // ejemplo: total_allocs=5
+    /*
+    Incrementamos contador de asignaciones.
+    */
+    arena->total_allocs++; // incrementa el contador de asignaciones para estadisticas // ejemplo: total_allocs=5
 
-   /*
-   Si este uso supera el pico anterior,
-   actualizamos max_usado.
-   */
-   if (arena->offset > arena->max_usado)
-      arena->max_usado = arena->offset; // actualiza el pico de uso maximo del arena // ejemplo: max_usado=320
+    /*
+    Si este uso supera el pico anterior,
+    actualizamos max_usado.
+    */
+    if (arena->offset > arena->max_usado)
+        arena->max_usado = arena->offset; // actualiza el pico de uso maximo del arena // ejemplo: max_usado=320
 #endif
 
-   /*
-   Retornamos puntero v√°lido.
-   */
-   return ptr; // retorna el puntero al bloque de memoria asignado y alineado // ejemplo: 0x...
+    /*
+    Retornamos puntero v·lido.
+    */
+    return ptr; // retorna el puntero al bloque de memoria asignado y alineado // ejemplo: 0x...
 }
 
 /*
 ===============================================================================
- ASIGNACI√ìN R√ÅPIDA (SIN ESTAD√çSTICAS)
+ ASIGNACI”N R¡PIDA (SIN ESTADÕSTICAS)
 ===============================================================================
 */
 
 void *core_arena_alloc_fast(core_arena *arena, size_t tamanio)
 {
-   /*
-   Validaci√≥n b√°sica.
-   */
-   if (arena == NULL || tamanio == 0) // valida que los parametros sean validos antes de asignar memoria // ejemplo: NULL -> retorna NULL
-      return NULL;
+    /*
+    ValidaciÛn b·sica.
+    */
+    if (arena == NULL || tamanio == 0) // valida que los parametros sean validos antes de asignar memoria // ejemplo: NULL -> retorna NULL
+        return NULL;
 
-   /*
-   Alineamos offset.
-   */
-   size_t offset_alineado =
-       core_align_forward(arena->offset, CORE_ARENA_ALIGNMENT);
+    /*
+    Alineamos offset.
+    */
+    size_t offset_alineado = core_align_forward(arena->offset, CORE_ARENA_ALIGNMENT);
 
-   /*
-   Verificamos espacio.
-   */
-   if (offset_alineado + tamanio > arena->capacidad) // verifica que haya espacio suficiente en el bloque antes de asignar // ejemplo: 256+64 > 4096 -> false
-      return NULL;
+    /*
+    Verificamos espacio.
+    */
+    if (offset_alineado + tamanio > arena->capacidad) // verifica que haya espacio suficiente en el bloque antes de asignar // ejemplo: 256+64 > 4096 -> false
+        return NULL;
 
-   /*
-   Calculamos direcci√≥n.
-   */
-   void *ptr = arena->memoria + offset_alineado; // calcula la direccion de inicio del bloque que se va a retornar // ejemplo: base+256
+    /*
+    Calculamos direcciÛn.
+    */
+    void *ptr = arena->memoria + offset_alineado; // calcula la direccion de inicio del bloque que se va a retornar // ejemplo: base+256
 
-   /*
-   Avanzamos offset.
-   */
-   arena->offset = offset_alineado + tamanio; // avanza el offset para que la proxima asignacion empiece despues de esta // ejemplo: 256+64=320
+    /*
+    Avanzamos offset.
+    */
+    arena->offset = offset_alineado + tamanio; // avanza el offset para que la proxima asignacion empiece despues de esta // ejemplo: 256+64=320
 
-   /*
-   Retornamos puntero.
-   */
-   return ptr; // retorna el puntero al bloque de memoria asignado y alineado // ejemplo: 0x...
+    /*
+    Retornamos puntero.
+    */
+    return ptr; // retorna el puntero al bloque de memoria asignado y alineado // ejemplo: 0x...
 }
 
 /*
@@ -323,27 +317,27 @@ void *core_arena_alloc_fast(core_arena *arena, size_t tamanio)
  */
 void core_arena_reset(core_arena *arena)
 {
-   /*
-   Validaci√≥n.
-   */
-   if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
-      return;
+    /*
+    ValidaciÛn.
+    */
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
+        return;
 
 #ifdef CORE_ARENA_DEBUG
-   /*
-   Si el modo debug est√° activo,
-   rellenamos toda la memoria con el patr√≥n definido.
+    /*
+    Si el modo debug est· activo,
+    rellenamos toda la memoria con el patrÛn definido.
 
-   Esto ayuda a detectar uso indebido despu√©s de reset.
-   */
-   for (size_t i = 0; i < arena->capacidad; i++)
-      arena->memoria[i] = CORE_DEBUG_PATTERN;
+    Esto ayuda a detectar uso indebido despuÈs de reset.
+    */
+    for (size_t i = 0; i < arena->capacidad; i++)
+        arena->memoria[i] = CORE_DEBUG_PATTERN;
 #endif
 
-   /*
-   Reiniciamos offset a 0.
-   */
-   arena->offset = 0;
+    /*
+    Reiniciamos offset a 0.
+    */
+    arena->offset = 0;
 }
 
 /*
@@ -358,16 +352,16 @@ void core_arena_reset(core_arena *arena)
  */
 size_t core_arena_usado(const core_arena *arena)
 {
-   /*
-   Validaci√≥n.
-   */
-   if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
-      return 0;
+    /*
+    ValidaciÛn.
+    */
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
+        return 0;
 
-   /*
-   Retornamos bytes usados.
-   */
-   return arena->offset; // devuelve el offset actual para poder restaurarlo despues (snapshot) // ejemplo: 256
+    /*
+    Retornamos bytes usados.
+    */
+    return arena->offset; // devuelve el offset actual para poder restaurarlo despues (snapshot) // ejemplo: 256
 }
 
 /*
@@ -376,14 +370,14 @@ size_t core_arena_usado(const core_arena *arena)
  */
 size_t core_arena_disponible(const core_arena *arena)
 {
-   /*
-   Validaci√≥n.
-   */
-   if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
-      return 0;
+    /*
+    ValidaciÛn.
+    */
+    if (arena == NULL) // valida que el puntero al arena no sea NULL antes de operar // ejemplo: arena=NULL -> retorna
+        return 0;
 
-   /*
-   Retornamos capacidad restante.
-   */
-   return arena->capacidad - arena->offset;
+    /*
+    Retornamos capacidad restante.
+    */
+    return arena->capacidad - arena->offset;
 }

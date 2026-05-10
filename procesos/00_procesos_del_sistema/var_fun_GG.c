@@ -4,11 +4,11 @@
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h: Dependencia interna del proyecto
  */
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
 char *GG_ultimo_retorno_estandar = NULL;            // ultimo retorno textual estandar generado por modelo/proceso/conmutador; ejemplo: "0╠todo salio bien en este modelo llamado x╠otros datos extra"
 static char *GG_acumulador_retorno_procesos = NULL; // acumula respuestas de procesos para incrustarlas en el retorno del modelo
@@ -64,10 +64,7 @@ static void acumular_texto_con_separador(char **acumulador, const char *nuevo_te
     memcpy(*acumulador + largo_actual, nuevo_texto, largo_nuevo + 1); // pega el nuevo texto incluyendo el terminador final
 }
 
-void establecer_ultimo_retorno_formateado(int codigo,
-                                          int indice_capa,
-                                          const char *nombre_funcion,
-                                          const char *datos_extra)
+void establecer_ultimo_retorno_formateado(int codigo, int indice_capa, const char *nombre_funcion, const char *datos_extra)
 {
     const char *nombre_seguro = (nombre_funcion != NULL) ? nombre_funcion : "funcion_desconocida"; // garantiza un nombre valido aunque el macro no lo mande
     const char *extra_seguro = (datos_extra != NULL) ? datos_extra : "otros datos extra";          // garantiza un bloque extra por defecto
@@ -167,10 +164,7 @@ void establecer_ultimo_retorno_formateado(int codigo,
     }
 }
 
-const char *obtener_ultimo_retorno_formateado(void)
-{
-    return GG_ultimo_retorno_estandar;
-}
+const char *obtener_ultimo_retorno_formateado(void) { return GG_ultimo_retorno_estandar; }
 
 int GG_indice_donde_comensar = 1; // índice de inicio para operaciones de listado; ejemplo: 1
 
@@ -199,47 +193,30 @@ char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝"}; // caracteres r
 char *GG_id_programa = "SISTEMA_QU1R30N"; // identificador único del programa; ejemplo: "SISTEMA_QU1R30N"
 
 #ifdef _WIN32
-char *GG_archivos[][3] = {
-    {"espacios\\",
-     "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel",
-     "archivo_espacios.txt"},
-    {"conexion_arc\\",
-     "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
-     "archivo_entrada.txt"},
-    {"conexion_arc\\",
-     "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
-     "archivo_salida.txt"},
-    {"conexion_arc\\",
-     NULL,
-     "banderas.txt"},
-    {"conexion_arc\\",
-     "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA",
-     "errores_de_com.txt"},
-    {NULL, NULL, NULL}};
+char *GG_archivos[][3] = {{"espacios\\", "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel", "archivo_espacios.txt"},
+                          {"conexion_arc\\",
+                           "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
+                           "archivo_entrada.txt"},
+                          {"conexion_arc\\",
+                           "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
+                           "archivo_salida.txt"},
+                          {"conexion_arc\\", NULL, "banderas.txt"},
+                          {"conexion_arc\\", "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", "errores_de_com.txt"},
+                          {NULL, NULL, NULL}};
 #else
-char *GG_archivos[][3] = {
-    {"espacios/",
-     "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel",
-     "archivo_espacios.txt"},
-    {"conexion_arc/",
-     "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
-     "archivo_entrada.txt"},
-    {"conexion_arc/",
-     "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
-     "archivo_salida.txt"},
-    {"conexion_arc/",
-     NULL,
-     "banderas.txt"},
-    {"conexion_arc/",
-     "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA",
-     "errores_de_com.txt"},
-    {NULL, NULL, NULL}};
+char *GG_archivos[][3] = {{"espacios/", "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel", "archivo_espacios.txt"},
+                          {"conexion_arc/",
+                           "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
+                           "archivo_entrada.txt"},
+                          {"conexion_arc/",
+                           "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
+                           "archivo_salida.txt"},
+                          {"conexion_arc/", NULL, "banderas.txt"},
+                          {"conexion_arc/", "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", "errores_de_com.txt"},
+                          {NULL, NULL, NULL}};
 #endif
 
-char *GG_archivos_registros[][2] = {
-    {"registros_ventas.txt", ""},
-    {"registros_compras.txt", ""},
-    {NULL, NULL}};
+char *GG_archivos_registros[][2] = {{"registros_ventas.txt", ""}, {"registros_compras.txt", ""}, {NULL, NULL}};
 
 /* ===== VARIABLES STRING GLOBALES ===== */
 
@@ -377,15 +354,7 @@ const char *GG_ventana_APRENDICES_E[][5] = {
 /* Ventana: Afiliados Unificados (8 campos) */
 const char *GG_ventana_afiliados_unificados[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"1", "_00_ID_USUARIO", "", "0", "TEXTO"},
-    {"1", "_01_IDP", "", "0╔0╦0¬0╔1╦1", "TEXTO"},
-    {"1", "_02_PUNTOS_D_R", "", "0╦0¬0╦0", "TEXTO"},
-    {"1", "_03_PUNTOS_D_R_TOTALES", "", "0", "TEXTO"},
-    {"1", "_04_DATOS", "", "NOSE", "TEXTO"},
-    {"1", "_05_NIVEL", "", "0", "TEXTO"},
-    {"1", "_06_ID_HORIZONTAL", "", "0", "TEXTO"},
-    {"1", "_07_TIPO_AFILIADO", "", "NOSE", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"1", "_00_ID_USUARIO", "", "0", "TEXTO"}, {"1", "_01_IDP", "", "0╔0╦0¬0╔1╦1", "TEXTO"}, {"1", "_02_PUNTOS_D_R", "", "0╦0¬0╦0", "TEXTO"}, {"1", "_03_PUNTOS_D_R_TOTALES", "", "0", "TEXTO"}, {"1", "_04_DATOS", "", "NOSE", "TEXTO"}, {"1", "_05_NIVEL", "", "0", "TEXTO"}, {"1", "_06_ID_HORIZONTAL", "", "0", "TEXTO"}, {"1", "_07_TIPO_AFILIADO", "", "NOSE", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 /* Ventana: Niveles Afiliados Unificado (4 campos) */
 const char *GG_ventana_niv_afiliados_unificado[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
@@ -423,151 +392,52 @@ const char *GG_ventana_SUCUR[][5] = {
 /* Ventana: Registro Día (11 campos) */
 const char *GG_ventana_reg_dia[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_HORA", "", "0", "TEXTO"},
-    {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
-    {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"},
-    {"1", "_04_CÓDIGO_PRECIO", "", "NOSE", "TEXTO"},
-    {"1", "_05_COMENTARIO", "", "", "TEXTO"},
-    {"1", "_06_TOTAL_VENTA", "", "0", "TEXTO"},
-    {"1", "_07_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
-    {"1", "_08_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
-    {"1", "_09_TOTAL_DEDUSIBLES", "", "0", "TEXTO"},
-    {"1", "_10_PLATAFORMA", "", "NOSE", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_HORA", "", "0", "TEXTO"}, {"1", "_02_OPERACION", "", "NOSE", "TEXTO"}, {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"}, {"1", "_04_CÓDIGO_PRECIO", "", "NOSE", "TEXTO"}, {"1", "_05_COMENTARIO", "", "", "TEXTO"}, {"1", "_06_TOTAL_VENTA", "", "0", "TEXTO"}, {"1", "_07_TOTAL_COSTO_COMP", "", "0", "TEXTO"}, {"1", "_08_TOTAL_IMPUESTOS", "", "0", "TEXTO"}, {"1", "_09_TOTAL_DEDUSIBLES", "", "0", "TEXTO"}, {"1", "_10_PLATAFORMA", "", "NOSE", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Mes (9 campos) */
 const char *GG_ventana_reg_mes[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_DIA", "", "0", "TEXTO"},
-    {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
-    {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"},
-    {"1", "_04_COMENTARIO", "", "", "TEXTO"},
-    {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"},
-    {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
-    {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
-    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_DIA", "", "0", "TEXTO"}, {"1", "_02_OPERACION", "", "NOSE", "TEXTO"}, {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"}, {"1", "_04_COMENTARIO", "", "", "TEXTO"}, {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"}, {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"}, {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"}, {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Año (9 campos) */
 const char *GG_ventana_reg_año[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_MES", "", "0", "TEXTO"},
-    {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
-    {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"},
-    {"1", "_04_COMENTARIO", "", "", "TEXTO"},
-    {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"},
-    {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
-    {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
-    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_MES", "", "0", "TEXTO"}, {"1", "_02_OPERACION", "", "NOSE", "TEXTO"}, {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"}, {"1", "_04_COMENTARIO", "", "", "TEXTO"}, {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"}, {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"}, {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"}, {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Total (9 campos) */
 const char *GG_ventana_reg_total[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_AÑO", "", "0", "TEXTO"},
-    {"1", "_02_OPERACION", "", "NOSE", "TEXTO"},
-    {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"},
-    {"1", "_04_COMENTARIO", "", "", "TEXTO"},
-    {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"},
-    {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"},
-    {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"},
-    {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_AÑO", "", "0", "TEXTO"}, {"1", "_02_OPERACION", "", "NOSE", "TEXTO"}, {"1", "_03_TOTAL_IMPUESTO", "", "NOSE╦0", "TEXTO"}, {"1", "_04_COMENTARIO", "", "", "TEXTO"}, {"1", "_05_TOTAL_VENTA", "", "0", "TEXTO"}, {"1", "_06_TOTAL_COSTO_COMP", "", "0", "TEXTO"}, {"1", "_07_TOTAL_IMPUESTOS", "", "0", "TEXTO"}, {"1", "_08_TOTAL_GANANCIA", "", "0", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Productos Día (12 campos) */
 const char *GG_ventana_reg_prod_dia[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
-    {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
-    {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"},
-    {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"},
-    {"1", "_05_HISTORIAL", "", "0", "TEXTO"},
-    {"1", "_06_RANKING", "", "0", "TEXTO"},
-    {"1", "_07_PROMEDIO", "", "0", "TEXTO"},
-    {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
-    {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
-    {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
-    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"}, {"1", "_02_CANTIDAD", "", "0", "TEXTO"}, {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"}, {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"}, {"1", "_05_HISTORIAL", "", "0", "TEXTO"}, {"1", "_06_RANKING", "", "0", "TEXTO"}, {"1", "_07_PROMEDIO", "", "0", "TEXTO"}, {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"}, {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"}, {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"}, {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Productos Mes (12 campos) */
 const char *GG_ventana_reg_prod_mes[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
-    {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
-    {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"},
-    {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"},
-    {"1", "_05_HISTORIAL", "", "0", "TEXTO"},
-    {"1", "_06_RANKING", "", "0", "TEXTO"},
-    {"1", "_07_PROMEDIO", "", "0", "TEXTO"},
-    {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
-    {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
-    {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
-    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"}, {"1", "_02_CANTIDAD", "", "0", "TEXTO"}, {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"}, {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"}, {"1", "_05_HISTORIAL", "", "0", "TEXTO"}, {"1", "_06_RANKING", "", "0", "TEXTO"}, {"1", "_07_PROMEDIO", "", "0", "TEXTO"}, {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"}, {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"}, {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"}, {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Productos Año (12 campos) */
 const char *GG_ventana_reg_prod_año[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
-    {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
-    {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"},
-    {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"},
-    {"1", "_05_HISTORIAL", "", "0", "TEXTO"},
-    {"1", "_06_RANKING", "", "0", "TEXTO"},
-    {"1", "_07_PROMEDIO", "", "0", "TEXTO"},
-    {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
-    {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
-    {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
-    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"}, {"1", "_02_CANTIDAD", "", "0", "TEXTO"}, {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"}, {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"}, {"1", "_05_HISTORIAL", "", "0", "TEXTO"}, {"1", "_06_RANKING", "", "0", "TEXTO"}, {"1", "_07_PROMEDIO", "", "0", "TEXTO"}, {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"}, {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"}, {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"}, {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Registro Productos Total (12 campos) */
 const char *GG_ventana_reg_prod_total[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"},
-    {"1", "_02_CANTIDAD", "", "0", "TEXTO"},
-    {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"},
-    {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"},
-    {"1", "_05_HISTORIAL", "", "0", "TEXTO"},
-    {"1", "_06_RANKING", "", "0", "TEXTO"},
-    {"1", "_07_PROMEDIO", "", "0", "TEXTO"},
-    {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"},
-    {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"},
-    {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"},
-    {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_NOMBRE_PRODUCTO", "", "NOSE", "TEXTO"}, {"1", "_02_CANTIDAD", "", "0", "TEXTO"}, {"1", "_03_COD_BAR", "", "NOSE", "TEXTO"}, {"1", "_04_PROVEDORES", "", "NOSE", "TEXTO"}, {"1", "_05_HISTORIAL", "", "0", "TEXTO"}, {"1", "_06_RANKING", "", "0", "TEXTO"}, {"1", "_07_PROMEDIO", "", "0", "TEXTO"}, {"1", "_08_VECES_SUPERA_PROMEDIO", "", "7", "TEXTO"}, {"1", "_09_USO_MULTIPLE", "", "", "TEXTO"}, {"1", "_10_TIPO_PRODUCTO", "", "", "TEXTO"}, {"1", "_11_NIVEL_NECESIDAD", "", "0", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Impuestos (6 campos) */
 const char *GG_ventana_IMPUESTOS[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_IMPUESTO", "", "0", "TEXTO"},
-    {"1", "_02_PORCENTAGE", "", "0", "TEXTO"},
-    {"1", "_03_DESCRIPCION", "", "NOSE", "TEXTO"},
-    {"1", "_04_INFO_EXTRA", "", "NOSE", "TEXTO"},
-    {"1", "_05_TIPO_IMPUESTO", "", "3", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_IMPUESTO", "", "0", "TEXTO"}, {"1", "_02_PORCENTAGE", "", "0", "TEXTO"}, {"1", "_03_DESCRIPCION", "", "NOSE", "TEXTO"}, {"1", "_04_INFO_EXTRA", "", "NOSE", "TEXTO"}, {"1", "_05_TIPO_IMPUESTO", "", "3", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Deducibles (7 campos) */
 const char *GG_ventana_DEDUSIBLES[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_FECHA", "", "0", "TEXTO"},
-    {"1", "_02_MONTO", "", "0", "TEXTO"},
-    {"1", "_03_DESCRIPCION", "", "NOSE", "TEXTO"},
-    {"1", "_04_PROVEDOR", "", "NOSE", "TEXTO"},
-    {"1", "_05_ARCHIVO_FACTURA", "", "NOSE", "TEXTO"},
-    {"1", "_06_FOLIO", "", "NOSE", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_FECHA", "", "0", "TEXTO"}, {"1", "_02_MONTO", "", "0", "TEXTO"}, {"1", "_03_DESCRIPCION", "", "NOSE", "TEXTO"}, {"1", "_04_PROVEDOR", "", "NOSE", "TEXTO"}, {"1", "_05_ARCHIVO_FACTURA", "", "NOSE", "TEXTO"}, {"1", "_06_FOLIO", "", "NOSE", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Herramientas (2 campos) */
 const char *GG_ventana_HERRAMIENTAS[][5] = {
@@ -579,15 +449,7 @@ const char *GG_ventana_HERRAMIENTAS[][5] = {
 /* Ventana: Trabajos por Día (8 campos) */
 const char *GG_trabajos_dia[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_DIA", "", "", "TEXTO"},
-    {"1", "_02_ID_TRABAJADOR", "", "", "TEXTO"},
-    {"1", "_03_HECHO_O_NO", "", "", "TEXTO"},
-    {"1", "_04_CANTIDAD", "", "", "TEXTO"},
-    {"1", "_05_COSTO_COMP", "", "", "TEXTO"},
-    {"1", "_06_ID_QUIENLOISO", "", "", "TEXTO"},
-    {"1", "_07_ID_PROGRAMA", "", "", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"}, {"1", "_01_DIA", "", "", "TEXTO"}, {"1", "_02_ID_TRABAJADOR", "", "", "TEXTO"}, {"1", "_03_HECHO_O_NO", "", "", "TEXTO"}, {"1", "_04_CANTIDAD", "", "", "TEXTO"}, {"1", "_05_COSTO_COMP", "", "", "TEXTO"}, {"1", "_06_ID_QUIENLOISO", "", "", "TEXTO"}, {"1", "_07_ID_PROGRAMA", "", "", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
 
 /*
  * Uso: Ejecuta RecargarVentanaEmergenteDatosConfiguracion de forma segura.
@@ -1097,9 +959,7 @@ char *columnas_concatenadas(const char *arreglo[][5], int filas, int id_columna,
     return resultado; // retorna el string con todas las columnas concatenadas; ejemplo: "_00_ID°_01_PRODUCTO°..."
 }
 
-char *GG_direccion_carpetas_base[] = {
-    "",
-    NULL};
+char *GG_direccion_carpetas_base[] = {"", NULL};
 
 GG_ArchivoBaseNegocio *GG_dir_nom_archivos = NULL; // puntero dinámico al arreglo de archivos base del negocio; ejemplo: NULL al inicio
 

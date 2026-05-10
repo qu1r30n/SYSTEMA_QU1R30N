@@ -24,10 +24,10 @@
 #include <string.h> // Librería para manejo de cadenas (strlen, strcmp, strcpy)
 #endif
 
+#include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
-#include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 #include "../../cabeceras/codigos_retorno.h"
 
 /* ============================================= */
@@ -528,9 +528,7 @@ int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const
             int j = 0;
             while (nombres_variables[j][0]) // Recorre el arreglo de nombres de variables hasta encontrar un NULL
             {
-                if (contador_elementos_parametro > 2 &&
-                    strcmp(nom_parametro_dato[1], "") == 0 &&
-                    strcmp(nom_parametro_dato[2], "no_predeterminado") == 0) // Verifica que la división del texto en nombre de parámetro y valor haya resultado en al menos 2 elementos (nombre y valor)
+                if (contador_elementos_parametro > 2 && strcmp(nom_parametro_dato[1], "") == 0 && strcmp(nom_parametro_dato[2], "no_predeterminado") == 0) // Verifica que la división del texto en nombre de parámetro y valor haya resultado en al menos 2 elementos (nombre y valor)
                 {
                     modelo_free_split(nom_parametro_dato);
                     liberarStructura(&datos);

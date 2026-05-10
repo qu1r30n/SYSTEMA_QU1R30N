@@ -9,14 +9,14 @@
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h: Dependencia interna del proyecto
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h: Dependencia interna del proyecto
  */
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 
 #ifdef _WIN32
-#include <sys/stat.h>
 #include <direct.h>
+#include <sys/stat.h>
 
 #elif defined(__linux__)
 #include <sys/stat.h>
@@ -30,10 +30,10 @@
 #include <sys/stat.h>
 #endif
 
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 
 /*
  * Uso: Ejecuta ruta_es_absoluta de forma segura.

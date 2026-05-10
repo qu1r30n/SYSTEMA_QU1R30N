@@ -21,18 +21,18 @@
 // -----------------------------
 // Cabeceras de modelos del sistema
 // -----------------------------
+#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_administracion_espacios.h"
+#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_administrador_de_estructuras_base.h"
+#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_gestor_de_permisos.h"
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_compu.h"
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_tex_bas.h"
-#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_administracion_espacios.h"
-#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_administrador_de_estructuras_base.h"
 #include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_var_fun_GG.h"
-#include "cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_gestor_de_permisos.h"
 
 // también incluimos algunos encabezados de procesos comunes
-#include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
-#include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
+#include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
 // Puedes agregar nuevas cabeceras de modelos aquí en el futuro

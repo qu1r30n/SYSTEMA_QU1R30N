@@ -1,4 +1,4 @@
-ï»¿/* LIBRERIAS USADAS EN ESTE ARCHIVO:
+/* LIBRERIAS USADAS EN ESTE ARCHIVO:
  * - string.h: Manejo de cadenas y memoria (strlen, strcmp, memcpy)
  * - stdio.h: Entrada y salida estandar (printf, fopen, etc.)
  * - stdarg.h: Argumentos variables de funciones tipo printf
@@ -7,14 +7,14 @@
  * - stdlib.h: Memoria dinamica, conversiones y utilidades generales
  * - xc.h: Cabecera del compilador para microcontroladores PIC
  */
-#include <string.h> // strlen, memcpy, strstr
-#include <stdio.h>  // snprintf
-#include <stdarg.h> // va_list, va_start, va_end
-#include <time.h>   // time, localtime, strftime
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
+#include <stdarg.h> // va_list, va_start, va_end
+#include <stdio.h>  // snprintf
+#include <string.h> // strlen, memcpy, strstr
+#include <time.h>   // time, localtime, strftime
 
 #ifdef _WIN32
 #include <stdlib.h> // malloc, realloc, free
@@ -37,13 +37,13 @@
  */
 char *construir_retorno_estandar(int codigo, const char *separador, const char *mensaje, const char *datos_extra)
 {
-    char *retorno = NULL;                                                              // string final que se devolvera al llamador; ejemplo: "0â•£todo salio bien en el conmutadorâ•£detalle"
+    char *retorno = NULL;                                                              // string final que se devolvera al llamador; ejemplo: "0¦todo salio bien en el conmutador¦detalle"
     const char *mensaje_final = (mensaje != NULL) ? mensaje : "sin_mensaje";           // mensaje seguro por si llega NULL; ejemplo: "sin_mensaje"
     const char *datos_extra_final = (datos_extra != NULL) ? datos_extra : "sin_datos"; // datos extra seguros por si llega NULL; ejemplo: "sin_datos"
 
     if (separador == NULL)
     {
-        separador = GG_caracter_para_confirmacion_o_error[0]; // usa el separador principal por defecto si no se especifica; ejemplo: "â•£"
+        separador = GG_caracter_para_confirmacion_o_error[0]; // usa el separador principal por defecto si no se especifica; ejemplo: "¦"
     }
 
     if (concatenar_formato_separado_por_variable(&retorno, NULL, "%d%s%s%s%s", codigo, separador, mensaje_final, separador, datos_extra_final) < 0)
@@ -63,35 +63,35 @@ char *variable_string(const char *format, ...) // define una funcion que crea y 
 {
     va_list args;        // declara la lista principal de argumentos variables para el formato recibido // ejemplo: "ID=%d"
     va_list args_copia;  // declara una copia de la lista para medir longitud sin consumir la original // ejemplo: copia de args
-    char *buffer = NULL; // prepara el puntero que almacenarÃ¡ el texto final reservado dinÃ¡micamente // ejemplo: "hola mundo"
-    int longitud = 0;    // guardarÃ¡ la cantidad exacta de caracteres que requiere el texto formateado // ejemplo: 12
+    char *buffer = NULL; // prepara el puntero que almacenará el texto final reservado dinámicamente // ejemplo: "hola mundo"
+    int longitud = 0;    // guardará la cantidad exacta de caracteres que requiere el texto formateado // ejemplo: 12
 
     if (format == NULL)
     {
         return NULL; // retorna NULL para indicar que no se pudo construir ninguna cadena // ejemplo: formato ausente
     }
 
-    va_start(args, format);                            // inicia la lectura de los argumentos variables reales enviados a la funciÃ³n // ejemplo: "%s-%d"
-    va_copy(args_copia, args);                         // duplica la lista para usarla en el cÃ¡lculo de longitud sin perder la original // ejemplo: copia de args
-    longitud = vsnprintf(NULL, 0, format, args_copia); // calcula cuÃ¡ntos caracteres necesita la salida sin escribirla todavÃ­a // ejemplo: 8
-    va_end(args_copia);                                // finaliza la copia temporal de argumentos porque ya no se seguirÃ¡ usando // ejemplo: fin de args_copia
+    va_start(args, format);                            // inicia la lectura de los argumentos variables reales enviados a la función // ejemplo: "%s-%d"
+    va_copy(args_copia, args);                         // duplica la lista para usarla en el cálculo de longitud sin perder la original // ejemplo: copia de args
+    longitud = vsnprintf(NULL, 0, format, args_copia); // calcula cuántos caracteres necesita la salida sin escribirla todavía // ejemplo: 8
+    va_end(args_copia);                                // finaliza la copia temporal de argumentos porque ya no se seguirá usando // ejemplo: fin de args_copia
 
     if (longitud < 0)
     {
-        va_end(args); // cierra la lista principal antes de salir por error de formato // ejemplo: formato invÃ¡lido
+        va_end(args); // cierra la lista principal antes de salir por error de formato // ejemplo: formato inválido
         return NULL;  // retorna NULL para indicar fallo al medir el texto de salida // ejemplo: error de vsnprintf
     }
 
     buffer = (char *)malloc((size_t)longitud + 1); // reserva memoria suficiente para la cadena final incluyendo el terminador nulo // ejemplo: 9 bytes
     if (buffer == NULL)
     {
-        va_end(args); // cierra la lista principal porque no se podrÃ¡ continuar sin memoria // ejemplo: sin heap disponible
-        return NULL;  // retorna NULL para avisar que la reserva dinÃ¡mica no se logrÃ³ // ejemplo: malloc fallÃ³
+        va_end(args); // cierra la lista principal porque no se podrá continuar sin memoria // ejemplo: sin heap disponible
+        return NULL;  // retorna NULL para avisar que la reserva dinámica no se logró // ejemplo: malloc falló
     }
 
     vsnprintf(buffer, (size_t)longitud + 1, format, args); // construye la cadena final dentro de buffer usando los argumentos originales // ejemplo: "ID=15"
     va_end(args);                                          // cierra la lista principal de argumentos una vez completado el formateo // ejemplo: fin de args
-    return buffer;                                         // entrega al llamador la cadena reciÃ©n creada en memoria dinÃ¡mica // ejemplo: puntero a "ID=15"
+    return buffer;                                         // entrega al llamador la cadena recién creada en memoria dinámica // ejemplo: puntero a "ID=15"
 }
 
 /*
@@ -99,7 +99,7 @@ char *variable_string(const char *format, ...) // define una funcion que crea y 
  CORE_STRING_SPLIT
 ===============================================================================
 
- FUNCIÃ“N: core_split
+ FUNCIÓN: core_split
 
  Divide un texto usando un separador (string completo).
  ------------------------------------------------------------------------------
@@ -127,14 +127,14 @@ int split(const char *txt, const char *sep, char ***salida)
     /* Paso a paso: validar entradas, procesar y manejar errores. */
 
     /* -----------------------------------------------------------------------
-    VALIDACIÃ“N DE PARÃMETROS
+    VALIDACIÓN DE PARÁMETROS
     -----------------------------------------------------------------------
 
     txt  -> texto original (ej: "A|B|C")
     sep  -> separador (ej: "|")
-    salida  -> direcciÃ³n donde se guardarÃ¡ el arreglo resultante
+    salida  -> dirección donde se guardará el arreglo resultante
 
-    Si alguno es NULL â†’ error inmediato
+    Si alguno es NULL ? error inmediato
     ----------------------------------------------------------------------- */
     if (txt == NULL || sep == NULL || salida == NULL) // al menos uno de los punteros obligatorios es nulo // ejemplo: txt=NULL al llamar split mal
     {
@@ -144,13 +144,13 @@ int split(const char *txt, const char *sep, char ***salida)
     /* Obtener longitud del separador */
     size_t len_sep = strlen(sep); // longitud del separador para avanzar el puntero correctamente // ejemplo: 1 para "|"
 
-    /* Si el separador estÃ¡ vacÃ­o, no tiene sentido dividir */
+    /* Si el separador está vacío, no tiene sentido dividir */
     if (len_sep == 0) // separador vacio imposibilita la division
     {
         RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
-    /* Capacidad inicial del arreglo dinÃ¡mico
+    /* Capacidad inicial del arreglo dinámico
     Significa que inicialmente podemos guardar 4 fragmentos */
     int capacidad = 4; // slots iniciales del arreglo dinamico de punteros // ejemplo: puede guardar 4 fragmentos antes de realloc
 
@@ -160,7 +160,7 @@ int split(const char *txt, const char *sep, char ***salida)
     /* Reservar memoria para arreglo de punteros (char*) */
     char **resultado = malloc(sizeof(char *) * capacidad); // reserva arreglo inicial de 4 punteros char* // ejemplo: 4 * 8 = 32 bytes en x64
 
-    /* Si falla malloc â†’ error */
+    /* Si falla malloc ? error */
     if (resultado == NULL) // verificacion de fallo en la asignacion de memoria
     {
         RETORNAR_PROCESO_ESTANDAR(-1);
@@ -169,7 +169,7 @@ int split(const char *txt, const char *sep, char ***salida)
     /* inicio apunta al comienzo del fragmento actual */
     const char *inicio = txt; // cursor que marca el inicio del fragmento en proceso // ejemplo: apunta a "7501020304050|5"
 
-    /* Buscar primera apariciÃ³n del separador */
+    /* Buscar primera aparición del separador */
     const char *pos = strstr(inicio, sep); // primera posicion del separador dentro del texto // ejemplo: apunta a "|5|SucursalNorte"
 
     /* -----------------------------------------------------------------------
@@ -200,7 +200,7 @@ int split(const char *txt, const char *sep, char ***salida)
         /* Agregar terminador de cadena */
         fragmento[len_fragmento] = '\0'; // cierra la cadena copiada con terminador nulo // ejemplo: fragmento[13] = '\0'
 
-        /* Si el arreglo estÃ¡ lleno, duplicar capacidad */
+        /* Si el arreglo está lleno, duplicar capacidad */
         if (cantidad >= capacidad) // el arreglo no tiene mas espacio para otro puntero
         {
             capacidad *= 2; // duplica la capacidad para minimizar reallocaciones // ejemplo: 4 -> 8
@@ -225,7 +225,7 @@ int split(const char *txt, const char *sep, char ***salida)
         resultado[cantidad] = fragmento; // almacena el puntero del fragmento en el slot actual // ejemplo: resultado[0] = "7501020304050"
         cantidad++;                      // incrementa el contador de fragmentos guardados // ejemplo: cantidad = 1
 
-        /* Avanzar inicio despuÃ©s del separador */
+        /* Avanzar inicio después del separador */
         inicio = pos + len_sep; // mueve el cursor al caracter despues del separador encontrado // ejemplo: apunta a "5|SucursalNorte"
 
         /* Buscar siguiente separador */
@@ -233,8 +233,8 @@ int split(const char *txt, const char *sep, char ***salida)
     }
 
     /* -----------------------------------------------------------------------
-    ÃšLTIMO FRAGMENTO
-    (lo que queda despuÃ©s del Ãºltimo separador)
+    ÚLTIMO FRAGMENTO
+    (lo que queda después del último separador)
     ----------------------------------------------------------------------- */
 
     size_t len_final = strlen(inicio); // longitud del ultimo fragmento que queda despues del ultimo separador // ejemplo: 13 para "SucursalNorte"
@@ -250,7 +250,7 @@ int split(const char *txt, const char *sep, char ***salida)
         RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
-    /* Copiar Ãºltimo fragmento incluyendo '\0' */
+    /* Copiar último fragmento incluyendo '\0' */
     memcpy(fragmento_final, inicio, len_final + 1); // copia el ultimo fragmento incluyendo su terminador nulo // ejemplo: "SucursalNorte\0"
 
     /* Expandir si es necesario */
@@ -272,13 +272,13 @@ int split(const char *txt, const char *sep, char ***salida)
         resultado = temp; // apunta al bloque expandido con espacio para el ultimo fragmento
     }
 
-    /* Guardar Ãºltimo fragmento */
+    /* Guardar último fragmento */
     resultado[cantidad] = fragmento_final; // almacena el ultimo fragmento en el arreglo // ejemplo: resultado[2] = "SucursalNorte"
     cantidad++;                            // incrementa el total para incluir el ultimo fragmento // ejemplo: cantidad = 3
 
     /* -----------------------------------------------------------------------
     AGREGAR NULL FINAL (estilo argv)
-    Permite recorrer asÃ­:
+    Permite recorrer así:
      while(resultado[i] != NULL)
     ----------------------------------------------------------------------- */
 
@@ -296,7 +296,7 @@ int split(const char *txt, const char *sep, char ***salida)
     resultado = temp;           // apunta al bloque final con espacio para el NULL centinela
     resultado[cantidad] = NULL; // marca el fin del arreglo estilo argv // ejemplo: resultado[3] = NULL
 
-    /* Guardar arreglo final en parÃ¡metro de salida */
+    /* Guardar arreglo final en parámetro de salida */
     *salida = resultado; // escribe el arreglo resultante en el puntero de salida // ejemplo: *salida apunta a {"7501020304050","5","SucursalNorte",NULL}
 
     /* Retornar cantidad de fragmentos encontrados */
@@ -305,13 +305,13 @@ int split(const char *txt, const char *sep, char ***salida)
 
 /*
 ===============================================================================
- FUNCIÃ“N: free_split
+ FUNCIÓN: free_split
 -------------------------------------------------------------------------------
 
  Libera completamente la memoria creada por core_split.
 
- ParÃ¡metro:
-  arreglo -> arreglo dinÃ¡mico terminado en NULL
+ Parámetro:
+  arreglo -> arreglo dinámico terminado en NULL
 
  Ejemplo interno:
 
@@ -320,10 +320,10 @@ int split(const char *txt, const char *sep, char ***salida)
   arreglo[2] = "SucursalNorte"
   arreglo[3] = NULL
 
- Esta funciÃ³n:
-  âœ” Libera cada fragmento
-  âœ” Libera el arreglo principal
-  âœ” No deja memoria colgada
+ Esta función:
+  ? Libera cada fragmento
+  ? Libera el arreglo principal
+  ? No deja memoria colgada
 ===============================================================================
 */
 
@@ -415,7 +415,7 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
 
     if (*texto < '0' || *texto > '9')
     {
-        RETORNAR_PROCESO_ESTANDAR(-1); // no empieza con nÃºmero
+        RETORNAR_PROCESO_ESTANDAR(-1); // no empieza con número
     }
 
     while (*texto >= '0' && *texto <= '9') // procesa cada digito decimal del texto
@@ -434,7 +434,7 @@ int texto_a_int_seguro(const char *texto, int *var_a_retornar)
 
     if (*texto != '\0')
     {
-        RETORNAR_PROCESO_ESTANDAR(-1); // caracteres invÃ¡lidos al final
+        RETORNAR_PROCESO_ESTANDAR(-1); // caracteres inválidos al final
     }
 
     *var_a_retornar = (int)(temp * signo); // escribe el resultado con signo en la variable de salida // ejemplo: -42
@@ -499,7 +499,7 @@ int texto_a_float_seguro(const char *texto, float *var_a_retornar)
         }
         else
         {
-            RETORNAR_PROCESO_ESTANDAR(-1); // carÃ¡cter invÃ¡lido
+            RETORNAR_PROCESO_ESTANDAR(-1); // carácter inválido
         }
 
         texto++; // avanza al siguiente caracter del texto
@@ -731,8 +731,7 @@ FUNCIONES NUEVAS DEL C#
  * Uso: Ejecuta join_paresido_simple de forma segura.
  * Entrada ejemplo: join_paresido_simple(caracter_union_filas, texto, n_texto, columnas_extraer, caracter_union_columnas)
  */
-char *join_paresido_simple(char caracter_union_filas, char **texto, int n_texto,
-                           const char *columnas_extraer, const char *caracter_union_columnas)
+char *join_paresido_simple(char caracter_union_filas, char **texto, int n_texto, const char *columnas_extraer, const char *caracter_union_columnas)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto || n_texto <= 0) // arreglo nulo o sin filas, retorna cadena vacia
@@ -794,9 +793,7 @@ char *join_paresido_simple(char caracter_union_filas, char **texto, int n_texto,
  * Uso: Ejecuta joineada_paraesida_y_quitador_de_extremos de forma segura.
  * Entrada ejemplo: joineada_paraesida_y_quitador_de_extremos(data, restar_cuantas, restar_primera_celda)
  */
-char *joineada_paraesida_y_quitador_de_extremos(const char *data,
-                                                int restar_cuantas,
-                                                int restar_primera_celda)
+char *joineada_paraesida_y_quitador_de_extremos(const char *data, int restar_cuantas, int restar_primera_celda)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!data) // datos de entrada nulos
@@ -951,9 +948,7 @@ char *concatenacion_filas_de_un_arreglo(char **arreglo, int n_arreglo, int poner
  * Uso: Ejecuta concatenacion_caracter_separacion de forma segura.
  * Entrada ejemplo: concatenacion_caracter_separacion(texto_actual, texto_agregar, separador)
  */
-char *concatenacion_caracter_separacion(const char *texto_actual,
-                                        const char *texto_agregar,
-                                        const char *separador)
+char *concatenacion_caracter_separacion(const char *texto_actual, const char *texto_agregar, const char *separador)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto_agregar) // el texto a agregar es nulo, no hay nada que construir
@@ -1062,10 +1057,7 @@ free_split(nom_ext);
  * Uso: Ejecuta desfragmentar_direccion de forma segura.
  * Entrada ejemplo: desfragmentar_direccion(direccion, retorna_directorios, retorna_nom_arch, retorna_extencion)
  */
-int desfragmentar_direccion(const char *direccion,
-                            char **retorna_directorios,
-                            char **retorna_nom_arch,
-                            char **retorna_extencion)
+int desfragmentar_direccion(const char *direccion, char **retorna_directorios, char **retorna_nom_arch, char **retorna_extencion)
 {
     // Arreglos temporales para almacenar partes de la ruta y nombre.ext.
     char **partes = NULL;  // fragmentos de la ruta separados por '\'
@@ -1092,10 +1084,7 @@ int desfragmentar_direccion(const char *direccion,
     // 2) Unir todo menos la ultima parte como directorios.
     for (int i = 0; i < n_partes - 1; i++) // itera todos los segmentos excepto el ultimo (archivo.ext)
     {
-        if (concatenar_formato_separado_por_variable(retorna_directorios,
-                                                     NULL,
-                                                     (*retorna_directorios && (*retorna_directorios)[0] != '\0') ? "\\%s" : "%s",
-                                                     partes[i]) < 0) // fallo al concatenar el segmento de directorio
+        if (concatenar_formato_separado_por_variable(retorna_directorios, NULL, (*retorna_directorios && (*retorna_directorios)[0] != '\0') ? "\\%s" : "%s", partes[i]) < 0) // fallo al concatenar el segmento de directorio
         {
             free_split(partes); // libera los segmentos antes de retornar error
             RETORNAR_PROCESO_ESTANDAR(-1);
@@ -1129,9 +1118,7 @@ int desfragmentar_direccion(const char *direccion,
  * Uso: Ejecuta ReemplazarCaracteres_de_texto_arreglo de forma segura.
  * Entrada ejemplo: ReemplazarCaracteres_de_texto_arreglo(info, caracteres_sep, n_sep, caracteres_sustitucion)
  */
-char *ReemplazarCaracteres_de_texto_arreglo(const char *info,
-                                            char **caracteres_sep, int n_sep,
-                                            char **caracteres_sustitucion)
+char *ReemplazarCaracteres_de_texto_arreglo(const char *info, char **caracteres_sep, int n_sep, char **caracteres_sustitucion)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!info) // texto de entrada nulo
@@ -1175,15 +1162,14 @@ char *ReemplazarCaracteres_de_texto_arreglo(const char *info,
 }
 
 /* =========================================================================
-BÃšSQUEDA PROFUNDA - Buscar en estructuras anidadas por columnas
+BÚSQUEDA PROFUNDA - Buscar en estructuras anidadas por columnas
 ========================================================================= */
 
 /*
  * Uso: Ejecuta busqueda_profunda_string de forma segura.
  * Entrada ejemplo: busqueda_profunda_string(texto, columnas_recorrer, comparar)
  */
-char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer,
-                               const char *comparar)
+char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer, const char *comparar)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto || !columnas_recorrer || !comparar) // alguno de los parametros requeridos es nulo
@@ -1206,9 +1192,9 @@ char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer,
 
         /* Split la fila por segundo separador para acceder a columnas */
         char **columnas = NULL;                                             // columnas de la fila actual
-        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas usando el segundo separador // ejemplo: GG_caracter_separacion[1]="Â§"
+        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas usando el segundo separador // ejemplo: GG_caracter_separacion[1]="§"
 
-        /* Recorrer columnas segÃºn Ã­ndices especificados */
+        /* Recorrer columnas según índices especificados */
         const char *pos = columnas_recorrer; // cursor sobre la lista de indices de columnas a comparar
         while (pos && *pos)                  // mientras haya indices por procesar
         {
@@ -1224,7 +1210,7 @@ char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer,
                     break;                                            // no sigue revisando columnas de esta fila
                 }
             }
-            /* Buscar siguiente Ã­ndice separado por '|' */
+            /* Buscar siguiente índice separado por '|' */
             while (pos && *pos && *pos != '|') // avanza hasta el siguiente separador de indices
                 pos++;
             if (*pos == '|') // salta el separador de indices
@@ -1239,16 +1225,14 @@ char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer,
 }
 
 /* =========================================================================
-BÃšSQUEDA PROFUNDA CON FORMATO FINAL
+BÚSQUEDA PROFUNDA CON FORMATO FINAL
 ========================================================================= */
 
 /*
  * Uso: Ejecuta busqueda_profunda_comparacion_final_string de forma segura.
  * Entrada ejemplo: busqueda_profunda_comparacion_final_string(texto, columnas_recorrer, comparar)
  */
-char *busqueda_profunda_comparacion_final_string(const char *texto,
-                                                 const char *columnas_recorrer,
-                                                 const char *comparar)
+char *busqueda_profunda_comparacion_final_string(const char *texto, const char *columnas_recorrer, const char *comparar)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto || !columnas_recorrer || !comparar) // parametros obligatorios nulos
@@ -1304,12 +1288,10 @@ char *busqueda_profunda_comparacion_final_string(const char *texto,
 }
 
 /* =========================================================================
-BÃšSQUEDA CON MÃšLTIPLES CONDICIONES (YY)
+BÚSQUEDA CON MÚLTIPLES CONDICIONES (YY)
 ========================================================================= */
 
-char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto,
-                                                const char *columnas_recorrer,
-                                                const char *comparaciones)
+char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto, const char *columnas_recorrer, const char *comparaciones)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto || !columnas_recorrer || !comparaciones) // parametros requeridos nulos
@@ -1323,7 +1305,7 @@ char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto,
         return NULL;
     resultado[0] = '\0'; // inicializa como cadena vacia
 
-    /* Parsear comparaciones mÃºltiples (separadas por algÃºn delimitador) */
+    /* Parsear comparaciones múltiples (separadas por algún delimitador) */
     char **comparaciones_arr = NULL;                                     // arreglo de condiciones individuales
     int n_comparaciones = split(comparaciones, "|", &comparaciones_arr); // separa las condiciones por '|' // ejemplo: "0:ID123|2:Tornillo"
 
@@ -1355,8 +1337,7 @@ char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto,
                 int col_idx = atoi(temp);               // convierte el indice de texto a entero // ejemplo: "2" -> 2
                 const char *valor_esperado = colon + 1; // el valor esperado empieza despues del ':' // ejemplo: "Tornillo"
 
-                if (col_idx < 0 || col_idx >= n_cols || !columnas[col_idx] ||
-                    strcmp(columnas[col_idx], valor_esperado) != 0) // alguna condicion no se cumple
+                if (col_idx < 0 || col_idx >= n_cols || !columnas[col_idx] || strcmp(columnas[col_idx], valor_esperado) != 0) // alguna condicion no se cumple
                 {
                     todas_coinciden = 0; // la fila no pasa esta condicion
                 }
@@ -1380,17 +1361,14 @@ char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto,
 }
 
 /* =========================================================================
-EDICIÃ“N CON INCREMENTO RECURSIVO
+EDICIÓN CON INCREMENTO RECURSIVO
 ========================================================================= */
 
 /*
  * Uso: Ejecuta editar_incr_string_funcion_recursiva de forma segura.
  * Entrada ejemplo: editar_incr_string_funcion_recursiva(texto, columnas_recorrer, info_sustituir, edit_0_increm_1)
  */
-char *editar_incr_string_funcion_recursiva(const char *texto,
-                                           const char *columnas_recorrer,
-                                           const char *info_sustituir,
-                                           const char *edit_0_increm_1)
+char *editar_incr_string_funcion_recursiva(const char *texto, const char *columnas_recorrer, const char *info_sustituir, const char *edit_0_increm_1)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto || !columnas_recorrer) // parametros requeridos nulos
@@ -1417,7 +1395,7 @@ char *editar_incr_string_funcion_recursiva(const char *texto,
         char **columnas = NULL;                                             // columnas de la fila actual
         int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas con el segundo separador
 
-        /* Parsear Ã­ndices de columnas a editar */
+        /* Parsear índices de columnas a editar */
         const char *pos = columnas_recorrer; // cursor sobre la lista de indices de columnas a editar
         while (pos && *pos)                  // mientras haya indices por procesar
         {
@@ -1426,7 +1404,7 @@ char *editar_incr_string_funcion_recursiva(const char *texto,
             {
                 if (es_incremento && columnas[col_idx]) // modo incremento: suma 1 al valor actual
                 {
-                    /* Incrementar valor numÃ©rico */
+                    /* Incrementar valor numérico */
                     int val = atoi(columnas[col_idx]);                 // convierte el valor actual de la columna a entero // ejemplo: "5" -> 5
                     char new_val[64];                                  // buffer para el nuevo valor como texto
                     snprintf(new_val, sizeof(new_val), "%d", val + 1); // calcula el valor incrementado // ejemplo: 5 + 1 = 6
@@ -1461,31 +1439,25 @@ char *editar_incr_string_funcion_recursiva(const char *texto,
 }
 
 /* =========================================================================
-EDICIÃ“N PROFUNDA MÃšLTIPLE CON COMPARACIÃ“N FINAL
+EDICIÓN PROFUNDA MÚLTIPLE CON COMPARACIÓN FINAL
 ========================================================================= */
 
 /*
  * Uso: Ejecuta editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string de forma segura.
  * Entrada ejemplo: editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(texto, indices_editar, info_editar, comparacion, edit_0_increm_1)
  */
-char *editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(
-    const char *texto,
-    const char *indices_editar,
-    const char *info_editar,
-    const char *comparacion,
-    const char *edit_0_increm_1)
+char *editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(const char *texto, const char *indices_editar, const char *info_editar, const char *comparacion, const char *edit_0_increm_1)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto || !indices_editar)
         return calloc(1, 1);
 
-    /* Combina bÃºsqueda con comparaciÃ³n y ediciÃ³n */
+    /* Combina búsqueda con comparación y edición */
     char *encontrado = busqueda_profunda_comparacion_final_string(texto, indices_editar, comparacion);
 
     if (encontrado && strlen(encontrado) > 0)
     {
-        char *editado = editar_incr_string_funcion_recursiva(encontrado, indices_editar,
-                                                             info_editar, edit_0_increm_1);
+        char *editado = editar_incr_string_funcion_recursiva(encontrado, indices_editar, info_editar, edit_0_increm_1);
         free(encontrado);
         return editado;
     }
@@ -1495,7 +1467,7 @@ char *editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(
 }
 
 /* =========================================================================
-WRAPPER ARR_FUN - EdiciÃ³n con estructura simplificada
+WRAPPER ARR_FUN - Edición con estructura simplificada
 ========================================================================= */
 
 /*
@@ -1516,9 +1488,7 @@ char *ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(const char
 
     if (n_partes >= 3)
     {
-        resultado = editar_incr_string_funcion_recursiva(partes[0], partes[1],
-                                                         partes[2],
-                                                         n_partes > 3 ? partes[3] : "0");
+        resultado = editar_incr_string_funcion_recursiva(partes[0], partes[1], partes[2], n_partes > 3 ? partes[3] : "0");
     }
 
     free_split(partes);
@@ -1526,24 +1496,20 @@ char *ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(const char
 }
 
 /* =========================================================================
-EDICIÃ“N CON MÃšLTIPLES CHEQUEOS
+EDICIÓN CON MÚLTIPLES CHEQUEOS
 ========================================================================= */
 
 /*
  * Uso: Ejecuta editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR de forma segura.
  * Entrada ejemplo: editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(texto, indices_editar, comparacion_con_edicion, edit_0_increm_1)
  */
-char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(
-    const char *texto,
-    const char *indices_editar,
-    const char *comparacion_con_edicion,
-    const char *edit_0_increm_1)
+char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(const char *texto, const char *indices_editar, const char *comparacion_con_edicion, const char *edit_0_increm_1)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!texto || !indices_editar || !comparacion_con_edicion)
         return calloc(1, 1);
 
-    /* Parsear comparaciÃ³n_con_edicion para extraer comparaciÃ³n e info_editar */
+    /* Parsear comparación_con_edicion para extraer comparación e info_editar */
     char temp[1024];
     strcpy(temp, comparacion_con_edicion);
     char *coma = strchr(temp, ',');
@@ -1574,7 +1540,7 @@ char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR
         if (!filas[i])
             continue;
 
-        /* Verificar si esta fila coincide con la bÃºsqueda */
+        /* Verificar si esta fila coincide con la búsqueda */
         char **columnas = NULL;
         int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
 
@@ -1583,8 +1549,7 @@ char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR
         while (pos && *pos)
         {
             int col_idx = atoi(pos);
-            if (col_idx >= 0 && col_idx < n_cols && columnas[col_idx] &&
-                strcmp(columnas[col_idx], comparar_val) == 0)
+            if (col_idx >= 0 && col_idx < n_cols && columnas[col_idx] && strcmp(columnas[col_idx], comparar_val) == 0)
             {
                 debe_editar = 1;
                 break;
@@ -1640,19 +1605,16 @@ char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR
 }
 
 /* =========================================================================
-EDICIÃ“N PROFUNDA MÃšLTIPLE SIMPLE
+EDICIÓN PROFUNDA MÚLTIPLE SIMPLE
 ========================================================================= */
 
 /*
  * Uso: Ejecuta editar_inc_edicion_profunda_multiple_string de forma segura.
  * Entrada ejemplo: editar_inc_edicion_profunda_multiple_string(texto, indices_editar, info_editar, edit_0_increm_1)
  */
-char *editar_inc_edicion_profunda_multiple_string(const char *texto,
-                                                  const char *indices_editar,
-                                                  const char *info_editar,
-                                                  const char *edit_0_increm_1)
+char *editar_inc_edicion_profunda_multiple_string(const char *texto, const char *indices_editar, const char *info_editar, const char *edit_0_increm_1)
 {
-    /* Simplemente aplica la ediciÃ³n a todas las filas en los Ã­ndices especificados */
+    /* Simplemente aplica la edición a todas las filas en los índices especificados */
     char **filas = NULL;
     int n_filas = split(texto, GG_caracter_separacion[0], &filas);
 
@@ -1712,19 +1674,16 @@ char *editar_inc_edicion_profunda_multiple_string(const char *texto,
 }
 
 /* =========================================================================
-EDICIÃ“N PROFUNDA AL FINAL
+EDICIÓN PROFUNDA AL FINAL
 ========================================================================= */
 
 /*
  * Uso: Ejecuta editar_inc_edicion_profunda_multiple_AL_FINAL_string de forma segura.
  * Entrada ejemplo: editar_inc_edicion_profunda_multiple_AL_FINAL_string(texto, indices_editar, info_editar, edit_0_increm_1)
  */
-char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto,
-                                                           const char *indices_editar,
-                                                           const char *info_editar,
-                                                           const char *edit_0_increm_1)
+char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto, const char *indices_editar, const char *info_editar, const char *edit_0_increm_1)
 {
-    /* Edita solo la Ãºltima fila que coincide */
+    /* Edita solo la última fila que coincide */
     char **filas = NULL;                                           // arreglo de filas del texto dividido
     int n_filas = split(texto, GG_caracter_separacion[0], &filas); // divide en filas con el separador primario
 
@@ -1744,7 +1703,7 @@ char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto,
         if (!filas[i]) // fila nula, se salta
             continue;
 
-        /* En la Ãºltima iteraciÃ³n, editar */
+        /* En la última iteración, editar */
         if (i == n_filas - 1) // es la ultima fila: aplica la edicion
         {
             char **columnas = NULL;                                             // columnas de la ultima fila
@@ -1793,16 +1752,14 @@ char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto,
 }
 
 /* =========================================================================
-RECORRER CARACTERES DE SEPARACIÃ“N
+RECORRER CARACTERES DE SEPARACIÓN
 ========================================================================= */
 
 /*
  * Uso: Ejecuta recorrer_caracter_separacion de forma segura.
  * Entrada ejemplo: recorrer_caracter_separacion(contenidoFila, izquierda_o_derecha, numero_veses)
  */
-char *recorrer_caracter_separacion(const char *contenidoFila,
-                                   const char *izquierda_o_derecha,
-                                   int numero_veses)
+char *recorrer_caracter_separacion(const char *contenidoFila, const char *izquierda_o_derecha, int numero_veses)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!contenidoFila) // texto de entrada nulo
@@ -1847,22 +1804,20 @@ char *recorrer_caracter_separacion(const char *contenidoFila,
 }
 
 /* =========================================================================
-RECORRER CARACTERES DE SEPARACIÃ“N - FUNCIÃ“N ESPECÃFICA
+RECORRER CARACTERES DE SEPARACIÓN - FUNCIÓN ESPECÍFICA
 ========================================================================= */
 
 /*
  * Uso: Ejecuta recorrer_caracter_separacion_funciones_espesificas de forma segura.
  * Entrada ejemplo: recorrer_caracter_separacion_funciones_espesificas(contenidoFila, izquierda_o_derecha, numero_veses)
  */
-char *recorrer_caracter_separacion_funciones_espesificas(const char *contenidoFila,
-                                                         const char *izquierda_o_derecha,
-                                                         int numero_veses)
+char *recorrer_caracter_separacion_funciones_espesificas(const char *contenidoFila, const char *izquierda_o_derecha, int numero_veses)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (!contenidoFila) // texto de entrada nulo
         return calloc(1, 1);
 
-    /* Usar separador especÃ­fico si estÃ¡ disponible */
+    /* Usar separador específico si está disponible */
     char separador[16];                                                     // buffer para el separador a usar en esta funcion
     if (GG_caracter_separacion_funciones_espesificas[0])                    // hay un separador especifico configurado para funciones
         strcpy(separador, GG_caracter_separacion_funciones_espesificas[0]); // usa el separador especifico de funciones // ejemplo: "~"

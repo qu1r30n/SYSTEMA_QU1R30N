@@ -1,0 +1,2 @@
+ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA
+SISTEMA_QU1R30N┴NEXOPORTALARCANO■op_tienda~agregar_producto§producto⊓29999999999¶contenido⊓3¶tipo_medida⊓4¶precio_venta⊓5⊓no_predeterminado¶cod_barras⊓6¶cantidad⊓7¶costo_compra⊓8¶proveedor⊓9~id_de_espacio⊓20260330113640_ferreteria_dan~usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓12345~usuario_de_negocio⊓administrador_negocio§contraseña_de_negocio⊓54321§id_usuario_negocio⊓0■PREGUNTAS_WS¤

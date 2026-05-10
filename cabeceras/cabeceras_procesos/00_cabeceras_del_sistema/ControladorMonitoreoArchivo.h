@@ -1,4 +1,4 @@
-﻿#ifndef CONTROLADOR_MONITOREO_ARCHIVO_H
+#ifndef CONTROLADOR_MONITOREO_ARCHIVO_H
 #define CONTROLADOR_MONITOREO_ARCHIVO_H
 
 /*
@@ -10,9 +10,7 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
  * Uso: Ejecuta respuesta de forma segura.
  * Entrada ejemplo: respuesta(info, programa_enviar, info_espejo)
  */
-void respuesta(const char *info,
-               const char *programa_enviar,
-               const char *info_espejo);
+void respuesta(const char *info, const char *programa_enviar, const char *info_espejo);
 /*
  * Uso: Ejecuta datos_recibidos_a_procesar_y_borrar de forma segura.
  * Entrada ejemplo: datos_recibidos_a_procesar_y_borrar(retorno_comando, retorno_numero_lineas)
@@ -37,8 +35,6 @@ int quitar_id_prog_del_archivo(void);
  * Uso: Ejecuta checar_numero_de_direccion_de_archivo_atras_actual_adelante de forma segura.
  * Entrada ejemplo: checar_numero_de_direccion_de_archivo_atras_actual_adelante(posicion_bandera, numero_actual_posicion, arr_devolver)
  */
-int checar_numero_de_direccion_de_archivo_atras_actual_adelante(int posicion_bandera,
-                                                                int numero_actual_posicion,
-                                                                int arr_devolver[3]);
+int checar_numero_de_direccion_de_archivo_atras_actual_adelante(int posicion_bandera, int numero_actual_posicion, int arr_devolver[3]);
 
 #endif

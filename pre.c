@@ -1,4 +1,4 @@
-ï»¿# 0 "c:\\Users\\qu1r30n\\Documents\\GitHub\\SYSTEMA_QU1R30N\\SISTEMA_QU1R30N.c"
+# 0 "c:\\Users\\qu1r30n\\Documents\\GitHub\\SYSTEMA_QU1R30N\\SISTEMA_QU1R30N.c"
 # 0 "<built-in>"
 # 0 "<command-line>"
 # 1 "c:\\Users\\qu1r30n\\Documents\\GitHub\\SYSTEMA_QU1R30N\\SISTEMA_QU1R30N.c"
@@ -53,9 +53,9 @@ void __attribute__((__cdecl__)) __debugbreak(void);
  */
 extern __inline__ __attribute__((__always_inline__, __gnu_inline__)) void __attribute__((__cdecl__)) __debugbreak(void)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
 
-  __asm__ __volatile__("int {$}3" :);
+    __asm__ __volatile__("int {$}3" :);
 }
 # 625 "C:/msys64/ucrt64/include/_mingw.h" 3
 /*
@@ -69,11 +69,11 @@ void __attribute__((__cdecl__)) __attribute__((__noreturn__)) __fastfail(unsigne
  */
 extern __inline__ __attribute__((__always_inline__, __gnu_inline__)) void __attribute__((__cdecl__)) __attribute__((__noreturn__)) __fastfail(unsigned int code)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
 
-  __asm__ __volatile__("int {$}0x29" ::"c"(code));
+    __asm__ __volatile__("int {$}0x29" ::"c"(code));
 
-  __builtin_unreachable();
+    __builtin_unreachable();
 }
 # 665 "C:/msys64/ucrt64/include/_mingw.h" 3
 /*
@@ -134,23 +134,23 @@ struct __lc_time_data;
 
 typedef struct localeinfo_struct
 {
-  pthreadlocinfo locinfo;
-  pthreadmbcinfo mbcinfo;
+    pthreadlocinfo locinfo;
+    pthreadmbcinfo mbcinfo;
 } _locale_tstruct, *_locale_t;
 
 typedef struct tagLC_ID
 {
-  unsigned short wLanguage;
-  unsigned short wCountry;
-  unsigned short wCodePage;
+    unsigned short wLanguage;
+    unsigned short wCountry;
+    unsigned short wCodePage;
 } LC_ID, *LPLC_ID;
 
 typedef struct threadlocaleinfostruct
 {
 
-  const unsigned short *_locale_pctype;
-  int _locale_mb_cur_max;
-  unsigned int _locale_lc_codepage;
+    const unsigned short *_locale_pctype;
+    int _locale_mb_cur_max;
+    unsigned int _locale_lc_codepage;
 # 489 "C:/msys64/ucrt64/include/corecrt.h" 3
 } threadlocinfo;
 # 508 "C:/msys64/ucrt64/include/corecrt.h" 3
@@ -175,7 +175,7 @@ unsigned long long *__attribute__((__cdecl__)) __local_stdio_scanf_options(void)
 struct _iobuf
 {
 
-  void *_Placeholder;
+    void *_Placeholder;
 # 46 "C:/msys64/ucrt64/include/stdio.h" 3
 };
 typedef struct _iobuf FILE;
@@ -255,8 +255,7 @@ extern
      * Entrada ejemplo: __attribute__(__format__, arg2, _DstBuf, _MaxCount, _Format, _ArgList)
      */
     __attribute__((__format__(__gnu_printf__, 3, 0))) __attribute__((__nonnull__(3))) int __attribute__((__cdecl__))
-    __mingw_vsnprintf(char *__restrict__ _DstBuf, size_t _MaxCount, const char *__restrict__ _Format,
-                      va_list _ArgList);
+    __mingw_vsnprintf(char *__restrict__ _DstBuf, size_t _MaxCount, const char *__restrict__ _Format, va_list _ArgList);
 extern
     /*
      * Uso: Ejecuta __attribute__ de forma segura.
@@ -841,9 +840,7 @@ int __attribute__((__cdecl__)) setvbuf(FILE *__restrict__ _File, char *__restric
  * Uso: Ejecuta __attribute__ de forma segura.
  * Entrada ejemplo: __attribute__(__gnu_printf__, arg2, _Format, arg4)
  */
-__attribute__((__pure__))
-__attribute__((__format__(__gnu_printf__, 1, 2))) __attribute__((__nonnull__(1))) int __attribute__((__cdecl__))
-_scprintf(const char *__restrict__ _Format, ...);
+__attribute__((__pure__)) __attribute__((__format__(__gnu_printf__, 1, 2))) __attribute__((__nonnull__(1))) int __attribute__((__cdecl__)) _scprintf(const char *__restrict__ _Format, ...);
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
  * Entrada ejemplo: __attribute__(__gnu_scanf__, arg2, _Src, _MaxCount, _Format, arg6)
@@ -854,10 +851,7 @@ __attribute__((__format__(__gnu_scanf__, 3, 4))) __attribute__((__nonnull__(3)))
  * Uso: Ejecuta __attribute__ de forma segura.
  * Entrada ejemplo: __attribute__(__attribute__, arg2, _Format, _ArgList)
  */
-__attribute__((__pure__))
-__attribute__((__format__(__ms_printf__, 1, 0))) __attribute__((__nonnull__(1)))
-__attribute__((__dllimport__)) int __attribute__((__cdecl__))
-_vscprintf(const char *__restrict__ _Format, va_list _ArgList);
+__attribute__((__pure__)) __attribute__((__format__(__ms_printf__, 1, 0))) __attribute__((__nonnull__(1))) __attribute__((__dllimport__)) int __attribute__((__cdecl__)) _vscprintf(const char *__restrict__ _Format, va_list _ArgList);
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
  * Entrada ejemplo: __attribute__(tmpfile)
@@ -1597,8 +1591,8 @@ int __attribute__((__cdecl__)) __stdio_common_vfprintf_p(unsigned long long _Opt
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vfscanf_s_l(FILE *_File, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vfscanf(0x0001ULL, _File, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vfscanf(0x0001ULL, _File, _Format, _Locale, _ArgList);
 }
 
 /*
@@ -1607,8 +1601,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vfscanf_s(FILE *_File, const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfscanf_s_l(_File, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfscanf_s_l(_File, _Format, ((void *)0), _ArgList);
 }
 
 /*
@@ -1617,8 +1611,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vscanf_s_l(const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfscanf_s_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfscanf_s_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
 }
 
 /*
@@ -1627,8 +1621,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vscanf_s(const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfscanf_s_l((__acrt_iob_func(0)), _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfscanf_s_l((__acrt_iob_func(0)), _Format, ((void *)0), _ArgList);
 }
 
 /*
@@ -1637,13 +1631,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _fscanf_s_l(FILE *_File, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfscanf_s_l(_File, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfscanf_s_l(_File, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1652,13 +1646,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) fscanf_s(FILE *_File, const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfscanf_s_l(_File, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfscanf_s_l(_File, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1667,13 +1661,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _scanf_s_l(const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfscanf_s_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfscanf_s_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1682,13 +1676,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) scanf_s(const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfscanf_s_l((__acrt_iob_func(0)), _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfscanf_s_l((__acrt_iob_func(0)), _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1697,8 +1691,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vfscanf_l(FILE *_File, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vfscanf(0, _File, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vfscanf(0, _File, _Format, _Locale, _ArgList);
 }
 
 /*
@@ -1707,8 +1701,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vscanf_l(const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfscanf_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfscanf_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
 }
 
 /*
@@ -1717,13 +1711,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _fscanf_l(FILE *_File, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfscanf_l(_File, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfscanf_l(_File, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1731,13 +1725,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _scanf_l(const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfscanf_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfscanf_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1746,8 +1740,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsscanf_s_l(const char *_Src, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsscanf(0x0001ULL, _Src, (size_t)-1, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsscanf(0x0001ULL, _Src, (size_t)-1, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1755,8 +1749,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vsscanf_s(const char *_Src, const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vsscanf_s_l(_Src, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vsscanf_s_l(_Src, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1764,13 +1758,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _sscanf_s_l(const char *_Src, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsscanf_s_l(_Src, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsscanf_s_l(_Src, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1778,13 +1772,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) sscanf_s(const char *_Src, const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vsscanf_s_l(_Src, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vsscanf_s_l(_Src, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1793,8 +1787,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsscanf_l(const char *_Src, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsscanf(0, _Src, (size_t)-1, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsscanf(0, _Src, (size_t)-1, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1802,13 +1796,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _sscanf_l(const char *_Src, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsscanf_l(_Src, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsscanf_l(_Src, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1817,13 +1811,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snscanf_s_l(const char *_Src, size_t _MaxCount, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = __stdio_common_vsscanf(0x0001ULL, _Src, _MaxCount, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = __stdio_common_vsscanf(0x0001ULL, _Src, _MaxCount, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1831,13 +1825,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snscanf_s(const char *_Src, size_t _MaxCount, const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = __stdio_common_vsscanf(0x0001ULL, _Src, _MaxCount, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = __stdio_common_vsscanf(0x0001ULL, _Src, _MaxCount, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1846,13 +1840,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snscanf_l(const char *_Src, size_t _MaxCount, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = __stdio_common_vsscanf(0, _Src, _MaxCount, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = __stdio_common_vsscanf(0, _Src, _MaxCount, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1861,8 +1855,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vfprintf_s_l(FILE *_File, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vfprintf_s((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vfprintf_s((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1870,8 +1864,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vfprintf_s(FILE *_File, const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfprintf_s_l(_File, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfprintf_s_l(_File, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1879,8 +1873,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vprintf_s_l(const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfprintf_s_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfprintf_s_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1888,8 +1882,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vprintf_s(const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfprintf_s_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfprintf_s_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1897,13 +1891,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _fprintf_s_l(FILE *_File, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfprintf_s_l(_File, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfprintf_s_l(_File, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1911,13 +1905,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _printf_s_l(const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfprintf_s_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfprintf_s_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1925,13 +1919,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) fprintf_s(FILE *_File, const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfprintf_s_l(_File, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfprintf_s_l(_File, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1939,13 +1933,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) printf_s(const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfprintf_s_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfprintf_s_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -1954,8 +1948,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsnprintf_c_l(char *_DstBuf, size_t _MaxCount, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsprintf((*__local_stdio_printf_options()), _DstBuf, _MaxCount, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsprintf((*__local_stdio_printf_options()), _DstBuf, _MaxCount, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1963,8 +1957,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsnprintf_c(char *_DstBuf, size_t _MaxCount, const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vsnprintf_c_l(_DstBuf, _MaxCount, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vsnprintf_c_l(_DstBuf, _MaxCount, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1972,13 +1966,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snprintf_c_l(char *_DstBuf, size_t _MaxCount, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsnprintf_c_l(_DstBuf, _MaxCount, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsnprintf_c_l(_DstBuf, _MaxCount, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -1986,13 +1980,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snprintf_c(char *_DstBuf, size_t _MaxCount, const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vsnprintf_c_l(_DstBuf, _MaxCount, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vsnprintf_c_l(_DstBuf, _MaxCount, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2001,8 +1995,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsnprintf_s_l(char *_DstBuf, size_t _DstSize, size_t _MaxCount, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsnprintf_s((*__local_stdio_printf_options()), _DstBuf, _DstSize, _MaxCount, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsnprintf_s((*__local_stdio_printf_options()), _DstBuf, _DstSize, _MaxCount, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2010,8 +2004,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vsnprintf_s(char *_DstBuf, size_t _DstSize, size_t _MaxCount, const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vsnprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vsnprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2019,8 +2013,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsnprintf_s(char *_DstBuf, size_t _DstSize, size_t _MaxCount, const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vsnprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vsnprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2028,13 +2022,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snprintf_s_l(char *_DstBuf, size_t _DstSize, size_t _MaxCount, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsnprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsnprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2042,13 +2036,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snprintf_s(char *_DstBuf, size_t _DstSize, size_t _MaxCount, const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vsnprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vsnprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2057,8 +2051,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsprintf_s_l(char *_DstBuf, size_t _DstSize, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsprintf_s((*__local_stdio_printf_options()), _DstBuf, _DstSize, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsprintf_s((*__local_stdio_printf_options()), _DstBuf, _DstSize, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2066,8 +2060,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vsprintf_s(char *_DstBuf, size_t _Size, const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vsprintf_s_l(_DstBuf, _Size, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vsprintf_s_l(_DstBuf, _Size, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2075,13 +2069,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _sprintf_s_l(char *_DstBuf, size_t _DstSize, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsprintf_s_l(_DstBuf, _DstSize, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsprintf_s_l(_DstBuf, _DstSize, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2089,13 +2083,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) sprintf_s(char *_DstBuf, size_t _DstSize, const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vsprintf_s_l(_DstBuf, _DstSize, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vsprintf_s_l(_DstBuf, _DstSize, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2104,8 +2098,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vfprintf_p_l(FILE *_File, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vfprintf_p((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vfprintf_p((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2113,8 +2107,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vfprintf_p(FILE *_File, const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfprintf_p_l(_File, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfprintf_p_l(_File, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2122,8 +2116,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vprintf_p_l(const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfprintf_p_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfprintf_p_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2131,8 +2125,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vprintf_p(const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfprintf_p_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfprintf_p_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2140,13 +2134,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _fprintf_p_l(FILE *_File, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = __stdio_common_vfprintf_p((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = __stdio_common_vfprintf_p((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2154,13 +2148,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _fprintf_p(FILE *_File, const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfprintf_p_l(_File, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfprintf_p_l(_File, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2168,13 +2162,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _printf_p_l(const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfprintf_p_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfprintf_p_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2182,13 +2176,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _printf_p(const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfprintf_p_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfprintf_p_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2197,8 +2191,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsprintf_p_l(char *_DstBuf, size_t _MaxCount, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsprintf_p((*__local_stdio_printf_options()), _DstBuf, _MaxCount, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsprintf_p((*__local_stdio_printf_options()), _DstBuf, _MaxCount, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2206,8 +2200,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsprintf_p(char *_Dst, size_t _MaxCount, const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vsprintf_p_l(_Dst, _MaxCount, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vsprintf_p_l(_Dst, _MaxCount, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2215,13 +2209,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _sprintf_p_l(char *_DstBuf, size_t _MaxCount, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsprintf_p_l(_DstBuf, _MaxCount, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsprintf_p_l(_DstBuf, _MaxCount, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2229,13 +2223,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _sprintf_p(char *_Dst, size_t _MaxCount, const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vsprintf_p_l(_Dst, _MaxCount, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vsprintf_p_l(_Dst, _MaxCount, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2244,8 +2238,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vscprintf_p_l(const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsprintf_p(0x0002ULL, ((void *)0), 0, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsprintf_p(0x0002ULL, ((void *)0), 0, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2253,8 +2247,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vscprintf_p(const char *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vscprintf_p_l(_Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vscprintf_p_l(_Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2262,13 +2256,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _scprintf_p_l(const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vscprintf_p_l(_Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vscprintf_p_l(_Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2276,13 +2270,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _scprintf_p(const char *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vscprintf_p_l(_Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vscprintf_p_l(_Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2291,8 +2285,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vfprintf_l(FILE *_File, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vfprintf((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vfprintf((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2300,8 +2294,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vprintf_l(const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfprintf_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfprintf_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2309,13 +2303,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _fprintf_l(FILE *_File, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfprintf_l(_File, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfprintf_l(_File, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2323,13 +2317,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _printf_l(const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfprintf_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfprintf_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2338,8 +2332,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsnprintf_l(char *_DstBuf, size_t _MaxCount, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsprintf(0x0001ULL, _DstBuf, _MaxCount, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsprintf(0x0001ULL, _DstBuf, _MaxCount, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2347,13 +2341,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snprintf_l(char *_DstBuf, size_t _MaxCount, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsnprintf_l(_DstBuf, _MaxCount, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsnprintf_l(_DstBuf, _MaxCount, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2361,8 +2355,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsprintf_l(char *_DstBuf, const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vsnprintf_l(_DstBuf, (size_t)-1, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vsnprintf_l(_DstBuf, (size_t)-1, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2370,13 +2364,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _sprintf_l(char *_DstBuf, const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsprintf_l(_DstBuf, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsprintf_l(_DstBuf, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2385,8 +2379,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vscprintf_l(const char *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsprintf(0x0002ULL, ((void *)0), 0, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsprintf(0x0002ULL, ((void *)0), 0, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2394,13 +2388,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _scprintf_l(const char *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vscprintf_l(_Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vscprintf_l(_Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 # 583 "C:/msys64/ucrt64/include/sec_api/stdio_s.h" 3
 
@@ -2461,8 +2455,8 @@ int __attribute__((__cdecl__)) __stdio_common_vfwprintf_s(unsigned long long _Op
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vfwscanf_s_l(FILE *_File, const wchar_t *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vfwscanf((*__local_stdio_scanf_options()) | 0x0001ULL, _File, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vfwscanf((*__local_stdio_scanf_options()) | 0x0001ULL, _File, _Format, _Locale, _ArgList);
 }
 
 /*
@@ -2471,8 +2465,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vfwscanf_s(FILE *_File, const wchar_t *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfwscanf_s_l(_File, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfwscanf_s_l(_File, _Format, ((void *)0), _ArgList);
 }
 
 /*
@@ -2481,8 +2475,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vwscanf_s_l(const wchar_t *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfwscanf_s_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfwscanf_s_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
 }
 
 /*
@@ -2491,8 +2485,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vwscanf_s(const wchar_t *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfwscanf_s_l((__acrt_iob_func(0)), _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfwscanf_s_l((__acrt_iob_func(0)), _Format, ((void *)0), _ArgList);
 }
 
 /*
@@ -2501,13 +2495,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _fwscanf_s_l(FILE *_File, const wchar_t *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfwscanf_s_l(_File, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfwscanf_s_l(_File, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2516,13 +2510,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) fwscanf_s(FILE *_File, const wchar_t *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfwscanf_s_l(_File, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfwscanf_s_l(_File, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2531,13 +2525,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _wscanf_s_l(const wchar_t *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfwscanf_s_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfwscanf_s_l((__acrt_iob_func(0)), _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2546,13 +2540,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) wscanf_s(const wchar_t *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfwscanf_s_l((__acrt_iob_func(0)), _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfwscanf_s_l((__acrt_iob_func(0)), _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2561,8 +2555,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vswscanf_s_l(const wchar_t *_Src, const wchar_t *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vswscanf((*__local_stdio_scanf_options()) | 0x0001ULL, _Src, (size_t)-1, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vswscanf((*__local_stdio_scanf_options()) | 0x0001ULL, _Src, (size_t)-1, _Format, _Locale, _ArgList);
 }
 
 /*
@@ -2571,8 +2565,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vswscanf_s(const wchar_t *_Src, const wchar_t *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vswscanf_s_l(_Src, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vswscanf_s_l(_Src, _Format, ((void *)0), _ArgList);
 }
 
 /*
@@ -2581,13 +2575,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _swscanf_s_l(const wchar_t *_Src, const wchar_t *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vswscanf_s_l(_Src, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vswscanf_s_l(_Src, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2595,13 +2589,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) swscanf_s(const wchar_t *_Src, const wchar_t *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vswscanf_s_l(_Src, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vswscanf_s_l(_Src, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2610,8 +2604,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsnwscanf_s_l(const wchar_t *_Src, size_t _MaxCount, const wchar_t *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vswscanf((*__local_stdio_scanf_options()) | 0x0001ULL, _Src, _MaxCount, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vswscanf((*__local_stdio_scanf_options()) | 0x0001ULL, _Src, _MaxCount, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2619,13 +2613,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snwscanf_s_l(const wchar_t *_Src, size_t _MaxCount, const wchar_t *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsnwscanf_s_l(_Src, _MaxCount, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsnwscanf_s_l(_Src, _MaxCount, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2633,13 +2627,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snwscanf_s(const wchar_t *_Src, size_t _MaxCount, const wchar_t *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vsnwscanf_s_l(_Src, _MaxCount, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vsnwscanf_s_l(_Src, _MaxCount, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2648,8 +2642,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vfwprintf_s_l(FILE *_File, const wchar_t *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vfwprintf_s((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vfwprintf_s((*__local_stdio_printf_options()), _File, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2657,8 +2651,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vwprintf_s_l(const wchar_t *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfwprintf_s_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfwprintf_s_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2666,8 +2660,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vfwprintf_s(FILE *_File, const wchar_t *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfwprintf_s_l(_File, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfwprintf_s_l(_File, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2675,8 +2669,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vwprintf_s(const wchar_t *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vfwprintf_s_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vfwprintf_s_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2684,13 +2678,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _fwprintf_s_l(FILE *_File, const wchar_t *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfwprintf_s_l(_File, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfwprintf_s_l(_File, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2698,13 +2692,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _wprintf_s_l(const wchar_t *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vfwprintf_s_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vfwprintf_s_l((__acrt_iob_func(1)), _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2712,13 +2706,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) fwprintf_s(FILE *_File, const wchar_t *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfwprintf_s_l(_File, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfwprintf_s_l(_File, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2726,13 +2720,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) wprintf_s(const wchar_t *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vfwprintf_s_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vfwprintf_s_l((__acrt_iob_func(1)), _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2741,8 +2735,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vswprintf_s_l(wchar_t *_DstBuf, size_t _DstSize, const wchar_t *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vswprintf_s((*__local_stdio_printf_options()), _DstBuf, _DstSize, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vswprintf_s((*__local_stdio_printf_options()), _DstBuf, _DstSize, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2750,8 +2744,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) vswprintf_s(wchar_t *_DstBuf, size_t _DstSize, const wchar_t *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vswprintf_s_l(_DstBuf, _DstSize, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vswprintf_s_l(_DstBuf, _DstSize, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2759,13 +2753,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _swprintf_s_l(wchar_t *_DstBuf, size_t _DstSize, const wchar_t *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vswprintf_s_l(_DstBuf, _DstSize, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vswprintf_s_l(_DstBuf, _DstSize, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2773,13 +2767,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) swprintf_s(wchar_t *_DstBuf, size_t _DstSize, const wchar_t *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vswprintf_s_l(_DstBuf, _DstSize, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vswprintf_s_l(_DstBuf, _DstSize, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 
 /*
@@ -2788,8 +2782,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsnwprintf_s_l(wchar_t *_DstBuf, size_t _DstSize, size_t _MaxCount, const wchar_t *_Format, _locale_t _Locale, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return __stdio_common_vsnwprintf_s((*__local_stdio_printf_options()), _DstBuf, _DstSize, _MaxCount, _Format, _Locale, _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return __stdio_common_vsnwprintf_s((*__local_stdio_printf_options()), _DstBuf, _DstSize, _MaxCount, _Format, _Locale, _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2797,8 +2791,8 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vsnwprintf_s(wchar_t *_DstBuf, size_t _DstSize, size_t _MaxCount, const wchar_t *_Format, va_list _ArgList)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _vsnwprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _vsnwprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2806,13 +2800,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snwprintf_s_l(wchar_t *_DstBuf, size_t _DstSize, size_t _MaxCount, const wchar_t *_Format, _locale_t _Locale, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Locale);
-  _Ret = _vsnwprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, _Locale, _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Locale);
+    _Ret = _vsnwprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, _Locale, _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 /*
  * Uso: Ejecuta __attribute__ de forma segura.
@@ -2820,13 +2814,13 @@ static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __a
  */
 static __attribute__((__unused__)) __inline__ __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _snwprintf_s(wchar_t *_DstBuf, size_t _DstSize, size_t _MaxCount, const wchar_t *_Format, ...)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  __builtin_va_list _ArgList;
-  int _Ret;
-  __builtin_va_start(_ArgList, _Format);
-  _Ret = _vsnwprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
-  __builtin_va_end(_ArgList);
-  return _Ret;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    __builtin_va_list _ArgList;
+    int _Ret;
+    __builtin_va_start(_ArgList, _Format);
+    _Ret = _vsnwprintf_s_l(_DstBuf, _DstSize, _MaxCount, _Format, ((void *)0), _ArgList);
+    __builtin_va_end(_ArgList);
+    return _Ret;
 }
 # 862 "C:/msys64/ucrt64/include/sec_api/stdio_s.h" 3
 
@@ -3560,8 +3554,8 @@ __attribute__((__dllimport__)) errno_t __attribute__((__cdecl__)) strcat_s(char 
  */
 extern __inline__ __attribute__((__always_inline__, __gnu_inline__)) size_t __attribute__((__cdecl__)) strnlen_s(const char *_src, size_t _count)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _src ? strnlen(_src, _count) : 0;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _src ? strnlen(_src, _count) : 0;
 }
 
 /*
@@ -3679,8 +3673,8 @@ __attribute__((__dllimport__)) errno_t __attribute__((__cdecl__)) _wcsnset_s_l(w
  */
 extern __inline__ __attribute__((__always_inline__, __gnu_inline__)) size_t __attribute__((__cdecl__)) wcsnlen_s(const wchar_t *_src, size_t _count)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  return _src ? wcsnlen(_src, _count) : 0;
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    return _src ? wcsnlen(_src, _count) : 0;
 }
 # 226 "C:/msys64/ucrt64/include/string.h" 2 3
 # 3 "c:\\Users\\qu1r30n\\Documents\\GitHub\\SYSTEMA_QU1R30N\\SISTEMA_QU1R30N.c" 2
@@ -3954,15 +3948,13 @@ void editar_fila(const char *ruta, int fila, const char *nueva);
  * Uso: Ejecuta editar_celda de forma segura.
  * Entrada ejemplo: editar_celda(ruta, colBuscar, valorBuscar, colEditar, nuevoValor)
  */
-void editar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
-                  int colEditar, const char *nuevoValor);
+void editar_celda(const char *ruta, int colBuscar, const char *valorBuscar, int colEditar, const char *nuevoValor);
 
 /*
  * Uso: Ejecuta incrementar_celda de forma segura.
  * Entrada ejemplo: incrementar_celda(ruta, colBuscar, valorBuscar, colEditar, inc)
  */
-void incrementar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
-                       int colEditar, int inc);
+void incrementar_celda(const char *ruta, int colBuscar, const char *valorBuscar, int colEditar, int inc);
 
 /*
  * Uso: Ejecuta editar_columna_completa de forma segura.
@@ -4031,10 +4023,10 @@ char *(*G_archivos_registros)[2] = GG_archivos_registros;
  */
 void inicializacion()
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  crearArchivo(G_archivos[0][0], G_archivos[0][1]);
-  for (int i = 0; i < 2; i++)
-    crearArchivo(G_archivos_registros[i][0], G_archivos_registros[i][1]);
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    crearArchivo(G_archivos[0][0], G_archivos[0][1]);
+    for (int i = 0; i < 2; i++)
+        crearArchivo(G_archivos_registros[i][0], G_archivos_registros[i][1]);
 }
 
 /*
@@ -4043,55 +4035,53 @@ void inicializacion()
  */
 void conmutador(char *texto_prueba)
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  char **opciones = modelo_split(texto_prueba, G_caracter_separacion_funciones_espesificas
-                                                   [0]);
-  int n_opciones = 0;
-  if (opciones)
-  {
-    while (opciones[n_opciones])
-      n_opciones++;
-  }
-
-  if (opciones && n_opciones >= 2 && strcmp(opciones[0], "op_tienda") == 0)
-  {
-    char **sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas
-                                                      [1]);
-    int n_sub = 0;
-    if (sub_opcion)
-      while (sub_opcion[n_sub])
-        n_sub++;
-
-    if (n_sub >= 2)
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    char **opciones = modelo_split(texto_prueba, G_caracter_separacion_funciones_espesificas[0]);
+    int n_opciones = 0;
+    if (opciones)
     {
-      if (strcmp(sub_opcion[0], "ventas") == 0)
-      {
-        modelo_venta(sub_opcion[1]);
-      }
-      else if (strcmp(sub_opcion[0], "compras") == 0)
-      {
-        modelo_compra(sub_opcion[1]);
-      }
-      else if (strcmp(sub_opcion[0], "agregar_producto") == 0)
-      {
-        modelo_agregarProducto(sub_opcion[1]);
-      }
-      else
-      {
-        printf("OpciÃ³n no vÃ¡lida: %s\n", sub_opcion[0]);
-      }
+        while (opciones[n_opciones])
+            n_opciones++;
     }
 
-    free_split(sub_opcion);
-  }
-  else if (opciones && strcmp(opciones[0], "procesos_generales") == 0)
-  {
-  }
-  else if (opciones && strcmp(opciones[0], "procesos_sistema") == 0)
-  {
-  }
+    if (opciones && n_opciones >= 2 && strcmp(opciones[0], "op_tienda") == 0)
+    {
+        char **sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]);
+        int n_sub = 0;
+        if (sub_opcion)
+            while (sub_opcion[n_sub])
+                n_sub++;
 
-  free_split(opciones);
+        if (n_sub >= 2)
+        {
+            if (strcmp(sub_opcion[0], "ventas") == 0)
+            {
+                modelo_venta(sub_opcion[1]);
+            }
+            else if (strcmp(sub_opcion[0], "compras") == 0)
+            {
+                modelo_compra(sub_opcion[1]);
+            }
+            else if (strcmp(sub_opcion[0], "agregar_producto") == 0)
+            {
+                modelo_agregarProducto(sub_opcion[1]);
+            }
+            else
+            {
+                printf("Opción no válida: %s\n", sub_opcion[0]);
+            }
+        }
+
+        free_split(sub_opcion);
+    }
+    else if (opciones && strcmp(opciones[0], "procesos_generales") == 0)
+    {
+    }
+    else if (opciones && strcmp(opciones[0], "procesos_sistema") == 0)
+    {
+    }
+
+    free_split(opciones);
 }
 
 /*
@@ -4100,25 +4090,22 @@ void conmutador(char *texto_prueba)
  */
 int main()
 {
-  /* Paso a paso: validar entradas, procesar y manejar errores. */
-  inicializacion();
+    /* Paso a paso: validar entradas, procesar y manejar errores. */
+    inicializacion();
 
-  const char *ejemplos[] = {
-      "op_tienda|ventas|ABC123|2|SucursalX",
-      "op_tienda|compras|XYZ987|5|Proveedor1",
-      "op_tienda|agregar_producto|1|Leche|1L|unidad|10|123456|100|50|ProveedorA",
+    const char *ejemplos[] = {"op_tienda|ventas|ABC123|2|SucursalX", "op_tienda|compras|XYZ987|5|Proveedor1", "op_tienda|agregar_producto|1|Leche|1L|unidad|10|123456|100|50|ProveedorA",
 
 # 85 "c:\\Users\\qu1r30n\\Documents\\GitHub\\SYSTEMA_QU1R30N\\SISTEMA_QU1R30N.c" 3
-      ((void *)0)
+                              ((void *)0)
 # 85 "c:\\Users\\qu1r30n\\Documents\\GitHub\\SYSTEMA_QU1R30N\\SISTEMA_QU1R30N.c"
-  };
+    };
 
-  for (int i = 0; ejemplos[i]; i++)
-  {
-    printf("Ejecutando comando: %s\n", ejemplos[i]);
-  }
+    for (int i = 0; ejemplos[i]; i++)
+    {
+        printf("Ejecutando comando: %s\n", ejemplos[i]);
+    }
 
-  modelo_delay_ms("1000");
+    modelo_delay_ms("1000");
 
-  return 0;
+    return 0;
 }

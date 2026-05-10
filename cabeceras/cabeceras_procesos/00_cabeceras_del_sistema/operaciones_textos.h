@@ -1,4 +1,4 @@
-ï»¿#ifndef PROCESOS_OPERACIONES_TEXTOS_H
+#ifndef PROCESOS_OPERACIONES_TEXTOS_H
 #define PROCESOS_OPERACIONES_TEXTOS_H
 
 /* LIBRERIAS USADAS EN ESTE ARCHIVO:
@@ -65,31 +65,26 @@ char *variable_string(const char *format, ...);
 FUNCIONES NUEVAS DEL C#
 ======================== */
 
-/* Unir filas con carÃ¡cter separador, extrayendo columnas especÃ­ficas opcionalmente. */
+/* Unir filas con carácter separador, extrayendo columnas específicas opcionalmente. */
 /*
  * Uso: Ejecuta join_paresido_simple de forma segura.
  * Entrada ejemplo: join_paresido_simple(caracter_union_filas, texto, n_texto, columnas_extraer, caracter_union_columnas)
  */
-char *join_paresido_simple(char caracter_union_filas, char **texto, int n_texto,
-                           const char *columnas_extraer, const char *caracter_union_columnas);
+char *join_paresido_simple(char caracter_union_filas, char **texto, int n_texto, const char *columnas_extraer, const char *caracter_union_columnas);
 
 /* Unir arreglo en string con separador, quitando celdas del inicio o final. */
 /*
  * Uso: Ejecuta joineada_paraesida_y_quitador_de_extremos de forma segura.
  * Entrada ejemplo: joineada_paraesida_y_quitador_de_extremos(data, restar_cuantas, restar_primera_celda)
  */
-char *joineada_paraesida_y_quitador_de_extremos(const char *data,
-                                                int restar_cuantas,
-                                                int restar_primera_celda);
+char *joineada_paraesida_y_quitador_de_extremos(const char *data, int restar_cuantas, int restar_primera_celda);
 
 /* Igual a anterior pero omitiendo celdas NULL. */
 /*
  * Uso: Ejecuta joineada_paraesida_SIN_NULOS_y_quitador_de_extremos de forma segura.
  * Entrada ejemplo: joineada_paraesida_SIN_NULOS_y_quitador_de_extremos(data, restar_cuantas, restar_primera_celda)
  */
-char *joineada_paraesida_SIN_NULOS_y_quitador_de_extremos(const char *data,
-                                                          int restar_cuantas,
-                                                          int restar_primera_celda);
+char *joineada_paraesida_SIN_NULOS_y_quitador_de_extremos(const char *data, int restar_cuantas, int restar_primera_celda);
 
 /* Quitar separador final duplicado de una string. */
 /*
@@ -117,124 +112,93 @@ char *concatenacion_filas_de_un_arreglo(char **arreglo, int n_arreglo, int poner
  * Uso: Ejecuta concatenacion_filas_de_un_arreglo_bidimencional de forma segura.
  * Entrada ejemplo: concatenacion_filas_de_un_arreglo_bidimencional(arreglo_2d, filas, cols, poner_num_fila)
  */
-char *concatenacion_filas_de_un_arreglo_bidimencional(const char **arreglo_2d,
-                                                      int filas, int cols,
-                                                      int poner_num_fila);
+char *concatenacion_filas_de_un_arreglo_bidimencional(const char **arreglo_2d, int filas, int cols, int poner_num_fila);
 
 /* Concatenar dos strings con separador. */
 /*
  * Uso: Ejecuta concatenacion_caracter_separacion de forma segura.
  * Entrada ejemplo: concatenacion_caracter_separacion(texto_actual, texto_agregar, separador)
  */
-char *concatenacion_caracter_separacion(const char *texto_actual,
-                                        const char *texto_agregar,
-                                        const char *separador);
+char *concatenacion_caracter_separacion(const char *texto_actual, const char *texto_agregar, const char *separador);
 
-/* BÃºsqueda en estructura profunda (nested) por columnas mÃºltiples. */
+/* Búsqueda en estructura profunda (nested) por columnas múltiples. */
 /*
  * Uso: Ejecuta busqueda_profunda_string de forma segura.
  * Entrada ejemplo: busqueda_profunda_string(texto, columnas_recorrer, comparar)
  */
-char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer,
-                               const char *comparar);
+char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer, const char *comparar);
 
-/* BÃºsqueda profunda retornando en formato especial final. */
+/* Búsqueda profunda retornando en formato especial final. */
 /*
  * Uso: Ejecuta busqueda_profunda_comparacion_final_string de forma segura.
  * Entrada ejemplo: busqueda_profunda_comparacion_final_string(texto, columnas_recorrer, comparar)
  */
-char *busqueda_profunda_comparacion_final_string(const char *texto,
-                                                 const char *columnas_recorrer,
-                                                 const char *comparar);
+char *busqueda_profunda_comparacion_final_string(const char *texto, const char *columnas_recorrer, const char *comparar);
 
-/* BÃºsqueda profunda con YY (mÃºltiples comparaciones). */
+/* Búsqueda profunda con YY (múltiples comparaciones). */
 /*
  * Uso: Ejecuta busqueda_con_YY_profunda_texto_id_archivo de forma segura.
  * Entrada ejemplo: busqueda_con_YY_profunda_texto_id_archivo(texto, columnas_recorrer, comparaciones)
  */
-char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto,
-                                                const char *columnas_recorrer,
-                                                const char *comparaciones);
+char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto, const char *columnas_recorrer, const char *comparaciones);
 
-/* EdiciÃ³n/incremento recursiva en estructura profunda. */
+/* Edición/incremento recursiva en estructura profunda. */
 /*
  * Uso: Ejecuta editar_incr_string_funcion_recursiva de forma segura.
  * Entrada ejemplo: editar_incr_string_funcion_recursiva(texto, columnas_recorrer, info_sustituir, edit_0_increm_1)
  */
-char *editar_incr_string_funcion_recursiva(const char *texto,
-                                           const char *columnas_recorrer,
-                                           const char *info_sustituir,
-                                           const char *edit_0_increm_1);
+char *editar_incr_string_funcion_recursiva(const char *texto, const char *columnas_recorrer, const char *info_sustituir, const char *edit_0_increm_1);
 
-/* EdiciÃ³n profunda mÃºltiple con comparaciÃ³n final. */
+/* Edición profunda múltiple con comparación final. */
 /*
  * Uso: Ejecuta editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string de forma segura.
  * Entrada ejemplo: editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(texto, indices_editar, info_editar, comparacion, edit_0_increm_1)
  */
-char *editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(
-    const char *texto,
-    const char *indices_editar,
-    const char *info_editar,
-    const char *comparacion,
-    const char *edit_0_increm_1);
+char *editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(const char *texto, const char *indices_editar, const char *info_editar, const char *comparacion, const char *edit_0_increm_1);
 
-/* EdiciÃ³n profunda mÃºltiple versiÃ³n ARR_FUN (wrapper). */
+/* Edición profunda múltiple versión ARR_FUN (wrapper). */
 /*
  * Uso: Ejecuta ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple de forma segura.
  * Entrada ejemplo: ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(datos)
  */
 char *ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(const char *datos);
 
-/* EdiciÃ³n profunda mÃºltiple con mÃºltiples chequeos. */
+/* Edición profunda múltiple con múltiples chequeos. */
 /*
  * Uso: Ejecuta editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR de forma segura.
  * Entrada ejemplo: editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(texto, indices_editar, comparacion_con_edicion, edit_0_increm_1)
  */
-char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(
-    const char *texto,
-    const char *indices_editar,
-    const char *comparacion_con_edicion,
-    const char *edit_0_increm_1);
+char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(const char *texto, const char *indices_editar, const char *comparacion_con_edicion, const char *edit_0_increm_1);
 
-/* EdiciÃ³n profunda mÃºltiple simple. */
+/* Edición profunda múltiple simple. */
 /*
  * Uso: Ejecuta editar_inc_edicion_profunda_multiple_string de forma segura.
  * Entrada ejemplo: editar_inc_edicion_profunda_multiple_string(texto, indices_editar, info_editar, edit_0_increm_1)
  */
-char *editar_inc_edicion_profunda_multiple_string(const char *texto,
-                                                  const char *indices_editar,
-                                                  const char *info_editar,
-                                                  const char *edit_0_increm_1);
+char *editar_inc_edicion_profunda_multiple_string(const char *texto, const char *indices_editar, const char *info_editar, const char *edit_0_increm_1);
 
-/* EdiciÃ³n profunda mÃºltiple al final. */
+/* Edición profunda múltiple al final. */
 /*
  * Uso: Ejecuta editar_inc_edicion_profunda_multiple_AL_FINAL_string de forma segura.
  * Entrada ejemplo: editar_inc_edicion_profunda_multiple_AL_FINAL_string(texto, indices_editar, info_editar, edit_0_increm_1)
  */
-char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto,
-                                                           const char *indices_editar,
-                                                           const char *info_editar,
-                                                           const char *edit_0_increm_1);
+char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto, const char *indices_editar, const char *info_editar, const char *edit_0_increm_1);
 
-/* Recorrer y reemplazar caracteres de separaciÃ³n izq/dcha. */
+/* Recorrer y reemplazar caracteres de separación izq/dcha. */
 /*
  * Uso: Ejecuta recorrer_caracter_separacion de forma segura.
  * Entrada ejemplo: recorrer_caracter_separacion(contenidoFila, izquierda_o_derecha, numero_veses)
  */
-char *recorrer_caracter_separacion(const char *contenidoFila,
-                                   const char *izquierda_o_derecha,
-                                   int numero_veses);
+char *recorrer_caracter_separacion(const char *contenidoFila, const char *izquierda_o_derecha, int numero_veses);
 
-/* Recorrer caracteres de separaciÃ³n para funciones especÃ­ficas. */
+/* Recorrer caracteres de separación para funciones específicas. */
 /*
  * Uso: Ejecuta recorrer_caracter_separacion_funciones_espesificas de forma segura.
  * Entrada ejemplo: recorrer_caracter_separacion_funciones_espesificas(contenidoFila, izquierda_o_derecha, numero_veses)
  */
-char *recorrer_caracter_separacion_funciones_espesificas(const char *contenidoFila,
-                                                         const char *izquierda_o_derecha,
-                                                         int numero_veses);
+char *recorrer_caracter_separacion_funciones_espesificas(const char *contenidoFila, const char *izquierda_o_derecha, int numero_veses);
 
-/* Extraer carpeta, nombre y extensiÃ³n de ruta. */
+/* Extraer carpeta, nombre y extensión de ruta. */
 /*
  * Uso: Ejecuta extraer_separado_carpetas_nombreArchivo_extencion de forma segura.
  * Entrada ejemplo: extraer_separado_carpetas_nombreArchivo_extencion(direccion_archivo)
@@ -246,25 +210,20 @@ char **extraer_separado_carpetas_nombreArchivo_extencion(const char *direccion_a
  * Uso: Ejecuta desfragmentar_direccion de forma segura.
  * Entrada ejemplo: desfragmentar_direccion(direccion, retorna_directorios, retorna_nom_arch, retorna_extencion)
  */
-int desfragmentar_direccion(const char *direccion,
-                            char **retorna_directorios,
-                            char **retorna_nom_arch,
-                            char **retorna_extencion);
+int desfragmentar_direccion(const char *direccion, char **retorna_directorios, char **retorna_nom_arch, char **retorna_extencion);
 
-/* Generar folio (ID Ãºnico con timestamp). */
+/* Generar folio (ID único con timestamp). */
 /*
  * Uso: Ejecuta generar_folio de forma segura.
  * Entrada ejemplo: generar_folio(formato_fecha_hora)
  */
 char *generar_folio(const char *formato_fecha_hora);
 
-/* Reemplazar mÃºltiples caracteres segÃºn arreglos paralelos. */
+/* Reemplazar múltiples caracteres según arreglos paralelos. */
 /*
  * Uso: Ejecuta ReemplazarCaracteres_de_texto_arreglo de forma segura.
  * Entrada ejemplo: ReemplazarCaracteres_de_texto_arreglo(info, caracteres_sep, n_sep, caracteres_sustitucion)
  */
-char *ReemplazarCaracteres_de_texto_arreglo(const char *info,
-                                            char **caracteres_sep, int n_sep,
-                                            char **caracteres_sustitucion);
+char *ReemplazarCaracteres_de_texto_arreglo(const char *info, char **caracteres_sep, int n_sep, char **caracteres_sustitucion);
 
 #endif // PROCESOS_OPERACIONES_TEXTOS_H

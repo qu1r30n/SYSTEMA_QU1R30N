@@ -5,12 +5,12 @@
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h: Creacion de archivos
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/administrador_de_estructuras_base.h: Dependencia interna del proyecto
  */
-#include <stdio.h>
-#include <stdlib.h>
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/administrador_de_estructuras_base.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/administrador_de_estructuras_base.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /*
  * Uso: Ejecuta creacion_de_estructura_base de forma segura.

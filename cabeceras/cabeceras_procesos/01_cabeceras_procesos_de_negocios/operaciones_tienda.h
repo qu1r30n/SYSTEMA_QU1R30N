@@ -30,39 +30,7 @@ int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo, char *
  * Uso: Ejecuta agregarProducto de forma segura.
  * Entrada ejemplo: agregarProducto(producto, ..., dir_espacio)
  */
-void agregarProducto(
-    char *producto,
-    float contenido,
-    char *tipo_medida,
-    float precio_venta,
-    char *cod_barras,
-    float cantidad,
-    float costo_compra,
-    char *proveedor,
-    char *grupo,
-    float cant_x_paquet,
-    char *es_paquete,
-    char *codbar_paquete_e_id,
-    char *cod_bar_individual_es_paq_e_id,
-    char *ligar_prod_sab,
-    char *impuestos,
-    char *ingredientes,
-    char *caducidad,
-    char *ultimo_mov,
-    char *sucur_vent,
-    float claf_prod,
-    char *dir_img_inter,
-    char *dir_img_comp,
-    char *info_extra,
-    char *proceso_crear,
-    char *dir_vid_proc_crear,
-    float tiempo_fabricacion,
-    char *indices_dia_registro_produc_vendido,
-    char *indices_mes_registro_produc_vendido,
-    char *indices_anio_registro_produc_vendido,
-    char *ultima_venta,
-    char *indices_total_registro_produc_vendido,
-    char *dir_espacio);
+void agregarProducto(char *producto, float contenido, char *tipo_medida, float precio_venta, char *cod_barras, float cantidad, float costo_compra, char *proveedor, char *grupo, float cant_x_paquet, char *es_paquete, char *codbar_paquete_e_id, char *cod_bar_individual_es_paq_e_id, char *ligar_prod_sab, char *impuestos, char *ingredientes, char *caducidad, char *ultimo_mov, char *sucur_vent, float claf_prod, char *dir_img_inter, char *dir_img_comp, char *info_extra, char *proceso_crear, char *dir_vid_proc_crear, float tiempo_fabricacion, char *indices_dia_registro_produc_vendido, char *indices_mes_registro_produc_vendido, char *indices_anio_registro_produc_vendido, char *ultima_venta, char *indices_total_registro_produc_vendido, char *dir_espacio);
 
 /*
  * Uso: Ejecuta editarPrecio de forma segura.

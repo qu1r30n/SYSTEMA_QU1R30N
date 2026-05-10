@@ -13,14 +13,14 @@
  * - ../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h: Dependencia interna del proyecto
  * - ../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h: Dependencia interna del proyecto
  */
-#include <stdio.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <string.h>
 
 #ifdef _WIN32
+#include <direct.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <direct.h>
 
 #elif defined(__linux__)
 #include <stdlib.h>
@@ -37,11 +37,11 @@
 #endif
 
 #include "../../CLASE_QU1R30N.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
 /* ===== MODELO DE PROCESOS DEL SISTEMA: OPERACIONES DE TEXTOS ===== */
 // Crear directorio
@@ -57,10 +57,7 @@ void modelo_crearDirectorio(char *texto)
         return;
     }
 
-    char *nombres_variables[][4] =
-        {
-            {"ruta", "string", "nose", ""},
-            {NULL, NULL, NULL, NULL}};
+    char *nombres_variables[][4] = {{"ruta", "string", "nose", ""}, {NULL, NULL, NULL, NULL}};
 
     int cuantos_parametros_hay = 0; // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 3
     while (nombres_variables[cuantos_parametros_hay][0])
@@ -86,7 +83,7 @@ void modelo_crearDirectorio(char *texto)
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
         modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-        liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
+        liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         return;
     }
 
@@ -94,7 +91,7 @@ void modelo_crearDirectorio(char *texto)
     crearDirectorio(ruta);
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-    liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
+    liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 }
 
 // Crear archivo
@@ -110,11 +107,7 @@ void modelo_crearArchivo(char *texto)
         return;
     }
 
-    char *nombres_variables[][4] =
-        {
-            {"ruta", "string", "nose", ""},
-            {"contenido", "string", "nose", ""},
-            {NULL, NULL, NULL, NULL}};
+    char *nombres_variables[][4] = {{"ruta", "string", "nose", ""}, {"contenido", "string", "nose", ""}, {NULL, NULL, NULL, NULL}};
 
     int cuantos_parametros_hay = 0; // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 3
     while (nombres_variables[cuantos_parametros_hay][0])
@@ -140,7 +133,7 @@ void modelo_crearArchivo(char *texto)
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
         modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-        liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
+        liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         return;
     }
 
@@ -149,7 +142,7 @@ void modelo_crearArchivo(char *texto)
     crearArchivo(ruta, contenido);
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-    liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
+    liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 }
 
 // Leer archivo (MODELO STUB - Solo parsea sin llamar a la función)
@@ -204,11 +197,7 @@ void modelo_agregar_fila(char *texto)
         return;
     }
 
-    char *nombres_variables[][4] =
-        {
-            {"ruta", "string", "nose", ""},
-            {"fila", "string", "nose", ""},
-            {NULL, NULL, NULL, NULL}};
+    char *nombres_variables[][4] = {{"ruta", "string", "nose", ""}, {"fila", "string", "nose", ""}, {NULL, NULL, NULL, NULL}};
 
     int cuantos_parametros_hay = 0; // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 3
     while (nombres_variables[cuantos_parametros_hay][0])
@@ -234,7 +223,7 @@ void modelo_agregar_fila(char *texto)
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
         modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-        liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
+        liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         return;
     }
 
@@ -243,5 +232,5 @@ void modelo_agregar_fila(char *texto)
     agregar_fila(ruta, fila);
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-    liberarStructura(&datos); // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
+    liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 }

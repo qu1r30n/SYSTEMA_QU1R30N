@@ -28,7 +28,6 @@ static void limpieza_al_salir(void)
                                   // programas saben que este ya no esta corriendo
 }
 
-
 // Inicialización
 /*
  * Uso: Ejecuta inicializacion de forma segura.
@@ -306,7 +305,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
                     if (retorno_modelo_actual != NULL)
                     {
-                        if (concatenar_formato_separado_por_variable(&acumulador_modelos, NULL, "%s%s",
+                        if (concatenar_formato_separado_por_variable(
+                                &acumulador_modelos, NULL, "%s%s",
                                 acumulador_modelos ? GG_caracter_para_confirmacion_o_error[2] : "",
                                 retorno_modelo_actual) < 0)
                         {
@@ -315,7 +315,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         }
                     }
                 }
-                else if (strcmp(sub_opcion[0], "compras") == 0)// si la sub-operacion es "compras"
+                else if (strcmp(sub_opcion[0], "compras") == 0) // si la sub-operacion es "compras"
                 {
                     resultado =
                         modelo_compra(sub_opcion[1], retorna_direccion_espacio_negocio,
@@ -325,7 +325,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
                     if (retorno_modelo_actual != NULL)
                     {
-                        if (concatenar_formato_separado_por_variable(&acumulador_modelos, NULL, "%s%s",
+                        if (concatenar_formato_separado_por_variable(
+                                &acumulador_modelos, NULL, "%s%s",
                                 acumulador_modelos ? GG_caracter_para_confirmacion_o_error[2] : "",
                                 retorno_modelo_actual) < 0)
                         {
@@ -334,7 +335,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         }
                     }
                 }
-                else if (strcmp(sub_opcion[0], "agregar_producto") == 0)// si la sub-operacion es "agregar_producto"
+                else if (strcmp(sub_opcion[0], "agregar_producto") == 0) // si la sub-operacion es "agregar_producto"
                 {
                     resultado = modelo_agregarProducto(
                         sub_opcion[1], retorna_direccion_espacio_negocio,
@@ -344,7 +345,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
                     if (retorno_modelo_actual != NULL)
                     {
-                        if (concatenar_formato_separado_por_variable(&acumulador_modelos, NULL, "%s%s",
+                        if (concatenar_formato_separado_por_variable(
+                                &acumulador_modelos, NULL, "%s%s",
                                 acumulador_modelos ? GG_caracter_para_confirmacion_o_error[2] : "",
                                 retorno_modelo_actual) < 0)
                         {
@@ -451,8 +453,10 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
                         if (retorno_modelo_actual != NULL)
                         {
-                            if (acumular_texto_con_separador(&acumulador_modelos, retorno_modelo_actual,
-                                                             GG_caracter_para_confirmacion_o_error[2]) != RET_OK)
+                            if (concatenar_formato_separado_por_variable(
+                                    &acumulador_modelos, NULL, "%s%s",
+                                    acumulador_modelos ? GG_caracter_para_confirmacion_o_error[2] : "",
+                                    retorno_modelo_actual) < 0)
                             {
                                 resultado = RET_ERROR_GENERIC;
                                 detalle_resultado = "Error al acumular retorno de modelo crear_espacio.";

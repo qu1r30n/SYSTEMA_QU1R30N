@@ -304,7 +304,7 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
     if (obtener_ruta_inventario(dir_espacio, &ruta) < 0){free(fila);return;}
 
     // genera la cabecera del inventario
-    char *cabecera_inventario = columnas_concatenadas(GG_ventana_emergente_productos, 0, 1, GG_caracter_separacion[0]);
+    char *cabecera_inventario = columnas_concatenadas(GG_ventana_emergente_productos, 0, 1, GG_caracter_separacion[1]);
     if (!cabecera_inventario){free(ruta);free(fila);return;}
 
     imprimirMensaje_para_depurar("\nruta: %s\n", ruta);

@@ -65,7 +65,7 @@ char *variable_string(const char *format, ...);
 FUNCIONES NUEVAS DEL C#
 ======================== */
 
-/* Unir filas con carácter separador, extrayendo columnas específicas opcionalmente. */
+/* Unir filas con carï¿½cter separador, extrayendo columnas especï¿½ficas opcionalmente. */
 /*
  * Uso: Ejecuta join_paresido_simple de forma segura.
  * Entrada ejemplo: join_paresido_simple(caracter_union_filas, texto, n_texto, columnas_extraer, caracter_union_columnas)
@@ -121,84 +121,84 @@ char *concatenacion_filas_de_un_arreglo_bidimencional(const char **arreglo_2d, i
  */
 char *concatenacion_caracter_separacion(const char *texto_actual, const char *texto_agregar, const char *separador);
 
-/* Búsqueda en estructura profunda (nested) por columnas múltiples. */
+/* Bï¿½squeda en estructura profunda (nested) por columnas mï¿½ltiples. */
 /*
  * Uso: Ejecuta busqueda_profunda_string de forma segura.
  * Entrada ejemplo: busqueda_profunda_string(texto, columnas_recorrer, comparar)
  */
 char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer, const char *comparar);
 
-/* Búsqueda profunda retornando en formato especial final. */
+/* Bï¿½squeda profunda retornando en formato especial final. */
 /*
  * Uso: Ejecuta busqueda_profunda_comparacion_final_string de forma segura.
  * Entrada ejemplo: busqueda_profunda_comparacion_final_string(texto, columnas_recorrer, comparar)
  */
 char *busqueda_profunda_comparacion_final_string(const char *texto, const char *columnas_recorrer, const char *comparar);
 
-/* Búsqueda profunda con YY (múltiples comparaciones). */
+/* Bï¿½squeda profunda con YY (mï¿½ltiples comparaciones). */
 /*
  * Uso: Ejecuta busqueda_con_YY_profunda_texto_id_archivo de forma segura.
  * Entrada ejemplo: busqueda_con_YY_profunda_texto_id_archivo(texto, columnas_recorrer, comparaciones)
  */
 char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto, const char *columnas_recorrer, const char *comparaciones);
 
-/* Edición/incremento recursiva en estructura profunda. */
+/* Ediciï¿½n/incremento recursiva en estructura profunda. */
 /*
  * Uso: Ejecuta editar_incr_string_funcion_recursiva de forma segura.
  * Entrada ejemplo: editar_incr_string_funcion_recursiva(texto, columnas_recorrer, info_sustituir, edit_0_increm_1)
  */
 char *editar_incr_string_funcion_recursiva(const char *texto, const char *columnas_recorrer, const char *info_sustituir, const char *edit_0_increm_1);
 
-/* Edición profunda múltiple con comparación final. */
+/* Ediciï¿½n profunda mï¿½ltiple con comparaciï¿½n final. */
 /*
  * Uso: Ejecuta editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string de forma segura.
  * Entrada ejemplo: editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(texto, indices_editar, info_editar, comparacion, edit_0_increm_1)
  */
 char *editar_inc_agregar_edicion_profunda_multiple_comparacion_final_string(const char *texto, const char *indices_editar, const char *info_editar, const char *comparacion, const char *edit_0_increm_1);
 
-/* Edición profunda múltiple versión ARR_FUN (wrapper). */
+/* Ediciï¿½n profunda mï¿½ltiple versiï¿½n ARR_FUN (wrapper). */
 /*
  * Uso: Ejecuta ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple de forma segura.
  * Entrada ejemplo: ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(datos)
  */
 char *ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(const char *datos);
 
-/* Edición profunda múltiple con múltiples chequeos. */
+/* Ediciï¿½n profunda mï¿½ltiple con mï¿½ltiples chequeos. */
 /*
  * Uso: Ejecuta editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR de forma segura.
  * Entrada ejemplo: editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(texto, indices_editar, comparacion_con_edicion, edit_0_increm_1)
  */
 char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR(const char *texto, const char *indices_editar, const char *comparacion_con_edicion, const char *edit_0_increm_1);
 
-/* Edición profunda múltiple simple. */
+/* Ediciï¿½n profunda mï¿½ltiple simple. */
 /*
  * Uso: Ejecuta editar_inc_edicion_profunda_multiple_string de forma segura.
  * Entrada ejemplo: editar_inc_edicion_profunda_multiple_string(texto, indices_editar, info_editar, edit_0_increm_1)
  */
 char *editar_inc_edicion_profunda_multiple_string(const char *texto, const char *indices_editar, const char *info_editar, const char *edit_0_increm_1);
 
-/* Edición profunda múltiple al final. */
+/* Ediciï¿½n profunda mï¿½ltiple al final. */
 /*
  * Uso: Ejecuta editar_inc_edicion_profunda_multiple_AL_FINAL_string de forma segura.
  * Entrada ejemplo: editar_inc_edicion_profunda_multiple_AL_FINAL_string(texto, indices_editar, info_editar, edit_0_increm_1)
  */
 char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto, const char *indices_editar, const char *info_editar, const char *edit_0_increm_1);
 
-/* Recorrer y reemplazar caracteres de separación izq/dcha. */
+/* Recorrer y reemplazar caracteres de separaciï¿½n izq/dcha. */
 /*
  * Uso: Ejecuta recorrer_caracter_separacion de forma segura.
  * Entrada ejemplo: recorrer_caracter_separacion(contenidoFila, izquierda_o_derecha, numero_veses)
  */
 char *recorrer_caracter_separacion(const char *contenidoFila, const char *izquierda_o_derecha, int numero_veses);
 
-/* Recorrer caracteres de separación para funciones específicas. */
+/* Recorrer caracteres de separaciï¿½n para funciones especï¿½ficas. */
 /*
  * Uso: Ejecuta recorrer_caracter_separacion_funciones_espesificas de forma segura.
  * Entrada ejemplo: recorrer_caracter_separacion_funciones_espesificas(contenidoFila, izquierda_o_derecha, numero_veses)
  */
 char *recorrer_caracter_separacion_funciones_espesificas(const char *contenidoFila, const char *izquierda_o_derecha, int numero_veses);
 
-/* Extraer carpeta, nombre y extensión de ruta. */
+/* Extraer carpeta, nombre y extensiï¿½n de ruta. */
 /*
  * Uso: Ejecuta extraer_separado_carpetas_nombreArchivo_extencion de forma segura.
  * Entrada ejemplo: extraer_separado_carpetas_nombreArchivo_extencion(direccion_archivo)
@@ -212,18 +212,25 @@ char **extraer_separado_carpetas_nombreArchivo_extencion(const char *direccion_a
  */
 int desfragmentar_direccion(const char *direccion, char **retorna_directorios, char **retorna_nom_arch, char **retorna_extencion);
 
-/* Generar folio (ID único con timestamp). */
+/* Generar folio (ID ï¿½nico con timestamp). */
 /*
  * Uso: Ejecuta generar_folio de forma segura.
  * Entrada ejemplo: generar_folio(formato_fecha_hora)
  */
 char *generar_folio(const char *formato_fecha_hora);
 
-/* Reemplazar múltiples caracteres según arreglos paralelos. */
+/* Reemplazar mï¿½ltiples caracteres segï¿½n arreglos paralelos. */
 /*
  * Uso: Ejecuta ReemplazarCaracteres_de_texto_arreglo de forma segura.
  * Entrada ejemplo: ReemplazarCaracteres_de_texto_arreglo(info, caracteres_sep, n_sep, caracteres_sustitucion)
  */
 char *ReemplazarCaracteres_de_texto_arreglo(const char *info, char **caracteres_sep, int n_sep, char **caracteres_sustitucion);
+
+/* Reemplazar un separador por una sustitucion recibiendo solo strings. */
+/*
+ * Uso: Reemplaza todas las ocurrencias de sep en info por sust.
+ * Entrada ejemplo: ReemplazarCaracteres_de_texto_string(info, "|", "~")
+ */
+char *ReemplazarCaracteres_de_texto_string(const char *info, const char *sep, const char *sust);
 
 #endif // PROCESOS_OPERACIONES_TEXTOS_H

@@ -69,7 +69,8 @@ int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo, char *
 void agregarProducto(char *producto, float contenido, char *tipo_medida, float precio_venta, char *cod_barras, float cantidad, float costo_compra, char *proveedor, char *grupo, float cant_x_paquet, char *es_paquete, char *codbar_paquete_e_id, char *cod_bar_individual_es_paq_e_id, char *ligar_prod_sab, char *impuestos, char *ingredientes, char *caducidad, char *ultimo_mov, char *sucur_vent, float claf_prod, char *dir_img_inter, char *dir_img_comp, char *info_extra, char *proceso_crear, char *dir_vid_proc_crear, float tiempo_fabricacion, char *indices_dia_registro_produc_vendido, char *indices_mes_registro_produc_vendido, char *indices_anio_registro_produc_vendido, char *ultima_venta, char *indices_total_registro_produc_vendido,
                      char *dir_espacio) // ruta del espacio de negocio donde se guardara el producto; ejemplo: "espacios\\20260330113640_ferreteria_dan\\"
 {
-    if (!dir_espacio) // valida que se haya recibido la ruta del espacio
+    // valida que se haya recibido la ruta del espacio
+    if (!dir_espacio)
     {
         return;
     }
@@ -79,19 +80,18 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
     concatenar_formato_separado_por_variable(&fila, "|", "%s%.2f%s%.2f%s%.2f%.2f%s%s%.2f%s%s%s%s%s%s%s%s%s%.2f%s%s%s%s%s%.2f%s%s%s%s%s", // une todos los campos del producto separados por "|"; ejemplo resultado: "Leche|1.00|L|25.50|123456|50.00|..."
                                              producto, contenido, tipo_medida, precio_venta, cod_barras, cantidad, costo_compra, proveedor, grupo, cant_x_paquet, es_paquete, codbar_paquete_e_id, cod_bar_individual_es_paq_e_id, ligar_prod_sab, impuestos, ingredientes, caducidad, ultimo_mov, sucur_vent, claf_prod, dir_img_inter, dir_img_comp, info_extra, proceso_crear, dir_vid_proc_crear, tiempo_fabricacion, indices_dia_registro_produc_vendido, indices_mes_registro_produc_vendido, indices_anio_registro_produc_vendido, ultima_venta, indices_total_registro_produc_vendido);
 
-    if (!fila) // si la concatenacion fallo, no hay nada que guardar
-    {
-        return;
-    }
+    // si la concatenacion fallo, no hay nada que guardar
+    if (!fila) {return;}
 
     char *base_limpia = NULL;       // base final para recargar rutas; se convierte a carpeta aunque llegue archivo
     char *nombre_archivo = NULL;    // salida de desfragmentar_direccion con nombre de archivo
     char *extencion_archivo = NULL; // salida de desfragmentar_direccion con extension
     int separacion_ok = desfragmentar_direccion(dir_espacio, &base_limpia, &nombre_archivo, &extencion_archivo); // intenta separar carpeta, nombre y extension
 
+    // si no venia archivo.ext valido, usar la ruta original completa como base
     if (separacion_ok != 0 || base_limpia == NULL || base_limpia[0] == '\0' || extencion_archivo == NULL || extencion_archivo[0] == '\0')
     {
-        free(base_limpia); // si no venia archivo.ext valido, usar la ruta original completa como base
+        free(base_limpia);
         base_limpia = NULL;
     }
 
@@ -130,7 +130,8 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
     RecargarArregloArchivos_dir_nom_archivos();  // reconstruye GG_dir_nom_archivos con la base actual del espacio
     GG_direccion_carpetas_base[0] = base_anterior; // restaura la base global previa al terminar la recarga
 
-    if (GG_dir_nom_archivos == NULL || GG_dir_nom_archivos[0].ruta == NULL) // valida que exista la ruta principal de inventario
+    // valida que exista la ruta principal de inventario
+    if (GG_dir_nom_archivos == NULL || GG_dir_nom_archivos[0].ruta == NULL)
     {
         free(base_limpia);
         free(fila);

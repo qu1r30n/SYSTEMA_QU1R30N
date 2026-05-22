@@ -150,8 +150,34 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
     imprimirMensaje_para_depurar("tiene_permiso_negocio= %d\n", tiene_permiso_negocio);
     imprimirMensaje_para_depurar("============================\n\n");
 
+
+
+
+
+
+    
     if (nivel_del_usuario_espacio <= 1 && nivel_del_usuario_espacio > -1) // entra solo si el nivel es 0 o 1 (valido); nivel -1 significa acceso denegado
     {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         if (strcmp(opciones[0], "op_tienda") == 0) // revisa si el primer campo del comando es "op_tienda"
         {
@@ -171,12 +197,21 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
             }
 
             sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]); // divide opciones[1] por "ï¿½"; ejemplo: "agregar_productoï¿½producto?2ï¿½..." ?
-                                                                                                    // sub_opcion[0]="agregar_producto", sub_opcion[1]="producto?2ï¿½contenido?3ï¿½..."
-
+                
+            
+            
+            
+            
             if (sub_opcion && sub_opcion[0] && sub_opcion[1]) // verifica que el split dio al menos dos partes validas
             {
                 imprimirMensaje_para_depurar("%s\n", sub_opcion[0]); // muestra nombre de la sub-operacion; ejemplo: "agregar_producto"
                 imprimirMensaje_para_depurar("%s\n", sub_opcion[1]); // muestra los parametros; ejemplo: "producto?2ï¿½contenido?3ï¿½tipo_medida?4ï¿½..."
+
+
+
+
+
+
 
                 if (strcmp(sub_opcion[0], "ventas") == 0) // si la sub-operacion es "ventas"
                 {
@@ -193,6 +228,9 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         }
                     }
                 }
+
+
+
                 else if (strcmp(sub_opcion[0], "compras") == 0) // si la sub-operacion es "compras"
                 {
                     resultado = modelo_compra(sub_opcion[1], retorna_direccion_espacio_negocio, opciones[4]); // ejecuta el modelo de compra con ruta del espacio y credenciales
@@ -208,6 +246,9 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         }
                     }
                 }
+
+
+
                 else if (strcmp(sub_opcion[0], "agregar_producto") == 0) // si la sub-operacion es "agregar_producto"
                 {
                     resultado = modelo_agregarProducto(sub_opcion[1], retorna_direccion_espacio_negocio, opciones[4]); // ejecuta el modelo de agregar producto con ruta del espacio y credenciales del
@@ -223,6 +264,9 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         }
                     }
                 }
+
+
+                
                 else // sub-operacion desconocida dentro de op_tienda
                 {
                     printf("Opción no válida: %s\n", sub_opcion[0]); // muestra la sub-opcion invalida; ejemplo: "Opción no válida: eliminar_tienda"
@@ -232,7 +276,10 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], "error en este modelo llamado op_tienda", detalle_resultado);
                 }
             }
-            else // el split no dio suficientes partes (falta el "ï¿½" o los datos)
+
+
+
+            else // el split no dio suficientes partes para la sub-operacion
             {
                 printf("Sub-opcion incompleta en op_tienda.\n");
                 resultado = RET_ERROR_GENERIC;
@@ -244,10 +291,28 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
             free_split(sub_opcion); // libera el arreglo de sub-opciones
         }
 
+
+
+
+
+        
+
+        else if (strcmp(opciones[0], "banco") == 0)
+        {
+            /* code */
+        }
+        
+        
+        
+        
+        
+        
         // nivel programador aqui se podra usar en un futuro directamente talves el tex_bas o algo asi para hablar
         // directamente con el sistema y hacer cosas que solo el programador puede hacer como revisar errores del
         // sistema o cosas asi
-        if (nivel_del_usuario_espacio == 0) // solo entra si el nivel es 0 (programador/administrador maximo del sistema)
+        
+       // solo entra si el nivel es 0 (programador/administrador maximo del sistema)
+        if (nivel_del_usuario_espacio == 0) 
         {
 
             if (strcmp(opciones[0], "administracion_espacio") == 0) // si el comando es "administracion_espacio"
@@ -348,35 +413,53 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
             }
         }
     }
-    else // usuario sin nivel valido (nivel -1): credenciales incorrectas o no tiene acceso al espacio
+
+    // usuario sin nivel valido (nivel -1): credenciales incorrectas o no tiene acceso al espacio
+    else 
     {
         resultado = RET_ERROR_GENERIC; // marca error
         detalle_resultado = "Permisos insuficientes o credenciales invalidas.";
     }
 
+
+
+
+
+    // libera la ruta del espacio al final del conmutador
     if (retorna_direccion_espacio_negocio)
     {
         free(retorna_direccion_espacio_negocio);
-    } // libera la ruta del espacio al final del conmutador
-    free_split(opciones);   // libera el arreglo de opciones al final de la funcion
-    if (estado_out != NULL) // si se paso un puntero para recibir el estado
+    } 
+    
+    // libera el arreglo de opciones al final de la funcion
+    free_split(opciones);   
+    
+    // si se paso un puntero para recibir el estado, guarda el resultado final del conmutador (exito o error) en ese puntero para que el llamador pueda usarlo
+    if (estado_out != NULL) 
     {
         *estado_out = resultado; // guarda el resultado final (RET_OK o RET_ERROR_GENERIC) en el puntero del llamador
     }
 
-    if (acumulador_modelos != NULL) // si hubo uno o varios modelos ejecutados, el conmutador devuelve esa cadena como detalle principal
+    // si hubo uno o varios modelos ejecutados, el conmutador devuelve esa cadena como detalle principal
+    if (acumulador_modelos != NULL) 
     {
         retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", acumulador_modelos); // arma el retorno final del conmutador incrustando todos los modelos separados por ?
     }
-    else if (detalle_capa_modelo != NULL) // si no hubo acumulador pero si un detalle individual de modelo, usa ese detalle
+    
+    // si no hubo acumulador pero si un detalle individual de modelo, usa ese detalle para el retorno del conmutador, ya que es mas especifico que el detalle general del resultado
+    else if (detalle_capa_modelo != NULL) 
     {
         retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_capa_modelo); // arma el retorno final usando un solo modelo como detalle
     }
-    else if (detalle_capa_proceso != NULL) // si la ruta fue directa a proceso, reutiliza ese detalle como extra del conmutador
+    
+    // si la ruta fue directa a proceso, reutiliza ese detalle como extra del conmutador
+    else if (detalle_capa_proceso != NULL) 
     {
         retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_capa_proceso); // arma el retorno final reutilizando el detalle de proceso
     }
-    else // si no existe detalle de capas internas, devuelve el mensaje general acumulado en detalle_resultado
+    
+    // si no existe detalle de capas internas, devuelve el mensaje general acumulado en detalle_resultado
+    else 
     {
         retorno_conmutador = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[0], RET_IS_OK(resultado) ? "todo salio bien en el conmutador" : "error en el conmutador", detalle_resultado); // usa el texto general como ultimo respaldo del retorno final
     }

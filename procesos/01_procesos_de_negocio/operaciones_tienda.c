@@ -74,8 +74,7 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
         return;
     }
 
-    char *fila = NULL;            // puntero donde se armara la fila completa lista para guardar en el archivo; ejemplo: "Leche|1.00|L|25.50|..."
-    char *ruta_inventario = NULL; // ruta completa del archivo de inventario dentro del espacio; ejemplo: "espacios\\20260330113640_ferreteria_dan\\inventario.txt"
+    char *fila = NULL; // puntero donde se armara la fila completa lista para guardar en el archivo; ejemplo: "Leche|1.00|L|25.50|..."
 
     concatenar_formato_separado_por_variable(&fila, "|", "%s%.2f%s%.2f%s%.2f%.2f%s%s%.2f%s%s%s%s%s%s%s%s%s%.2f%s%s%s%s%s%.2f%s%s%s%s%s", // une todos los campos del producto separados por "|"; ejemplo resultado: "Leche|1.00|L|25.50|123456|50.00|..."
                                              producto, contenido, tipo_medida, precio_venta, cod_barras, cantidad, costo_compra, proveedor, grupo, cant_x_paquet, es_paquete, codbar_paquete_e_id, cod_bar_individual_es_paq_e_id, ligar_prod_sab, impuestos, ingredientes, caducidad, ultimo_mov, sucur_vent, claf_prod, dir_img_inter, dir_img_comp, info_extra, proceso_crear, dir_vid_proc_crear, tiempo_fabricacion, indices_dia_registro_produc_vendido, indices_mes_registro_produc_vendido, indices_anio_registro_produc_vendido, ultima_venta, indices_total_registro_produc_vendido);
@@ -85,17 +84,67 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
         return;
     }
 
-    if (concatenar_formato_separado_por_variable(&ruta_inventario, NULL, "%sinventario.txt", dir_espacio) < 0) // construye la ruta al archivo de inventario dentro del espacio; ejemplo: "espacios\\20260330_ferreteria\\inventario.txt"
+    char *base_limpia = NULL;       // base final para recargar rutas; se convierte a carpeta aunque llegue archivo
+    char *nombre_archivo = NULL;    // salida de desfragmentar_direccion con nombre de archivo
+    char *extencion_archivo = NULL; // salida de desfragmentar_direccion con extension
+    int separacion_ok = desfragmentar_direccion(dir_espacio, &base_limpia, &nombre_archivo, &extencion_archivo); // intenta separar carpeta, nombre y extension
+
+    if (separacion_ok != 0 || base_limpia == NULL || base_limpia[0] == '\0' || extencion_archivo == NULL || extencion_archivo[0] == '\0')
     {
+        free(base_limpia); // si no venia archivo.ext valido, usar la ruta original completa como base
+        base_limpia = NULL;
+    }
+
+    free(nombre_archivo);
+    free(extencion_archivo);
+
+    if (base_limpia == NULL)
+    {
+        if (concatenar_formato_separado_por_variable(&base_limpia, NULL, "%s", dir_espacio) < 0)
+        {
+            free(fila);
+            return;
+        }
+    }
+
+    if (base_limpia[0] != '\0')
+    {
+        size_t largo_base_limpia = strlen(base_limpia); // mide la base limpia para validar si falta separador final
+        if (base_limpia[largo_base_limpia - 1] != '\\' && base_limpia[largo_base_limpia - 1] != '/')
+        {
+            char *base_con_sep = NULL; // recibira base_limpia + "\\" usando helper de operaciones_textos
+            if (concatenar_formato_separado_por_variable(&base_con_sep, NULL, "%s%s", base_limpia, "\\") < 0)
+            {
+                free(base_limpia);
+                free(fila);
+                return;
+            }
+
+            free(base_limpia);
+            base_limpia = base_con_sep;
+        }
+    }
+
+    char *base_anterior = GG_direccion_carpetas_base[0]; // respaldo temporal de la base global previa
+    GG_direccion_carpetas_base[0] = base_limpia; // ajusta la base para que la recarga construya rutas dentro del espacio recibido
+    RecargarArregloArchivos_dir_nom_archivos();  // reconstruye GG_dir_nom_archivos con la base actual del espacio
+    GG_direccion_carpetas_base[0] = base_anterior; // restaura la base global previa al terminar la recarga
+
+    if (GG_dir_nom_archivos == NULL || GG_dir_nom_archivos[0].ruta == NULL) // valida que exista la ruta principal de inventario
+    {
+        free(base_limpia);
         free(fila);
         return;
     }
 
+    const char *ruta = GG_dir_nom_archivos[0].ruta; // toma la ruta del inventario principal configurado en la recarga
+    const char *cabecera_inventario = columnas_concatenadas(GG_ventana_emergente_productos, 0, 1, GG_caracter_separacion[0]); // columnas tomadas de GG_ventana_emergente_productos[][1]: _00_ID|_01_PRODUCTO|...|_32_NO_PONER_NADA
+
     printf("Fila concatenada final: \n%s", fila);                                                                                                                                                                                                                                                                                                                                                                                                     // muestra la fila construida para depuracion
-    crearArchivo(ruta_inventario, "PRODUCTO|CONTENIDO|TIPO_MEDIDA|PRECIO_VENTA|COD_BARRAS|CANTIDAD|COSTO_COMP|PROVEDOR|GRUPO|CANT_X_PAQUET|ES_PAQUETE|CODBAR_PAQUETE_E_ID|COD_BAR_INDIVIDUAL_ES_PAQ_E_ID|LIGAR_PROD_SAB|IMPUESTOS|INGREDIENTES|CADUCIDAD|ULTIMO_MOV|SUCUR_VENT|CLAF_PROD|DIR_IMG_INTER|DIR_IMG_COMP|INFO_EXTRA|PROCESO_CREAR|DIR_VID_PROC_CREAR|TIEMPO_FABRICACION|INDICES_DIA|INDICES_MES|INDICES_ANIO|ULTIMA_VENTA|INDICES_TOTAL"); // crea el archivo si no existe con su cabecera de columnas
-    agregar_fila(ruta_inventario, fila);                                                                                                                                                                                                                                                                                                                                                                                                              // agrega el producto al archivo de inventario del espacio
+    crearArchivo(ruta, cabecera_inventario); // crea el archivo si no existe con su cabecera tomada de GG_ventana_emergente_productos
+    agregar_fila(ruta, fila);                                                                                                                                                                                                                                                                                                                                                                                                                        // agrega el producto al archivo de inventario del espacio
+    free(base_limpia);
     free(fila);
-    free(ruta_inventario);
 }
 
 // Venta

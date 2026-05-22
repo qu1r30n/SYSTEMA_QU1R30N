@@ -200,8 +200,12 @@ char *GG_archivos[][3] = {{"espacios\\", "ID|Usuario|Contraseña|Directorio_Arch
                           {"conexion_arc\\",
                            "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
                            "archivo_salida.txt"},
-                          {"conexion_arc\\", NULL, "banderas.txt"},
-                          {"conexion_arc\\", "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA", "errores_de_com.txt"},
+                          {"conexion_arc\\", 
+                            NULL, 
+                            "banderas.txt"},
+                          {"conexion_arc\\",
+                             "ID_DESTINO■ID_ORIGEN┴COMANDO┴INFORMACION_ESPEJO_NO_SE_MODIFICA",
+                             "errores_de_com.txt"},
                           {NULL, NULL, NULL}};
 #else
 char *GG_archivos[][3] = {{"espacios/", "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel", "archivo_espacios.txt"},
@@ -1185,9 +1189,11 @@ void RecargarArregloArchivos_dir_nom_archivos(void)
         strftime(yyyymmdd, sizeof(yyyymmdd), "%Y%m%d", t); // formatea fecha completa de 8 dígitos; ejemplo: "20260505"
     }
 
-    char tmp[512];                                                                         // buffer temporal para construir rutas de archivos; ejemplo: "CONFIG\INF\INVENTARIO\INVENTARIO.TXT"
+                                                                             
     const char *base = GG_direccion_carpetas_base[0] ? GG_direccion_carpetas_base[0] : ""; // prefijo de ruta base del espacio activo; ejemplo: "espacios\20260406224536_ferreteria_dan\"
 
+    char tmp[512];// buffer temporal para construir rutas de archivos; ejemplo: "CONFIG\INF\INVENTARIO\INVENTARIO.TXT"
+    
     snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\INVENTARIO\\INVENTARIO.TXT", base);                                                                      // construye ruta al archivo de inventario principal
     if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_emergente_productos, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de inventario al arreglo global
         return;                                                                                                                                         // aborta si no se pudo agregar por falta de memoria

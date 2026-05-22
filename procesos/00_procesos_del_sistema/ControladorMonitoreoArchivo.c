@@ -30,26 +30,26 @@ static int construir_ruta_transferencia(int indice_archivo, char **ruta_out)
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (ruta_out == NULL) // si el puntero de salida no existe, no se puede guardar la ruta
     {
-        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: puntero de salida inválido
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: puntero de salida invï¿½lido
     }
 
     *ruta_out = NULL; // inicializa el puntero de salida a NULL por seguridad; ejemplo: *ruta_out = NULL
 
-    if (indice_archivo < 0 ||                     // si el índice es negativo, es inválido
-        GG_archivos[indice_archivo][0] == NULL || // si no hay directorio definido para ese índice
-        GG_archivos[indice_archivo][2] == NULL)   // si no hay nombre de archivo definido para ese índice
+    if (indice_archivo < 0 ||                     // si el ï¿½ndice es negativo, es invï¿½lido
+        GG_archivos[indice_archivo][0] == NULL || // si no hay directorio definido para ese ï¿½ndice
+        GG_archivos[indice_archivo][2] == NULL)   // si no hay nombre de archivo definido para ese ï¿½ndice
     {
         RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: datos del archivo no disponibles en GG_archivos
     }
 
     if (concatenar_formato_separado_por_variable(ruta_out, NULL, "%s%s", GG_archivos[indice_archivo][0], GG_archivos[indice_archivo][2]) < 0) // construye la ruta completa concatenando directorio + nombre del archivo
     {
-        free(*ruta_out);               // libera memoria si concatenar asignó algo antes de fallar
+        free(*ruta_out);               // libera memoria si concatenar asignï¿½ algo antes de fallar
         *ruta_out = NULL;              // deja el puntero limpio para no dejar basura
         RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: fallo al construir la ruta
     }
 
-    RETORNAR_PROCESO_ESTANDAR(0); // retorna éxito: la ruta fue construida y almacenada en *ruta_out
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna ï¿½xito: la ruta fue construida y almacenada en *ruta_out
 }
 
 /*
@@ -59,31 +59,31 @@ static int construir_ruta_transferencia(int indice_archivo, char **ruta_out)
 static int extraer_comando_de_linea_transferencia(const char *linea_transferencia, char **comando_out)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    char **partes_transferencia = NULL; // arreglo con las partes de la línea dividida por el separador de transferencia
-    int n_partes_transferencia = 0;     // cantidad de partes encontradas al dividir la línea
-    char *comando_final = NULL;         // puntero donde se guardará el comando extraído; ejemplo: "op_tienda~agregar"
+    char **partes_transferencia = NULL; // arreglo con las partes de la lï¿½nea dividida por el separador de transferencia
+    int n_partes_transferencia = 0;     // cantidad de partes encontradas al dividir la lï¿½nea
+    char *comando_final = NULL;         // puntero donde se guardarï¿½ el comando extraï¿½do; ejemplo: "op_tienda~agregar"
 
     if (comando_out == NULL) // si el puntero de salida es NULL, no se puede devolver el comando
     {
-        RETORNAR_PROCESO_ESTANDAR(RET_INVALID_ARG); // retorna error: argumento inválido
+        RETORNAR_PROCESO_ESTANDAR(RET_INVALID_ARG); // retorna error: argumento invï¿½lido
     }
 
     *comando_out = NULL; // inicializa el puntero de salida a NULL por seguridad
 
-    if (linea_transferencia == NULL || linea_transferencia[0] == '\0') // si la línea es NULL o está vacía, no hay comando que extraer
+    if (linea_transferencia == NULL || linea_transferencia[0] == '\0') // si la lï¿½nea es NULL o estï¿½ vacï¿½a, no hay comando que extraer
     {
-        RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": línea inválida o vacía
+        RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": lï¿½nea invï¿½lida o vacï¿½a
     }
 
-    n_partes_transferencia = split(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia); // divide la línea usando el separador principal de transferencia
+    n_partes_transferencia = split(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia); // divide la lï¿½nea usando el separador principal de transferencia
     if (n_partes_transferencia < 3 ||                                                                                             // se esperan al menos 3 partes: destino, comando y espejo
-        partes_transferencia == NULL ||                                                                                           // si split falló y no devolvió arreglo
-        partes_transferencia[0] == NULL ||                                                                                        // si la parte de destino está vacía
-        partes_transferencia[1] == NULL ||                                                                                        // si la parte de comando está vacía
-        partes_transferencia[2] == NULL)                                                                                          // si la parte de espejo está vacía
+        partes_transferencia == NULL ||                                                                                           // si split fallï¿½ y no devolviï¿½ arreglo
+        partes_transferencia[0] == NULL ||                                                                                        // si la parte de destino estï¿½ vacï¿½a
+        partes_transferencia[1] == NULL ||                                                                                        // si la parte de comando estï¿½ vacï¿½a
+        partes_transferencia[2] == NULL)                                                                                          // si la parte de espejo estï¿½ vacï¿½a
     {
-        free_split(partes_transferencia);         // libera el arreglo aunque esté incompleto
-        RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": formato de línea incorrecto
+        free_split(partes_transferencia);         // libera el arreglo aunque estï¿½ incompleto
+        RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": formato de lï¿½nea incorrecto
     }
 
     {
@@ -96,21 +96,21 @@ static int extraer_comando_de_linea_transferencia(const char *linea_transferenci
         free_split(partes_destino);                                                                                               // libera las partes de destino, ya no se necesitan
         if (!es_para_mi)                                                                                                          // si el mensaje no es para este programa, ignorarlo
         {
-            free_split(partes_transferencia);         // libera las partes de la línea completa
+            free_split(partes_transferencia);         // libera las partes de la lï¿½nea completa
             RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": el mensaje es para otro programa
         }
     }
 
     comando_final = variable_string("%s", partes_transferencia[1]); // duplica el comando (segunda parte) en memoria propia
-    if (comando_final == NULL)                                      // si la duplicación falló por memoria insuficiente
+    if (comando_final == NULL)                                      // si la duplicaciï¿½n fallï¿½ por memoria insuficiente
     {
         free_split(partes_transferencia);             // libera las partes antes de salir con error
-        RETORNAR_PROCESO_ESTANDAR(RET_ERROR_GENERIC); // retorna error genérico: fallo de memoria
+        RETORNAR_PROCESO_ESTANDAR(RET_ERROR_GENERIC); // retorna error genï¿½rico: fallo de memoria
     }
 
-    free_split(partes_transferencia);  // libera el arreglo de partes, ya se copió lo necesario
-    *comando_out = comando_final;      // entrega el comando extraído al caller
-    RETORNAR_PROCESO_ESTANDAR(RET_OK); // retorna éxito: comando extraído correctamente
+    free_split(partes_transferencia);  // libera el arreglo de partes, ya se copiï¿½ lo necesario
+    *comando_out = comando_final;      // entrega el comando extraï¿½do al caller
+    RETORNAR_PROCESO_ESTANDAR(RET_OK); // retorna ï¿½xito: comando extraï¿½do correctamente
 }
 
 /*
@@ -120,59 +120,59 @@ static int extraer_comando_de_linea_transferencia(const char *linea_transferenci
 static int quitar_linea_exacta_del_archivo(const char *ruta, const char *linea_a_quitar)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    char **lineas = NULL;    // arreglo con todas las líneas leídas del archivo
-    char **resultado = NULL; // arreglo con las líneas que se conservarán (sin la eliminada)
-    int total_lineas = 0;    // cantidad total de líneas leídas del archivo
-    int total_resultado = 0; // cantidad de líneas que se guardarán (resultado final)
-    int eliminado = 0;       // bandera: 1 si ya se encontró y eliminó la línea buscada
+    char **lineas = NULL;    // arreglo con todas las lï¿½neas leï¿½das del archivo
+    char **resultado = NULL; // arreglo con las lï¿½neas que se conservarï¿½n (sin la eliminada)
+    int total_lineas = 0;    // cantidad total de lï¿½neas leï¿½das del archivo
+    int total_resultado = 0; // cantidad de lï¿½neas que se guardarï¿½n (resultado final)
+    int eliminado = 0;       // bandera: 1 si ya se encontrï¿½ y eliminï¿½ la lï¿½nea buscada
 
-    if (ruta == NULL || linea_a_quitar == NULL) // si alguno de los parámetros de entrada es NULL
+    if (ruta == NULL || linea_a_quitar == NULL) // si alguno de los parï¿½metros de entrada es NULL
     {
-        RETORNAR_PROCESO_ESTANDAR(RET_INVALID_ARG); // retorna error: argumento inválido
+        RETORNAR_PROCESO_ESTANDAR(RET_INVALID_ARG); // retorna error: argumento invï¿½lido
     }
 
-    lineas = leer_archivo(ruta, &total_lineas); // lee todas las líneas del archivo en memoria
+    lineas = leer_archivo(ruta, &total_lineas); // lee todas las lï¿½neas del archivo en memoria
     if (lineas == NULL)                         // si no se pudo leer el archivo (no existe o error de lectura)
     {
         RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": archivo inaccesible
     }
 
-    resultado = (char **)malloc(sizeof(char *) * ((total_lineas > 0) ? total_lineas : 1)); // reserva memoria para el arreglo resultado (mínimo 1 para evitar malloc(0))
-    if (resultado == NULL)                                                                 // si malloc falló por falta de memoria
+    resultado = (char **)malloc(sizeof(char *) * ((total_lineas > 0) ? total_lineas : 1)); // reserva memoria para el arreglo resultado (mï¿½nimo 1 para evitar malloc(0))
+    if (resultado == NULL)                                                                 // si malloc fallï¿½ por falta de memoria
     {
-        free_lineas(lineas, total_lineas);            // libera las líneas antes de salir
-        RETORNAR_PROCESO_ESTANDAR(RET_ERROR_GENERIC); // retorna error genérico: fallo de memoria
+        free_lineas(lineas, total_lineas);            // libera las lï¿½neas antes de salir
+        RETORNAR_PROCESO_ESTANDAR(RET_ERROR_GENERIC); // retorna error genï¿½rico: fallo de memoria
     }
 
-    for (int i = 0; i < total_lineas; i++) // recorre cada línea del archivo
+    for (int i = 0; i < total_lineas; i++) // recorre cada lï¿½nea del archivo
     {
-        if (!eliminado && lineas[i] != NULL && strcmp(lineas[i], linea_a_quitar) == 0) // si aún no se eliminó y esta línea coincide exactamente con la buscada
+        if (!eliminado && lineas[i] != NULL && strcmp(lineas[i], linea_a_quitar) == 0) // si aï¿½n no se eliminï¿½ y esta lï¿½nea coincide exactamente con la buscada
         {
-            eliminado = 1; // marca que ya se encontró la línea a eliminar
-            continue;      // salta esta línea sin agregarla al resultado
+            eliminado = 1; // marca que ya se encontrï¿½ la lï¿½nea a eliminar
+            continue;      // salta esta lï¿½nea sin agregarla al resultado
         }
 
-        resultado[total_resultado] = variable_string("%s", lineas[i] ? lineas[i] : ""); // copia la línea actual al arreglo resultado
-        if (resultado[total_resultado] == NULL)                                         // si la copia falló por memoria
+        resultado[total_resultado] = variable_string("%s", lineas[i] ? lineas[i] : ""); // copia la lï¿½nea actual al arreglo resultado
+        if (resultado[total_resultado] == NULL)                                         // si la copia fallï¿½ por memoria
         {
             free_lineas(resultado, total_resultado);      // libera el resultado parcial
-            free_lineas(lineas, total_lineas);            // libera las líneas originales
-            RETORNAR_PROCESO_ESTANDAR(RET_ERROR_GENERIC); // retorna error genérico: fallo de memoria
+            free_lineas(lineas, total_lineas);            // libera las lï¿½neas originales
+            RETORNAR_PROCESO_ESTANDAR(RET_ERROR_GENERIC); // retorna error genï¿½rico: fallo de memoria
         }
-        total_resultado++; // incrementa el contador de líneas en el resultado
+        total_resultado++; // incrementa el contador de lï¿½neas en el resultado
     }
 
-    if (!eliminado) // si se recorrieron todas las líneas y nunca se encontró la buscada
+    if (!eliminado) // si se recorrieron todas las lï¿½neas y nunca se encontrï¿½ la buscada
     {
-        free_lineas(resultado, total_resultado);  // libera el resultado (no se usará)
-        free_lineas(lineas, total_lineas);        // libera las líneas originales
-        RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": la línea no existía en el archivo
+        free_lineas(resultado, total_resultado);  // libera el resultado (no se usarï¿½)
+        free_lineas(lineas, total_lineas);        // libera las lï¿½neas originales
+        RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": la lï¿½nea no existï¿½a en el archivo
     }
 
-    guardar_archivo(ruta, resultado, total_resultado); // sobreescribe el archivo con las líneas restantes
+    guardar_archivo(ruta, resultado, total_resultado); // sobreescribe el archivo con las lï¿½neas restantes
     free_lineas(resultado, total_resultado);           // libera el arreglo resultado
-    free_lineas(lineas, total_lineas);                 // libera las líneas originales
-    RETORNAR_PROCESO_ESTANDAR(RET_OK);                 // retorna éxito: la línea fue eliminada y el archivo fue actualizado
+    free_lineas(lineas, total_lineas);                 // libera las lï¿½neas originales
+    RETORNAR_PROCESO_ESTANDAR(RET_OK);                 // retorna ï¿½xito: la lï¿½nea fue eliminada y el archivo fue actualizado
 }
 
 /*
@@ -185,45 +185,45 @@ void respuesta(const char *info, const char *programa_enviar, const char *info_e
     imprimirMensaje_para_depurar("parametros recibidos en respuesta(): \n\nprograma_enviar='%s', \ninfo='%s', \ninfo_espejo='%s'\n", programa_enviar ? programa_enviar : "(null)", info ? info : "(null)", info_espejo ? info_espejo : "(null)");
 
     const char *programa = programa_enviar; // alias local al nombre del programa destino; ejemplo: "NEXOPORTALARCANO"
-    const char *texto_info = info;          // alias local al texto de información a enviar
-    const char *texto_espejo = info_espejo; // alias local al texto espejo (copia de confirmación)
-    char *ruta = NULL;                      // ruta del archivo de salida donde se escribirá la respuesta
+    const char *texto_info = info;          // alias local al texto de informaciï¿½n a enviar
+    const char *texto_espejo = info_espejo; // alias local al texto espejo (copia de confirmaciï¿½n)
+    char *ruta = NULL;                      // ruta del archivo de salida donde se escribirï¿½ la respuesta
     char *info_a_enviar = NULL;             // cadena completa formateada lista para agregar al archivo
 
-    if (programa == NULL || programa[0] == '\0') // si no se especificó programa destino, usar el predeterminado
+    if (programa == NULL || programa[0] == '\0') // si no se especificï¿½ programa destino, usar el predeterminado
     {
         programa = "NEXOPORTALARCANO"; // asigna el programa destino por defecto
     }
 
-    if (texto_info == NULL) // si el texto de info es NULL, usar cadena vacía para evitar puntero nulo
+    if (texto_info == NULL) // si el texto de info es NULL, usar cadena vacï¿½a para evitar puntero nulo
     {
-        texto_info = ""; // reemplaza NULL por cadena vacía
+        texto_info = ""; // reemplaza NULL por cadena vacï¿½a
     }
 
-    if (texto_espejo == NULL) // si el texto espejo es NULL, usar cadena vacía
+    if (texto_espejo == NULL) // si el texto espejo es NULL, usar cadena vacï¿½a
     {
-        texto_espejo = ""; // reemplaza NULL por cadena vacía
+        texto_espejo = ""; // reemplaza NULL por cadena vacï¿½a
     }
 
-    if (texto_info[0] == '\0' && texto_espejo[0] == '\0') // si ambos textos están vacíos, no hay nada que enviar
+    if (texto_info[0] == '\0' && texto_espejo[0] == '\0') // si ambos textos estï¿½n vacï¿½os, no hay nada que enviar
     {
-        return; // sale sin hacer nada: respuesta vacía no tiene sentido
+        return; // sale sin hacer nada: respuesta vacï¿½a no tiene sentido
     }
 
-    if (construir_ruta_transferencia(2, &ruta) < 0) // intenta construir la ruta del archivo de salida (posición 2 en GG_archivos)
+    if (construir_ruta_transferencia(2, &ruta) < 0) // intenta construir la ruta del archivo de salida (posiciï¿½n 2 en GG_archivos)
     {
         return; // sale si no se pudo construir la ruta de transferencia
     }
 
     if (concatenar_formato_separado_por_variable(&info_a_enviar, NULL, "%s%s%s%s%s%s%s", programa, GG_caracter_para_transferencia_entre_archivos[1], GG_id_programa, GG_caracter_para_transferencia_entre_archivos[0], texto_info, GG_caracter_para_transferencia_entre_archivos[0],
-                                                 texto_espejo) < 0) // construye la línea de respuesta con formato: destino-origen¦info¦espejo
+                                                 texto_espejo) < 0) // construye la lï¿½nea de respuesta con formato: destino-origenï¿½infoï¿½espejo
     {
-        free(info_a_enviar); // libera por si concatenar asignó algo parcial
+        free(info_a_enviar); // libera por si concatenar asignï¿½ algo parcial
         free(ruta);          // libera la ruta antes de salir
         return;              // sale con error silencioso: fallo al construir la respuesta
     }
 
-    agregar_fila(ruta, info_a_enviar); // escribe la línea de respuesta al final del archivo de salida
+    agregar_fila(ruta, info_a_enviar); // escribe la lï¿½nea de respuesta al final del archivo de salida
     free(info_a_enviar);               // libera la cadena de respuesta, ya fue escrita
     free(ruta);                        // libera la ruta del archivo, ya no se necesita
 }
@@ -298,10 +298,10 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
         }
 
         char *comando_final = NULL;  // AquÃ­ se guardarÃ¡ el comando extraÃ­do
-        char *linea_original = NULL; // puntero a la copia de la línea completa para usarla como clave de eliminación; ejemplo: "NEXOPORTALARCANO-ID¦op_tienda§agregar¦espejo"
+        char *linea_original = NULL; // puntero a la copia de la lï¿½nea completa para usarla como clave de eliminaciï¿½n; ejemplo: "NEXOPORTALARCANO-IDï¿½op_tiendaï¿½agregarï¿½espejo"
 
         // Intenta extraer un comando de la lÃ­nea
-        int resultado_extraer = extraer_comando_de_linea_transferencia(lineas_archivo[i], &comando_final); // intenta extraer el comando de la línea actual; ejemplo: resultado_extraer = RET_OK (0)
+        int resultado_extraer = extraer_comando_de_linea_transferencia(lineas_archivo[i], &comando_final); // intenta extraer el comando de la lï¿½nea actual; ejemplo: resultado_extraer = RET_OK (0)
 
         // Si se extrajo correctamente un comando
         if (RET_IS_OK(resultado_extraer) && comando_final != NULL)
@@ -312,7 +312,7 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
             if (tmp == NULL) // Si falla realloc
             {
                 free(comando_final);  // Libera el comando actual
-                free(linea_original); // libera la copia de la línea original antes de salir con error
+                free(linea_original); // libera la copia de la lï¿½nea original antes de salir con error
 
                 // Libera todos los comandos ya guardados
                 for (int j = 0; j < cantidad_comandos; j++) // recorre los comandos ya guardados para liberarlos; ejemplo: j de 0 a 2
@@ -330,10 +330,10 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
 
             *retorno_comando = tmp; // Actualiza el arreglo
 
-            linea_original = variable_string("%s", lineas_archivo[i]); // duplica la línea entera para usarla como clave de eliminación posterior; ejemplo: "NEXOPORTALARCANO-ID¦op_tienda§agregar¦espejo"
-            if (linea_original == NULL)                                // si la duplicación falló por falta de memoria disponible
+            linea_original = variable_string("%s", lineas_archivo[i]); // duplica la lï¿½nea entera para usarla como clave de eliminaciï¿½n posterior; ejemplo: "NEXOPORTALARCANO-IDï¿½op_tiendaï¿½agregarï¿½espejo"
+            if (linea_original == NULL)                                // si la duplicaciï¿½n fallï¿½ por falta de memoria disponible
             {
-                free(comando_final); // libera el comando extraído antes de salir con error
+                free(comando_final); // libera el comando extraï¿½do antes de salir con error
 
                 for (int j = 0; j < cantidad_comandos; j++) // recorre los comandos ya guardados para liberarlos todos
                 {
@@ -344,15 +344,15 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
                 *retorno_comando = NULL;    // deja el puntero limpio para no tener dangling pointer
                 *retorno_numero_lineas = 0; // reinicia el contador de comandos a 0
 
-                free_lineas(lineas_archivo, total_lineas_archivo); // libera las líneas del archivo leídas en memoria
-                RETORNAR_PROCESO_ESTANDAR(-1);                     // retorna error: fallo de memoria al duplicar la línea original
+                free_lineas(lineas_archivo, total_lineas_archivo); // libera las lï¿½neas del archivo leï¿½das en memoria
+                RETORNAR_PROCESO_ESTANDAR(-1);                     // retorna error: fallo de memoria al duplicar la lï¿½nea original
             }
 
             // Guarda la linea completa para que el caller pueda separar origen, comando y espejo.
-            (*retorno_comando)[cantidad_comandos] = linea_original; // guarda la línea completa en el índice actual del arreglo; ejemplo: (*retorno_comando)[0] = "NEXOPORTALARCANO-ID¦op_tienda§agregar¦espejo"
+            (*retorno_comando)[cantidad_comandos] = linea_original; // guarda la lï¿½nea completa en el ï¿½ndice actual del arreglo; ejemplo: (*retorno_comando)[0] = "NEXOPORTALARCANO-IDï¿½op_tiendaï¿½agregarï¿½espejo"
 
             cantidad_comandos++; // Incrementa contador
-            free(comando_final); // libera el string de comando extraído, ya se guardó la línea completa
+            free(comando_final); // libera el string de comando extraï¿½do, ya se guardï¿½ la lï¿½nea completa
         }
     }
 
@@ -376,13 +376,13 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
 int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_numero_lineas)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    char **comandos = NULL; // arreglo que se llenará con las líneas de comando encontradas
+    char **comandos = NULL; // arreglo que se llenarï¿½ con las lï¿½neas de comando encontradas
     int total_comandos = 0; // cantidad de comandos encontrados en el archivo de entrada
     int estado = 0;         // resultado de la llamada a monitoreo_archivo_entrada; ejemplo: 1=hay comandos
 
     if (retorno_comando == NULL || retorno_numero_lineas == NULL) // si los punteros de salida son NULL, no se puede continuar
     {
-        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: parámetros de salida inválidos
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: parï¿½metros de salida invï¿½lidos
     }
 
     *retorno_comando = NULL;    // inicializa el arreglo de salida a NULL
@@ -392,7 +392,7 @@ int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_nu
 
     if (estado <= 0) // si no hay comandos (0) o hubo error (-1)
     {
-        RETORNAR_PROCESO_ESTANDAR(estado); // propaga el resultado (0=vacío, -1=error)
+        RETORNAR_PROCESO_ESTANDAR(estado); // propaga el resultado (0=vacï¿½o, -1=error)
     }
 
     *retorno_comando = comandos;             // entrega al caller el arreglo de comandos encontrados
@@ -407,43 +407,43 @@ int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_nu
 int finalizar_comando_procesado(const char *linea_original, int estado_ejecucion)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    char *ruta_entrada = NULL;         // ruta del archivo de entrada donde está la línea a eliminar
-    int mandar_a_errores = 0;          // bandera: 1 si el comando falló y debe guardarse en el archivo de errores
-    int resultado = RET_ERROR_GENERIC; // resultado de la operación, inicializado como error por defecto
+    char *ruta_entrada = NULL;         // ruta del archivo de entrada donde estï¿½ la lï¿½nea a eliminar
+    int mandar_a_errores = 0;          // bandera: 1 si el comando fallï¿½ y debe guardarse en el archivo de errores
+    int resultado = RET_ERROR_GENERIC; // resultado de la operaciï¿½n, inicializado como error por defecto
 
-    if (linea_original == NULL || linea_original[0] == '\0') // si la línea es NULL o vacía, no hay nada que finalizar
+    if (linea_original == NULL || linea_original[0] == '\0') // si la lï¿½nea es NULL o vacï¿½a, no hay nada que finalizar
     {
-        RETORNAR_PROCESO_ESTANDAR(RET_INVALID_ARG); // retorna error: argumento inválido
+        RETORNAR_PROCESO_ESTANDAR(RET_INVALID_ARG); // retorna error: argumento invï¿½lido
     }
 
-    if (construir_ruta_transferencia(1, &ruta_entrada) < 0) // construye la ruta del archivo de entrada (posición 1 en GG_archivos)
+    if (construir_ruta_transferencia(1, &ruta_entrada) < 0) // construye la ruta del archivo de entrada (posiciï¿½n 1 en GG_archivos)
     {
         RETORNAR_PROCESO_ESTANDAR(RET_ERROR_GENERIC); // retorna error: no se pudo obtener la ruta del archivo de entrada
     }
 
-    if (RET_IS_ERROR(estado_ejecucion)) // si el estado del comando procesado es un código de error
+    if (RET_IS_ERROR(estado_ejecucion)) // si el estado del comando procesado es un cï¿½digo de error
     {
         mandar_a_errores = 1; // activa la bandera para registrar el fallo en el archivo de errores
     }
 
-    if (mandar_a_errores) // si el comando falló, hay que guardarlo en el archivo de errores
+    if (mandar_a_errores) // si el comando fallï¿½, hay que guardarlo en el archivo de errores
     {
         char *ruta_errores = NULL; // ruta del archivo donde se guardan los comandos fallidos
 
-        if (construir_ruta_transferencia(4, &ruta_errores) < 0) // construye la ruta del archivo de errores (posición 4 en GG_archivos)
+        if (construir_ruta_transferencia(4, &ruta_errores) < 0) // construye la ruta del archivo de errores (posiciï¿½n 4 en GG_archivos)
         {
             free(ruta_entrada);                           // libera la ruta de entrada antes de salir
             RETORNAR_PROCESO_ESTANDAR(RET_ERROR_GENERIC); // retorna error: no se pudo obtener la ruta del archivo de errores
         }
 
         crearArchivo(ruta_errores, GG_archivos[4][1]); // crea el archivo de errores si no existe
-        agregar_fila(ruta_errores, linea_original);    // agrega la línea del comando fallido al archivo de errores
+        agregar_fila(ruta_errores, linea_original);    // agrega la lï¿½nea del comando fallido al archivo de errores
         free(ruta_errores);                            // libera la ruta de errores, ya no se necesita
     }
 
-    resultado = quitar_linea_exacta_del_archivo(ruta_entrada, linea_original); // elimina la línea del archivo de entrada (marca el comando como procesado)
+    resultado = quitar_linea_exacta_del_archivo(ruta_entrada, linea_original); // elimina la lï¿½nea del archivo de entrada (marca el comando como procesado)
     free(ruta_entrada);                                                        // libera la ruta de entrada
-    RETORNAR_PROCESO_ESTANDAR(resultado);                                      // retorna el resultado de la eliminación
+    RETORNAR_PROCESO_ESTANDAR(resultado);                                      // retorna el resultado de la eliminaciï¿½n
 }
 
 /*
@@ -460,15 +460,15 @@ int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
 
     if (usuarios[0] == NULL || strcmp(usuarios[0], GG_id_programa) != 0) // si el primer usuario no es este programa
     {
-        RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: este programa no está en turno, no corresponde cambiar
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: este programa no estï¿½ en turno, no corresponde cambiar
     }
 
-    int id_nuevo = GG_indice_donde_comensar;                        // índice del siguiente usuario al que ceder el turno; ejemplo: 1
+    int id_nuevo = GG_indice_donde_comensar;                        // ï¿½ndice del siguiente usuario al que ceder el turno; ejemplo: 1
     for (int i = GG_indice_donde_comensar; i < total_usuarios; i++) // recorre la lista de usuarios desde el inicio
     {
-        if (usuarios[i] != NULL && strcmp(usuarios[i], GG_id_programa) == 0) // busca la posición actual de este programa en la lista
+        if (usuarios[i] != NULL && strcmp(usuarios[i], GG_id_programa) == 0) // busca la posiciï¿½n actual de este programa en la lista
         {
-            if (i >= total_usuarios - 1) // si es el último de la lista, el siguiente es el primero (circular)
+            if (i >= total_usuarios - 1) // si es el ï¿½ltimo de la lista, el siguiente es el primero (circular)
             {
                 id_nuevo = GG_indice_donde_comensar; // vuelve al inicio de la lista
             }
@@ -480,12 +480,12 @@ int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
         }
     }
 
-    if (usuarios[id_nuevo] == NULL || usuarios[id_nuevo][0] == '\0') // si el siguiente ID es NULL o vacío, no se puede cambiar
+    if (usuarios[id_nuevo] == NULL || usuarios[id_nuevo][0] == '\0') // si el siguiente ID es NULL o vacï¿½o, no se puede cambiar
     {
-        RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: no hay un ID válido al que ceder el turno
+        RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: no hay un ID vï¿½lido al que ceder el turno
     }
 
-    char *ruta_entrada = NULL;                              // ruta del archivo de entrada donde se editará el ID activo
+    char *ruta_entrada = NULL;                              // ruta del archivo de entrada donde se editarï¿½ el ID activo
     if (construir_ruta_transferencia(1, &ruta_entrada) < 0) // construye la ruta del archivo de entrada
     {
         RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo construir la ruta
@@ -493,7 +493,7 @@ int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
 
     int resultado = editar_fila_espesifica_sin_arreglo_gg(ruta_entrada, "0", 0, usuarios[id_nuevo]); // edita la fila 0 del archivo con el nuevo ID de programa
     free(ruta_entrada);                                                                              // libera la ruta de entrada
-    RETORNAR_PROCESO_ESTANDAR(resultado ? 1 : 0);                                                    // retorna 1 si la edición fue exitosa, 0 si falló
+    RETORNAR_PROCESO_ESTANDAR(resultado ? 1 : 0);                                                    // retorna 1 si la ediciï¿½n fue exitosa, 0 si fallï¿½
 }
 
 /*
@@ -503,7 +503,7 @@ int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
 int quitar_id_prog_del_archivo(void)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    char *ruta_entrada = NULL;                              // ruta del archivo de entrada donde se eliminará el ID de este programa
+    char *ruta_entrada = NULL;                              // ruta del archivo de entrada donde se eliminarï¿½ el ID de este programa
     if (construir_ruta_transferencia(1, &ruta_entrada) < 0) // construye la ruta del archivo de entrada
     {
         RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: no se pudo construir la ruta
@@ -511,7 +511,7 @@ int quitar_id_prog_del_archivo(void)
 
     eliminar_fila_para_multiples_programas_solo_prog(ruta_entrada, "0", GG_id_programa); // elimina la fila que contiene el ID de este programa del archivo
     free(ruta_entrada);                                                                  // libera la ruta de entrada
-    RETORNAR_PROCESO_ESTANDAR(1);                                                        // retorna 1 indicando que la operación fue completada
+    RETORNAR_PROCESO_ESTANDAR(1);                                                        // retorna 1 indicando que la operaciï¿½n fue completada
 }
 
 /*
@@ -523,27 +523,27 @@ int checar_numero_de_direccion_de_archivo_atras_actual_adelante(int posicion_ban
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (arr_devolver == NULL) // si el arreglo de salida es NULL, no se puede escribir el resultado
     {
-        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: arreglo de salida inválido
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error: arreglo de salida invï¿½lido
     }
 
-    const int total_direcciones = 3;                                           // número fijo de direcciones: atrás, actual, adelante
-    int numero_adelante_posicion = numero_actual_posicion + total_direcciones; // calcula la posición adelante sumando el paso
-    int numero_atras_posicion = numero_actual_posicion - total_direcciones;    // calcula la posición atrás restando el paso
+    const int total_direcciones = 3;                                           // nï¿½mero fijo de direcciones: atrï¿½s, actual, adelante
+    int numero_adelante_posicion = numero_actual_posicion + total_direcciones; // calcula la posiciï¿½n adelante sumando el paso
+    int numero_atras_posicion = numero_actual_posicion - total_direcciones;    // calcula la posiciï¿½n atrï¿½s restando el paso
 
-    if (numero_adelante_posicion >= total_direcciones) // si la posición adelante supera el límite, volver al inicio
+    if (numero_adelante_posicion >= total_direcciones) // si la posiciï¿½n adelante supera el lï¿½mite, volver al inicio
     {
-        numero_adelante_posicion = posicion_bandera; // usa la posición de bandera como referencia de inicio
+        numero_adelante_posicion = posicion_bandera; // usa la posiciï¿½n de bandera como referencia de inicio
     }
 
-    if (numero_atras_posicion < 0) // si la posición atrás es negativa, ir al final de la lista
+    if (numero_atras_posicion < 0) // si la posiciï¿½n atrï¿½s es negativa, ir al final de la lista
     {
-        numero_atras_posicion = (total_direcciones - 1) + posicion_bandera; // calcula la última posición válida
+        numero_atras_posicion = (total_direcciones - 1) + posicion_bandera; // calcula la ï¿½ltima posiciï¿½n vï¿½lida
     }
 
-    arr_devolver[0] = numero_atras_posicion;    // guarda la posición anterior en el primer elemento
-    arr_devolver[1] = numero_actual_posicion;   // guarda la posición actual en el segundo elemento
-    arr_devolver[2] = numero_adelante_posicion; // guarda la posición siguiente en el tercer elemento
-    RETORNAR_PROCESO_ESTANDAR(0);               // retorna éxito: las tres posiciones fueron calculadas y almacenadas
+    arr_devolver[0] = numero_atras_posicion;    // guarda la posiciï¿½n anterior en el primer elemento
+    arr_devolver[1] = numero_actual_posicion;   // guarda la posiciï¿½n actual en el segundo elemento
+    arr_devolver[2] = numero_adelante_posicion; // guarda la posiciï¿½n siguiente en el tercer elemento
+    RETORNAR_PROCESO_ESTANDAR(0);               // retorna ï¿½xito: las tres posiciones fueron calculadas y almacenadas
 }
 
 #elif defined(__XC)
@@ -589,9 +589,9 @@ static void usb_respuesta(const char *folio, const char *info, const char *progr
        - Enviar por USB/puerto serie
        - Manejar timeouts y errores
     */
-    (void)folio;    // suprime advertencia: folio no se usa hasta implementar el envío USB
-    (void)info;     // suprime advertencia: info no se usa hasta implementar el envío USB
-    (void)programa; // suprime advertencia: programa no se usa hasta implementar el envío USB
+    (void)folio;    // suprime advertencia: folio no se usa hasta implementar el envï¿½o USB
+    (void)info;     // suprime advertencia: info no se usa hasta implementar el envï¿½o USB
+    (void)programa; // suprime advertencia: programa no se usa hasta implementar el envï¿½o USB
 }
 
 /* Procesa y limpia comandos recibidos por USB.
@@ -615,9 +615,9 @@ static int usb_datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int 
 static int usb_cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
 {
     /* TODO: Implementar rotaciÃ³n de ID en buffer USB */
-    (void)usuarios;               // suprime advertencia: parámetro no usado hasta implementación
-    (void)total_usuarios;         // suprime advertencia: parámetro no usado hasta implementación
-    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: sin operación (stub pendiente)
+    (void)usuarios;               // suprime advertencia: parï¿½metro no usado hasta implementaciï¿½n
+    (void)total_usuarios;         // suprime advertencia: parï¿½metro no usado hasta implementaciï¿½n
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: sin operaciï¿½n (stub pendiente)
 }
 
 /* Elimina ID del programa desde buffer USB.
@@ -625,7 +625,7 @@ static int usb_cambiar_id_programa_al_siguiente(char **usuarios, int total_usuar
 static int usb_quitar_id_prog_del_archivo(void)
 {
     /* TODO: Implementar eliminaciÃ³n de ID en buffer USB */
-    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub pendiente, sin operación real en PIC
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub pendiente, sin operaciï¿½n real en PIC
 }
 
 /* ============================================================
@@ -639,7 +639,7 @@ static int usb_quitar_id_prog_del_archivo(void)
 int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_lineas)
 {
     /* En PIC, leer desde USB en lugar de archivo */
-    RETORNAR_PROCESO_ESTANDAR(usb_monitoreo_archivo_entrada(retorno_comando, retorno_numero_lineas)); // delega a la función USB correspondiente
+    RETORNAR_PROCESO_ESTANDAR(usb_monitoreo_archivo_entrada(retorno_comando, retorno_numero_lineas)); // delega a la funciï¿½n USB correspondiente
 }
 
 /*
@@ -649,7 +649,7 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
 void respuesta(const char *info, const char *programa_enviar, const char *info_espejo)
 {
     /* En PIC, enviar por USB en lugar de archivo */
-    usb_respuesta(info, info_espejo, programa_enviar); // delega el envío a la función USB correspondiente
+    usb_respuesta(info, info_espejo, programa_enviar); // delega el envï¿½o a la funciï¿½n USB correspondiente
     (void)info_espejo;                                 // suprime advertencia: ya fue pasado a usb_respuesta
 }
 
@@ -660,7 +660,7 @@ void respuesta(const char *info, const char *programa_enviar, const char *info_e
 int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_numero_lineas)
 {
     /* En PIC, procesar desde USB en lugar de archivo */
-    RETORNAR_PROCESO_ESTANDAR(usb_datos_recibidos_a_procesar_y_borrar(retorno_comando, retorno_numero_lineas)); // delega a la función USB correspondiente
+    RETORNAR_PROCESO_ESTANDAR(usb_datos_recibidos_a_procesar_y_borrar(retorno_comando, retorno_numero_lineas)); // delega a la funciï¿½n USB correspondiente
 }
 
 /*
@@ -672,7 +672,7 @@ int finalizar_comando_procesado(const char *linea_original, int estado_ejecucion
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     (void)linea_original;         // suprime advertencia: en PIC no se usa sistema de archivos
     (void)estado_ejecucion;       // suprime advertencia: en PIC no se registran errores en archivo
-    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub sin operación
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub sin operaciï¿½n
 }
 
 /*
@@ -682,7 +682,7 @@ int finalizar_comando_procesado(const char *linea_original, int estado_ejecucion
 int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
 {
     /* En PIC, cambiar ID en buffer USB */
-    RETORNAR_PROCESO_ESTANDAR(usb_cambiar_id_programa_al_siguiente(usuarios, total_usuarios)); // delega a la función USB correspondiente
+    RETORNAR_PROCESO_ESTANDAR(usb_cambiar_id_programa_al_siguiente(usuarios, total_usuarios)); // delega a la funciï¿½n USB correspondiente
 }
 
 /*
@@ -692,7 +692,7 @@ int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
 int quitar_id_prog_del_archivo(void)
 {
     /* En PIC, quitar ID de buffer USB */
-    RETORNAR_PROCESO_ESTANDAR(usb_quitar_id_prog_del_archivo()); // delega a la función USB correspondiente
+    RETORNAR_PROCESO_ESTANDAR(usb_quitar_id_prog_del_archivo()); // delega a la funciï¿½n USB correspondiente
 }
 
 /*
@@ -703,11 +703,11 @@ int checar_numero_de_direccion_de_archivo_atras_actual_adelante(int posicion_ban
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (arr_devolver == NULL)
-        RETORNAR_PROCESO_ESTANDAR(-1);        // retorna error: arreglo de salida inválido
-    arr_devolver[0] = 0;                      // en PIC no hay navegación atrás, se devuelve 0
-    arr_devolver[1] = numero_actual_posicion; // posición actual del archivo
-    arr_devolver[2] = 0;                      // en PIC no hay navegación adelante, se devuelve 0
-    RETORNAR_PROCESO_ESTANDAR(0);             // retorna éxito: stub con valores por defecto
+        RETORNAR_PROCESO_ESTANDAR(-1);        // retorna error: arreglo de salida invï¿½lido
+    arr_devolver[0] = 0;                      // en PIC no hay navegaciï¿½n atrï¿½s, se devuelve 0
+    arr_devolver[1] = numero_actual_posicion; // posiciï¿½n actual del archivo
+    arr_devolver[2] = 0;                      // en PIC no hay navegaciï¿½n adelante, se devuelve 0
+    RETORNAR_PROCESO_ESTANDAR(0);             // retorna ï¿½xito: stub con valores por defecto
 }
 
 #else
@@ -732,9 +732,9 @@ int monitoreo_archivo_entrada(char ***retorno_comando, int *retorno_numero_linea
 void respuesta(const char *info, const char *programa_enviar, const char *info_espejo)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    (void)info;            // suprime advertencia: parámetro no usado en plataforma por defecto
-    (void)programa_enviar; // suprime advertencia: parámetro no usado en plataforma por defecto
-    (void)info_espejo;     // suprime advertencia: parámetro no usado en plataforma por defecto
+    (void)info;            // suprime advertencia: parï¿½metro no usado en plataforma por defecto
+    (void)programa_enviar; // suprime advertencia: parï¿½metro no usado en plataforma por defecto
+    (void)info_espejo;     // suprime advertencia: parï¿½metro no usado en plataforma por defecto
 }
 
 /*
@@ -758,9 +758,9 @@ int datos_recibidos_a_procesar_y_borrar(char ***retorno_comando, int *retorno_nu
 int finalizar_comando_procesado(const char *linea_original, int estado_ejecucion)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    (void)linea_original;         // suprime advertencia: parámetro no usado en plataforma por defecto
-    (void)estado_ejecucion;       // suprime advertencia: parámetro no usado en plataforma por defecto
-    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub sin operación
+    (void)linea_original;         // suprime advertencia: parï¿½metro no usado en plataforma por defecto
+    (void)estado_ejecucion;       // suprime advertencia: parï¿½metro no usado en plataforma por defecto
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub sin operaciï¿½n
 }
 
 /*
@@ -770,9 +770,9 @@ int finalizar_comando_procesado(const char *linea_original, int estado_ejecucion
 int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    (void)usuarios;               // suprime advertencia: parámetro no usado en plataforma por defecto
-    (void)total_usuarios;         // suprime advertencia: parámetro no usado en plataforma por defecto
-    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub sin operación
+    (void)usuarios;               // suprime advertencia: parï¿½metro no usado en plataforma por defecto
+    (void)total_usuarios;         // suprime advertencia: parï¿½metro no usado en plataforma por defecto
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub sin operaciï¿½n
 }
 
 /*
@@ -782,7 +782,7 @@ int cambiar_id_programa_al_siguiente(char **usuarios, int total_usuarios)
 int quitar_id_prog_del_archivo(void)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub sin operación
+    RETORNAR_PROCESO_ESTANDAR(0); // retorna 0: stub sin operaciï¿½n
 }
 
 /*
@@ -793,11 +793,11 @@ int checar_numero_de_direccion_de_archivo_atras_actual_adelante(int posicion_ban
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     if (arr_devolver == NULL)
-        RETORNAR_PROCESO_ESTANDAR(-1);        // retorna error: arreglo de salida inválido
-    arr_devolver[0] = 0;                      // plataforma por defecto no tiene navegación atrás
-    arr_devolver[1] = numero_actual_posicion; // posición actual recibida como parámetro
-    arr_devolver[2] = 0;                      // plataforma por defecto no tiene navegación adelante
-    RETORNAR_PROCESO_ESTANDAR(0);             // retorna éxito: stub con valores por defecto
+        RETORNAR_PROCESO_ESTANDAR(-1);        // retorna error: arreglo de salida invï¿½lido
+    arr_devolver[0] = 0;                      // plataforma por defecto no tiene navegaciï¿½n atrï¿½s
+    arr_devolver[1] = numero_actual_posicion; // posiciï¿½n actual recibida como parï¿½metro
+    arr_devolver[2] = 0;                      // plataforma por defecto no tiene navegaciï¿½n adelante
+    RETORNAR_PROCESO_ESTANDAR(0);             // retorna ï¿½xito: stub con valores por defecto
 }
 
 #endif /* Fin compilaciÃ³n condicional */

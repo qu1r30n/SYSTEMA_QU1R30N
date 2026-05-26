@@ -1717,6 +1717,103 @@ void generar_ruta_archivo(const char *ruta, long id, long cant_por_arch, // cons
 }
 
 /* =======================
+HELPERS ESTATICOS PARA INFO_DIVIDIDA
+======================== */
+
+/* Lee ID_TOT y CANT_POR_ARCH del archivo metadata. Retorna 0 en exito, -1 en error. */
+static int leer_config_metadata(const char *ruta_metadata, long *id_total_out, long *cant_por_arch_out) // lee los campos de configuracion del archivo metadata de info dividida
+{
+#if defined(_WIN32) || defined(__linux__)
+    int n = 0;
+    char **lineas = leer_archivo(ruta_metadata, &n);
+    if (!lineas || n <= 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        if (lineas) { free_lineas(lineas, n); } // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+        return -1;                              // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
+    }
+
+    long id_total = 0, cant = 100;
+    for (int i = 0; i < n; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+    {
+        char **p = NULL;
+        int np = split(lineas[i], GG_caracter_separacion[0], &p); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        if (np >= 2 && p) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+        {
+            if (strcmp(p[0], "ID_TOT") == 0)            { id_total = atol(p[1]); }
+            else if (strcmp(p[0], "CANT_POR_ARCH") == 0) { long v = atol(p[1]); if (v > 0) { cant = v; } }
+        }
+        if (p) { free_split(p); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    }
+    free_lineas(lineas, n); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+
+    if (id_total_out)      { *id_total_out      = id_total; }
+    if (cant_por_arch_out) { *cant_por_arch_out = cant;     }
+    return 0;
+
+#elif defined(__XC)
+    (void)ruta_metadata;
+    (void)id_total_out;
+    (void)cant_por_arch_out;
+    return -1;
+#endif
+}
+
+/* Construye la ruta de la carpeta "_DAT" a partir de la ruta del metadata. El caller debe free(). */
+static char *construir_carpeta_data(const char *ruta_metadata) // deriva la ruta de la carpeta de datos divididos a partir del archivo metadata
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *copia = NULL;
+    if (concatenar_formato_separado_por_variable(&copia, NULL, "%s", ruta_metadata) < 0) { return NULL; } // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+
+    char *sep   = buscar_ultimo_separador(copia); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    char *punto = strrchr(copia, '.');             // busca la última aparición del carácter indicado dentro de la cadena actual // ejemplo: último separador de carpeta
+    if (punto && (!sep || punto > sep)) { *punto = '\0'; } // elimina la extensión del archivo dejando solo la ruta base
+
+    char *resultado = NULL;
+    if (concatenar_formato_separado_por_variable(&resultado, NULL, "%s_DAT", copia) < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        free(copia); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        return NULL; // retorna el valor calculado en esta ruta de ejecución // ejemplo: NULL
+    }
+    free(copia); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    return resultado; // retorna el valor calculado en esta ruta de ejecución // ejemplo: resultado
+
+#elif defined(__XC)
+    (void)ruta_metadata;
+    return NULL;
+#endif
+}
+
+/* Calcula la posicion de una fila dentro de su archivo usando los primeros 1-2 digitos del ID. */
+static long calcular_posicion_en_archivo(const char *id) // calcula el indice de fila dentro del archivo de datos a partir del ID
+{
+    if (!id || !id[0]) { return 0; }
+    size_t len  = strlen(id);
+    char   tmp[3];
+    if (len >= 2) { tmp[0] = id[0]; tmp[1] = id[1]; tmp[2] = '\0'; }
+    else          { tmp[0] = id[0]; tmp[1] = '\0'; }
+    return atol(tmp);
+}
+
+/* Reconstruye una fila uniendo celdas[] con GG_caracter_separacion[0]. El caller debe free(). */
+static char *reconstruir_fila(char **celdas, int nc) // une un arreglo de celdas usando el separador estandar del sistema
+{
+    char *nueva = NULL;
+    for (int i = 0; i < nc; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+    {
+        if (i > 0)
+        {
+            concatenar_formato_separado_por_variable(&nueva, NULL, "%s%s", GG_caracter_separacion[0], celdas[i] ? celdas[i] : ""); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        }
+        else
+        {
+            concatenar_formato_separado_por_variable(&nueva, NULL, "%s", celdas[i] ? celdas[i] : ""); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        }
+    }
+    return nueva;
+}
+
+/* =======================
 FUNCIONES ADICIONALES DEL C#
 ======================== */
 
@@ -1825,98 +1922,43 @@ static int crear_archivo_info_dividida(const char *direccion_archivos,          
 }
 
 /*
- * Uso: Ejecuta agregar_info_dividida de forma segura.
- * Entrada ejemplo: agregar_info_dividida(datos)
+ * Uso: Agrega una nueva fila al almacenamiento dividido y actualiza ID_TOT en el metadata.
+ * Parametros:
+ *   direccion    - ruta del archivo metadata
+ *   agregando    - fila a insertar (sin ID, campos separados con SEP[0]; puede ser NULL)
+ *   nom_columnas - cabecera de columnas si se crea el archivo por primera vez (puede ser NULL)
  */
-char *agregar_info_dividida(const char *datos) // declara una variable que se usará en las operaciones siguientes // ejemplo: buffer temporal
+char *agregar_info_dividida(const char *direccion,    // ruta del archivo metadata
+                            const char *agregando,    // fila a insertar (sin ID, separada con SEP[0])
+                            const char *nom_columnas) // cabecera de columnas si se crea el archivo por primera vez
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
 #if defined(_WIN32) || defined(__linux__)
-    /*
-     * agregar_info_dividida
-     * ------------------------------------------------------------
-     * Agrega una fila a un archivo de datos dividido por bloques,
-     * y actualiza ID_TOT en el metadata.
-     *
-     * ENTRADA (string "datos"):
-     * - Formato: direccion_archivos + SEP_FUNC[3] + fila + SEP_FUNC[3] + columnas
-     * - Ejemplo:
-     *"espacios\\mi_espacio.txt╬laptop|acer|15000╬ID|NOMBRE|PRECIO"
-     *(donde SEP_FUNC[3] actualmente es GG_caracter_separacion_funciones_espesificas[3])
-     *
-     * ARCHIVOS QUE PUEDE CREAR:
-     * 1) Metadata:
-     * - espacios\\mi_espacio.txt
-     * - Si no existe, se crea con:
-     *tipo_info|info
-     *ID_TOT|0
-     *COLUMNAS|ID|NOMBRE|PRECIO
-     *CANT_POR_ARCH|100
-     *
-     * 2) Archivo de datos dividido:
-     * - espacios\\mi_espacio_DAT\\100.txt (o ruta generada equivalente)
-     * - Si no existe, se crea con cabecera de columnas.
-     *
-     * FILA AGREGADA (ejemplo):
-     * - Si ID_TOT era 0 y agregando = "laptop|acer|15000",
-     *se agrega: "1|laptop|acer|15000"
-     * - Luego metadata queda con: ID_TOT|1
-     *
-     * SALIDA:
-     * - Exito: "1<SEP_CONFIRMACION>1|laptop|acer|15000"
-     * - Error: "0<SEP_CONFIRMACION>mensaje"
-     */
-    char *respuesta = NULL;          // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    char **datos_espliteados = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    int n_datos = 0;                 // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    char *respuesta = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
 
-    if (!datos || !datos[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    if (!direccion || !direccion[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
         return respuesta;                                                                                                                // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
     }
 
-    n_datos = split(datos, GG_caracter_separacion_funciones_espesificas[3], &datos_espliteados); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
-    if (n_datos <= 0 || !datos_espliteados || !datos_espliteados[0] || !datos_espliteados[0][0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-    {
-        if (datos_espliteados)                                                                                                           // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-        {
-            free_split(datos_espliteados);                                                                                               // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
-        }
-        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
-        return respuesta;                                                                                                                // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
-    }
-
-    const char *direccion_archivos = datos_espliteados[0]; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    const char *agregando = "";                            // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    const char *nom_columnas_si_no_existe_archivo = "";    // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-
-    if (n_datos >= 2 && datos_espliteados[1] && datos_espliteados[1][0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-    {
-        agregando = datos_espliteados[1];                                // actualiza la variable con el nuevo valor calculado en esta etapa // ejemplo: total = 0
-    }
-
-    if (n_datos >= 3 && datos_espliteados[2] && datos_espliteados[2][0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
-    {
-        nom_columnas_si_no_existe_archivo = datos_espliteados[2];        // actualiza la variable con el nuevo valor calculado en esta etapa // ejemplo: total = 0
-    }
+    const char *nom_columnas_si_no_existe_archivo = nom_columnas ? nom_columnas : ""; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    const char *agregando_val                     = agregando    ? agregando    : ""; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
     
 
-    int estado_creacion_metadata = crear_archivo_info_dividida(direccion_archivos,                 // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    int estado_creacion_metadata = crear_archivo_info_dividida(direccion,                            // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
                                                                nom_columnas_si_no_existe_archivo); // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
 
     if (estado_creacion_metadata < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
-        free_split(datos_espliteados);                                                                                                           // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror no pudo crear metadata", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
         return respuesta;                                                                                                                        // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
     }
 
-    int n_lineas = 0;                                            // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    char **lineas = leer_archivo(direccion_archivos, &n_lineas); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
-    if (!lineas || n_lineas <= 0)                                // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    int n_lineas = 0;                                        // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    char **lineas = leer_archivo(direccion, &n_lineas);      // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
+    if (!lineas || n_lineas <= 0)                            // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
-        free_split(datos_espliteados);                                                                                                          // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         if (lineas)                                                                                                                             // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             free_lineas(lineas, n_lineas);                                                                                                      // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
@@ -1951,7 +1993,6 @@ char *agregar_info_dividida(const char *datos) // declara una variable que se us
                 {
                     free_split(partes);                                                                                                          // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
                     free_lineas(lineas, n_lineas);                                                                                               // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-                    free_split(datos_espliteados);                                                                                               // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
                     concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
                     return respuesta;                                                                                                            // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
                 }
@@ -1978,15 +2019,14 @@ char *agregar_info_dividida(const char *datos) // declara una variable que se us
         }
     }
 
-    char *ruta_base_sin_ext = NULL;                                                                       // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    if (concatenar_formato_separado_por_variable(&ruta_base_sin_ext, NULL, "%s", direccion_archivos) < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    char *ruta_base_sin_ext = NULL;                                                                   // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    if (concatenar_formato_separado_por_variable(&ruta_base_sin_ext, NULL, "%s", direccion) < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         if (columnas)                                                                                                                // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             free(columnas);                                                                                                          // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         free_lineas(lineas, n_lineas);                                                                                               // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        free_split(datos_espliteados);                                                                                               // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
         return respuesta;                                                                                                            // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
     }
@@ -2007,7 +2047,6 @@ char *agregar_info_dividida(const char *datos) // declara una variable que se us
             free(columnas);                                                                                                          // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         free_lineas(lineas, n_lineas);                                                                                               // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        free_split(datos_espliteados);                                                                                               // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
         return respuesta;                                                                                                            // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
     }
@@ -2023,7 +2062,6 @@ char *agregar_info_dividida(const char *datos) // declara una variable que se us
             free(columnas);                                                                                                          // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         free_lineas(lineas, n_lineas);                                                                                               // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        free_split(datos_espliteados);                                                                                               // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
         return respuesta;                                                                                                            // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
     }
@@ -2044,7 +2082,6 @@ char *agregar_info_dividida(const char *datos) // declara una variable que se us
             free(columnas);                                                                                                                              // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         free_lineas(lineas, n_lineas);                                                                                                                   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        free_split(datos_espliteados);                                                                                                                   // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror no pudo crear archivo de datos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
         return respuesta;                                                                                                                                // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
     }
@@ -2053,7 +2090,7 @@ char *agregar_info_dividida(const char *datos) // declara una variable que se us
     if (concatenar_formato_separado_por_variable(&fila_nueva, NULL, "%ld%s%s", // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
                                                  id_total + 1,                 // continúa enviando argumentos o elementos dentro de la expresión actual // ejemplo: siguiente parámetro de la llamada
                                                  GG_caracter_separacion[0],    // continúa enviando argumentos o elementos dentro de la expresión actual // ejemplo: siguiente parámetro de la llamada
-                                                 agregando) < 0)               // ejecuta la llamada o condición representada en esta línea // ejemplo: operación completada
+                                                 agregando_val) < 0)           // ejecuta la llamada o condición representada en esta línea // ejemplo: operación completada
     {
         free(ruta_data);                                                                                                             // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         if (columnas)                                                                                                                // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
@@ -2061,7 +2098,6 @@ char *agregar_info_dividida(const char *datos) // declara una variable que se us
             free(columnas);                                                                                                          // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         free_lineas(lineas, n_lineas);                                                                                               // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-        free_split(datos_espliteados);                                                                                               // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
         concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
         return respuesta;                                                                                                            // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
     }
@@ -2070,7 +2106,7 @@ char *agregar_info_dividida(const char *datos) // declara una variable que se us
 
     char nuevo_id_total[64];                                                    // declara una variable que se usará en las operaciones siguientes // ejemplo: buffer temporal
     snprintf(nuevo_id_total, sizeof(nuevo_id_total), "%ld", id_total + 1);      // formatea texto seguro dentro del buffer indicado respetando su tamaño // ejemplo: 1000.txt
-    editar_celda_por_celda(direccion_archivos, 0, "ID_TOT", 1, nuevo_id_total); // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
+    editar_celda_por_celda(direccion, 0, "ID_TOT", 1, nuevo_id_total); // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
 
     concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s",                             // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
                                              GG_caracter_para_confirmacion_o_error[0], fila_nueva); // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
@@ -2082,11 +2118,12 @@ char *agregar_info_dividida(const char *datos) // declara una variable que se us
         free(columnas);            // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
     }
     free_lineas(lineas, n_lineas); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
-    free_split(datos_espliteados); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
     return respuesta;              // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
 
 #elif defined(__XC)
-    (void)datos; // marca el parámetro como no usado en esta rama de compilación // ejemplo: datos
+    (void)direccion;    // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)agregando;    // marca el parámetro como no usado en esta rama de compilación // ejemplo: agregando
+    (void)nom_columnas; // marca el parámetro como no usado en esta rama de compilación // ejemplo: nom_columnas
     return NULL; // retorna el valor calculado en esta ruta de ejecución // ejemplo: NULL
 
 #endif
@@ -2645,5 +2682,1089 @@ void borrar_contenido_excepto_id(const char *ruta, const char *id_fila) // ejecu
     (void)ruta;    // marca el parámetro como no usado en esta rama de compilación // ejemplo: ruta
     (void)id_fila; // marca el parámetro como no usado en esta rama de compilación // ejemplo: id_fila
 
+#endif
+}
+
+/* =======================
+FUNCIONES INFO_DIVIDIDA PORTADAS DEL C#
+======================== */
+
+/*
+ * Uso: Lee todas las filas de datos de un almacenamiento dividido y las retorna unidas.
+ * Entrada ejemplo: leer_todo_info_dividida("espacios\\mi_espacio.txt")
+ * Retorna string con todas las filas separadas por SEP_FUNC[3]. El caller debe free().
+ */
+char *leer_todo_info_dividida(const char *ruta) // lee todos los registros distribuidos en archivos divididos y los retorna como una sola cadena
+{
+#if defined(_WIN32) || defined(__linux__)
+    if (!ruta || !ruta[0]) { return NULL; } // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+
+    long id_total = 0, cant_por_arch = 100;
+    if (leer_config_metadata(ruta, &id_total, &cant_por_arch) < 0) { return NULL; } // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+
+    char *carpeta_data = construir_carpeta_data(ruta); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    if (!carpeta_data) { return NULL; }                // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+
+    char *resultado = NULL; // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+
+    for (long i = 1; i <= id_total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+    {
+        size_t tam    = strlen(carpeta_data) + 128;
+        char  *ruta_a = (char *)malloc(tam); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
+        if (!ruta_a) { break; }              // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+
+        generar_ruta_archivo(carpeta_data, i, cant_por_arch, ruta_a, tam); // construye la ruta del archivo segmentado según el identificador actual // ejemplo: datos/100/1000.txt
+
+        int    nl     = 0;
+        char **lineas = leer_archivo(ruta_a, &nl); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
+        free(ruta_a);                              // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+        long cont = 0;
+        if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+        {
+            for (int j = 0; j < nl && cont < cant_por_arch; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+            {
+                if (cont > 0) // salta la primera línea del archivo (encabezado de columnas)
+                {
+                    if (!resultado)
+                    {
+                        concatenar_formato_separado_por_variable(&resultado, NULL, "%s", lineas[j]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                    }
+                    else
+                    {
+                        concatenar_formato_separado_por_variable(&resultado, NULL, "%s%s",
+                            GG_caracter_separacion_funciones_espesificas[3], lineas[j]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                    }
+                }
+                cont++;
+            }
+            free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+        }
+
+        i += cont; // avanza i por la cantidad de líneas leídas (el for agrega 1 más en la siguiente iteración)
+    }
+
+    free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    if (!resultado)
+    {
+        resultado = (char *)calloc(1, 1); // retorna string vacío en lugar de NULL cuando no hay datos aún
+    }
+    return resultado; // retorna el valor calculado en esta ruta de ejecución // ejemplo: resultado
+
+#elif defined(__XC)
+    (void)ruta;
+    return NULL;
+#endif
+}
+
+/*
+ * Uso: Agrega una fila solo si no existe un registro con el mismo valor en la columna indicada.
+ * Parametros:
+ *   direccion      - ruta del archivo metadata
+ *   col_comp       - indice de columna donde comparar (0 = primera)
+ *   comparar       - valor a buscar en col_comp
+ *   texto_agr      - fila a insertar si no existe (sin ID, con SEP[0])
+ *   nom_cols       - cabecera de columnas si se crea el archivo por primera vez
+ * Retorna "1<SEP_C>fila" o "0<SEP_C>ya existe..." El caller debe free().
+ */
+char *agregar_sino_existe_info_dividida(const char *direccion, // ruta del archivo metadata
+                                        long        col_comp,  // indice de columna de comparacion
+                                        const char *comparar,  // valor a buscar en col_comp
+                                        const char *texto_agr, // fila a insertar si no existe
+                                        const char *nom_cols)  // cabecera de columnas para archivo nuevo
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    if (!direccion || !direccion[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    crear_archivo_info_dividida(direccion, nom_cols ? nom_cols : ""); // crea el archivo metadata si todavía no existe usando la cabecera indicada // ejemplo: metadata inicial
+
+    char *todo = leer_todo_info_dividida(direccion); // lee todos los registros para buscar si ya existe el valor
+
+    int   id_encontrado   = -1;
+    char *info_encontrada = NULL;
+
+    if (todo && todo[0] && comparar) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        char **filas  = NULL;
+        int    nf     = split(todo, GG_caracter_separacion_funciones_espesificas[3], &filas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        for (int i = 0; i < nf && filas; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+        {
+            char **celdas = NULL;
+            int    nc     = split(filas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            if (nc > (int)col_comp && celdas && strcmp(celdas[(int)col_comp], comparar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+            {
+                id_encontrado = i + 1;
+                concatenar_formato_separado_por_variable(&info_encontrada, NULL, "%s", filas[i]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                break;
+            }
+            if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        }
+        if (filas) { free_split(filas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    }
+    free(todo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    if (id_encontrado == -1) // no se encontró: agregar
+    {
+        respuesta = agregar_info_dividida(direccion, texto_agr, nom_cols); // delega en agregar_info_dividida para insertar la nueva fila
+    }
+    else // ya existe
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%s%d%sya existe no se guardo%s%s",
+            GG_caracter_para_confirmacion_o_error[0], id_encontrado,
+            GG_caracter_para_confirmacion_o_error[0],
+            GG_caracter_para_confirmacion_o_error[0],
+            info_encontrada ? info_encontrada : ""); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+    }
+
+    if (info_encontrada) { free(info_encontrada); } // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+
+#elif defined(__XC)
+    (void)direccion;  // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)col_comp;   // marca el parámetro como no usado en esta rama de compilación // ejemplo: col_comp
+    (void)comparar;   // marca el parámetro como no usado en esta rama de compilación // ejemplo: comparar
+    (void)texto_agr;  // marca el parámetro como no usado en esta rama de compilación // ejemplo: texto_agr
+    (void)nom_cols;   // marca el parámetro como no usado en esta rama de compilación // ejemplo: nom_cols
+    return NULL;
+#endif
+}
+
+/*
+ * Uso: Obtiene un registro por su ID en almacenamiento dividido.
+ * Parametros:
+ *   direccion - ruta del archivo metadata
+ *   id        - identificador del registro a obtener
+ * Retorna "1<SEP_C>fila" o "0<SEP_C>no_se_encontro_informacion". El caller debe free().
+ */
+char *seleccionar_id_info_dividida(const char *direccion, // ruta del archivo metadata
+                                   const char *id)        // identificador del registro a obtener
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    if (!direccion || !direccion[0] || !id || !id[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    long        id_num    = atol(id);
+    long        cant      = 100;
+    leer_config_metadata(direccion, NULL, &cant); // lee CANT_POR_ARCH del metadata para derivar la ruta del archivo de datos
+
+    char *carpeta_data = construir_carpeta_data(direccion); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    if (!carpeta_data) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    size_t  tam    = strlen(carpeta_data) + 128;
+    char   *ruta_a = (char *)malloc(tam); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
+    if (!ruta_a) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    generar_ruta_archivo(carpeta_data, id_num, cant, ruta_a, tam); // construye la ruta del archivo segmentado según el identificador actual // ejemplo: datos/100/1000.txt
+    free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    int    nl     = 0;
+    char **lineas = leer_archivo(ruta_a, &nl); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
+    free(ruta_a);                              // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    long posicion = calcular_posicion_en_archivo(id); // calcula el índice de fila dentro del archivo a partir del ID
+    int  encontro = 0;
+
+    if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        for (long j = 0; j < nl; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+        {
+            if (posicion == j) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+            {
+                concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s",
+                    GG_caracter_para_confirmacion_o_error[0], lineas[j]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                encontro = 1;
+                break;
+            }
+        }
+        free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+    }
+
+    if (!encontro) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sno_se_encontro_informacion",
+            GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+    }
+
+    return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+
+#elif defined(__XC)
+    (void)direccion; // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)id;        // marca el parámetro como no usado en esta rama de compilación // ejemplo: id
+    return NULL;
+#endif
+}
+
+/*
+ * Uso: Igual a seleccionar_id_info_dividida pero también retorna la ruta del archivo y la posicion de fila.
+ * Parametros:
+ *   direccion - ruta del archivo metadata
+ *   id        - identificador del registro a obtener
+ * Retorna "1<SEP_C>fila<SEP_C>ruta_archivo<SEP_C>posicion" o "0<SEP_C>no_se_encontro_informacion". El caller debe free().
+ */
+char *seleccionar_id_info_dividida_extrae(const char *direccion, // ruta del archivo metadata
+                                          const char *id)        // identificador del registro a obtener
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    if (!direccion || !direccion[0] || !id || !id[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    long        id_num    = atol(id);
+    long        cant      = 100;
+    leer_config_metadata(direccion, NULL, &cant); // lee CANT_POR_ARCH del metadata para derivar la ruta del archivo de datos
+
+    char *carpeta_data = construir_carpeta_data(direccion); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    if (!carpeta_data) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    size_t  tam    = strlen(carpeta_data) + 128;
+    char   *ruta_a = (char *)malloc(tam); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
+    if (!ruta_a) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    generar_ruta_archivo(carpeta_data, id_num, cant, ruta_a, tam); // construye la ruta del archivo segmentado según el identificador actual // ejemplo: datos/100/1000.txt
+    free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    int    nl     = 0;
+    char **lineas = leer_archivo(ruta_a, &nl); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
+
+    long posicion = calcular_posicion_en_archivo(id); // calcula el índice de fila dentro del archivo a partir del ID
+    int  encontro = 0;
+
+    if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        for (long j = 0; j < nl; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+        {
+            if (posicion == j) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+            {
+                concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s%s%s%s%ld",
+                    GG_caracter_para_confirmacion_o_error[0], lineas[j],
+                    GG_caracter_para_confirmacion_o_error[0], ruta_a,
+                    GG_caracter_para_confirmacion_o_error[0], j); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                encontro = 1;
+                break;
+            }
+        }
+        free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+    }
+
+    if (!encontro) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sno_se_encontro_informacion",
+            GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+    }
+
+    free(ruta_a);  // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+
+#elif defined(__XC)
+    (void)direccion; // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)id;        // marca el parámetro como no usado en esta rama de compilación // ejemplo: id
+    return NULL;
+#endif
+}
+
+/*
+ * Uso: Edita una columna en el registro que coincide por columna de busqueda o por ID.
+ * Parametros:
+ *   direccion       - ruta del archivo metadata
+ *   id              - identificador del registro objetivo
+ *   info_a_comparar - valor a buscar (vacio = buscar por id)
+ *   col_comparar    - columna donde buscar info_a_comparar (vacio = buscar por id)
+ *   nuevos_datos    - valor a escribir en la columna editada
+ *   col_editar      - indice de la columna a modificar
+ * Retorna "1<SEP_C>informacion_editada" o "0<SEP_C>no_se_encontro_informacion". El caller debe free().
+ */
+char *editar_id_info_dividida(const char *direccion,       // ruta del archivo metadata
+                               const char *id,             // identificador del registro objetivo
+                               const char *info_a_comparar,// valor de busqueda (NULL = buscar por id)
+                               const char *col_comparar,   // columna donde buscar (NULL = buscar por id)
+                               const char *nuevos_datos,   // nuevo valor para la celda editada
+                               int         col_editar)     // indice de columna a modificar
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    if (!direccion || !direccion[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    long id_num = atol(id ? id : "0");
+    long cant   = 100;
+    leer_config_metadata(direccion, NULL, &cant); // lee CANT_POR_ARCH del metadata para derivar la ruta del archivo de datos
+
+    char *carpeta_data = construir_carpeta_data(direccion); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    if (!carpeta_data) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    size_t  tam    = strlen(carpeta_data) + 128;
+    char   *ruta_a = (char *)malloc(tam); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
+    if (!ruta_a) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    generar_ruta_archivo(carpeta_data, id_num, cant, ruta_a, tam); // construye la ruta del archivo segmentado según el identificador actual // ejemplo: datos/100/1000.txt
+    free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    int    nl     = 0;
+    char **lineas = leer_archivo(ruta_a, &nl); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
+
+    int encontro = 0;
+    int col_comp = (info_a_comparar && info_a_comparar[0] && col_comparar && col_comparar[0])
+                   ? atoi(col_comparar) : -1; // determina si la búsqueda es por valor en columna o por ID
+
+    if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        for (int i = 0; i < nl; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+        {
+            char **celdas = NULL;
+            int    nc     = split(lineas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            int    coincide = 0;
+
+            if (col_comp >= 0) // busca por valor en columna específica
+            {
+                if (nc > col_comp && celdas && strcmp(celdas[col_comp], info_a_comparar) == 0) { coincide = 1; }
+            }
+            else // busca por ID (columna 0)
+            {
+                if (nc > 0 && celdas && strcmp(celdas[0], id) == 0) { coincide = 1; }
+            }
+
+            if (coincide && nc > col_editar && celdas) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+            {
+                free(celdas[col_editar]);    // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                celdas[col_editar] = NULL;
+                concatenar_formato_separado_por_variable(&celdas[col_editar], NULL, "%s", nuevos_datos ? nuevos_datos : ""); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+
+                char *nueva = reconstruir_fila(celdas, nc); // reconstruye la fila con el valor editado
+                if (nueva) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+                {
+                    free(lineas[i]);  // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                    lineas[i] = nueva;
+                    encontro  = 1;
+                }
+            }
+            if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        }
+
+        if (encontro)
+        {
+            guardar_archivo(ruta_a, lineas, nl); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
+            concatenar_formato_separado_por_variable(&respuesta, NULL, "1%sinformacion_editada",
+                GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        }
+        else
+        {
+            concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sno_se_encontro_informacion",
+                GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        }
+        free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+    }
+    else
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sno_se_encontro_informacion",
+            GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        if (lineas) { free_lineas(lineas, nl); } // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+    }
+
+    free(ruta_a);  // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+
+#elif defined(__XC)
+    (void)direccion;       // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)id;              // marca el parámetro como no usado en esta rama de compilación // ejemplo: id
+    (void)info_a_comparar; // marca el parámetro como no usado en esta rama de compilación // ejemplo: info_a_comparar
+    (void)col_comparar;    // marca el parámetro como no usado en esta rama de compilación // ejemplo: col_comparar
+    (void)nuevos_datos;    // marca el parámetro como no usado en esta rama de compilación // ejemplo: nuevos_datos
+    (void)col_editar;      // marca el parámetro como no usado en esta rama de compilación // ejemplo: col_editar
+    return NULL;
+#endif
+}
+
+/*
+ * Uso: Edita multiples celdas de un registro por ID usando SEP[4] para separar columnas y valores.
+ * Parametros:
+ *   direccion - ruta del archivo metadata
+ *   id        - identificador del registro objetivo
+ *   cols_str  - columnas a editar separadas con SEP[4]
+ *   vals_str  - nuevos valores separados con SEP[4] (misma cantidad que cols_str)
+ * Retorna "1<SEP_C>fila_editada" o "0<SEP_C>no_se_encontro_informacion". El caller debe free().
+ */
+char *editar_celda_id_info_dividida(const char *direccion, // ruta del archivo metadata
+                                    const char *id,        // identificador del registro objetivo
+                                    const char *cols_str,  // columnas a editar (sep SEP[4])
+                                    const char *vals_str)  // nuevos valores (sep SEP[4])
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    if (!direccion || !direccion[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    long        id_num     = atol(id ? id : "0");
+    long        cant       = 100;
+    leer_config_metadata(direccion, NULL, &cant); // lee CANT_POR_ARCH del metadata para derivar la ruta del archivo de datos
+
+    char *carpeta_data = construir_carpeta_data(direccion); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    if (!carpeta_data) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    size_t  tam    = strlen(carpeta_data) + 128;
+    char   *ruta_a = (char *)malloc(tam); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
+    if (!ruta_a) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    generar_ruta_archivo(carpeta_data, id_num, cant, ruta_a, tam); // construye la ruta del archivo segmentado según el identificador actual // ejemplo: datos/100/1000.txt
+    free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    int    nl     = 0;
+    char **lineas = leer_archivo(ruta_a, &nl); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
+
+    long posicion = calcular_posicion_en_archivo(id); // calcula el índice de fila dentro del archivo a partir del ID
+    int  encontro = 0;
+
+    if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        char **cols_arr = NULL;
+        int    nc_cols  = split(cols_str, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a editar usando el separador de nivel 4
+        char **vals_arr = NULL;
+        int    nc_vals  = split(vals_str, GG_caracter_separacion_funciones_espesificas[4], &vals_arr); // divide los nuevos valores usando el separador de nivel 4
+
+        for (long j = 0; j < nl; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+        {
+            if (posicion != j) { continue; }
+
+            char **celdas = NULL;
+            int    nc     = split(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            if (nc <= 0 || !celdas) { break; }
+
+            for (int k = 0; k < nc_cols && k < nc_vals && cols_arr && vals_arr; k++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+            {
+                int col_idx = atoi(cols_arr[k]);
+                if (col_idx >= 0 && col_idx < nc) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+                {
+                    free(celdas[col_idx]); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                    celdas[col_idx] = NULL;
+                    concatenar_formato_separado_por_variable(&celdas[col_idx], NULL, "%s", vals_arr[k] ? vals_arr[k] : ""); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                }
+            }
+
+            char *nueva = reconstruir_fila(celdas, nc); // reconstruye la fila con las celdas editadas
+            if (nueva) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+            {
+                free(lineas[j]);  // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                lineas[j] = nueva;
+                encontro  = 1;
+                concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s",
+                    GG_caracter_para_confirmacion_o_error[0], nueva); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+            }
+            free_split(celdas); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            break;
+        }
+
+        if (cols_arr) { free_split(cols_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (vals_arr) { free_split(vals_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (encontro) { guardar_archivo(ruta_a, lineas, nl); } // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
+        free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+    }
+
+    if (!encontro && !respuesta) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sno_se_encontro_informacion",
+            GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+    }
+
+    free(ruta_a);  // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+
+#elif defined(__XC)
+    (void)direccion; // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)id;        // marca el parámetro como no usado en esta rama de compilación // ejemplo: id
+    (void)cols_str;  // marca el parámetro como no usado en esta rama de compilación // ejemplo: cols_str
+    (void)vals_str;  // marca el parámetro como no usado en esta rama de compilación // ejemplo: vals_str
+    return NULL;
+#endif
+}
+
+/*
+ * Uso: Incrementa numericamente multiples celdas de un registro por ID.
+ * Parametros:
+ *   direccion  - ruta del archivo metadata
+ *   id         - identificador del registro objetivo
+ *   cols_str   - columnas a incrementar separadas con SEP[4] (SEP[5] es reemplazado por SEP[0] internamente)
+ *   cants_str  - cantidades a sumar separadas con SEP[4] (pueden ser negativas)
+ * Retorna "1<SEP_C>fila_editada" o "0<SEP_C>no_se_encontro_informacion". El caller debe free().
+ */
+char *incrementa_celda_id_info_dividida(const char *direccion, // ruta del archivo metadata
+                                        const char *id,        // identificador del registro objetivo
+                                        const char *cols_str,  // columnas a incrementar (sep SEP[4])
+                                        const char *cants_str) // cantidades a sumar (sep SEP[4])
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    if (!direccion || !direccion[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    long        id_num     = atol(id ? id : "0");
+    long        cant       = 100;
+    leer_config_metadata(direccion, NULL, &cant); // lee CANT_POR_ARCH del metadata para derivar la ruta del archivo de datos
+
+    char *cols_str_proc = ReemplazarCaracteres_de_texto_string(cols_str ? cols_str : "",
+        GG_caracter_separacion_funciones_espesificas[5],
+        GG_caracter_separacion[0]); // reemplaza SEP[5] con SEP[0] en la lista de columnas (comportamiento del C# original)
+    if (!cols_str_proc) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    char *carpeta_data_incr = construir_carpeta_data(direccion); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    if (!carpeta_data_incr) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        free(cols_str_proc); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        return NULL;
+    }
+
+    size_t  tam_incr    = strlen(carpeta_data_incr) + 128;
+    char   *ruta_a_incr = (char *)malloc(tam_incr); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
+    if (!ruta_a_incr) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        free(carpeta_data_incr); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        free(cols_str_proc);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        return NULL;
+    }
+
+    generar_ruta_archivo(carpeta_data_incr, id_num, cant, ruta_a_incr, tam_incr); // construye la ruta del archivo segmentado según el identificador actual // ejemplo: datos/100/1000.txt
+    free(carpeta_data_incr); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    int    nl     = 0;
+    char **lineas = leer_archivo(ruta_a_incr, &nl); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
+
+    long posicion = calcular_posicion_en_archivo(id ? id : "0"); // calcula el índice de fila dentro del archivo a partir del ID
+    int  encontro = 0;
+
+    if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        char **cols_arr  = NULL;
+        int    nc_cols   = split(cols_str_proc, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a incrementar usando el separador de nivel 4
+        char **cants_arr = NULL;
+        int    nc_cants  = split(cants_str, GG_caracter_separacion_funciones_espesificas[4], &cants_arr); // divide las cantidades usando el separador de nivel 4
+
+        for (long j = 0; j < nl; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+        {
+            if (posicion != j) { continue; }
+
+            char **celdas = NULL;
+            int    nc     = split(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            if (nc <= 0 || !celdas) { break; }
+
+            for (int k = 0; k < nc_cols && k < nc_cants && cols_arr && cants_arr; k++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+            {
+                int    col_idx   = atoi(cols_arr[k]);
+                double inc       = atof(cants_arr[k]);
+                if (col_idx >= 0 && col_idx < nc) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+                {
+                    double val_actual = atof(celdas[col_idx] ? celdas[col_idx] : "0");
+                    char   nuevo_val[64];
+                    snprintf(nuevo_val, sizeof(nuevo_val), "%g", val_actual + inc); // formatea el nuevo valor numérico en texto
+                    free(celdas[col_idx]); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                    celdas[col_idx] = NULL;
+                    concatenar_formato_separado_por_variable(&celdas[col_idx], NULL, "%s", nuevo_val); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                }
+            }
+
+            char *nueva = reconstruir_fila(celdas, nc); // reconstruye la fila con los valores incrementados
+            if (nueva) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+            {
+                free(lineas[j]);  // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                lineas[j] = nueva;
+                encontro  = 1;
+                concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s",
+                    GG_caracter_para_confirmacion_o_error[0], nueva); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+            }
+            free_split(celdas); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            break;
+        }
+
+        if (cols_arr)  { free_split(cols_arr);  } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (cants_arr) { free_split(cants_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (encontro)  { guardar_archivo(ruta_a_incr, lineas, nl); } // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
+        free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+    }
+
+    if (!encontro && !respuesta) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sno_se_encontro_informacion",
+            GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+    }
+
+    free(cols_str_proc); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    free(ruta_a_incr);   // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+
+#elif defined(__XC)
+    (void)direccion;  // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)id;         // marca el parámetro como no usado en esta rama de compilación // ejemplo: id
+    (void)cols_str;   // marca el parámetro como no usado en esta rama de compilación // ejemplo: cols_str
+    (void)cants_str;  // marca el parámetro como no usado en esta rama de compilación // ejemplo: cants_str
+    return NULL;
+#endif
+}
+
+/*
+ * Uso: Incrementa celdas por ID; si el valor resultante es negativo o la celda esta vacia,
+ *      copia el valor de una columna fuente y señala que se debe descontar un paquete.
+ * Parametros:
+ *   direccion        - ruta del archivo metadata
+ *   id               - identificador del registro objetivo
+ *   cols_str         - columnas a incrementar separadas con SEP[4]
+ *   cants_str        - cantidades a sumar separadas con SEP[4] (pueden ser negativas)
+ *   cols_fuente_str  - columnas fuente para copiar cuando hay deficit, separadas con SEP[4]
+ * Retorna "2<SEP_C>fila<SEP_C>bultos_a_quitar" si hay deficit, "1<SEP_C>fila" si OK. El caller debe free().
+ */
+char *incrementa_celda_id_info_dividida_copia_si_cero(const char *direccion,       // ruta del archivo metadata
+                                                       const char *id,              // identificador del registro objetivo
+                                                       const char *cols_str,        // columnas a incrementar (sep SEP[4])
+                                                       const char *cants_str,       // cantidades a sumar (sep SEP[4])
+                                                       const char *cols_fuente_str) // columnas fuente para copiar al haber deficit (sep SEP[4])
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    if (!direccion || !direccion[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    long        id_num     = atol(id ? id : "0");
+    long        cant       = 100;
+    leer_config_metadata(direccion, NULL, &cant); // lee CANT_POR_ARCH del metadata para derivar la ruta del archivo de datos
+
+    char *cols_str_cero = ReemplazarCaracteres_de_texto_string(cols_str ? cols_str : "",
+        GG_caracter_separacion_funciones_espesificas[5],
+        GG_caracter_separacion[0]); // reemplaza SEP[5] con SEP[0] en la lista de columnas
+    if (!cols_str_cero) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    char *carpeta_data = construir_carpeta_data(direccion); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    if (!carpeta_data) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        free(cols_str_cero); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        return NULL;
+    }
+
+    size_t  tam    = strlen(carpeta_data) + 128;
+    char   *ruta_a = (char *)malloc(tam); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
+    if (!ruta_a) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        free(carpeta_data);  // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        free(cols_str_cero); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        return NULL;
+    }
+
+    generar_ruta_archivo(carpeta_data, id_num, cant, ruta_a, tam); // construye la ruta del archivo segmentado según el identificador actual // ejemplo: datos/100/1000.txt
+    free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    int    nl     = 0;
+    char **lineas = leer_archivo(ruta_a, &nl); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
+
+    long posicion = calcular_posicion_en_archivo(id ? id : "0"); // calcula el índice de fila dentro del archivo a partir del ID
+    int  encontro = 0;
+
+    if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        char **cols_arr  = NULL;
+        int    nc_cols   = split(cols_str_cero, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a incrementar usando el separador de nivel 4
+        char **cants_arr = NULL;
+        int    nc_cants  = split(cants_str, GG_caracter_separacion_funciones_espesificas[4], &cants_arr); // divide las cantidades usando el separador de nivel 4
+        char **cop_arr   = NULL;
+        int    nc_cop    = split(cols_fuente_str ? cols_fuente_str : "", GG_caracter_separacion_funciones_espesificas[4], &cop_arr); // divide las columnas fuente de copia usando el separador de nivel 4
+
+        for (long j = 0; j < nl; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+        {
+            if (posicion != j) { continue; }
+
+            char **celdas = NULL;
+            int    nc     = split(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            if (nc <= 0 || !celdas) { break; }
+
+            int decrementa_paquete = 0;
+            int bultos_a_quitar   = 0;
+
+            for (int k = 0; k < nc_cols && k < nc_cants && cols_arr && cants_arr; k++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+            {
+                int    col_idx        = atoi(cols_arr[k]);
+                double incremento_val = atof(cants_arr[k]);
+                double val_col6       = (nc > 6 && celdas[6]) ? atof(celdas[6]) : 0.0; // usa columna 6 como stock actual (igual al C# original)
+                double kilos_totales  = val_col6 + incremento_val;
+                int    celda_vacia    = (col_idx >= 0 && col_idx < nc && (!celdas[col_idx] || !celdas[col_idx][0]));
+
+                if (kilos_totales <= 0.0 || celda_vacia) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+                {
+                    double val_col10 = (nc > 10 && celdas[10]) ? atof(celdas[10]) : 1.0;
+                    if (val_col10 < 1.0) { val_col10 = 1.0; }
+                    if ((-kilos_totales) > val_col10) // el déficit supera el tamaño del paquete: calcular cuántos paquetes quitar
+                    {
+                        bultos_a_quitar = (int)((kilos_totales / val_col10)) + 1;
+                    }
+
+                    if (k < nc_cop && cop_arr && cop_arr[k] && cop_arr[k][0]) // copia el valor de la columna fuente en la columna destino
+                    {
+                        int col_cop = atoi(cop_arr[k]);
+                        if (col_cop >= 0 && col_cop < nc && col_idx >= 0 && col_idx < nc) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+                        {
+                            free(celdas[col_idx]); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                            celdas[col_idx] = NULL;
+                            concatenar_formato_separado_por_variable(&celdas[col_idx], NULL, "%s", celdas[col_cop] ? celdas[col_cop] : ""); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                        }
+                    }
+                    decrementa_paquete = 1;
+                }
+
+                if (col_idx >= 0 && col_idx < nc) // establece el valor final (kilos resultantes pueden ser negativos)
+                {
+                    char nuevo_val[64];
+                    snprintf(nuevo_val, sizeof(nuevo_val), "%g", kilos_totales); // formatea el nuevo valor numérico en texto
+                    free(celdas[col_idx]); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                    celdas[col_idx] = NULL;
+                    concatenar_formato_separado_por_variable(&celdas[col_idx], NULL, "%s", nuevo_val); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                }
+            }
+
+            char *nueva = reconstruir_fila(celdas, nc); // reconstruye la fila con los nuevos valores
+            if (nueva) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+            {
+                free(lineas[j]);  // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                lineas[j] = nueva;
+                encontro  = 1;
+                if (decrementa_paquete) // retorna código 2 para indicar que se debe descontar un paquete
+                {
+                    concatenar_formato_separado_por_variable(&respuesta, NULL, "2%s%s%s%d",
+                        GG_caracter_para_confirmacion_o_error[0], nueva,
+                        GG_caracter_para_confirmacion_o_error[0], bultos_a_quitar); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                }
+                else
+                {
+                    concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s",
+                        GG_caracter_para_confirmacion_o_error[0], nueva); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                }
+            }
+            free_split(celdas); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            break;
+        }
+
+        if (cols_arr)  { free_split(cols_arr);  } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (cants_arr) { free_split(cants_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (cop_arr)   { free_split(cop_arr);   } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (encontro)  { guardar_archivo(ruta_a, lineas, nl); } // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
+        free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+    }
+
+    if (!encontro && !respuesta) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sno_se_encontro_informacion",
+            GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+    }
+
+    free(cols_str_cero); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    free(ruta_a);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+
+#elif defined(__XC)
+    (void)direccion;        // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)id;               // marca el parámetro como no usado en esta rama de compilación // ejemplo: id
+    (void)cols_str;         // marca el parámetro como no usado en esta rama de compilación // ejemplo: cols_str
+    (void)cants_str;        // marca el parámetro como no usado en esta rama de compilación // ejemplo: cants_str
+    (void)cols_fuente_str;  // marca el parámetro como no usado en esta rama de compilación // ejemplo: cols_fuente_str
+    return NULL;
+#endif
+}
+
+/*
+ * Uso: Busca un registro por valor en una columna e incrementa celdas numericas al encontrarlo.
+ * Parametros:
+ *   direccion       - ruta del archivo metadata
+ *   dato_a_buscar   - valor a buscar en col_buscar
+ *   col_buscar      - indice de columna donde buscar
+ *   cols_inc_str    - columnas a incrementar separadas con SEP[4]
+ *   cants_inc_str   - cantidades a sumar separadas con SEP[4]
+ *   agregar_fallback- fila a agregar si no se encuentra el valor (puede ser NULL o vacio)
+ * Retorna "1" si encontró y editó, "0" si no encontró. El caller debe free().
+ */
+char *incrementa_celda_busqueda_info_dividida(const char *direccion,          // ruta del archivo metadata
+                                              const char *dato_a_buscar,      // valor a buscar
+                                              int         col_buscar,         // columna donde buscar
+                                              const char *cols_inc_str,       // columnas a incrementar (sep SEP[4])
+                                              const char *cants_inc_str,      // cantidades a sumar (sep SEP[4])
+                                              const char *agregar_fallback)   // fila a agregar si no se encuentra
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    if (!direccion || !direccion[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    long id_total = 0, cant_por_arch = 100;
+    if (leer_config_metadata(direccion, &id_total, &cant_por_arch) < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror al leer metadata",
+            GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    char *carpeta_data = construir_carpeta_data(direccion); // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
+    if (!carpeta_data) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        return NULL;
+    }
+
+    char **cols_arr  = NULL;
+    int    nc_cols   = split(cols_inc_str, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a incrementar usando el separador de nivel 4
+    char **cants_arr = NULL;
+    int    nc_cants  = split(cants_inc_str, GG_caracter_separacion_funciones_espesificas[4], &cants_arr); // divide las cantidades usando el separador de nivel 4
+    int    encontro  = 0;
+
+    for (long i = 1; i <= id_total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+    {
+        size_t  tam    = strlen(carpeta_data) + 128;
+        char   *ruta_a = (char *)malloc(tam); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
+        if (!ruta_a) { break; } // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+
+        generar_ruta_archivo(carpeta_data, i, cant_por_arch, ruta_a, tam); // construye la ruta del archivo segmentado según el identificador actual // ejemplo: datos/100/1000.txt
+
+        int    nl     = 0;
+        char **lineas = leer_archivo(ruta_a, &nl); // carga el archivo completo en memoria para procesar sus filas // ejemplo: inventario completo
+
+        long cont      = 0;
+        int  modifico  = 0;
+
+        if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+        {
+            for (int j = 0; j < nl && cont < cant_por_arch; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+            {
+                if (cont == 0) { cont++; continue; } // salta el encabezado de columnas del archivo de datos
+
+                char **celdas = NULL;
+                int    nc     = split(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+
+                if (nc > col_buscar && celdas && strcmp(celdas[col_buscar], dato_a_buscar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+                {
+                    for (int k = 0; k < nc_cols && k < nc_cants && cols_arr && cants_arr; k++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+                    {
+                        int    col_idx = atoi(cols_arr[k]);
+                        double inc     = atof(cants_arr[k]);
+                        if (col_idx >= 0 && col_idx < nc) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+                        {
+                            double val = atof(celdas[col_idx] ? celdas[col_idx] : "0");
+                            char   nv[64];
+                            snprintf(nv, sizeof(nv), "%g", val + inc); // formatea el nuevo valor numérico en texto
+                            free(celdas[col_idx]); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                            celdas[col_idx] = NULL;
+                            concatenar_formato_separado_por_variable(&celdas[col_idx], NULL, "%s", nv); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                        }
+                    }
+                    char *nueva = reconstruir_fila(celdas, nc); // reconstruye la fila con los valores incrementados
+                    if (nueva) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+                    {
+                        free(lineas[j]); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+                        lineas[j] = nueva;
+                        modifico  = 1;
+                        encontro  = 1;
+                    }
+                }
+                if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                cont++;
+            }
+
+            if (modifico) { guardar_archivo(ruta_a, lineas, nl); } // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
+            free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
+        }
+
+        free(ruta_a); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        i += cont;    // avanza i por la cantidad de líneas procesadas (el for agrega 1 más en la siguiente iteración)
+    }
+
+    if (!encontro && agregar_fallback && agregar_fallback[0]) // si no se encontró y hay un valor por defecto, agregarlo
+    {
+        char *res = agregar_info_dividida(direccion, agregar_fallback, NULL); // agrega la fila que no se encontró
+        if (res) { free(res); } // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+    }
+
+    if (cols_arr)  { free_split(cols_arr);  } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    if (cants_arr) { free_split(cants_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    concatenar_formato_separado_por_variable(&respuesta, NULL, "%s", encontro ? "1" : "0"); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+    return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+
+#elif defined(__XC)
+    (void)direccion;        // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)dato_a_buscar;    // marca el parámetro como no usado en esta rama de compilación // ejemplo: dato_a_buscar
+    (void)col_buscar;       // marca el parámetro como no usado en esta rama de compilación // ejemplo: col_buscar
+    (void)cols_inc_str;     // marca el parámetro como no usado en esta rama de compilación // ejemplo: cols_inc_str
+    (void)cants_inc_str;    // marca el parámetro como no usado en esta rama de compilación // ejemplo: cants_inc_str
+    (void)agregar_fallback; // marca el parámetro como no usado en esta rama de compilación // ejemplo: agregar_fallback
+    return NULL;
+#endif
+}
+
+/*
+ * Uso: Busca un registro por valor en una columna dentro del almacenamiento dividido.
+ * Parametros:
+ *   direccion    - ruta del archivo metadata
+ *   dato_buscar  - valor a buscar
+ *   col_buscar   - indice de columna donde buscar
+ *   id_hint      - posicion aproximada donde buscar primero (-1 para busqueda completa)
+ * Retorna "1<SEP_C>fila<SEP_C>id" o "0<SEP_C>no encontro el producto". El caller debe free().
+ */
+char *buscar_info_dividida(const char *direccion,  // ruta del archivo metadata
+                           const char *dato_buscar, // valor a buscar
+                           int         col_buscar,  // indice de columna donde buscar
+                           int         id_hint)     // posicion aproximada (-1 para busqueda completa)
+{
+#if defined(_WIN32) || defined(__linux__)
+    char *respuesta = NULL;
+    if (!direccion || !direccion[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sparametros invalidos", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    char *todo = leer_todo_info_dividida(direccion); // carga todos los registros para la búsqueda
+
+    if (!todo || !todo[0]) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        if (todo) { free(todo); } // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sno encontro el producto",
+            GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+        return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+    }
+
+    char **filas  = NULL;
+    int    nf     = split(todo, GG_caracter_separacion_funciones_espesificas[3], &filas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+    free(todo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
+
+    int encontro = 0;
+
+    if (id_hint >= 0 && id_hint < nf && filas && filas[id_hint]) // verifica primero en la posición sugerida por el hint
+    {
+        char **celdas = NULL;
+        int    nc     = split(filas[id_hint], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        if (nc > col_buscar && celdas && strcmp(celdas[col_buscar], dato_buscar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+        {
+            concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s%s%d",
+                GG_caracter_para_confirmacion_o_error[0], filas[id_hint],
+                GG_caracter_para_confirmacion_o_error[0], id_hint); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+            encontro = 1;
+        }
+        if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    }
+
+    if (!encontro && id_hint > 0) // busca en el rango anterior al hint
+    {
+        int inicio = (id_hint > 10) ? (id_hint - 10) : 0;
+        for (int i = inicio; i < id_hint && !encontro; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+        {
+            if (!filas || !filas[i]) { continue; }
+            char **celdas = NULL;
+            int    nc     = split(filas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            if (nc > col_buscar && celdas && strcmp(celdas[col_buscar], dato_buscar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+            {
+                concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s%s%d",
+                    GG_caracter_para_confirmacion_o_error[0], filas[i],
+                    GG_caracter_para_confirmacion_o_error[0], i + 1); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                encontro = 1;
+            }
+            if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        }
+    }
+
+    if (!encontro) // búsqueda completa si el hint no ayudó
+    {
+        for (int i = 0; i < nf && !encontro; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
+        {
+            if (!filas || !filas[i]) { continue; }
+            char **celdas = NULL;
+            int    nc     = split(filas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            if (nc > col_buscar && celdas && strcmp(celdas[col_buscar], dato_buscar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+            {
+                concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s%s%d",
+                    GG_caracter_para_confirmacion_o_error[0], filas[i],
+                    GG_caracter_para_confirmacion_o_error[0], i + 1); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+                encontro = 1;
+            }
+            if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        }
+    }
+
+    if (filas) { free_split(filas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+
+    if (!encontro) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
+    {
+        concatenar_formato_separado_por_variable(&respuesta, NULL, "0%sno encontro el producto",
+            GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
+    }
+
+    return respuesta; // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
+
+#elif defined(__XC)
+    (void)direccion;    // marca el parámetro como no usado en esta rama de compilación // ejemplo: direccion
+    (void)dato_buscar;  // marca el parámetro como no usado en esta rama de compilación // ejemplo: dato_buscar
+    (void)col_buscar;   // marca el parámetro como no usado en esta rama de compilación // ejemplo: col_buscar
+    (void)id_hint;      // marca el parámetro como no usado en esta rama de compilación // ejemplo: id_hint
+    return NULL;
 #endif
 }

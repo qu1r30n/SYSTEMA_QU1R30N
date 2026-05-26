@@ -192,51 +192,47 @@ int modelo_buscarProducto(char *texto, char *dir_espacio, char *usuario_contrase
 int modelo_agregarProducto(char *texto, char *dir_espacio, char *usuario_contraseña_negocio)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (!texto) // Verifica si el texto es NULL
-    {
-        RETORNAR_MODELO_ESTANDAR(-1);
-    }
+    if (!texto) {RETORNAR_MODELO_ESTANDAR(-1);}
 
-    if (!dir_espacio) // valida que se haya recibido la ruta del espacio de negocio
-    {
-        RETORNAR_MODELO_ESTANDAR(-1);
-    }
+    if (!dir_espacio) {RETORNAR_MODELO_ESTANDAR(-1);}
 
     (void)usuario_contraseña_negocio; // reservado para validación futura del negocio; ejemplo: "admin⊓pass123"
 
     char *nombres_variables[][4] = // Arreglo de campos esperados con su tipo y valor por defecto
-        {{"producto", "string", "NOSE", ""},
-         {"contenido", "float", "-0", ""},
-         {"tipo_medida", "string", "NOSE", ""},
-         {"precio_venta", "float", "-0", ""},
-         {"cod_barras", "string", "NOSE", ""},
-         {"cantidad", "float", "-0", ""},
-         {"costo_comp", "float", "-0", ""},
-         {"provedor", "string", "NOSE¬0", ""},
-         {"grupo", "string", "PRODUCTO_PIEZA", ""},
-         {"cant_x_paquet", "float", "-0", ""},
-         {"es_paquete", "string", "INDIVIDUAL", ""},
-         {"codbar_paquete_e_id", "string", "NOSE_2", ""},
-         {"cod_bar_individual_es_paq_e_id", "string", "NOSE_3¬1", ""},
-         {"ligar_prod_sab", "string", "NOSE", ""},
-         {"impuestos", "string", "NOSE", ""},
-         {"ingredientes", "string", "NOSE", ""},
-         {"caducidad", "string", "-0", ""},
-         {"ultimo_mov", "string", "-0", ""},
-         {"sucur_vent", "string", "NOSE¬0", ""},
-         {"claf_prod", "float", "-0", ""},
-         {"dir_img_inter", "string", "NOSE", ""},
-         {"dir_img_comp", "string", "NOSE", ""},
-         {"info_extra", "string", "NOSE", ""},
-         {"proceso_crear", "string", "NOSE", ""},
-         {"dir_vid_proc_crear", "string", "NOSE", ""},
-         {"tiempo_fabricacion", "float", "-0", ""},
-         {"indices_dia_registro_produc_vendido", "string", "0", ""},
-         {"indices_mes_registro_produc_vendido", "string", "0", ""},
-         {"indices_anio_registro_produc_vendido", "string", "0", ""},
-         {"ultima_venta", "string", "", ""},
-         {"indices_total_registro_produc_vendido", "string", "0", ""},
-         {NULL, NULL, NULL, NULL}};
+        {
+            {"producto", "string", "NOSE", ""},
+            {"contenido", "float", "-0", ""},
+            {"tipo_medida", "string", "NOSE", ""},
+            {"precio_venta", "float", "-0", ""},
+            {"cod_barras", "string", "NOSE", ""},
+            {"cantidad", "float", "-0", ""},
+            {"costo_comp", "float", "-0", ""},
+            {"provedor", "string", "NOSE¬0", ""},
+            {"grupo", "string", "PRODUCTO_PIEZA", ""},
+            {"cant_x_paquet", "float", "-0", ""},
+            {"es_paquete", "string", "INDIVIDUAL", ""},
+            {"codbar_paquete_e_id", "string", "NOSE_2", ""},
+            {"cod_bar_individual_es_paq_e_id", "string", "NOSE_3¬1", ""},
+            {"ligar_prod_sab", "string", "NOSE", ""},
+            {"impuestos", "string", "NOSE", ""},
+            {"ingredientes", "string", "NOSE", ""},
+            {"caducidad", "string", "-0", ""},
+            {"ultimo_mov", "string", "-0", ""},
+            {"sucur_vent", "string", "NOSE¬0", ""},
+            {"claf_prod", "float", "-0", ""},
+            {"dir_img_inter", "string", "NOSE", ""},
+            {"dir_img_comp", "string", "NOSE", ""},
+            {"info_extra", "string", "NOSE", ""},
+            {"proceso_crear", "string", "NOSE", ""},
+            {"dir_vid_proc_crear", "string", "NOSE", ""},
+            {"tiempo_fabricacion", "float", "-0", ""},
+            {"indices_dia_registro_produc_vendido", "string", "0", ""},
+            {"indices_mes_registro_produc_vendido", "string", "0", ""},
+            {"indices_anio_registro_produc_vendido", "string", "0", ""},
+            {"ultima_venta", "string", "", ""},
+            {"indices_total_registro_produc_vendido", "string", "0", ""},
+            {NULL, NULL, NULL, NULL}
+        };
 
     int cuantos_parametros_hay = 0;                      // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 31
     while (nombres_variables[cuantos_parametros_hay][0]) // Cuenta cuántos campos hay en el arreglo de nombres_variables
@@ -245,10 +241,7 @@ int modelo_agregarProducto(char *texto, char *dir_espacio, char *usuario_contras
     }
 
     char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
-    if (!partes)
-    {
-        RETORNAR_MODELO_ESTANDAR(-2);
-    }
+    if (!partes){RETORNAR_MODELO_ESTANDAR(-2);}
 
     int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 31
     imprimirMensaje_para_depurar("\n\n");
@@ -284,20 +277,24 @@ int modelo_agregarProducto(char *texto, char *dir_espacio, char *usuario_contras
  */
 int modelo_venta(char *texto, char *dir_espacio, char *usuario_contraseña_negocio)
 {
+    imprimirMensaje_para_depurar("modelo_venta: \ntexto=%s, \ndir_espacio=%s,\nusuario_contraseña_negocio=%s\n", texto, dir_espacio, usuario_contraseña_negocio);
+    
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (!texto)
-    {
-        RETORNAR_MODELO_ESTANDAR(-1);
-    }
+    if (!texto){RETORNAR_MODELO_ESTANDAR(-1);}
 
-    if (!dir_espacio) // valida que se haya recibido la ruta del espacio de negocio
-    {
-        RETORNAR_MODELO_ESTANDAR(-1);
-    }
+    // valida que se haya recibido la ruta del espacio de negocio
+    if (!dir_espacio){RETORNAR_MODELO_ESTANDAR(-1);}
 
     (void)usuario_contraseña_negocio; // reservado para validación futura del negocio; ejemplo: "admin⊓pass123"
 
-    char *nombres_variables[][4] = {{"codigo", "string", "nose", ""}, {"cantidad", "int", "0", ""}, {"sucursal", "string", "nose", ""}, {NULL, NULL, NULL, NULL}};
+    char *nombres_variables[][4] = 
+    {
+        {"codigo",   "string", "nose", ""}, 
+        {"cantidad", "float",  "0",    ""}, 
+        {"sucursal", "string", "nose", ""}, 
+        {"id",       "string", "",     ""}, 
+        {NULL, NULL, NULL, NULL}
+    };
 
     int cuantos_parametros_hay = 0; // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 3
     while (nombres_variables[cuantos_parametros_hay][0])
@@ -305,20 +302,19 @@ int modelo_venta(char *texto, char *dir_espacio, char *usuario_contraseña_negoc
         cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->2->NULL
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
-    if (!partes)
-    {
-        RETORNAR_MODELO_ESTANDAR(-2);
-    }
+    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
+    
+    if (!partes){RETORNAR_MODELO_ESTANDAR(-2);}
 
     int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
     while (partes[cuantas_partes])
     {
+        imprimirMensaje_para_depurar("partes[%d]: %s\n", cuantas_partes, partes[cuantas_partes]);
         cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
     }
 
     StructurasDinamicas datos = crearStructuraVacia(); // crea estructura dinamica vacia para guardar los valores parseados // ejemplo: datos con 0 campos
-    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[2], &datos);
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
 
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
@@ -327,11 +323,12 @@ int modelo_venta(char *texto, char *dir_espacio, char *usuario_contraseña_negoc
         RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
 
-    char *codigo = (char *)obtenerValorPorOrden(&datos, 0);   // codigo de barras del producto vendido
-    int cantidad = *(int *)obtenerValorPorOrden(&datos, 1);   // cantidad de unidades vendidas
+    char *codigo   = (char *)obtenerValorPorOrden(&datos, 0); // codigo de barras del producto vendido
+    float cantidad = *(float *)obtenerValorPorOrden(&datos, 1); // cantidad de unidades vendidas
     char *sucursal = (char *)obtenerValorPorOrden(&datos, 2); // sucursal donde se realizo la venta
+    char *id       = (char *)obtenerValorPorOrden(&datos, 3); // id directo (opcional; vacio = buscar por codigo)
 
-    int ok = venta(codigo, cantidad, sucursal, dir_espacio); // ejecuta la venta en el espacio de negocio indicado
+    int ok = venta(codigo, cantidad, sucursal, id, dir_espacio); // ejecuta la venta en el espacio de negocio indicado
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
@@ -358,7 +355,7 @@ int modelo_compra(char *texto, char *dir_espacio, char *usuario_contraseña_nego
 
     (void)usuario_contraseña_negocio; // reservado para validación futura del negocio; ejemplo: "admin⊓pass123"
 
-    char *nombres_variables[][4] = {{"codigo", "string", "nose", ""}, {"cantidad", "int", "0", ""}, {"proveedor", "string", "nose", ""}, {NULL, NULL, NULL, NULL}};
+    char *nombres_variables[][4] = {{"codigo", "string", "nose", ""}, {"cantidad", "float", "0", ""}, {"proveedor", "string", "nose", ""}, {NULL, NULL, NULL, NULL}};
 
     int cuantos_parametros_hay = 0; // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 3
     while (nombres_variables[cuantos_parametros_hay][0])
@@ -389,10 +386,10 @@ int modelo_compra(char *texto, char *dir_espacio, char *usuario_contraseña_nego
     }
 
     char *codigo = (char *)obtenerValorPorOrden(&datos, 0);    // codigo de barras del producto comprado
-    int cantidad = *(int *)obtenerValorPorOrden(&datos, 1);    // cantidad de unidades compradas
+    float cantidad = *(float *)obtenerValorPorOrden(&datos, 1);    // cantidad de unidades compradas
     char *proveedor = (char *)obtenerValorPorOrden(&datos, 2); // nombre del proveedor
 
-    int ok = compra(codigo, cantidad, proveedor, dir_espacio); // ejecuta la compra en el espacio de negocio indicado
+    int ok = compra(codigo, cantidad, proveedor, dir_espacio);// ejecuta la compra en el espacio de negocio indicado
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.

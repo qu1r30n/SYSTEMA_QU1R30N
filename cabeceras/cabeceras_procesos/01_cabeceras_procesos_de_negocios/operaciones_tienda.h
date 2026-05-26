@@ -39,13 +39,15 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
 int editarPrecio(char *codigo, char *precio, char *proveedor, char *dir_espacio);
 /*
  * Uso: Ejecuta venta de forma segura.
- * Entrada ejemplo: venta(codigo, cantidad, sucursal, dir_espacio)
+ * Entrada ejemplo: venta(codigo, cantidad, sucursal, id, dir_espacio)
+ * id: si no es NULL ni vacio, verifica que el registro con ese id tenga el mismo codigo;
+ *     si coincide se usa directo; si no, se cae a busqueda por codigo de barras.
  */
-int venta(char *codigo, int cantidad, char *sucursal, char *dir_espacio);
+int venta(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espacio);
 /*
  * Uso: Ejecuta compra de forma segura.
  * Entrada ejemplo: compra(codigo, cantidad, proveedor, dir_espacio)
  */
-int compra(char *codigo, int cantidad, char *proveedor, char *dir_espacio);
+int compra(char *codigo, float cantidad, char *proveedor, char *dir_espacio);
 
 #endif

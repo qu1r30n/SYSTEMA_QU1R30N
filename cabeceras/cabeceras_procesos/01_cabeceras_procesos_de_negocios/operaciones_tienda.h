@@ -8,23 +8,32 @@
 
 /*
  * Uso: Ejecuta leerInventario de forma segura.
- * Entrada ejemplo: leerInventario(inventario, maxProductos)
+ * Entrada ejemplo: leerInventario(&retorno_inventario, dir_espacio)
+ * retorno_inventario: salida en texto con el inventario completo del archivo.
  */
+int leerInventario(char **retorno_inventario, char *dir_espacio);
 /*
- * Uso: Ejecuta leerInventario de forma segura.
- * Entrada ejemplo: leerInventario(inventario, maxProductos, dir_espacio)
+ * Uso: Ejecuta liberarInventario de forma segura.
+ * Entrada ejemplo: liberarInventario(inventario, n)
  */
-int leerInventario(char inventario[][COLUMNAS][256], int maxProductos, char *dir_espacio);
+void liberarInventario(char ***inventario, int n);
 /*
  * Uso: Ejecuta guardarInventario de forma segura.
  * Entrada ejemplo: guardarInventario(inventario, n, dir_espacio)
  */
-void guardarInventario(char inventario[][COLUMNAS][256], int n, char *dir_espacio);
+void guardarInventario(char ***inventario, int n, char *dir_espacio);
+/*
+ * Uso: Ejecuta hacerInventario de forma segura.
+ * Entrada ejemplo: hacerInventario(inv_a_checar, &retorno_inv_revisado, dir_espacio)
+ * inv_a_checar: lista "codigo⛪cantidad⊔codigo⛪cantidad".
+ * retorno_inv_revisado: salida "codigo⛪delta|no_se_checo⊔...".
+ */
+int hacerInventario(char *inv_a_checar, char **retorno_inv_revisado, char *dir_espacio);
 /*
  * Uso: Ejecuta buscarProducto de forma segura.
  * Entrada ejemplo: buscarProducto(inventario, n, codigo, dir_espacio)
  */
-int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo, char *dir_espacio);
+int buscarProducto(char ***inventario, int n, char *codigo, char *dir_espacio);
 
 /*
  * Uso: Ejecuta agregarProducto de forma segura.

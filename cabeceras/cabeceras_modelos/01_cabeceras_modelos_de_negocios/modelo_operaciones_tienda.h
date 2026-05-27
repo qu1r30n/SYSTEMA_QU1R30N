@@ -110,6 +110,11 @@ int modelo_buscarProducto(char *texto, char *dir_espacio, char *usuario_contrase
  */
 int modelo_agregarProducto(char *texto, char *dir_espacio, char *usuario_contraseña_negocio);
 /*
+ * Uso: Ejecuta modelo_hacerInventario de forma segura.
+ * Entrada ejemplo: modelo_hacerInventario(texto, dir_espacio, usuario_contraseña_negocio)
+ */
+int modelo_hacerInventario(char *texto, char *dir_espacio, char *usuario_contraseña_negocio);
+/*
  * Uso: Ejecuta modelo_editarPrecio de forma segura.
  * Entrada ejemplo: modelo_editarPrecio(texto, dir_espacio, usuario_contraseña_negocio)
  */

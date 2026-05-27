@@ -20,6 +20,40 @@
 #include <string.h>
 #include <time.h>
 
+static char *duplicar_texto_dinamico(const char *texto)
+{
+    char *copia = NULL;
+    if (concatenar_formato_separado_por_variable(&copia, NULL, "%s", texto ? texto : "") < 0)
+    {
+        return NULL;
+    }
+    return copia;
+}
+
+void liberarInventario(char ***inventario, int n)
+{
+    if (!inventario)
+    {
+        return;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        if (!inventario[i])
+        {
+            continue;
+        }
+
+        for (int j = 0; j < COLUMNAS; j++)
+        {
+            free(inventario[i][j]);
+        }
+        free(inventario[i]);
+    }
+
+    free(inventario);
+}
+
 static int obtener_ruta_inventario(char *dir_espacio, char **ruta_inventario)
 {
     // valida parametros de entrada
@@ -91,15 +125,17 @@ static int obtener_ruta_inventario(char *dir_espacio, char **ruta_inventario)
 // Leer inventario
 /*
  * Uso: Ejecuta leerInventario de forma segura.
- * Entrada ejemplo: leerInventario(inventario, maxProductos, dir_espacio)
+ * Entrada ejemplo: leerInventario(&retorno_inventario, dir_espacio)
  */
-int leerInventario(char inventario[][COLUMNAS][256], int maxProductos, char *dir_espacio)
+int leerInventario(char **retorno_inventario, char *dir_espacio)
 {
     // valida parametros principales
-    if (!inventario || maxProductos <= 0 || !dir_espacio)
+    if (!retorno_inventario || !dir_espacio)
     {
         RETORNAR_PROCESO_ESTANDAR(-1);
     }
+
+    *retorno_inventario = NULL;
 
     char *ruta_inventario = NULL; // ruta final del inventario
     // calcula la ruta exacta del archivo
@@ -108,30 +144,131 @@ int leerInventario(char inventario[][COLUMNAS][256], int maxProductos, char *dir
         RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
-    int total_lineas = 0; // total de lineas leidas
-    // carga el archivo completo en memoria
-    char **lineas = leer_archivo(ruta_inventario, &total_lineas);
+    // usa tex_bas para leer el inventario completo en un solo string
+    char *contenido = leer_info_dividida(ruta_inventario);
+    free(ruta_inventario);
+
     // si no hay archivo o esta vacio, devuelve cero
-    if (!lineas || total_lineas <= 0)
+    if (!contenido || !contenido[0])
     {
-        free(ruta_inventario);
+        free(contenido);
         RETORNAR_PROCESO_ESTANDAR(0);
     }
 
-    int cantidad_productos = 0; // productos cargados
-    // salta la cabecera y recorre las filas reales
-    for (int i = 1; i < total_lineas && cantidad_productos < maxProductos; i++)
+    *retorno_inventario = contenido;
+
+    // cuenta filas validas (excluye cabecera) para mantener retorno int compatible
+    char **lineas = NULL;
+    int total_lineas = split(contenido, "\n", &lineas);
+    if (total_lineas <= 0 || !lineas)
     {
-        // ignora lineas vacias
-        if (!lineas[i] || lineas[i][0] == '\0')
+        if (lineas)
+        {
+            free_split(lineas);
+        }
+        RETORNAR_PROCESO_ESTANDAR(0);
+    }
+
+    int cantidad_productos = 0;
+    for (int i = 1; i < total_lineas; i++)
+    {
+        if (!lineas[i] || !lineas[i][0])
         {
             continue;
         }
 
-        char **partes = NULL; // columnas de una fila
-        // separa la fila por columnas
-        int total_partes = split(lineas[i], GG_caracter_separacion[0], &partes);
-        // si no pudo separar, salta la fila
+        int largo = (int)strlen(lineas[i]);
+        if (largo == 1 && lineas[i][0] == '\r')
+        {
+            continue;
+        }
+
+        cantidad_productos++;
+    }
+
+    free_split(lineas);
+    RETORNAR_PROCESO_ESTANDAR(cantidad_productos);
+}
+
+static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
+{
+    if (!inventario || !dir_espacio)
+    {
+        RETORNAR_PROCESO_ESTANDAR(-1);
+    }
+
+    *inventario = NULL;
+
+    char *retorno_inventario = NULL;
+    int cantidad_estimada = leerInventario(&retorno_inventario, dir_espacio);
+    if (cantidad_estimada < 0)
+    {
+        RETORNAR_PROCESO_ESTANDAR(-1);
+    }
+
+    if (!retorno_inventario || !retorno_inventario[0])
+    {
+        free(retorno_inventario);
+        RETORNAR_PROCESO_ESTANDAR(0);
+    }
+
+    char **lineas = NULL;
+    int total_lineas = split(retorno_inventario, "\n", &lineas);
+    if (total_lineas <= 0 || !lineas)
+    {
+        free(retorno_inventario);
+        if (lineas)
+        {
+            free_split(lineas);
+        }
+        RETORNAR_PROCESO_ESTANDAR(0);
+    }
+
+    char ***inventario_dinamico = (char ***)malloc(sizeof(char **) * MAX_PRODUCTOS);
+    if (!inventario_dinamico)
+    {
+        free_split(lineas);
+        free(retorno_inventario);
+        RETORNAR_PROCESO_ESTANDAR(-1);
+    }
+
+    for (int i = 0; i < MAX_PRODUCTOS; i++)
+    {
+        inventario_dinamico[i] = NULL;
+    }
+
+    int cantidad_productos = 0;
+    for (int i = 1; i < total_lineas && cantidad_productos < MAX_PRODUCTOS; i++)
+    {
+        if (!lineas[i] || !lineas[i][0])
+        {
+            continue;
+        }
+
+        char *linea_limpia = duplicar_texto_dinamico(lineas[i]);
+        if (!linea_limpia)
+        {
+            free_split(lineas);
+            free(retorno_inventario);
+            liberarInventario(inventario_dinamico, cantidad_productos);
+            RETORNAR_PROCESO_ESTANDAR(-1);
+        }
+
+        int largo = (int)strlen(linea_limpia);
+        while (largo > 0 && (linea_limpia[largo - 1] == '\r' || linea_limpia[largo - 1] == '\n'))
+        {
+            linea_limpia[largo - 1] = '\0';
+            largo--;
+        }
+        if (largo <= 0)
+        {
+            free(linea_limpia);
+            continue;
+        }
+
+        char **partes = NULL;
+        int total_partes = split(linea_limpia, GG_caracter_separacion[0], &partes);
+        free(linea_limpia);
         if (total_partes <= 0 || !partes)
         {
             if (partes)
@@ -141,25 +278,65 @@ int leerInventario(char inventario[][COLUMNAS][256], int maxProductos, char *dir
             continue;
         }
 
+        char **fila = (char **)malloc(sizeof(char *) * COLUMNAS);
+        if (!fila)
+        {
+            free_split(partes);
+            free_split(lineas);
+            free(retorno_inventario);
+            liberarInventario(inventario_dinamico, cantidad_productos);
+            RETORNAR_PROCESO_ESTANDAR(-1);
+        }
+
         for (int j = 0; j < COLUMNAS; j++)
         {
-            inventario[cantidad_productos][j][0] = '\0'; // limpia cada celda
+            fila[j] = NULL;
         }
 
-        // copia cada campo al arreglo destino
         for (int j = 0; j < COLUMNAS && j < total_partes; j++)
         {
-            snprintf(inventario[cantidad_productos][j], 256, "%s", partes[j] ? partes[j] : "");
+            fila[j] = duplicar_texto_dinamico(partes[j] ? partes[j] : "");
+            if (!fila[j])
+            {
+                for (int k = 0; k < COLUMNAS; k++)
+                {
+                    free(fila[k]);
+                }
+                free(fila);
+                free_split(partes);
+                free_split(lineas);
+                free(retorno_inventario);
+                liberarInventario(inventario_dinamico, cantidad_productos);
+                RETORNAR_PROCESO_ESTANDAR(-1);
+            }
         }
 
-        // libera columnas temporales
+        for (int j = total_partes; j < COLUMNAS; j++)
+        {
+            fila[j] = duplicar_texto_dinamico("");
+            if (!fila[j])
+            {
+                for (int k = 0; k < COLUMNAS; k++)
+                {
+                    free(fila[k]);
+                }
+                free(fila);
+                free_split(partes);
+                free_split(lineas);
+                free(retorno_inventario);
+                liberarInventario(inventario_dinamico, cantidad_productos);
+                RETORNAR_PROCESO_ESTANDAR(-1);
+            }
+        }
+
+        inventario_dinamico[cantidad_productos] = fila;
         free_split(partes);
         cantidad_productos++;
     }
 
-    // libera todo lo leido
-    free_lineas(lineas, total_lineas);
-    free(ruta_inventario);
+    free_split(lineas);
+    free(retorno_inventario);
+    *inventario = inventario_dinamico;
     RETORNAR_PROCESO_ESTANDAR(cantidad_productos);
 }
 
@@ -168,10 +345,10 @@ int leerInventario(char inventario[][COLUMNAS][256], int maxProductos, char *dir
  * Uso: Ejecuta guardarInventario de forma segura.
  * Entrada ejemplo: guardarInventario(inventario, n, dir_espacio)
  */
-void guardarInventario(char inventario[][COLUMNAS][256], int n, char *dir_espacio)
+void guardarInventario(char ***inventario, int n, char *dir_espacio)
 {
     // valida parametros de entrada
-    if (!inventario || n < 0 || !dir_espacio)
+    if ((n > 0 && !inventario) || n < 0 || !dir_espacio)
     {
         return;
     }
@@ -221,6 +398,7 @@ void guardarInventario(char inventario[][COLUMNAS][256], int n, char *dir_espaci
                     {
                         free(lineas[k + 1]);
                     }
+                    free(cabecera);
                     free(lineas);
                     free(ruta_inventario);
                     return;
@@ -228,13 +406,14 @@ void guardarInventario(char inventario[][COLUMNAS][256], int n, char *dir_espaci
             }
 
             // agrega el valor de la celda actual
-            if (concatenar_formato_separado_por_variable(&fila, NULL, "%s", inventario[i][j]) < 0)
+            if (concatenar_formato_separado_por_variable(&fila, NULL, "%s", (inventario[i] && inventario[i][j]) ? inventario[i][j] : "") < 0)
             {
                 free(fila);
                 for (int k = 0; k < i; k++)
                 {
                     free(lineas[k + 1]);
                 }
+                free(cabecera);
                 free(lineas);
                 free(ruta_inventario);
                 return;
@@ -247,7 +426,7 @@ void guardarInventario(char inventario[][COLUMNAS][256], int n, char *dir_espaci
     // guarda el archivo completo ya reconstruido
     guardar_archivo(ruta_inventario, lineas, total_lineas);
 
-    for (int i = 1; i < total_lineas; i++)
+    for (int i = 0; i < total_lineas; i++)
     {
         free(lineas[i]);
     }
@@ -255,12 +434,183 @@ void guardarInventario(char inventario[][COLUMNAS][256], int n, char *dir_espaci
     free(ruta_inventario);
 }
 
+// Hacer inventario
+/*
+ * Uso: Ejecuta hacerInventario de forma segura.
+ * Entrada ejemplo: hacerInventario("prod_1⛪1000⊔prod_2⛪500", dir_espacio)
+ */
+int hacerInventario(char *inv_a_checar, char **retorno_inv_revisado, char *dir_espacio)
+{
+    // valida parametros esenciales
+    if (!inv_a_checar || !retorno_inv_revisado || !dir_espacio)
+    {
+        RETORNAR_PROCESO_ESTANDAR(-1);
+    }
+
+    *retorno_inv_revisado = NULL;
+
+    char ***inventario_local = NULL;
+    int cantidad_productos = cargar_inventario_en_memoria(&inventario_local, dir_espacio);
+    if (cantidad_productos < 0)
+    {
+        RETORNAR_PROCESO_ESTANDAR(-1);
+    }
+
+    int *ya_revisado = (int *)calloc((size_t)(cantidad_productos > 0 ? cantidad_productos : 1), sizeof(int));
+    if (!ya_revisado)
+    {
+        liberarInventario(inventario_local, cantidad_productos);
+        RETORNAR_PROCESO_ESTANDAR(-1);
+    }
+
+    char **pares = NULL;
+    int n_pares = split(inv_a_checar, GG_caracter_separacion_nom_parametro_de_valor[1], &pares);
+    if (n_pares <= 0 || !pares)
+    {
+        if (pares)
+        {
+            free_split(pares);
+        }
+        if (inventario_local)
+        {
+            liberarInventario(inventario_local, cantidad_productos);
+        }
+        free(ya_revisado);
+        RETORNAR_PROCESO_ESTANDAR(-1);
+    }
+
+    int cambios = 0;
+
+    // recorre cada par codigo⛪cantidad
+    for (int i = 0; i < n_pares; i++)
+    {
+        if (!pares[i] || !pares[i][0])
+        {
+            continue;
+        }
+
+        char **campos = NULL;
+        int n_campos = split(pares[i], GG_caracter_separacion_nom_parametro_de_valor[2], &campos);
+        if (n_campos < 2 || !campos)
+        {
+            if (campos)
+            {
+                free_split(campos);
+            }
+            continue;
+        }
+
+        char *codigo = campos[0];
+        char *cantidad_txt = campos[1];
+        float cantidad_fisica = 0.0f;
+
+        if (!codigo || !codigo[0] || texto_a_float_seguro(cantidad_txt, &cantidad_fisica) < 0)
+        {
+            free_split(campos);
+            continue;
+        }
+
+        int indice = buscarProducto(inventario_local, cantidad_productos, codigo, dir_espacio);
+        if (indice >= 0)
+        {
+            ya_revisado[indice] = 1;
+
+            float cantidad_actual = 0.0f;
+            if (texto_a_float_seguro(inventario_local[indice][5], &cantidad_actual) < 0)
+            {
+                cantidad_actual = 0.0f;
+            }
+
+            float delta = cantidad_fisica - cantidad_actual;
+            if (delta > -0.0005f && delta < 0.0005f)
+            {
+                delta = 0.0f;
+            }
+
+            char *delta_txt = NULL;
+            if (concatenar_formato_separado_por_variable(&delta_txt, NULL, "%.3f", (double)delta) == 0 && delta_txt)
+            {
+                if (concatenar_formato_separado_por_variable(retorno_inv_revisado, NULL, "%s%s%s%s%s",
+                                                             (*retorno_inv_revisado && (*retorno_inv_revisado)[0]) ? GG_caracter_separacion_nom_parametro_de_valor[1] : "",
+                                                             codigo,
+                                                             GG_caracter_separacion_nom_parametro_de_valor[2],
+                                                             delta_txt,
+                                                             "") < 0)
+                {
+                    free(delta_txt);
+                    free_split(campos);
+                    free_split(pares);
+                    free(ya_revisado);
+                    liberarInventario(inventario_local, cantidad_productos);
+                    free(*retorno_inv_revisado);
+                    *retorno_inv_revisado = NULL;
+                    RETORNAR_PROCESO_ESTANDAR(-1);
+                }
+            }
+            free(delta_txt);
+
+            char *cantidad_formateada = NULL;
+            if (concatenar_formato_separado_por_variable(&cantidad_formateada, NULL, "%.3f", cantidad_fisica) == 0 && cantidad_formateada)
+            {
+                free(inventario_local[indice][5]);
+                inventario_local[indice][5] = cantidad_formateada;
+                cantidad_formateada = NULL;
+                cambios++;
+            }
+            free(cantidad_formateada);
+        }
+
+        free_split(campos);
+    }
+
+    free_split(pares);
+
+    // agrega los productos que no se revisaron en el conteo fisico
+    for (int i = 0; i < cantidad_productos; i++)
+    {
+        if (ya_revisado[i])
+        {
+            continue;
+        }
+
+        if (!inventario_local[i] || !inventario_local[i][4] || !inventario_local[i][4][0])
+        {
+            continue;
+        }
+
+        if (concatenar_formato_separado_por_variable(retorno_inv_revisado, NULL, "%s%s%s%s%s",
+                                                     (*retorno_inv_revisado && (*retorno_inv_revisado)[0]) ? GG_caracter_separacion_nom_parametro_de_valor[1] : "",
+                                                     inventario_local[i][4],
+                                                     GG_caracter_separacion_nom_parametro_de_valor[2],
+                                                     "no_se_checo",
+                                                     "") < 0)
+        {
+            free(ya_revisado);
+            liberarInventario(inventario_local, cantidad_productos);
+            free(*retorno_inv_revisado);
+            *retorno_inv_revisado = NULL;
+            RETORNAR_PROCESO_ESTANDAR(-1);
+        }
+    }
+
+    // guarda solo si hubo cambios aplicados
+    if (cambios > 0)
+    {
+        guardarInventario(inventario_local, cantidad_productos, dir_espacio);
+    }
+
+    free(ya_revisado);
+    liberarInventario(inventario_local, cantidad_productos);
+
+    RETORNAR_PROCESO_ESTANDAR(cambios);
+}
+
 // Buscar producto
 /*
  * Uso: Ejecuta buscarProducto de forma segura.
  * Entrada ejemplo: buscarProducto(inventario, n, codigo, dir_espacio)
  */
-int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo, char *dir_espacio)
+int buscarProducto(char ***inventario, int n, char *codigo, char *dir_espacio)
 {
     (void)dir_espacio;
 
@@ -284,8 +634,7 @@ int buscarProducto(char inventario[][COLUMNAS][256], int n, char *codigo, char *
  * Uso: Ejecuta agregarProducto de forma segura.
  * Entrada ejemplo: agregarProducto(producto, ..., dir_espacio)
  */
-void agregarProducto(char *producto, float contenido, char *tipo_medida, float precio_venta, char *cod_barras, float cantidad, float costo_compra, char *proveedor, char *grupo, float cant_x_paquet, char *es_paquete, char *codbar_paquete_e_id, char *cod_bar_individual_es_paq_e_id, char *ligar_prod_sab, char *impuestos, char *ingredientes, char *caducidad, char *ultimo_mov, char *sucur_vent, float claf_prod, char *dir_img_inter, char *dir_img_comp, char *info_extra, char *proceso_crear, char *dir_vid_proc_crear, float tiempo_fabricacion, char *indices_dia_registro_produc_vendido, char *indices_mes_registro_produc_vendido, char *indices_anio_registro_produc_vendido, char *ultima_venta, char *indices_total_registro_produc_vendido,
-                     char *dir_espacio) // ruta del espacio de negocio donde se guardara el producto; ejemplo: "espacios\\20260330113640_ferreteria_dan\\"
+void agregarProducto(char *producto, float contenido, char *tipo_medida, float precio_venta, char *cod_barras, float cantidad, float costo_compra, char *proveedor, char *grupo, float cant_x_paquet, char *es_paquete, char *codbar_paquete_e_id, char *cod_bar_individual_es_paq_e_id, char *ligar_prod_sab, char *impuestos, char *ingredientes, char *caducidad, char *ultimo_mov, char *sucur_vent, float claf_prod, char *dir_img_inter, char *dir_img_comp, char *info_extra, char *proceso_crear, char *dir_vid_proc_crear, float tiempo_fabricacion, char *indices_dia_registro_produc_vendido, char *indices_mes_registro_produc_vendido, char *indices_anio_registro_produc_vendido, char *ultima_venta, char *indices_total_registro_produc_vendido,char *dir_espacio) // ruta del espacio de negocio donde se guardara el producto; ejemplo: "espacios\\20260330113640_ferreteria_dan\\"
 {
     // valida que se haya recibido la ruta del espacio
     if (!dir_espacio){return;}

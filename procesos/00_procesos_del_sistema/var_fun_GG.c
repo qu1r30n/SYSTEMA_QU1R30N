@@ -185,8 +185,8 @@ char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘", "⛍"};
 char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[] = {"•", "∆"};   // caracteres que simulan salto de línea y nuevo mensaje; ejemplo: "•"
 char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[] = {"⛙", "⛚"}; // caracteres alternativos para enter y nuevo mensaje (set 2); ejemplo: "⛙"
 
-char *GG_caracter_separacion_nom_parametro_de_valor[] = {"⊓", "⊔"};   // separadores entre nombre de parámetro y su valor; ejemplo: "⊓"
-char *GG_caracter_separacion_nom_parametro_de_valor_2[] = {"⊑", "⊒"}; // separadores alternativos entre nombre de parámetro y valor (set 2); ejemplo: "⊑"
+char *GG_caracter_separacion_nom_parametro_de_valor[] = {"⊓", "⊔","⛪","⛩"};   // separadores entre nombre de parámetro y su valor; ejemplo: "⊓"
+char *GG_caracter_separacion_nom_parametro_de_valor_2[] = {"⊑", "⊒","⛫","⛬"}; // separadores alternativos entre nombre de parámetro y valor (set 2); ejemplo: "⊑"
 
 char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝"}; // caracteres reservados para confirmación de guardado; ejemplo: "⛞"
 

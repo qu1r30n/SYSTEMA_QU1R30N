@@ -54,56 +54,23 @@
  */
 int modelo_leerInventario(char *texto, char *dir_espacio, char *usuario_contraseña_negocio)
 {
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (!texto)
-    {
-        RETORNAR_MODELO_ESTANDAR(-1);
-    }
-
     if (!dir_espacio) // valida que se haya recibido la ruta del espacio de negocio
     {
         RETORNAR_MODELO_ESTANDAR(-1);
     }
 
+    (void)texto; // no se requieren parametros para leer inventario
     (void)usuario_contraseña_negocio; // reservado para validación futura del negocio; ejemplo: "admin⊓pass123"
 
-    char *nombres_variables[][4] = {{"maxProductos", "int", "0", ""}, {NULL, NULL, NULL, NULL}};
+    char *retorno_inventario = NULL;
+    int cantidad = leerInventario(&retorno_inventario, dir_espacio); // lee el inventario completo y lo devuelve en texto
 
-    int cuantos_parametros_hay = 0; // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 1
-    while (nombres_variables[cuantos_parametros_hay][0])
+    if (retorno_inventario)
     {
-        cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->NULL
+        imprimirMensaje_para_depurar("\nretorno_inventario: %s\n", retorno_inventario);
+        free(retorno_inventario);
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
-    if (!partes)
-    {
-        RETORNAR_MODELO_ESTANDAR(-2);
-    }
-
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 1
-    while (partes[cuantas_partes])
-    {
-        cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1
-    }
-
-    StructurasDinamicas datos = crearStructuraVacia(); // crea estructura dinamica vacia para guardar los valores parseados // ejemplo: datos con 0 campos
-    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
-
-    if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
-    {
-        modelo_free_split(partes);                                  // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-        liberarStructura(&datos);                                   // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
-    }
-
-    int maxProductos = *(int *)obtenerValorPorOrden(&datos, 0); // obtiene el numero maximo de productos a leer
-
-    char inventario_local[MAX_PRODUCTOS][COLUMNAS][256];                        // arreglo local donde se cargara el inventario
-    int cantidad = leerInventario(inventario_local, maxProductos, dir_espacio); // lee el inventario del espacio indicado
-
-    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-    liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
     RETORNAR_MODELO_ESTANDAR(cantidad);
 }
 
@@ -174,10 +141,71 @@ int modelo_buscarProducto(char *texto, char *dir_espacio, char *usuario_contrase
     }
 
     char *codigo = (char *)obtenerValorPorOrden(&datos, 0); // obtiene el codigo de barras a buscar
+    char *retorno_inventario = NULL;
+    int cantidad = leerInventario(&retorno_inventario, dir_espacio); // carga el inventario del espacio indicado en texto
+    int resultado = -1;
 
-    char inventario_local[MAX_PRODUCTOS][COLUMNAS][256];                             // arreglo local donde se cargara el inventario
-    int cantidad = leerInventario(inventario_local, MAX_PRODUCTOS, dir_espacio);     // carga el inventario completo del espacio indicado
-    int resultado = buscarProducto(inventario_local, cantidad, codigo, dir_espacio); // busca el codigo dentro del inventario cargado
+    if (cantidad > 0 && retorno_inventario)
+    {
+        char **filas = NULL;
+        int total_filas = split(retorno_inventario, "\n", &filas);
+        int indice_producto = 0;
+
+        if (total_filas > 1 && filas)
+        {
+            for (int i = 1; i < total_filas; i++)
+            {
+                if (!filas[i] || !filas[i][0])
+                {
+                    continue;
+                }
+
+                char *fila_limpia = variable_string("%s", filas[i]);
+                if (!fila_limpia)
+                {
+                    continue;
+                }
+
+                int largo = (int)strlen(fila_limpia);
+                while (largo > 0 && (fila_limpia[largo - 1] == '\r' || fila_limpia[largo - 1] == '\n'))
+                {
+                    fila_limpia[largo - 1] = '\0';
+                    largo--;
+                }
+
+                if (largo <= 0)
+                {
+                    free(fila_limpia);
+                    continue;
+                }
+
+                char **columnas = NULL;
+                int total_columnas = split(fila_limpia, GG_caracter_separacion[0], &columnas);
+                free(fila_limpia);
+
+                if (total_columnas > 4 && columnas && columnas[4] && strcmp(columnas[4], codigo) == 0)
+                {
+                    resultado = indice_producto;
+                    free_split(columnas);
+                    break;
+                }
+
+                if (columnas)
+                {
+                    free_split(columnas);
+                }
+
+                indice_producto++;
+            }
+        }
+
+        if (filas)
+        {
+            free_split(filas);
+        }
+    }
+
+    free(retorno_inventario);
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
@@ -460,6 +488,73 @@ int modelo_editarPrecio(char *texto, char *dir_espacio, char *usuario_contraseñ
     char *id = (char *)obtenerValorPorOrden(&datos, 3);
 
     int ok = editarPrecio(codigo, precio, proveedor, id, dir_espacio);
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
+    RETORNAR_MODELO_ESTANDAR(ok);
+}
+
+// Hacer inventario
+/*
+ * Uso: Ejecuta modelo_hacerInventario de forma segura.
+ * Entrada ejemplo: modelo_hacerInventario(texto, dir_espacio)
+ */
+int modelo_hacerInventario(char *texto, char *dir_espacio, char *usuario_contraseña_negocio)
+{
+    if (!texto)
+    {
+        RETORNAR_MODELO_ESTANDAR(-1);
+    }
+
+    if (!dir_espacio)
+    {
+        RETORNAR_MODELO_ESTANDAR(-1);
+    }
+
+    (void)usuario_contraseña_negocio; // reservado para validación futura del negocio
+
+    char *nombres_variables[][4] =
+    {
+        {"inv_a_checar", "string", "", ""},
+        {NULL, NULL, NULL, NULL}
+    };
+
+    int cuantos_parametros_hay = 0;
+    while (nombres_variables[cuantos_parametros_hay][0])
+    {
+        cuantos_parametros_hay++;
+    }
+
+    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
+    if (!partes)
+    {
+        RETORNAR_MODELO_ESTANDAR(-2);
+    }
+
+    int cuantas_partes = 0;
+    while (partes[cuantas_partes])
+    {
+        cuantas_partes++;
+    }
+
+    StructurasDinamicas datos = crearStructuraVacia();
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
+    if (ret_parse < 0 || cuantas_partes <= 0)
+    {
+        modelo_free_split(partes);
+        liberarStructura(&datos);
+        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3);
+    }
+
+    char *inv_a_checar = (char *)obtenerValorPorOrden(&datos, 0);
+    char *retorno_inv_revisado = NULL;
+    int ok = hacerInventario(inv_a_checar, &retorno_inv_revisado, dir_espacio);
+
+    if (retorno_inv_revisado)
+    {
+        imprimirMensaje_para_depurar("\nretorno_inv_revisado: %s\n", retorno_inv_revisado);
+        free(retorno_inv_revisado);
+    }
 
     modelo_free_split(partes);
     liberarStructura(&datos);

@@ -280,6 +280,21 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     }
                 }
 
+                else if (strcmp(sub_opcion[0], "hacer_inventario") == 0) // si la sub-operacion es "hacer_inventario"
+                {
+                    resultado = modelo_hacerInventario(sub_opcion[1], retorna_direccion_espacio_negocio, opciones[4]); // ejecuta el modelo que aplica conteo fisico al inventario
+                    detalle_resultado = RET_IS_ERROR(resultado) ? "No se pudo hacer inventario." : "Inventario aplicado.";
+                    const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
+                    if (retorno_modelo_actual != NULL)
+                    {
+                        if (concatenar_formato_separado_por_variable(&acumulador_modelos, NULL, "%s%s", acumulador_modelos ? GG_caracter_para_confirmacion_o_error[2] : "", retorno_modelo_actual) < 0)
+                        {
+                            resultado = RET_ERROR_GENERIC;
+                            detalle_resultado = "Error al acumular retorno de modelo hacer_inventario.";
+                        }
+                    }
+                }
+
 
                 
                 else // sub-operacion desconocida dentro de op_tienda

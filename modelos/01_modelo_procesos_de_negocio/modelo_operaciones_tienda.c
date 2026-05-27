@@ -355,7 +355,7 @@ int modelo_compra(char *texto, char *dir_espacio, char *usuario_contraseña_nego
 
     (void)usuario_contraseña_negocio; // reservado para validación futura del negocio; ejemplo: "admin⊓pass123"
 
-    char *nombres_variables[][4] = {{"codigo", "string", "nose", ""}, {"cantidad", "float", "0", ""}, {"proveedor", "string", "nose", ""}, {NULL, NULL, NULL, NULL}};
+    char *nombres_variables[][4] = {{"codigo", "string", "nose", ""}, {"cantidad", "float", "0", ""}, {"proveedor", "string", "nose", ""}, {"id", "string", "", ""}, {NULL, NULL, NULL, NULL}};
 
     int cuantos_parametros_hay = 0; // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 3
     while (nombres_variables[cuantos_parametros_hay][0])
@@ -369,7 +369,7 @@ int modelo_compra(char *texto, char *dir_espacio, char *usuario_contraseña_nego
         RETORNAR_MODELO_ESTANDAR(-2);
     }
 
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
+    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 4
     while (partes[cuantas_partes])
     {
         cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
@@ -385,13 +385,83 @@ int modelo_compra(char *texto, char *dir_espacio, char *usuario_contraseña_nego
         RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
 
-    char *codigo = (char *)obtenerValorPorOrden(&datos, 0);    // codigo de barras del producto comprado
-    float cantidad = *(float *)obtenerValorPorOrden(&datos, 1);    // cantidad de unidades compradas
+    char *codigo = (char *)obtenerValorPorOrden(&datos, 0); // codigo de barras del producto comprado
+    float cantidad = *(float *)obtenerValorPorOrden(&datos, 1); // cantidad de unidades compradas
     char *proveedor = (char *)obtenerValorPorOrden(&datos, 2); // nombre del proveedor
+    char *id = (char *)obtenerValorPorOrden(&datos, 3); // id directo (opcional; vacio = buscar por codigo)
 
-    int ok = compra(codigo, cantidad, proveedor, dir_espacio);// ejecuta la compra en el espacio de negocio indicado
+    int ok = compra(codigo, cantidad, proveedor, id, dir_espacio); // ejecuta la compra en el espacio de negocio indicado
 
     modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
+    RETORNAR_MODELO_ESTANDAR(ok);
+}
+
+// Editar precio
+/*
+ * Uso: Ejecuta modelo_editarPrecio de forma segura.
+ * Entrada ejemplo: modelo_editarPrecio(texto, dir_espacio)
+ */
+int modelo_editarPrecio(char *texto, char *dir_espacio, char *usuario_contraseña_negocio)
+{
+    // valida entradas obligatorias del modelo
+    if (!texto)
+    {
+        RETORNAR_MODELO_ESTANDAR(-1);
+    }
+
+    if (!dir_espacio)
+    {
+        RETORNAR_MODELO_ESTANDAR(-1);
+    }
+
+    (void)usuario_contraseña_negocio; // reservado para validación futura del negocio
+
+    char *nombres_variables[][4] =
+    {
+        {"codigo", "string", "", ""},
+        {"precio", "string", "", ""},
+        {"proveedor", "string", "", ""},
+        {"id", "string", "", ""},
+        {NULL, NULL, NULL, NULL}
+    };
+
+    int cuantos_parametros_hay = 0;
+    while (nombres_variables[cuantos_parametros_hay][0])
+    {
+        cuantos_parametros_hay++;
+    }
+
+    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
+    if (!partes)
+    {
+        RETORNAR_MODELO_ESTANDAR(-2);
+    }
+
+    int cuantas_partes = 0;
+    while (partes[cuantas_partes])
+    {
+        cuantas_partes++;
+    }
+
+    StructurasDinamicas datos = crearStructuraVacia();
+    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
+
+    if (ret_parse < 0 || cuantas_partes <= 0)
+    {
+        modelo_free_split(partes);
+        liberarStructura(&datos);
+        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3);
+    }
+
+    char *codigo = (char *)obtenerValorPorOrden(&datos, 0);
+    char *precio = (char *)obtenerValorPorOrden(&datos, 1);
+    char *proveedor = (char *)obtenerValorPorOrden(&datos, 2);
+    char *id = (char *)obtenerValorPorOrden(&datos, 3);
+
+    int ok = editarPrecio(codigo, precio, proveedor, id, dir_espacio);
+
+    modelo_free_split(partes);
+    liberarStructura(&datos);
     RETORNAR_MODELO_ESTANDAR(ok);
 }

@@ -265,6 +265,21 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     }
                 }
 
+                else if (strcmp(sub_opcion[0], "editar_precio") == 0) // si la sub-operacion es "editar_precio"
+                {
+                    resultado = modelo_editarPrecio(sub_opcion[1], retorna_direccion_espacio_negocio, opciones[4]); // ejecuta el modelo para editar precio por id o codigo
+                    detalle_resultado = RET_IS_OK(resultado) ? "Precio editado." : "No se pudo editar precio.";
+                    const char *retorno_modelo_actual = obtener_ultimo_retorno_formateado();
+                    if (retorno_modelo_actual != NULL)
+                    {
+                        if (concatenar_formato_separado_por_variable(&acumulador_modelos, NULL, "%s%s", acumulador_modelos ? GG_caracter_para_confirmacion_o_error[2] : "", retorno_modelo_actual) < 0)
+                        {
+                            resultado = RET_ERROR_GENERIC;
+                            detalle_resultado = "Error al acumular retorno de modelo editar_precio.";
+                        }
+                    }
+                }
+
 
                 
                 else // sub-operacion desconocida dentro de op_tienda

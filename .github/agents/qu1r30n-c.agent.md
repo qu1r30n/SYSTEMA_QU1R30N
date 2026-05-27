@@ -105,7 +105,7 @@ int modelo_operacion(char *texto)
 ```c
 // CORRECTO
 char *fila = NULL;
-concatenar_formato_separado_por_variable(&fila, "|", "%s|%.2f", nombre, precio);
+concatenar_formato_separado_por_variable(&fila, "|", "%s|%.3f", nombre, precio);
 // ... uso de fila ...
 free(fila);
 return RET_OK;

@@ -171,13 +171,13 @@ void agregarCampo(StructurasDinamicas *s, const char *nombre, const char *tipo)
         imprimirMensaje_para_depurar("ANTES arreglo_float: %p, count_float: %d\n", (void *)s->arreglo_float, s->count_float);                                                           // Imprime la dirección del arreglo de floats y el contador de floats antes del realloc (para depuración)
         s->arreglo_float = (float *)realloc(s->arreglo_float, sizeof(float) * (s->count_float + 1));                                                                                    // aumenta el arreglo de floats para que tenga espacio para el nuevo campo
         s->arreglo_float[s->count_float] = 0.0f;                                                                                                                                        // valor inicial = 0.0f
-        imprimirMensaje_para_depurar("DESPUES arreglo_float: %p, count_float: %d, nuevo elemento: %.2f\n", (void *)s->arreglo_float, s->count_float, s->arreglo_float[s->count_float]); // Imprime la dirección del arreglo de floats, el contador de floats y el valor del nuevo elemento después del realloc (para depuración)
+        imprimirMensaje_para_depurar("DESPUES arreglo_float: %p, count_float: %d, nuevo elemento: %.3f\n", (void *)s->arreglo_float, s->count_float, s->arreglo_float[s->count_float]); // Imprime la dirección del arreglo de floats, el contador de floats y el valor del nuevo elemento después del realloc (para depuración)
 
         imprimirMensaje_para_depurar("ANTES: orden_tipo[%d]=%d\norden_indice[%d]=%d\ncount_string=%d\n", s->total - 1, s->orden_tipo[s->total - 1], s->total - 1, s->orden_indice[s->total - 1], s->count_string); // Imprime el tipo y el índice que se van a asignar antes de asignarlos (para depuración)
         s->orden_tipo[s->total - 1] = TIPO_FLOAT;                                                                                                                                                                  // TIPO_FLOAT = 2
         s->orden_indice[s->total - 1] = s->count_float;                                                                                                                                                            // índice dentro del arreglo de floats
         s->count_float++;                                                                                                                                                                                          // aumenta contador de floats
-        imprimirMensaje_para_depurar("DESPUES arreglo_float: %p, count_float: %d, nuevo elemento: %.2f\n", (void *)s->arreglo_float, s->count_float, s->arreglo_float[s->count_float]);                            // Imprime la dirección del arreglo de floats, el contador de floats y el valor del nuevo elemento después del realloc (para depuración)
+        imprimirMensaje_para_depurar("DESPUES arreglo_float: %p, count_float: %d, nuevo elemento: %.3f\n", (void *)s->arreglo_float, s->count_float, s->arreglo_float[s->count_float]);                            // Imprime la dirección del arreglo de floats, el contador de floats y el valor del nuevo elemento después del realloc (para depuración)
     }
     imprimirMensaje_para_depurar("--------------------------------------------------------------------------------------------------\n");
 }
@@ -213,7 +213,7 @@ void imprimirStructura(StructurasDinamicas *s)
         }
         else if (s->orden_tipo[i] == TIPO_FLOAT) // TIPO_FLOAT = 2
         {
-            imprimirMensaje_para_depurar("%.2f\n", s->arreglo_float[s->orden_indice[i]]); // Imprime el valor del campo (float)
+            imprimirMensaje_para_depurar("%.3f\n", s->arreglo_float[s->orden_indice[i]]); // Imprime el valor del campo (float)
         }
     }
 }
@@ -301,7 +301,7 @@ void asignarValorInt(StructurasDinamicas *s, const char *nombre, int valor)
 void asignarValorFloat(StructurasDinamicas *s, const char *nombre, float valor)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    imprimirMensaje_para_depurar("asignarValorFloat: %s=%.2f\n", nombre ? nombre : "(null)", valor);
+    imprimirMensaje_para_depurar("asignarValorFloat: %s=%.3f\n", nombre ? nombre : "(null)", valor);
 
     if (!s || !nombre) // Verifica si el puntero a la estructura o el nombre es NULL
     {
@@ -316,7 +316,7 @@ void asignarValorFloat(StructurasDinamicas *s, const char *nombre, float valor)
         if (strcmp(s->nombres[i], nombre) == 0 && s->orden_tipo[i] == TIPO_FLOAT) // TIPO_FLOAT = 2
         {
             s->arreglo_float[s->orden_indice[i]] = valor; // Asigna el valor al campo (float)
-            imprimirMensaje_para_depurar("asignarValorFloat aplicado: %s=%.2f\n", nombre, s->arreglo_float[s->orden_indice[i]]);
+            imprimirMensaje_para_depurar("asignarValorFloat aplicado: %s=%.3f\n", nombre, s->arreglo_float[s->orden_indice[i]]);
             return;
         }
     }

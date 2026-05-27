@@ -166,12 +166,7 @@ FUNCIONES ADICIONALES DEL C#
 El caller debe liberar con free(). */
 char *leer_info_dividida(const char *ruta);
 
-/* Agregar informacion en archivo distribuido y actualizar metadata ID_TOT.
-Retorna "1<sep_confirmacion>fila" en exito, o "0<sep_confirmacion>mensaje" en error.
-El caller debe liberar con free(). */
-char *agregar_info_dividida(const char *datos);
-
-/* Incrementar celda solo si el programa (col 2) coincide con programa_id.
+/* Incrementar celda solo si el programa(col 2) coincide con programa_id.
 Busca por col 0 (ID principal). */
 /*
  * Uso: Ejecuta incrementa_celda_solo_prog de forma segura.

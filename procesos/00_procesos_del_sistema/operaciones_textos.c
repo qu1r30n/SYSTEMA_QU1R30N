@@ -99,7 +99,7 @@ char *variable_string(const char *format, ...) // define una funcion que crea y 
  CORE_STRING_SPLIT
 ===============================================================================
 
- FUNCI�N: core_split
+ FUNCION: core_split
 
  Divide un texto usando un separador (string completo).
  ------------------------------------------------------------------------------
@@ -305,13 +305,13 @@ int split(const char *txt, const char *sep, char ***salida)
 
 /*
 ===============================================================================
- FUNCI�N: free_split
+ FUNCION: free_split
 -------------------------------------------------------------------------------
 
  Libera completamente la memoria creada por core_split.
 
- Par�metro:
-  arreglo -> arreglo din�mico terminado en NULL
+ Parametro:
+  arreglo -> arreglo dinamico terminado en NULL
 
  Ejemplo interno:
 
@@ -320,7 +320,7 @@ int split(const char *txt, const char *sep, char ***salida)
   arreglo[2] = "SucursalNorte"
   arreglo[3] = NULL
 
- Esta funci�n:
+ Esta funcion:
   ? Libera cada fragmento
   ? Libera el arreglo principal
   ? No deja memoria colgada
@@ -514,7 +514,7 @@ Ejemplo:
  char salida[128] = "";
  concatenar_formato(salida, NULL, "%s", "producto");
  concatenar_formato(salida, "|", "%d", 5);
- concatenar_formato(salida, "|", "%.2f", 12.5f);
+ concatenar_formato(salida, "|", "%.3f", 12.5f);
 
 Resultado en salida:
  "producto|5|12.50"

@@ -293,7 +293,7 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
     char *fila = NULL; // fila completa a guardar
 
     // arma la fila completa del producto
-    concatenar_formato_separado_por_variable(&fila, "|", "%s%.2f%s%.2f%s%.2f%.2f%s%s%.2f%s%s%s%s%s%s%s%s%s%.2f%s%s%s%s%s%.2f%s%s%s%s%s", // une todos los campos del producto separados por "|"; ejemplo resultado: "Leche|1.00|L|25.50|123456|50.00|..."
+    concatenar_formato_separado_por_variable(&fila, "|", "%s%.3f%s%.3f%s%.3f%.3f%s%s%.3f%s%s%s%s%s%s%s%s%s%.3f%s%s%s%s%s%.3f%s%s%s%s%s", // une todos los campos del producto separados por "|"; ejemplo resultado: "Leche|1.00|L|25.50|123456|50.00|..."
                                              producto, contenido, tipo_medida, precio_venta, cod_barras, cantidad, costo_compra, proveedor, grupo, cant_x_paquet, es_paquete, codbar_paquete_e_id, cod_bar_individual_es_paq_e_id, ligar_prod_sab, impuestos, ingredientes, caducidad, ultimo_mov, sucur_vent, claf_prod, dir_img_inter, dir_img_comp, info_extra, proceso_crear, dir_vid_proc_crear, tiempo_fabricacion, indices_dia_registro_produc_vendido, indices_mes_registro_produc_vendido, indices_anio_registro_produc_vendido, ultima_venta, indices_total_registro_produc_vendido);
 
     // si la concatenacion fallo, no hay nada que guardar
@@ -328,7 +328,7 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
 int venta(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espacio)
 {
 
-    imprimirMensaje_para_depurar("\nventa: \ncodigo=%s, \ncantidad=%.2f, \nsucursal=%s, \nid=%s, \ndir_espacio=%s\n", codigo, cantidad, sucursal, id ? id : "", dir_espacio);
+    imprimirMensaje_para_depurar("\nventa: \ncodigo=%s, \ncantidad=%.3f, \nsucursal=%s, \nid=%s, \ndir_espacio=%s\n", codigo, cantidad, sucursal, id ? id : "", dir_espacio);
 
     // valida parametros esenciales
     if (!codigo || cantidad <= 0 || !dir_espacio){RETORNAR_PROCESO_ESTANDAR(-1);}
@@ -368,18 +368,18 @@ int venta(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espa
     // si no se resolvio por id (no vino, era invalido o no coincidio), busca por codigo de barras
     if (!id_resuelto)
     {
-        char *resultado_busqueda = buscar_info_dividida(ruta_inventario, codigo, 4, -1);
+        char *resultado_busqueda = buscar_info_dividida(ruta_inventario, codigo, 5, -1);
+        imprimirMensaje_para_depurar("\nresultado_busqueda: %s\n", resultado_busqueda ? resultado_busqueda : "NULL");
         if (!resultado_busqueda){free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);}
 
         char **partes_bus = NULL;
-        int    n_bus      = split(resultado_busqueda, GG_caracter_para_confirmacion_o_error[0], &partes_bus);
+        int n_bus = split(resultado_busqueda, GG_caracter_para_confirmacion_o_error[0], &partes_bus);
+        
         free(resultado_busqueda);
 
         if (n_bus < 3 || !partes_bus || partes_bus[0][0] != '1')
         {
-            if (partes_bus){free_split(partes_bus);}
-            free(ruta_inventario);
-            RETORNAR_PROCESO_ESTANDAR(-1);
+            if (partes_bus){free_split(partes_bus);}free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
         }
 
         concatenar_formato_separado_por_variable(&id_resuelto,   NULL, "%s", partes_bus[2]);
@@ -389,21 +389,17 @@ int venta(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espa
 
     // verifica el stock antes de decrementar
     char **cols_fila = NULL;
-    int    n_cols    = split(fila_de_stock, GG_caracter_separacion[0], &cols_fila);
+    int n_cols = split(fila_de_stock, GG_caracter_separacion[0], &cols_fila);
     free(fila_de_stock);
     if (n_cols <= 5 || !cols_fila)
     {
-        if (cols_fila){free_split(cols_fila);}
-        free(id_resuelto);free(ruta_inventario);
-        RETORNAR_PROCESO_ESTANDAR(-1);
+        if (cols_fila){free_split(cols_fila);}free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     float stock_actual = 0.0f;
     if (texto_a_float_seguro(cols_fila[5], &stock_actual) < 0 || stock_actual < cantidad)
     {
-        free_split(cols_fila);
-        free(id_resuelto);free(ruta_inventario);
-        RETORNAR_PROCESO_ESTANDAR(-1);
+        free_split(cols_fila);free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
     }
     free_split(cols_fila);
 
@@ -413,18 +409,17 @@ int venta(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espa
     char *cols_inc  = NULL;
     char *cants_inc = NULL;
 
-    if (concatenar_formato_separado_por_variable(&cant_neg, NULL, "%.2f", -(double)cantidad) < 0 ||
-        concatenar_formato_separado_por_variable(&cant_pos, NULL, "%.2f",  (double)cantidad) < 0 ||
-        concatenar_formato_separado_por_variable(&cols_inc, NULL, "5%s30",
+    if (concatenar_formato_separado_por_variable(&cant_neg, NULL, "%.3f", -(double)cantidad) < 0 ||
+        concatenar_formato_separado_por_variable(&cant_pos, NULL, "%.3f",  (double)cantidad) < 0 ||
+        concatenar_formato_separado_por_variable(&cols_inc, NULL, "6%s30",
             GG_caracter_separacion_funciones_espesificas[4]) < 0 ||
         concatenar_formato_separado_por_variable(&cants_inc, NULL, "%s%s%s",
             cant_neg, GG_caracter_separacion_funciones_espesificas[4], cant_pos) < 0)
     {
-        free(cant_neg);free(cant_pos);free(cols_inc);free(cants_inc);
-        free(id_resuelto);free(ruta_inventario);
-        RETORNAR_PROCESO_ESTANDAR(-1);
+        free(cant_neg);free(cant_pos);free(cols_inc);free(cants_inc);free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
+    imprimirMensaje_para_depurar("\nruta: %s\nid_res: %s\ncol_inc: %s\ncants_inc: %s\n", ruta_inventario, id_resuelto, cols_inc, cants_inc);
     char *res_inc = incrementa_celda_id_info_dividida(ruta_inventario, id_resuelto, cols_inc, cants_inc);
     free(res_inc);free(cols_inc);free(cants_inc);free(cant_neg);free(cant_pos);
 
@@ -432,7 +427,7 @@ int venta(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espa
     char *fecha_actual = (char *)malloc(20);
     if (fecha_actual)
     {
-        fechaActual(fecha_actual, "%Y-%m-%d");
+        fechaActual(fecha_actual, "%Y%m%d");
 
         char *cols_edit = NULL;
         char *vals_edit = NULL;
@@ -519,7 +514,7 @@ int compra(char *codigo, float  cantidad, char *proveedor, char *dir_espacio)
     // incrementa existencias y registra el ultimo movimiento
     char *nuevo_texto = NULL; // cantidad nueva en texto
     // formatea la cantidad nueva
-    if (concatenar_formato_separado_por_variable(&nuevo_texto, NULL, "%.2f", nueva_cantidad) < 0)
+    if (concatenar_formato_separado_por_variable(&nuevo_texto, NULL, "%.3f", nueva_cantidad) < 0)
     {
         free_split(partes);
         free(fila_encontrada);
@@ -534,7 +529,7 @@ int compra(char *codigo, float  cantidad, char *proveedor, char *dir_espacio)
     if (fecha_actual)
     {
         // reutiliza la funcion de operacion de compu
-        fechaActual(fecha_actual, "%Y-%m-%d");
+        fechaActual(fecha_actual, "%Y%m%d");
         // fecha del ultimo movimiento
         editar_celda(ruta_inventario, 4, codigo, 17, fecha_actual);
         // actualiza proveedor si vino uno nuevo
@@ -574,7 +569,7 @@ int editarPrecio(char *codigo, char *precio, char *proveedor, char *dir_espacio)
 
     char *precio_nuevo = NULL; // precio formateado
     // genera el texto final del precio
-    if (concatenar_formato_separado_por_variable(&precio_nuevo, NULL, "%.2f", precio_decimal) < 0)
+    if (concatenar_formato_separado_por_variable(&precio_nuevo, NULL, "%.3f", precio_decimal) < 0)
     {
         RETORNAR_PROCESO_ESTANDAR(-1);
     }

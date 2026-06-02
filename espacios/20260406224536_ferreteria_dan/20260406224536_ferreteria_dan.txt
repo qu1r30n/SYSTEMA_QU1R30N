@@ -1,2 +1,0 @@
-ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel
-0|administrador_negocio|54321||2

@@ -8,21 +8,16 @@
       "cStandard": "c11",
       "cppStandard": "c++17",
       "includePath": [
-        "${workspaceFolder}/SISTEMA_QU1R30N",
-        "${workspaceFolder}/SISTEMA_QU1R30N/**",
-        "${workspaceFolder}"
+        "${workspaceFolder}",
+        "${workspaceFolder}/**"
       ],
       "defines": [
         "_WIN32"
       ],
-      "forcedInclude": [
-        "${workspaceFolder}/SISTEMA_QU1R30N/cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
-      ],
       "browse": {
         "path": [
-          "${workspaceFolder}/SISTEMA_QU1R30N",
-          "${workspaceFolder}/SISTEMA_QU1R30N/**",
-          "${workspaceFolder}"
+          "${workspaceFolder}",
+          "${workspaceFolder}/**"
         ],
         "limitSymbolsToIncludedHeaders": false
       }

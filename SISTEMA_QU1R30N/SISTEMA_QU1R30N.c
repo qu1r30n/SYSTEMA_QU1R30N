@@ -61,6 +61,163 @@ void inicializacion()
     atexit(limpieza_al_salir);
 }
 
+/* Extrae inventario inicial y arma detalle con separadores globales GG_. */
+static int extraccion_de_inicio(char *dir_espacio_negocio, char **detalle_inicio_out)
+{
+    if (!detalle_inicio_out){return RET_INVALID_ARG;}
+
+    (void)dir_espacio_negocio;
+
+    *detalle_inicio_out = NULL; // inicia vacio para concatenar dinamicamente
+    //concatenacion----------------------------------------------------------------------------
+    for (int i = 0; GG_caracter_separacion[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_separacion[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+    for (int i = 0; GG_caracter_separacion_2[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_separacion_2[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+    
+    
+    
+    for (int i = 0; GG_caracter_separacion_funciones_espesificas[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_separacion_funciones_espesificas[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+    
+    
+    for (int i = 0; GG_caracter_separacion_funciones_espesificas_2[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_separacion_funciones_espesificas_2[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+
+
+    
+    
+    for (int i = 0; GG_caracter_para_confirmacion_o_error[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_confirmacion_o_error[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+
+    for (int i = 0;GG_caracter_para_confirmacion_o_error_2[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_confirmacion_o_error_2[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+
+
+
+
+    for (int i = 0;GG_caracter_para_transferencia_entre_archivos[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_transferencia_entre_archivos[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+    
+    for (int i = 0;GG_caracter_para_transferencia_entre_archivos_2[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_transferencia_entre_archivos_2[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+
+
+
+
+
+    for (int i = 0;GG_caracter_para_usar_como_enter_y_nuevo_mensaje[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_usar_como_enter_y_nuevo_mensaje[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+    
+    for (int i = 0; GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+
+
+
+
+
+
+    for (int i = 0;GG_caracter_separacion_nom_parametro_de_valor[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_separacion_nom_parametro_de_valor[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+for (int i = 0; GG_caracter_separacion_nom_parametro_de_valor_2[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_separacion_nom_parametro_de_valor_2[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+
+
+
+    for (int i = 0; GG_caracter_guardado_para_confirmacion[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_guardado_para_confirmacion[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+    for (int i = 0; GG_caracter_guardado_para_confirmacion_2[i] != NULL; i++)
+    {
+        if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_guardado_para_confirmacion_2[i]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    }
+
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+
+
+
+
+    //fin concatenacion------------------------------------------------------------------------
+    if (*detalle_inicio_out == NULL){return RET_ERROR_GENERIC;}
+
+    return RET_OK;
+}
+
 /* Punto central de despacho: valida permisos y enruta operaciones. */
 char *conmutador(char *info_a_conmutar, int *estado_out)
 {
@@ -177,9 +334,33 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
 
 
 
+        if (strcmp(opciones[0], "inicio") == 0)
+        {
+            char *detalle_inicio = NULL;
+            int resultado_inicio = extraccion_de_inicio(retorna_direccion_espacio_negocio, &detalle_inicio);
 
+            if (RET_IS_OK(resultado_inicio))
+            {
+                resultado = RET_OK;
+                detalle_resultado = "Inicio ejecutado: inventario y separadores GG_ extraidos.";
 
-        if (strcmp(opciones[0], "op_tienda") == 0) // revisa si el primer campo del comando es "op_tienda"
+                free(detalle_capa_proceso);
+                detalle_capa_proceso = construir_retorno_estandar(
+                    resultado,
+                    GG_caracter_para_confirmacion_o_error[4],
+                    "todo salio bien en este proseso llamado inicio",
+                    detalle_inicio ? detalle_inicio : "");
+            }
+            else
+            {
+                resultado = RET_ERROR_GENERIC;
+                detalle_resultado = "No se pudo extraer el inventario en inicio.";
+            }
+
+            free(detalle_inicio);
+        }
+
+        else if (strcmp(opciones[0], "op_tienda") == 0) // revisa si el primer campo del comando es "op_tienda"
         {
             if (!opciones[1]) // verifica que exista la sub-operacion despues del primer "~"
             {

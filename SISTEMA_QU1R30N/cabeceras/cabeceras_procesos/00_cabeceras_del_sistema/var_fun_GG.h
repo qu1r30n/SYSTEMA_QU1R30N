@@ -27,6 +27,7 @@ extern GG_ArchivoInventarioPendiente *GG_direccion_hacer_inventarios;
 /* nuevas variables globales aï¿½adidas */
 extern int GG_indice_donde_comensar;
 extern char *GG_cantidado_por_archivo;
+extern char *GG_caracter_para_funcion_inicio[];
 
 extern char *GG_caracter_separacion[];
 extern char *GG_caracter_separacion_2[];
@@ -48,6 +49,7 @@ extern char *GG_caracter_separacion_nom_parametro_de_valor[];
 extern char *GG_caracter_separacion_nom_parametro_de_valor_2[];
 
 extern char *GG_caracter_guardado_para_confirmacion[];
+extern char *GG_caracter_guardado_para_confirmacion_2[];
 
 extern char *GG_id_programa;
 extern char *GG_ultimo_retorno_estandar;
@@ -130,6 +132,7 @@ extern const char *GG_trabajos_dia[][5];
 #define G_archivos_registros GG_archivos_registros
 #define G_indice_donde_comensar GG_indice_donde_comensar
 #define G_cantidado_por_archivo GG_cantidado_por_archivo
+#define G_caracter_para_funcion_inicio GG_caracter_para_funcion_inicio
 #define G_caracter_separacion GG_caracter_separacion
 #define G_caracter_separacion_2 GG_caracter_separacion_2
 #define G_caracter_separacion_funciones_espesificas GG_caracter_separacion_funciones_espesificas
@@ -143,6 +146,7 @@ extern const char *GG_trabajos_dia[][5];
 #define G_caracter_separacion_nom_parametro_de_valor GG_caracter_separacion_nom_parametro_de_valor
 #define G_caracter_separacion_nom_parametro_de_valor_2 GG_caracter_separacion_nom_parametro_de_valor_2
 #define G_caracter_guardado_para_confirmacion GG_caracter_guardado_para_confirmacion
+#define G_caracter_guardado_para_confirmacion_2 GG_caracter_guardado_para_confirmacion_2
 #define G_id_programa GG_id_programa
 #define G_variables_string GG_variables_string
 #define G_ventana_datos_conf GG_ventana_datos_conf

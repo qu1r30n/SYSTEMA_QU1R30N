@@ -170,25 +170,29 @@ int GG_indice_donde_comensar = 1; // índice de inicio para operaciones de lista
 
 char *GG_cantidado_por_archivo = "100"; // cantidad máxima de registros por archivo; ejemplo: "100"
 
-char *GG_caracter_separacion[] = {"|", "°", "¬", "╦", "╔"};   // separadores de columna para archivos de datos; ejemplo: "|"
-char *GG_caracter_separacion_2[] = {"⚭", "⚮", "⚯", "⚰", "⚱"}; // separadores alternativos de columna (set 2); ejemplo: "⚭"
+char *GG_caracter_para_funcion_inicio[] = {"⛮"};        // separadores cortos para la funcion inicio; ejemplo: "|°¬"
 
-char *GG_caracter_separacion_funciones_espesificas[] = {"~", "§", "¶", "╬", "╝", "╩", "║", "╗", "┐", "└", "┬", "├", "┼"};   // separadores para parsing de comandos del conmutador; ejemplo: "~"
-char *GG_caracter_separacion_funciones_espesificas_2[] = {"⚲", "⚳", "⚴", "⚵", "⚶", "⚷", "⚸", "⚺", "⚻", "⚼", "⚿", "⛊", "⛋"}; // separadores alternativos para parsing de comandos (set 2); ejemplo: "⚲"
 
-char *GG_caracter_para_confirmacion_o_error[] = {"╣", "╠", "⛐", "⛔", "⛟"};   // caracteres para señalizar confirmación o error en comunicación; ejemplo: "╣"
-char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒", "⛠", "⛡", "⛎"}; // caracteres alternativos para confirmación o error (set 2); ejemplo: "⛑"
+char *GG_caracter_separacion[] = {"|", "°", "¬", "╦", "╔",NULL};   // separadores de columna para archivos de datos; ejemplo: "|"
+char *GG_caracter_separacion_2[] = {"⚭", "⚮", "⚯", "⚰", "⚱",NULL}; // separadores alternativos de columna (set 2); ejemplo: "⚭"
 
-char *GG_caracter_para_transferencia_entre_archivos[] = {"■", "┴", "¤"};   // separadores para transferencia de datos entre archivos; ejemplo: "┴"
-char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘", "⛍"}; // separadores alternativos para transferencia entre archivos (set 2); ejemplo: "⛕"
+char *GG_caracter_separacion_funciones_espesificas[] =   {"~", "§", "¶", "╬", "╝", "╩", "║", "╗", "┐", "└", "┬", "├", "┼",NULL};   // separadores para parsing de comandos del conmutador; ejemplo: "~"
+char *GG_caracter_separacion_funciones_espesificas_2[] = {"⚲", "⚳", "⚴", "⚵", "⚶", "⚷", "⚸", "⚺", "⚻", "⚼", "⚿", "⛊", "⛋",NULL}; // separadores alternativos para parsing de comandos (set 2); ejemplo: "⚲"
 
-char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[] = {"•", "∆"};   // caracteres que simulan salto de línea y nuevo mensaje; ejemplo: "•"
-char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[] = {"⛙", "⛚"}; // caracteres alternativos para enter y nuevo mensaje (set 2); ejemplo: "⛙"
+char *GG_caracter_para_confirmacion_o_error[] = {"╣", "╠", "⛐", "⛔", "⛟",NULL};   // caracteres para señalizar confirmación o error en comunicación; ejemplo: "╣"
+char *GG_caracter_para_confirmacion_o_error_2[] = {"⛑", "⛒", "⛠", "⛡", "⛎",NULL}; // caracteres alternativos para confirmación o error (set 2); ejemplo: "⛑"
 
-char *GG_caracter_separacion_nom_parametro_de_valor[] = {"⊓", "⊔","⛪","⛩"};   // separadores entre nombre de parámetro y su valor; ejemplo: "⊓"
-char *GG_caracter_separacion_nom_parametro_de_valor_2[] = {"⊑", "⊒","⛫","⛬"}; // separadores alternativos entre nombre de parámetro y valor (set 2); ejemplo: "⊑"
+char *GG_caracter_para_transferencia_entre_archivos[] = {"■", "┴", "¤",NULL};   // separadores para transferencia de datos entre archivos; ejemplo: "┴"
+char *GG_caracter_para_transferencia_entre_archivos_2[] = {"⛕", "⛘", "⛍",NULL}; // separadores alternativos para transferencia entre archivos (set 2); ejemplo: "⛕"
 
-char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝"}; // caracteres reservados para confirmación de guardado; ejemplo: "⛞"
+char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje[] = {"•", "∆",NULL};   // caracteres que simulan salto de línea y nuevo mensaje; ejemplo: "•"
+char *GG_caracter_para_usar_como_enter_y_nuevo_mensaje_2[] = {"⛙", "⛚",NULL}; // caracteres alternativos para enter y nuevo mensaje (set 2); ejemplo: "⛙"
+
+char *GG_caracter_separacion_nom_parametro_de_valor[] = {"⊓", "⊔","⛪","⛩",NULL};   // separadores entre nombre de parámetro y su valor; ejemplo: "⊓"
+char *GG_caracter_separacion_nom_parametro_de_valor_2[] = {"⊑", "⊒","⛫","⛬",NULL}; // separadores alternativos entre nombre de parámetro y valor (set 2); ejemplo: "⊑"
+
+char *GG_caracter_guardado_para_confirmacion[] = {"⛞", "⛝",NULL}; // caracteres reservados para confirmación de guardado; ejemplo: "⛞"
+char *GG_caracter_guardado_para_confirmacion_2[] = {"⛜", "⛛",NULL}; // caracteres alternativos reservados para confirmación de guardado (set 2); ejemplo: "⛜"
 
 char *GG_id_programa = "SISTEMA_QU1R30N"; // identificador único del programa; ejemplo: "SISTEMA_QU1R30N"
 

@@ -1,0 +1,1 @@
+ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel

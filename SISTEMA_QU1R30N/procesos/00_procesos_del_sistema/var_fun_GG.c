@@ -200,35 +200,35 @@ char *GG_id_programa = "SISTEMA_QU1R30N"; // identificador único del programa; 
 char *GG_archivos[][3] = {
     {"espacios\\", 
         "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel", 
-        "archivo_espacios.txt"},
+        "archivo_espacios_sys.txt"},
                           
-    {"C:\\sys\\conexion_arc\\",
+    {"C:\\sys\\",
         "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
-        "archivo_entrada.txt"},
+        "archivo_entrada_sys.txt"},
         
-    {"C:\\sys\\conexion_arc\\",
+    {"C:\\sys\\",
         "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
-        "archivo_salida.txt"},
+        "archivo_salida_sys.txt"},
             
-    {"C:\\sys\\conexion_arc\\", 
+    {"C:\\sys\\", 
         NULL, 
-        "banderas.txt"},
+        "banderas_sys.txt"},
             
-    {"C:\\sys\\conexion_arc\\",
+    {"C:\\sys\\",
         "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA",
-        "errores_de_com.txt"},
+        "errores_de_com_sys.txt"},
             
     {NULL, NULL, NULL}};
 #else
 char *GG_archivos[][3] = {{"espacios/", "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel", "archivo_espacios.txt"},
-                          {"conexion_arc/",
+                          {"",
                            "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
                            "archivo_entrada.txt"},
-                          {"conexion_arc/",
+                          {"",
                            "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
                            "archivo_salida.txt"},
-                          {"conexion_arc/", NULL, "banderas.txt"},
-                          {"conexion_arc/", "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", "errores_de_com.txt"},
+                          {"", NULL, "banderas.txt"},
+                          {"", "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", "errores_de_com.txt"},
                           {NULL, NULL, NULL}};
 #endif
 

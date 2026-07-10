@@ -9,6 +9,7 @@
 
 #include "CLASE_QU1R30N.h"
 #include "cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/ControladorMonitoreoArchivo.h"
+#include "cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_tienda.h"
 #include "cabeceras/codigos_retorno.h"
 
 #if defined(_WIN32) || defined(__linux__)
@@ -66,9 +67,9 @@ static int extraccion_de_inicio(char *dir_espacio_negocio, char **detalle_inicio
 {
     if (!detalle_inicio_out){return RET_INVALID_ARG;}
 
-    (void)dir_espacio_negocio;
+    *detalle_inicio_out = NULL; // la concatenacion inicializa el buffer en heap antes de crecerlo
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s%s", columnas_concatenadas(GG_ventana_emergente_productos, 0, 1, GG_caracter_separacion[0]) ,GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
 
-    *detalle_inicio_out = NULL; // inicia vacio para concatenar dinamicamente
     //concatenacion----------------------------------------------------------------------------
     for (int i = 0; GG_caracter_separacion[i] != NULL; i++)
     {
@@ -209,8 +210,12 @@ for (int i = 0; GG_caracter_separacion_nom_parametro_de_valor_2[i] != NULL; i++)
 
     if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s", GG_caracter_para_funcion_inicio[0]) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
 
-
-
+    char *inventario_inicio = NULL;
+    if (leerInventario(&inventario_inicio, dir_espacio_negocio) < 0){free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    imprimirMensaje_para_depurar("\n\ninventario_inicio=%s\n", inventario_inicio);
+    if (concatenar_formato_separado_por_variable(detalle_inicio_out, NULL, "%s%s", GG_caracter_separacion_funciones_espesificas[0], inventario_inicio ? inventario_inicio : "") < 0){free(inventario_inicio);free(*detalle_inicio_out);*detalle_inicio_out = NULL;return RET_ERROR_GENERIC;}
+    imprimirMensaje_para_depurar("\n\ndetalle_inicio_out=%s\n", *detalle_inicio_out);
+    free(inventario_inicio);
 
     //fin concatenacion------------------------------------------------------------------------
     if (*detalle_inicio_out == NULL){return RET_ERROR_GENERIC;}
@@ -754,24 +759,28 @@ int main()
 {
     inicializacion(); // crea los archivos del sistema si no existen y registra este programa en banderas.txt
 
-    /* ejemplos de comandos que el sistema entrega al modelo
+     /*//ejemplos de comandos que el sistema entrega al modelo
     const char *ejemplos[] = {
-    //"op_tienda~agregar_productoï¿½1ï¿½Lecheï¿½1Lï¿½unidadï¿½10ï¿½123456ï¿½100ï¿½50ï¿½ProveedorA",
-    //"administracion_espacio~crear_espacioï¿½nom_espacio?ferreteria_danï¿½usuario_de_negocio?administrador_negocioï¿½contraseña_de_negocio?54321~id_de_espacio?0ï¿½usuario_de_espacio?administrador_de_espacioï¿½contraseña_de_espacio?0",
-    "op_tienda~agregar_productoï¿½producto?2ï¿½contenido?3ï¿½tipo_medida?4ï¿½precio_venta?5?no_predeterminadoï¿½cod_barras?6ï¿½cantidad?7ï¿½costo_compra?8ï¿½proveedor?9~id_de_espacio?20260330113640_ferreteria_dan~usuario_de_espacio?administrador_de_espacioï¿½contraseña_de_espacio?12345~usuario_de_negocio?administrador_negocioï¿½contraseña_de_negocio?54321",
-    "op_tienda~ventasï¿½ABC123ï¿½2ï¿½SucursalX",
-    "op_tienda~comprasï¿½XYZ987ï¿½5ï¿½Proveedor1",
-    NULL};
+        //"op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
+        //"administracion_espacio~crear_espacio§nom_espacio⊓ferreteria_dan¶usuario_de_negocio⊓administrador_negocio¶contraseña_de_negocio⊓54321~id_de_espacio⊓0§usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓0",
+        //"op_tienda~agregar_producto§producto⊓2¶contenido⊓3¶tipo_medida⊓4¶precio_venta⊓5⊓no_predeterminado¶cod_barras⊓6¶cantidad⊓7¶costo_compra⊓8¶proveedor⊓9~id_de_espacio⊓20260330113640_ferreteria_dan~usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓12345~usuario_de_negocio⊓administrador_negocio§contraseña_de_negocio⊓54321",
+        //"op_tienda~ventas§ABC123¶2§SucursalX",
+        //"op_tienda~compras§XYZ987¶5§Proveedor1",
+        NULL};
 
 
     for (int i = 0; ejemplos[i]; i++)
     {
-    printf("Ejecutando comando: %s\n", ejemplos[i]);
+    printf("\n\nEjecutando comando: %s\n", ejemplos[i]);
     int estado_ejemplo = RET_ERROR_GENERIC;
     char *respuesta_ejemplo = conmutador((char *)ejemplos[i], &estado_ejemplo);
     free(respuesta_ejemplo);
     }
     */
+
+
+ //Flujo principal del programa:
+
 
     char **retorno_comando = NULL;                                                                        // arreglo donde se guardaran las lineas del archivo de entrada dirigidas a este programa
     int retorno_numero_lineas = 0;                                                                        // cantidad de lineas/comandos encontrados
@@ -800,15 +809,28 @@ int main()
                                                       &comando_para_conmutar, // recibira: "op_tienda~agregar_productoï¿½..."
                                                       &info_espejo)))         // recibira: "PREGUNTAS_WSï¿½"
             {
+
+
+
+
+
                 // 2) Manda el comando a conmutador para ejecutar operaciones.
                 respuesta_conmutador = conmutador(comando_para_conmutar, &estado_conmutador); // ejecuta el comando y obtiene el texto de
-                                                                                              // resultado; ejemplo: "Producto agregado."
+                
+                
+                
+                
+                
+                // resultado; ejemplo: "Producto agregado."
 
                 imprimirMensaje_para_depurar("Respuesta del conmutador: %s\n", respuesta_conmutador); // ejemplo: "Respuesta del conmutador: Producto agregado."
                 // 3) El resultado textual de conmutador se envia por respuesta.
                 respuesta(respuesta_conmutador, programa_respuesta, info_espejo); // escribe en archivo_salida.txt; formato:
                                                                                   // "NEXOPORTALARCANO-SISTEMA_QU1R30Nï¿½Producto agregado.ï¿½PREGUNTAS_WSï¿½"
-            }
+            
+            
+            
+                                                                                }
 
             finalizar_comando_procesado(retorno_comando[i], estado_conmutador); // borra la linea del archivo de entrada; si hay error la
                                                                                 // guarda en errores_de_com.txt
@@ -819,6 +841,11 @@ int main()
         }
         free_lineas(retorno_comando, retorno_numero_lineas); // libera todos los strings del arreglo de comandos
     }
+
+
+
+
+//fin flujo principal del programa
 
     modelo_delay_ms("1000"); // espera 1000 milisegundos antes de terminar; da tiempo al sistema de archivos para
                              // procesar los cambios

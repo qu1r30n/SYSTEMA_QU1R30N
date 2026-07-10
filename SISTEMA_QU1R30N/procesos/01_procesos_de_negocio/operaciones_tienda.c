@@ -130,63 +130,43 @@ static int obtener_ruta_inventario(char *dir_espacio, char **ruta_inventario)
 int leerInventario(char **retorno_inventario, char *dir_espacio)
 {
     // valida parametros principales
-    if (!retorno_inventario || !dir_espacio)
-    {
-        RETORNAR_PROCESO_ESTANDAR(-1);
-    }
+    if (!retorno_inventario || !dir_espacio){RETORNAR_PROCESO_ESTANDAR(-1);}
 
     *retorno_inventario = NULL;
 
     char *ruta_inventario = NULL; // ruta final del inventario
     // calcula la ruta exacta del archivo
-    if (obtener_ruta_inventario(dir_espacio, &ruta_inventario) < 0)
-    {
-        RETORNAR_PROCESO_ESTANDAR(-1);
-    }
+    if (obtener_ruta_inventario(dir_espacio, &ruta_inventario) < 0){RETORNAR_PROCESO_ESTANDAR(-1);}
 
-    // usa tex_bas para leer el inventario completo en un solo string
-    char *contenido = leer_info_dividida(ruta_inventario);
+    imprimirMensaje_para_depurar("Leyendo inventario desde: %s", ruta_inventario); // log de la ruta del inventario que se va a leer
+    // usa tex_bas para leer todas las filas del inventario consolidado
+    char *contenido = leer_todo_info_dividida(ruta_inventario);
+    imprimirMensaje_para_depurar("Contenido del inventario leído: %s", contenido ? contenido : "NULL"); // log del contenido leído del inventario
     free(ruta_inventario);
 
     // si no hay archivo o esta vacio, devuelve cero
-    if (!contenido || !contenido[0])
-    {
-        free(contenido);
-        RETORNAR_PROCESO_ESTANDAR(0);
-    }
-
-    *retorno_inventario = contenido;
+    if (!contenido || !contenido[0]){free(contenido);RETORNAR_PROCESO_ESTANDAR(0);}
 
     // cuenta filas validas (excluye cabecera) para mantener retorno int compatible
     char **lineas = NULL;
-    int total_lineas = split(contenido, "\n", &lineas);
-    if (total_lineas <= 0 || !lineas)
-    {
-        if (lineas)
-        {
-            free_split(lineas);
-        }
-        RETORNAR_PROCESO_ESTANDAR(0);
-    }
+    int total_lineas = split(contenido, GG_caracter_separacion_funciones_espesificas[3], &lineas);
+    if (total_lineas <= 0 || !lineas){if (lineas){free_split(lineas);}RETORNAR_PROCESO_ESTANDAR(0);}
 
     int cantidad_productos = 0;
-    for (int i = 1; i < total_lineas; i++)
+    for (int i = 0; i < total_lineas; i++)
     {
-        if (!lineas[i] || !lineas[i][0])
-        {
-            continue;
-        }
-
-        int largo = (int)strlen(lineas[i]);
-        if (largo == 1 && lineas[i][0] == '\r')
-        {
-            continue;
-        }
+        if (!lineas[i] || !lineas[i][0]){continue;}
 
         cantidad_productos++;
     }
 
     free_split(lineas);
+
+    char *contenido_salida = ReemplazarCaracteres_de_texto_string(contenido, GG_caracter_separacion_funciones_espesificas[3], GG_caracter_separacion_funciones_espesificas[0]);
+    if (!contenido_salida){free(contenido);RETORNAR_PROCESO_ESTANDAR(-1);}
+
+    free(contenido);
+    *retorno_inventario = contenido_salida;
     RETORNAR_PROCESO_ESTANDAR(cantidad_productos);
 }
 
@@ -213,7 +193,7 @@ static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
     }
 
     char **lineas = NULL;
-    int total_lineas = split(retorno_inventario, "\n", &lineas);
+    int total_lineas = split(retorno_inventario, GG_caracter_para_usar_como_enter_y_nuevo_mensaje[0], &lineas);
     if (total_lineas <= 0 || !lineas)
     {
         free(retorno_inventario);
@@ -675,130 +655,85 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
  */
 int venta_desde_texto(char *texto_venta, char *dir_espacio)
 {
-    if (!texto_venta || !texto_venta[0] || !dir_espacio)
-    {
-        RETORNAR_PROCESO_ESTANDAR(-1);
-    }
+    imprimirMensaje_para_depurar("\n\nventa_desde_texto: \ntexto_venta=%s, \ndir_espacio=%s\n", texto_venta ? texto_venta : "NULL", dir_espacio ? dir_espacio : "NULL"); // imprime trazas de entrada para depuracion
+    if (!texto_venta || !texto_venta[0] || !dir_espacio){RETORNAR_PROCESO_ESTANDAR(-1);} // valida texto y ruta antes de procesar
+    
 
-    char **ventas_lote = NULL;
-    int total_ventas = split(texto_venta, GG_caracter_separacion_funciones_espesificas[3], &ventas_lote);
-    if (total_ventas <= 0 || !ventas_lote)
+    char **ventas_lote = NULL; // arreglo dinamico de ventas separadas por el delimitador principal
+    int total_ventas = split(texto_venta, GG_caracter_separacion_funciones_espesificas[2], &ventas_lote); // separa el texto en ventas individuales usando "¶"
+    for (int i = 0; i < total_ventas; i++)
     {
-        if (ventas_lote)
-        {
-            free_split(ventas_lote);
-        }
-        RETORNAR_PROCESO_ESTANDAR(-1);
+        imprimirMensaje_para_depurar("\nventa %d: %s\n", i, ventas_lote[i] ? ventas_lote[i] : "NULL"); // muestra cada bloque de venta obtenido del split
     }
+    
+    if (total_ventas <= 0 || !ventas_lote){if (ventas_lote){free_split(ventas_lote);}RETORNAR_PROCESO_ESTANDAR(-1);} // corta si no hay ventas validas o no se pudo reservar el arreglo
 
-    int resultado = 0;
+    int resultado = 0; // acumula el estado final de procesamiento del lote
 
     for (int i = 0; i < total_ventas; i++)
     {
-        if (!ventas_lote[i] || !ventas_lote[i][0])
-        {
-            continue;
-        }
+        if (!ventas_lote[i] || !ventas_lote[i][0]){continue;} // ignora entradas vacias en el lote
 
-        char *codigo = NULL;
-        char *sucursal = NULL;
-        char *id = NULL;
-        float cantidad = 0.0f;
+        char *codigo = NULL; // codigo de barras extraido de la venta actual
+        char *sucursal = NULL; // sucursal extraida de la venta actual
+        char *id = NULL; // id opcional para ubicar directamente el registro
+        float cantidad = 0.0f; // cantidad solicitada en la venta actual
 
         if (concatenar_formato_separado_por_variable(&sucursal, NULL, "%s", "nose") < 0 ||
             concatenar_formato_separado_por_variable(&id, NULL, "%s", "") < 0)
-        {
-            free(codigo);
-            free(sucursal);
-            free(id);
-            resultado = -1;
-            break;
-        }
+        {free(codigo);free(sucursal);free(id);resultado = -1;break;} // inicializa valores por defecto y aborta si falla memoria
 
-        char **campos = NULL;
-        int total_campos = split(ventas_lote[i], GG_caracter_separacion_funciones_espesificas[2], &campos);
-        if (total_campos <= 0 || !campos)
-        {
-            free(codigo);
-            free(sucursal);
-            free(id);
-            if (campos)
-            {
-                free_split(campos);
-            }
-            resultado = -1;
-            break;
-        }
+        char **campos = NULL; // arreglo de pares "nombre⊓valor" dentro de una venta
+        int total_campos = split(ventas_lote[i], GG_caracter_separacion_funciones_espesificas[3], &campos); // separa campos por "╬"
+        if (total_campos <= 0 || !campos){free(codigo);free(sucursal);free(id);if (campos){free_split(campos);}resultado = -1;break;} // aborta si no pudo descomponer los campos
 
         for (int j = 0; j < total_campos; j++)
         {
-            if (!campos[j] || !campos[j][0])
-            {
-                continue;
-            }
+            if (!campos[j] || !campos[j][0]){continue;} // salta campos vacios
 
-            char **par = NULL;
-            int n_par = split(campos[j], GG_caracter_separacion_nom_parametro_de_valor[0], &par);
+            char **par = NULL; // contiene [nombre, valor] del campo actual
+            int n_par = split(campos[j], GG_caracter_separacion_nom_parametro_de_valor[0], &par); // separa nombre y valor por "⊓"
             if (n_par < 2 || !par || !par[0] || !par[1])
-            {
-                if (par)
-                {
-                    free_split(par);
-                }
-                continue;
-            }
+            {if (par){free_split(par);}continue;} // ignora campos mal formados y continua con el resto
 
             if (strcmp(par[0], "codigo") == 0)
             {
-                free(codigo);
-                codigo = duplicar_texto_dinamico(par[1]);
+                free(codigo); // libera valor previo para evitar fuga si se repite la llave
+                codigo = duplicar_texto_dinamico(par[1]); // guarda el codigo de barras
             }
             else if (strcmp(par[0], "cantidad") == 0)
             {
                 if (texto_a_float_seguro(par[1], &cantidad) < 0)
                 {
-                    cantidad = 0.0f;
+                    cantidad = 0.0f; // fuerza cantidad invalida a cero para que la validacion final falle
                 }
             }
             else if (strcmp(par[0], "sucursal") == 0)
             {
-                free(sucursal);
-                sucursal = duplicar_texto_dinamico(par[1]);
+                free(sucursal); // libera valor previo para evitar fuga si se repite la llave
+                sucursal = duplicar_texto_dinamico(par[1]); // guarda la sucursal asociada a la venta
             }
             else if (strcmp(par[0], "id") == 0)
             {
-                free(id);
-                id = duplicar_texto_dinamico(par[1]);
+                free(id); // libera valor previo para evitar fuga si se repite la llave
+                id = duplicar_texto_dinamico(par[1]); // guarda el id opcional del registro
             }
 
-            free_split(par);
+            free_split(par); // libera el par nombre/valor procesado
         }
 
-        free_split(campos);
+        free_split(campos); // libera todos los campos de la venta actual
 
-        if (!codigo || !codigo[0] || cantidad <= 0.0f || !sucursal)
-        {
-            free(codigo);
-            free(sucursal);
-            free(id);
-            resultado = -1;
-            break;
-        }
+        if (!codigo || !codigo[0] || cantidad <= 0.0f || !sucursal){free(codigo);free(sucursal);free(id);resultado = -1;break;} // valida datos minimos para ejecutar la venta
 
-        int ok = venta(codigo, cantidad, sucursal, id ? id : "", dir_espacio);
-        free(codigo);
-        free(sucursal);
-        free(id);
+        int ok = venta(codigo, cantidad, sucursal, id ? id : "", dir_espacio); // aplica la venta sobre inventario
+        free(codigo);free(sucursal);free(id); // libera memoria temporal de la venta actual
 
-        if (ok < 0)
-        {
-            resultado = ok;
-            break;
-        }
+        if (ok < 0){resultado = ok;break;} // corta el lote ante el primer error de negocio
     }
 
-    free_split(ventas_lote);
-    RETORNAR_PROCESO_ESTANDAR(resultado);
+    free_split(ventas_lote); // libera el arreglo completo de ventas del lote
+    RETORNAR_PROCESO_ESTANDAR(resultado); // retorna estado final del procesamiento del lote
 }
 
 // Venta

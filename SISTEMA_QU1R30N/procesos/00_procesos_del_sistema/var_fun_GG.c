@@ -200,7 +200,7 @@ char *GG_id_programa = "SISTEMA_QU1R30N"; // identificador único del programa; 
 char *GG_archivos[][3] = {
     {"espacios\\", 
         "ID|Usuario|Contraseña|Directorio_Archivo_permisos_usuarios|Nivel", 
-        "archivo_espacios_sys.txt"},
+        "archivo_espacios.txt"},
                           
     {"C:\\sys\\",
         "ID_DESTINO┴ID_ORIGEN■COMANDO■INFORMACION_ESPEJO_NO_SE_MODIFICA", // la informacion espejo regresa esa misma informacion tal y como esta
@@ -1006,17 +1006,17 @@ static char *duplicar_texto(const char *txt)
 static char *crear_metadata_archivo_base(const char *columnas)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    const char *columnas_seguras = columnas ? columnas : "";                                                                             // usa string vacío si columnas es NULL para evitar crash; ejemplo: "_00_ID|_01_PRODUCTO"
-    const char *cantidad_por_archivo = GG_cantidado_por_archivo ? GG_cantidado_por_archivo : "0";                                        // usa "0" si la global es NULL; ejemplo: "100"
-    size_t longitud_total = strlen("ID_TOT|0\nCOLUMNAS|\nCANT_POR_ARCH|") + strlen(columnas_seguras) + strlen(cantidad_por_archivo) + 1; // calcula el tamaño exacto del string de metadata; ejemplo: 60
-    char *metadata = (char *)malloc(longitud_total);                                                                                     // reserva memoria para el string de metadata del archivo
+    const char *columnas_seguras = columnas ? columnas : "";// usa string vacío si columnas es NULL para evitar crash; ejemplo: "_00_ID|_01_PRODUCTO"
+    const char *cantidad_por_archivo = GG_cantidado_por_archivo ? GG_cantidado_por_archivo : "0"; // usa "0" si la global es NULL; ejemplo: "100"
+    size_t longitud_total = strlen("tipo_info|info\nID_TOT|0\nCOLUMNAS|\nCANT_POR_ARCH|") + strlen(columnas_seguras) + strlen(cantidad_por_archivo) + 1; // calcula el tamaño exacto del string de metadata; ejemplo: 60
+    char *metadata = (char *)malloc(longitud_total); // reserva memoria para el string de metadata del archivo
 
     if (!metadata) // verifica que malloc tuvo éxito
     {
         return NULL; // retorna NULL si no hay memoria disponible
     }
 
-    snprintf(metadata, longitud_total, "ID_TOT|0\nCOLUMNAS|%s\nCANT_POR_ARCH|%s", columnas_seguras, cantidad_por_archivo); // formatea el string de metadata con las columnas y la cantidad; ejemplo: "ID_TOT|0\nCOLUMNAS|_00_ID°...\nCANT_POR_ARCH|100"
+    snprintf(metadata, longitud_total, "tipo_info|info\nID_TOT|0\nCOLUMNAS|%s\nCANT_POR_ARCH|%s", columnas_seguras, cantidad_por_archivo); // formatea el string de metadata con las columnas y la cantidad; ejemplo: "tipo_info|info\nID_TOT|0\nCOLUMNAS|_00_ID°...\nCANT_POR_ARCH|100"
     return metadata;                                                                                                       // retorna el string de metadata listo para usarse como cabecera
 }
 
@@ -1081,7 +1081,7 @@ static int agregar_archivo_base_negocio_con_columnas(const char *ruta, const cha
 
     if (!metadata) // verifica que la creación de metadata fue exitosa
     {
-        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si no se pudo crear el string de metadata
+        RETORNAR_PROCESO_ESTANDAR(-1); // retorna error si no se pudo crear el string de metadata}
     }
 
     resultado = agregar_archivo_base_negocio(ruta, metadata, extra); // agrega la entrada al arreglo usando la metadata generada

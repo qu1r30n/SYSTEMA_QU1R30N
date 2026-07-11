@@ -12,6 +12,7 @@
 #include "../../cabeceras/cabeceras_procesos/01_cabeceras_procesos_de_negocios/operaciones_tienda.h"
 #include "../../CLASE_QU1R30N.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_arreglos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
@@ -655,85 +656,85 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
  */
 int venta_desde_texto(char *texto_venta, char *dir_espacio)
 {
-    imprimirMensaje_para_depurar("\n\nventa_desde_texto: \ntexto_venta=%s, \ndir_espacio=%s\n", texto_venta ? texto_venta : "NULL", dir_espacio ? dir_espacio : "NULL"); // imprime trazas de entrada para depuracion
-    if (!texto_venta || !texto_venta[0] || !dir_espacio){RETORNAR_PROCESO_ESTANDAR(-1);} // valida texto y ruta antes de procesar
+    imprimirMensaje_para_depurar("\n\nventa_desde_texto: \ntexto_venta=%s, \ndir_espacio=%s\n", texto_venta ? texto_venta : "NULL", dir_espacio ? dir_espacio : "NULL");
+    if (!texto_venta || !texto_venta[0] || !dir_espacio){RETORNAR_PROCESO_ESTANDAR(-1);}
     
 
-    char **ventas_lote = NULL; // arreglo dinamico de ventas separadas por el delimitador principal
-    int total_ventas = split(texto_venta, GG_caracter_separacion_funciones_espesificas[2], &ventas_lote); // separa el texto en ventas individuales usando "¶"
+    char **ventas_lote = NULL;
+    int total_ventas = split(texto_venta, GG_caracter_separacion_funciones_espesificas[2], &ventas_lote);
     for (int i = 0; i < total_ventas; i++)
     {
-        imprimirMensaje_para_depurar("\nventa %d: %s\n", i, ventas_lote[i] ? ventas_lote[i] : "NULL"); // muestra cada bloque de venta obtenido del split
+        imprimirMensaje_para_depurar("\nventa %d: %s\n", i, ventas_lote[i] ? ventas_lote[i] : "NULL");
     }
     
-    if (total_ventas <= 0 || !ventas_lote){if (ventas_lote){free_split(ventas_lote);}RETORNAR_PROCESO_ESTANDAR(-1);} // corta si no hay ventas validas o no se pudo reservar el arreglo
+    if (total_ventas <= 0 || !ventas_lote){if (ventas_lote){free_split(ventas_lote);}RETORNAR_PROCESO_ESTANDAR(-1);}
 
-    int resultado = 0; // acumula el estado final de procesamiento del lote
+    int resultado = 0;
+    char **venta_codigo = NULL;
+    char **venta_cantida = NULL;
 
     for (int i = 0; i < total_ventas; i++)
     {
-        if (!ventas_lote[i] || !ventas_lote[i][0]){continue;} // ignora entradas vacias en el lote
+        char **venta_espliteada = NULL; // guarda la venta actual separada por campos
+        char *codigo_actual = NULL;
+        char *cantidad_actual = NULL;
+        int total_venta_espliteada = split(ventas_lote[i], GG_caracter_separacion_funciones_espesificas[3], &venta_espliteada); // separa por "╬"
+        if (total_venta_espliteada <= 0 || !venta_espliteada){if (venta_espliteada){free_split(venta_espliteada);}continue;} // ignora ventas mal formadas
 
-        char *codigo = NULL; // codigo de barras extraido de la venta actual
-        char *sucursal = NULL; // sucursal extraida de la venta actual
-        char *id = NULL; // id opcional para ubicar directamente el registro
-        float cantidad = 0.0f; // cantidad solicitada en la venta actual
-
-        if (concatenar_formato_separado_por_variable(&sucursal, NULL, "%s", "nose") < 0 ||
-            concatenar_formato_separado_por_variable(&id, NULL, "%s", "") < 0)
-        {free(codigo);free(sucursal);free(id);resultado = -1;break;} // inicializa valores por defecto y aborta si falla memoria
-
-        char **campos = NULL; // arreglo de pares "nombre⊓valor" dentro de una venta
-        int total_campos = split(ventas_lote[i], GG_caracter_separacion_funciones_espesificas[3], &campos); // separa campos por "╬"
-        if (total_campos <= 0 || !campos){free(codigo);free(sucursal);free(id);if (campos){free_split(campos);}resultado = -1;break;} // aborta si no pudo descomponer los campos
-
-        for (int j = 0; j < total_campos; j++)
+        for (int j = 0; j < total_venta_espliteada; j++)
         {
-            if (!campos[j] || !campos[j][0]){continue;} // salta campos vacios
+            if (!venta_espliteada[j] || !venta_espliteada[j][0]){continue;}
 
-            char **par = NULL; // contiene [nombre, valor] del campo actual
-            int n_par = split(campos[j], GG_caracter_separacion_nom_parametro_de_valor[0], &par); // separa nombre y valor por "⊓"
-            if (n_par < 2 || !par || !par[0] || !par[1])
-            {if (par){free_split(par);}continue;} // ignora campos mal formados y continua con el resto
+            char **par = NULL;
+            int total_par = split(venta_espliteada[j], GG_caracter_separacion_nom_parametro_de_valor[0], &par);
+            
+            if (total_par < 2 || !par || !par[0] || !par[1])
+            {if (par){free_split(par);}continue;}
 
             if (strcmp(par[0], "codigo") == 0)
             {
-                free(codigo); // libera valor previo para evitar fuga si se repite la llave
-                codigo = duplicar_texto_dinamico(par[1]); // guarda el codigo de barras
+                free(codigo_actual);
+                codigo_actual = NULL;
+                concatenar_formato_separado_por_variable(&codigo_actual, NULL, "%s", par[1]);
             }
             else if (strcmp(par[0], "cantidad") == 0)
             {
-                if (texto_a_float_seguro(par[1], &cantidad) < 0)
-                {
-                    cantidad = 0.0f; // fuerza cantidad invalida a cero para que la validacion final falle
-                }
-            }
-            else if (strcmp(par[0], "sucursal") == 0)
-            {
-                free(sucursal); // libera valor previo para evitar fuga si se repite la llave
-                sucursal = duplicar_texto_dinamico(par[1]); // guarda la sucursal asociada a la venta
-            }
-            else if (strcmp(par[0], "id") == 0)
-            {
-                free(id); // libera valor previo para evitar fuga si se repite la llave
-                id = duplicar_texto_dinamico(par[1]); // guarda el id opcional del registro
+                free(cantidad_actual);
+                cantidad_actual = NULL;
+                concatenar_formato_separado_por_variable(&cantidad_actual, NULL, "%s", par[1]);
             }
 
-            free_split(par); // libera el par nombre/valor procesado
+            free_split(par);
         }
 
-        free_split(campos); // libera todos los campos de la venta actual
+        agregar_texto_a_arreglo(&venta_codigo, (codigo_actual && codigo_actual[0]) ? codigo_actual : "0");
+        agregar_texto_a_arreglo(&venta_cantida, (cantidad_actual && cantidad_actual[0]) ? cantidad_actual : "0");
 
-        if (!codigo || !codigo[0] || cantidad <= 0.0f || !sucursal){free(codigo);free(sucursal);free(id);resultado = -1;break;} // valida datos minimos para ejecutar la venta
-
-        int ok = venta(codigo, cantidad, sucursal, id ? id : "", dir_espacio); // aplica la venta sobre inventario
-        free(codigo);free(sucursal);free(id); // libera memoria temporal de la venta actual
-
-        if (ok < 0){resultado = ok;break;} // corta el lote ante el primer error de negocio
+        free(codigo_actual);free(cantidad_actual);free_split(venta_espliteada); // libera la venta ya separada porque aqui solo se queria guardar el split
+    
     }
 
-    free_split(ventas_lote); // libera el arreglo completo de ventas del lote
-    RETORNAR_PROCESO_ESTANDAR(resultado); // retorna estado final del procesamiento del lote
+    for (int i = 0; venta_codigo && venta_codigo[i]; i++)
+    {
+        float cantidad_convertida = 0.0f;
+        if (!venta_cantida || !venta_cantida[i] || texto_a_float_seguro(venta_cantida[i], &cantidad_convertida) < 0 || cantidad_convertida <= 0.0f)
+        {
+            resultado = -1;
+            continue;
+        }
+
+        if (venta(venta_codigo[i], cantidad_convertida, "", "", dir_espacio) < 0)
+        {
+            resultado = -1;
+        }
+    }
+
+    for (int i = 0; venta_codigo && venta_codigo[i]; i++){free(venta_codigo[i]);}free(venta_codigo);
+
+    for (int i = 0; venta_cantida && venta_cantida[i]; i++){free(venta_cantida[i]);}free(venta_cantida);
+
+    free_split(ventas_lote);
+    RETORNAR_PROCESO_ESTANDAR(resultado);
 }
 
 // Venta

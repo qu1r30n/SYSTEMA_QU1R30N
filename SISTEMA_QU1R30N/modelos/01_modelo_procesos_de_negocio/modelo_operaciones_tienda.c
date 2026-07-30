@@ -322,63 +322,12 @@ int modelo_venta(char *texto, char *dir_espacio, char *usuario_contraseña_negoc
 int modelo_compra(char *texto, char *dir_espacio, char *usuario_contraseña_negocio)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (!texto)
-    {
-        RETORNAR_MODELO_ESTANDAR(-1);
-    }
-
-    if (!dir_espacio) // valida que se haya recibido la ruta del espacio de negocio
-    {
-        RETORNAR_MODELO_ESTANDAR(-1);
-    }
+    if (!texto){RETORNAR_MODELO_ESTANDAR(-1);}
+    if (!dir_espacio){RETORNAR_MODELO_ESTANDAR(-1);} // valida que se haya recibido la ruta del espacio de negocio
 
     (void)usuario_contraseña_negocio; // reservado para validación futura del negocio; ejemplo: "admin⊓pass123"
 
-    char *nombres_variables[][4] = {
-        {"codigo", "string", "nose", ""}, 
-        {"cantidad", "float", "0", ""}, 
-        {"proveedor", "string", "nose", ""}, 
-        {"id", "string", "", ""}, 
-        {NULL, NULL, NULL, NULL}
-    };
-
-    int cuantos_parametros_hay = 0; // contador de filas en nombres_variables[] hasta encontrar NULL // ejemplo: 3
-    while (nombres_variables[cuantos_parametros_hay][0])
-    {
-        cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->2->NULL
-    }
-
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
-    if (!partes)
-    {
-        RETORNAR_MODELO_ESTANDAR(-2);
-    }
-
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 4
-    while (partes[cuantas_partes])
-    {
-        cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
-    }
-
-    StructurasDinamicas datos = crearStructuraVacia(); // crea estructura dinamica vacia para guardar los valores parseados // ejemplo: datos con 0 campos
-    int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
-
-    if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
-    {
-        modelo_free_split(partes);                                  // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-        liberarStructura(&datos);                                   // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
-        RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
-    }
-
-    char *codigo = (char *)obtenerValorPorOrden(&datos, 0); // codigo de barras del producto comprado
-    float cantidad = *(float *)obtenerValorPorOrden(&datos, 1); // cantidad de unidades compradas
-    char *proveedor = (char *)obtenerValorPorOrden(&datos, 2); // nombre del proveedor
-    char *id = (char *)obtenerValorPorOrden(&datos, 3); // id directo (opcional; vacio = buscar por codigo)
-
-    int ok = compra(codigo, cantidad, proveedor, id, dir_espacio); // ejecuta la compra en el espacio de negocio indicado
-
-    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
-    liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
+    int ok = compra_desde_texto(texto, dir_espacio);
     RETORNAR_MODELO_ESTANDAR(ok);
 }
 

@@ -737,6 +737,92 @@ int venta_desde_texto(char *texto_venta, char *dir_espacio)
     RETORNAR_PROCESO_ESTANDAR(resultado);
 }
 
+/*
+ * Uso: Ejecuta compra_desde_texto de forma segura.
+ * Entrada ejemplo:
+ *   - Una compra: "codigo⊓ABC123¶cantidad⊓2¶sucursal⊓MATRIZ¶id⊓"
+ *   - Lote: "...compra1...╬...compra2..."
+ */
+int compra_desde_texto(char *texto_compra, char *dir_espacio)
+{
+    imprimirMensaje_para_depurar("\n\ncompra_desde_texto: \ntexto_compra=%s, \ndir_espacio=%s\n", texto_compra ? texto_compra : "NULL", dir_espacio ? dir_espacio : "NULL");
+    if (!texto_compra || !texto_compra[0] || !dir_espacio){RETORNAR_PROCESO_ESTANDAR(-1);}
+
+    char **compras_lote = NULL;
+    int total_compras = split(texto_compra, GG_caracter_separacion_funciones_espesificas[2], &compras_lote);
+    for (int i = 0; i < total_compras; i++)
+    {
+        imprimirMensaje_para_depurar("\ncompra %d: %s\n", i, compras_lote[i] ? compras_lote[i] : "NULL");
+    }
+
+    if (total_compras <= 0 || !compras_lote){if (compras_lote){free_split(compras_lote);}RETORNAR_PROCESO_ESTANDAR(-1);}
+
+    int resultado = 0;
+    char **compra_codigo = NULL;
+    char **compra_cantida = NULL;
+
+    for (int i = 0; i < total_compras; i++)
+    {
+        char **compra_espliteada = NULL;
+        char *codigo_actual = NULL;
+        char *cantidad_actual = NULL;
+        int total_compra_espliteada = split(compras_lote[i], GG_caracter_separacion_funciones_espesificas[3], &compra_espliteada);
+        if (total_compra_espliteada <= 0 || !compra_espliteada){if (compra_espliteada){free_split(compra_espliteada);}continue;}
+
+        for (int j = 0; j < total_compra_espliteada; j++)
+        {
+            if (!compra_espliteada[j] || !compra_espliteada[j][0]){continue;}
+
+            char **par = NULL;
+            int total_par = split(compra_espliteada[j], GG_caracter_separacion_nom_parametro_de_valor[0], &par);
+
+            if (total_par < 2 || !par || !par[0] || !par[1])
+            {if (par){free_split(par);}continue;}
+
+            if (strcmp(par[0], "codigo") == 0)
+            {
+                free(codigo_actual);
+                codigo_actual = NULL;
+                concatenar_formato_separado_por_variable(&codigo_actual, NULL, "%s", par[1]);
+            }
+            else if (strcmp(par[0], "cantidad") == 0)
+            {
+                free(cantidad_actual);
+                cantidad_actual = NULL;
+                concatenar_formato_separado_por_variable(&cantidad_actual, NULL, "%s", par[1]);
+            }
+
+            free_split(par);
+        }
+
+        agregar_texto_a_arreglo(&compra_codigo, (codigo_actual && codigo_actual[0]) ? codigo_actual : "0");
+        agregar_texto_a_arreglo(&compra_cantida, (cantidad_actual && cantidad_actual[0]) ? cantidad_actual : "0");
+
+        free(codigo_actual);free(cantidad_actual);free_split(compra_espliteada);
+    }
+
+    for (int i = 0; compra_codigo && compra_codigo[i]; i++)
+    {
+        float cantidad_convertida = 0.0f;
+        if (!compra_cantida || !compra_cantida[i] || texto_a_float_seguro(compra_cantida[i], &cantidad_convertida) < 0 || cantidad_convertida <= 0.0f)
+        {
+            resultado = -1;
+            continue;
+        }
+
+        if (compra(compra_codigo[i], cantidad_convertida, "", "", dir_espacio) < 0)
+        {
+            resultado = -1;
+        }
+    }
+
+    for (int i = 0; compra_codigo && compra_codigo[i]; i++){free(compra_codigo[i]);}free(compra_codigo);
+    for (int i = 0; compra_cantida && compra_cantida[i]; i++){free(compra_cantida[i]);}free(compra_cantida);
+
+    free_split(compras_lote);
+    RETORNAR_PROCESO_ESTANDAR(resultado);
+}
+
 // Venta
 /*
  * Uso: Ejecuta venta de forma segura.
@@ -881,7 +967,7 @@ int venta(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espa
 int compra(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espacio)
 {
 
-    imprimirMensaje_para_depurar("\nventa: \ncodigo=%s, \ncantidad=%.3f, \nsucursal=%s, \nid=%s, \ndir_espacio=%s\n", codigo, cantidad, sucursal, id ? id : "", dir_espacio);
+    imprimirMensaje_para_depurar("\ncompra: \ncodigo=%s, \ncantidad=%.3f, \nsucursal=%s, \nid=%s, \ndir_espacio=%s\n", codigo, cantidad, sucursal, id ? id : "", dir_espacio);
 
     // valida parametros esenciales
     if (!codigo || cantidad <= 0 || !dir_espacio){RETORNAR_PROCESO_ESTANDAR(-1);}
@@ -940,7 +1026,7 @@ int compra(char *codigo, float cantidad, char *sucursal, char *id, char *dir_esp
         free_split(partes_bus);
     }
 
-    // verifica el stock antes de decrementar
+    // valida que la fila tenga columna de stock para poder incrementarla
     char **cols_fila = NULL;
     int n_cols = split(fila_de_stock, GG_caracter_separacion[0], &cols_fila);
     free(fila_de_stock);
@@ -948,15 +1034,9 @@ int compra(char *codigo, float cantidad, char *sucursal, char *id, char *dir_esp
     {
         if (cols_fila){free_split(cols_fila);}free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
     }
-
-    float stock_actual = 0.0f;
-    if (texto_a_float_seguro(cols_fila[5], &stock_actual) < 0 || stock_actual < cantidad)
-    {
-        free_split(cols_fila);free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
-    }
     free_split(cols_fila);
 
-    // arma los argumentos: decrementa col 5 (stock) e incrementa col 30 (total_vendido)
+    // arma los argumentos: incrementa col 5 (stock) y decrementa col 30 (total_vendido)
     char *cant_neg  = NULL;
     char *cant_pos  = NULL;
     char *cols_inc  = NULL;

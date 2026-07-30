@@ -48,6 +48,12 @@ void agregarProducto(char *producto, float contenido, char *tipo_medida, float p
 int venta_desde_texto(char *texto_venta, char *dir_espacio);
 
 /*
+ * Uso: Ejecuta compra_desde_texto de forma segura.
+ * Entrada ejemplo: compra_desde_texto("codigo⊓ABC123¶cantidad⊓2¶sucursal⊓MATRIZ¶id⊓╬...", dir_espacio)
+ */
+int compra_desde_texto(char *texto_compra, char *dir_espacio);
+
+/*
  * Uso: Ejecuta editarPrecio de forma segura.
  * Entrada ejemplo: editarPrecio(codigo, precio, proveedor, id, dir_espacio)
  * id: si no es NULL ni vacio, verifica que el registro con ese id tenga el mismo codigo;

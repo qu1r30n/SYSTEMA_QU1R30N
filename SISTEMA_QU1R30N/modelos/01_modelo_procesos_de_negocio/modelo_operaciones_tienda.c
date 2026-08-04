@@ -34,7 +34,7 @@
 /* prototipos del modelo para validar firmas y ajustar retornos */
 #include "../../CLASE_QU1R30N.h"
 #include "../../cabeceras/cabeceras_modelos/01_cabeceras_modelos_de_negocios/modelo_operaciones_tienda.h"
-/* usar el split del modelo de textos */
+/* usar el split_con_numero_de_celdas del modelo de textos */
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h"
 
 /* las cabeceras de procesos que se invocan */
@@ -118,13 +118,13 @@ int modelo_buscarProducto(char *texto, char *dir_espacio, char *usuario_contrase
         cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->NULL
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    char **partes = split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
         RETORNAR_MODELO_ESTANDAR(-2);
     }
 
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 1
+    int cuantas_partes = 0; // contador de partes resultantes del split_con_numero_de_celdas // ejemplo: 1
     while (partes[cuantas_partes])
     {
         cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1
@@ -135,7 +135,7 @@ int modelo_buscarProducto(char *texto, char *dir_espacio, char *usuario_contrase
 
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
-        modelo_free_split(partes);                                  // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+        modelo_free_split_con_numero_de_celdas(partes);                                  // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
         liberarStructura(&datos);                                   // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
@@ -148,7 +148,7 @@ int modelo_buscarProducto(char *texto, char *dir_espacio, char *usuario_contrase
     if (cantidad > 0 && retorno_inventario)
     {
         char **filas = NULL;
-        int total_filas = split(retorno_inventario, "\n", &filas);
+        int total_filas = split_con_numero_de_celdas(retorno_inventario, "\n", &filas);
         int indice_producto = 0;
 
         if (total_filas > 1 && filas)
@@ -180,19 +180,19 @@ int modelo_buscarProducto(char *texto, char *dir_espacio, char *usuario_contrase
                 }
 
                 char **columnas = NULL;
-                int total_columnas = split(fila_limpia, GG_caracter_separacion[0], &columnas);
+                int total_columnas = split_con_numero_de_celdas(fila_limpia, GG_caracter_separacion[0], &columnas);
                 free(fila_limpia);
 
                 if (total_columnas > 4 && columnas && columnas[4] && strcmp(columnas[4], codigo) == 0)
                 {
                     resultado = indice_producto;
-                    free_split(columnas);
+                    free_split_con_numero_de_celdas(columnas);
                     break;
                 }
 
                 if (columnas)
                 {
-                    free_split(columnas);
+                    free_split_con_numero_de_celdas(columnas);
                 }
 
                 indice_producto++;
@@ -201,13 +201,13 @@ int modelo_buscarProducto(char *texto, char *dir_espacio, char *usuario_contrase
 
         if (filas)
         {
-            free_split(filas);
+            free_split_con_numero_de_celdas(filas);
         }
     }
 
     free(retorno_inventario);
 
-    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+    modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
     RETORNAR_MODELO_ESTANDAR(resultado);
 }
@@ -268,10 +268,10 @@ int modelo_agregarProducto(char *texto, char *dir_espacio, char *usuario_contras
         cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->2->NULL
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
+    char **partes = split(texto, G_caracter_separacion_funciones_espesificas[2]);
     if (!partes){RETORNAR_MODELO_ESTANDAR(-2);}
 
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 31
+    int cuantas_partes = 0; // contador de partes resultantes del split_con_numero_de_celdas // ejemplo: 31
     imprimirMensaje_para_depurar("\n\n");
     while (partes[cuantas_partes]) // Cuenta cuántas partes del texto que se reccibio en el parametro hay en el arreglo de partes
     {
@@ -284,7 +284,7 @@ int modelo_agregarProducto(char *texto, char *dir_espacio, char *usuario_contras
 
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
-        modelo_free_split(partes);                                  // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+        modelo_free_split_con_numero_de_celdas(partes);                                  // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
         liberarStructura(&datos);                                   // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3); // si el parseo fallo retorna su codigo, si no hay partes retorna -3 // ejemplo: ret_parse=-1
     }
@@ -293,7 +293,7 @@ int modelo_agregarProducto(char *texto, char *dir_espacio, char *usuario_contras
                     (char *)obtenerValorPorOrden(&datos, 23), (char *)obtenerValorPorOrden(&datos, 24), *(float *)obtenerValorPorOrden(&datos, 25), (char *)obtenerValorPorOrden(&datos, 26), (char *)obtenerValorPorOrden(&datos, 27), (char *)obtenerValorPorOrden(&datos, 28), (char *)obtenerValorPorOrden(&datos, 29), (char *)obtenerValorPorOrden(&datos, 30),
                     dir_espacio); // pasa la ruta del espacio de negocio para que el proceso sepa donde guardar el producto
 
-    modelo_free_split(partes); // Libera la memoria del arreglo de partes
+    modelo_free_split_con_numero_de_celdas(partes); // Libera la memoria del arreglo de partes
     liberarStructura(&datos);  // Libera la memoria de la estructura dinámica
     RETORNAR_MODELO_ESTANDAR(0);
 }
@@ -366,7 +366,7 @@ int modelo_editarPrecio(char *texto, char *dir_espacio, char *usuario_contraseñ
         cuantos_parametros_hay++;
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
+    char **partes = split(texto, G_caracter_separacion_funciones_espesificas[2]);
     if (!partes)
     {
         RETORNAR_MODELO_ESTANDAR(-2);
@@ -383,7 +383,7 @@ int modelo_editarPrecio(char *texto, char *dir_espacio, char *usuario_contraseñ
 
     if (ret_parse < 0 || cuantas_partes <= 0)
     {
-        modelo_free_split(partes);
+        modelo_free_split_con_numero_de_celdas(partes);
         liberarStructura(&datos);
         RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3);
     }
@@ -395,7 +395,7 @@ int modelo_editarPrecio(char *texto, char *dir_espacio, char *usuario_contraseñ
 
     int ok = editarPrecio(codigo, precio, proveedor, id, dir_espacio);
 
-    modelo_free_split(partes);
+    modelo_free_split_con_numero_de_celdas(partes);
     liberarStructura(&datos);
     RETORNAR_MODELO_ESTANDAR(ok);
 }
@@ -431,7 +431,7 @@ int modelo_hacerInventario(char *texto, char *dir_espacio, char *usuario_contras
         cuantos_parametros_hay++;
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[2]);
+    char **partes = split(texto, G_caracter_separacion_funciones_espesificas[2]);
     if (!partes)
     {
         RETORNAR_MODELO_ESTANDAR(-2);
@@ -447,7 +447,7 @@ int modelo_hacerInventario(char *texto, char *dir_espacio, char *usuario_contras
     int ret_parse = procesar_partes_del_texto(partes, nombres_variables, G_caracter_separacion_nom_parametro_de_valor[0], &datos);
     if (ret_parse < 0 || cuantas_partes <= 0)
     {
-        modelo_free_split(partes);
+        modelo_free_split_con_numero_de_celdas(partes);
         liberarStructura(&datos);
         RETORNAR_MODELO_ESTANDAR((ret_parse < 0) ? ret_parse : -3);
     }
@@ -462,7 +462,7 @@ int modelo_hacerInventario(char *texto, char *dir_espacio, char *usuario_contras
         free(retorno_inv_revisado);
     }
 
-    modelo_free_split(partes);
+    modelo_free_split_con_numero_de_celdas(partes);
     liberarStructura(&datos);
     RETORNAR_MODELO_ESTANDAR(ok);
 }

@@ -66,19 +66,18 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
     }
 
     // Divide el texto en partes usando un separador global
-    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[1]);
+    char **partes = split(texto, G_caracter_separacion_funciones_espesificas[1]);
 
-    // Si falla el split ? error
+    imprimirMensaje_para_depurar_arreglo(partes, "partes", -1); // imprime el arreglo de partes para depuracion
+
+    // Si falla el split_con_numero_de_celdas ? error
     if (!partes)
     {
         RETORNAR_MODELO_ESTANDAR(-1);
     }
 
-    // Imprime las primeras partes para depuracion
-    imprimirMensaje_para_depurar("%s\n%s\n%s\n%s", partes[0], partes[1], partes[2], partes[3]);
-
     // Cuenta cuantas partes se generaron
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
+    int cuantas_partes = 0; // contador de partes resultantes del split_con_numero_de_celdas // ejemplo: 3
     while (partes[cuantas_partes])
     {
         cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
@@ -94,7 +93,7 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
     // Si falla el parseo o no hay partes ? error
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
-        modelo_free_split(partes); // Libera memoria del split
+        modelo_free_split_con_numero_de_celdas(partes); // Libera memoria del split_con_numero_de_celdas
         liberarStructura(&datos);  // Libera estructura dinamica
         RETORNAR_MODELO_ESTANDAR(-1);
     }
@@ -113,7 +112,7 @@ int modelo_checar_permiso(char *texto, char **retorna_direccion_espacio_negocio,
     int tiene_permiso = checar_permiso(nivel_minimo, ruta_archivo, id_de_espacio, usuario, contrasena, retorna_direccion_espacio_negocio, retornar_nivel);
 
     // Libera memoria usada
-    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+    modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 
     // Devuelve el resultado de la validaci�n (1, 0 o -1)
@@ -151,7 +150,7 @@ int modelo_checar_permiso_negocios(char *texto, int *retornar_nivel)
         cuantos_parametros_hay++;
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_funciones_espesificas[1]);
+    char **partes = split(texto, G_caracter_separacion_funciones_espesificas[1]);
     if (!partes)
     {
         RETORNAR_MODELO_ESTANDAR(-1);
@@ -171,7 +170,7 @@ int modelo_checar_permiso_negocios(char *texto, int *retornar_nivel)
 
     if (ret_parse < 0 || cuantas_partes <= 0)
     {
-        modelo_free_split(partes);
+        modelo_free_split_con_numero_de_celdas(partes);
         liberarStructura(&datos);
         RETORNAR_MODELO_ESTANDAR(-1);
     }
@@ -186,7 +185,7 @@ int modelo_checar_permiso_negocios(char *texto, int *retornar_nivel)
 
     int tiene_permiso = checar_permiso_negocios(nivel_minimo, ruta_archivo, id_de_espacio, usuario, contrasena, retornar_nivel);
 
-    modelo_free_split(partes);
+    modelo_free_split_con_numero_de_celdas(partes);
     liberarStructura(&datos);
 
     RETORNAR_MODELO_ESTANDAR(tiene_permiso);

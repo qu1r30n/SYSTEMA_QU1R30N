@@ -12,7 +12,7 @@
 
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/gestor_de_permisos.h" // firma publica de checar_permiso
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"  // imprimirMensaje_para_depurar
-#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h" // split() y free_split()
+#include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h" // split_con_numero_de_celdas() y free_split_con_numero_de_celdas()
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/tex_bas.h"            // leer_archivo, free_lineas, existe_archivo
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"         // separadores globales GG_
 
@@ -53,6 +53,7 @@ int checar_permiso(int nivel_minimo, const char *ruta_archivo, const char *id_de
     int n_lineas = 0;
     // Cargar todas las lineas del archivo en memoria.
     char **lineas = leer_archivo(ruta_archivo, &n_lineas);
+    imprimirMensaje_para_depurar_arreglo(lineas, "lineas", n_lineas); // imprime el arreglo de lineas para depuracion
     if (!lineas)
     {
         // Retorno -1: fallo al leer archivo.
@@ -74,10 +75,12 @@ int checar_permiso(int nivel_minimo, const char *ruta_archivo, const char *id_de
             continue;
         }
 
-        /* Extraer columnas usando split() de operaciones_textos. */
+        /* Extraer columnas usando split_con_numero_de_celdas() de operaciones_textos. */
         char **columnas = NULL;
         // Divide una linea en columnas por separador y deja arreglo terminado en NULL.
-        split(lineas[i], sep, &columnas);
+        split_con_numero_de_celdas(lineas[i], sep, &columnas);
+
+        imprimirMensaje_para_depurar_arreglo(columnas, "columnas", -1); // imprime el arreglo de columnas para depuracion
 
         // Contador real de columnas encontradas.
         int n_columnas = 0;
@@ -121,13 +124,13 @@ int checar_permiso(int nivel_minimo, const char *ruta_archivo, const char *id_de
             // Con la convención actual: 0 = permitido, 1 = denegado.
             tiene_permiso = (nivel_usuario <= nivel_minimo) ? 0 : 1;
             // Liberar columnas antes de salir del ciclo.
-            free_split(columnas);
+            free_split_con_numero_de_celdas(columnas);
             // Ya se encontro usuario; se deja de buscar.
             break;
         }
 
         // Liberar columnas en caso de no coincidir o no cumplir condiciones.
-        free_split(columnas);
+        free_split_con_numero_de_celdas(columnas);
     }
 
     // Liberar todas las lineas leidas del archivo.
@@ -177,7 +180,7 @@ int checar_permiso_negocios(int nivel_minimo, const char *ruta_archivo, const ch
         }
 
         char **columnas = NULL;
-        split(lineas[i], sep, &columnas); // divide la fila en columnas por el separador; ejemplo: "0|administrador_negocio|54321||2" → ["0","administrador_negocio","54321","","2"]
+        split_con_numero_de_celdas(lineas[i], sep, &columnas); // divide la fila en columnas por el separador; ejemplo: "0|administrador_negocio|54321||2" → ["0","administrador_negocio","54321","","2"]
 
         int n_columnas = 0;
         if (columnas)
@@ -204,11 +207,11 @@ int checar_permiso_negocios(int nivel_minimo, const char *ruta_archivo, const ch
             }
             // columna 3 (directorio) se ignora: no se retorna porque el caller ya tiene la ruta
             tiene_permiso = (nivel_usuario <= nivel_minimo) ? 0 : 1; // 0=permitido si su nivel es <= nivel_minimo; 1=denegado si es mayor
-            free_split(columnas);                                    // libera antes de salir del ciclo
+            free_split_con_numero_de_celdas(columnas);                                    // libera antes de salir del ciclo
             break;                                                   // usuario encontrado, no es necesario seguir buscando
         }
 
-        free_split(columnas); // libera columnas si esta fila no coincidio
+        free_split_con_numero_de_celdas(columnas); // libera columnas si esta fila no coincidio
     }
 
     free_lineas(lineas, n_lineas);            // libera todas las filas leidas del archivo

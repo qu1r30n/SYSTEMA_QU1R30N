@@ -11,17 +11,17 @@
 #define CONCAT_FLOAT 2
 
 /*
- * Uso: Ejecuta split de forma segura.
- * Entrada ejemplo: split(txt, sep, salida)
+ * Uso: Ejecuta split_con_numero_de_celdas de forma segura.
+ * Entrada ejemplo: split_con_numero_de_celdas(txt, sep, salida)
  */
-int split(const char *txt, const char *sep, char ***salida);
+int split_con_numero_de_celdas(const char *txt, const char *sep, char ***salida);
 
 /* libera el arreglo terminado en NULL (no necesita longitud) */
 /*
- * Uso: Ejecuta free_split de forma segura.
- * Entrada ejemplo: free_split(a)
+ * Uso: Ejecuta free_split_con_numero_de_celdas de forma segura.
+ * Entrada ejemplo: free_split_con_numero_de_celdas(a)
  */
-void free_split(char **a);
+void free_split_con_numero_de_celdas(char **a);
 
 /*
  * Uso: Ejecuta texto_a_float_seguro de forma segura.

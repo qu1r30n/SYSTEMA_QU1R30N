@@ -508,12 +508,12 @@ int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const
     int i = 0;
     while (partes[i]) // Recorre las partes del texto hasta encontrar un NULL
     {
-        char **nom_parametro_dato = modelo_split(partes[i], separador); // Divide cada parte del texto en nombre de parámetro y valor usando el separador especificado
+        char **nom_parametro_dato = split(partes[i], separador); // Divide cada parte del texto en nombre de parámetro y valor usando el separador especificado
 
         if (!nom_parametro_dato)
         {
             liberarStructura(&datos);
-            RETORNAR_PROCESO_ESTANDAR(-1); // Si la división del texto en nombre de parámetro y valor falla (modelo_split devuelve NULL), libera la estructura creada y retorna un error genérico
+            RETORNAR_PROCESO_ESTANDAR(-1); // Si la división del texto en nombre de parámetro y valor falla (split devuelve NULL), libera la estructura creada y retorna un error genérico
         }
 
         int contador_elementos_parametro = 0;
@@ -530,7 +530,7 @@ int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const
             {
                 if (contador_elementos_parametro > 2 && strcmp(nom_parametro_dato[1], "") == 0 && strcmp(nom_parametro_dato[2], "no_predeterminado") == 0) // Verifica que la división del texto en nombre de parámetro y valor haya resultado en al menos 2 elementos (nombre y valor)
                 {
-                    modelo_free_split(nom_parametro_dato);
+                    modelo_free_split_con_numero_de_celdas(nom_parametro_dato);
                     liberarStructura(&datos);
                     RETORNAR_PROCESO_ESTANDAR(-1); // si no se quiere el valor predeterminado y el valor está vacío, se retorna un error -1 para indicar que no se asignará ningún valor a ese campo y no prosedera con el agregado
                 }
@@ -563,7 +563,7 @@ int procesar_partes_del_texto(char **partes, char *nombres_variables[][4], const
 
         if (nom_parametro_dato) // Si la división del texto en nombre de parámetro y valor fue exitosa, libera la memoria del arreglo resultante para evitar fugas
         {
-            modelo_free_split(nom_parametro_dato); // Libera la memoria del arreglo resultante de la división del texto en nombre de parámetro y valor
+            modelo_free_split_con_numero_de_celdas(nom_parametro_dato); // Libera la memoria del arreglo resultante de la división del texto en nombre de parámetro y valor
         }
 
         i++;

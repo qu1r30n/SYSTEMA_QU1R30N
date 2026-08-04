@@ -65,13 +65,13 @@ void modelo_crearDirectorio(char *texto)
         cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->2->NULL
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    char **partes = split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
         return;
     }
 
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
+    int cuantas_partes = 0; // contador de partes resultantes del split_con_numero_de_celdas // ejemplo: 3
     while (partes[cuantas_partes])
     {
         cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
@@ -82,7 +82,7 @@ void modelo_crearDirectorio(char *texto)
 
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
-        modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+        modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
         liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         return;
     }
@@ -90,7 +90,7 @@ void modelo_crearDirectorio(char *texto)
     char *ruta = (char *)obtenerValorPorOrden(&datos, 0);
     crearDirectorio(ruta);
 
-    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+    modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 }
 
@@ -115,13 +115,13 @@ void modelo_crearArchivo(char *texto)
         cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->2->NULL
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    char **partes = split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
         return;
     }
 
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
+    int cuantas_partes = 0; // contador de partes resultantes del split_con_numero_de_celdas // ejemplo: 3
     while (partes[cuantas_partes])
     {
         cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
@@ -132,7 +132,7 @@ void modelo_crearArchivo(char *texto)
 
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
-        modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+        modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
         liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         return;
     }
@@ -141,7 +141,7 @@ void modelo_crearArchivo(char *texto)
     char *contenido = (char *)obtenerValorPorOrden(&datos, 1);
     crearArchivo(ruta, contenido);
 
-    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+    modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 }
 
@@ -158,7 +158,7 @@ void modelo_leer_archivo(char *texto)
         return;
     }
     // Notas: Esta versión usa dinámica malloc/realloc
-    // Ruta: modelo_split, parse parámetros, luego:
+    // Ruta: split, parse parámetros, luego:
     // int n = 0;
     // char **lineas = leer_archivo(ruta, &n);
     // free_lineas(lineas, n);
@@ -177,7 +177,7 @@ void modelo_guardar_archivo(char *texto)
         return;
     }
     // Notas: Esta versión usa dinámica malloc/realloc
-    // Ruta: modelo_split, parse parámetros, luego:
+    // Ruta: split, parse parámetros, luego:
     // int n = 0;
     // char **lineas = leer_archivo(ruta, &n);
     // guardar_archivo(ruta, lineas, n);
@@ -205,13 +205,13 @@ void modelo_agregar_fila(char *texto)
         cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->2->NULL
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    char **partes = split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
         return;
     }
 
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
+    int cuantas_partes = 0; // contador de partes resultantes del split_con_numero_de_celdas // ejemplo: 3
     while (partes[cuantas_partes])
     {
         cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
@@ -222,7 +222,7 @@ void modelo_agregar_fila(char *texto)
 
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
-        modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+        modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
         liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         return;
     }
@@ -231,6 +231,6 @@ void modelo_agregar_fila(char *texto)
     char *fila = (char *)obtenerValorPorOrden(&datos, 1);
     agregar_fila(ruta, fila);
 
-    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+    modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 }

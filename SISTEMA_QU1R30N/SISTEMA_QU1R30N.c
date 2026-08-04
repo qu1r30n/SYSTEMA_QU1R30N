@@ -235,7 +235,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
     char *acumulador_modelos = NULL;
     char *retorno_conmutador = NULL;
 
-    char **opciones = modelo_split(info_a_conmutar, G_caracter_separacion_funciones_espesificas[0]);
+    char **opciones = NULL;
+    int cant_opciones = split_con_numero_de_celdas(info_a_conmutar, G_caracter_separacion_funciones_espesificas[0], &opciones);
     char **sub_opcion = NULL;
 
     if (estado_out != NULL)
@@ -245,7 +246,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
 
     if (!opciones || !opciones[0])
     {
-        free_split(opciones);
+        free_split_con_numero_de_celdas(opciones);
         if (estado_out != NULL)
         {
             *estado_out = RET_ERROR_GENERIC;
@@ -254,14 +255,14 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
     }
 
     /* Trazas de entrada: operación, payload, espacio y credenciales. */
-    imprimirMensaje_para_depurar("\n\n%s\n%s\n%s\n%s\n%s\n", opciones[0], opciones[1], opciones[2], opciones[3], opciones[4]);
+    imprimirMensaje_para_depurar_arreglo(opciones, "opcion", -1);
 
     char *texto_permiso = NULL;
 
     if (concatenar_formato_separado_por_variable(&texto_permiso, NULL, "nivel_minimo%s1%sruta_archivo%s%s\\%s%s%s%s%s", GG_caracter_separacion_nom_parametro_de_valor[0], G_caracter_separacion_funciones_espesificas[1], GG_caracter_separacion_nom_parametro_de_valor[0], GG_archivos[0][0], GG_archivos[0][2], G_caracter_separacion_funciones_espesificas[1], opciones[2], G_caracter_separacion_funciones_espesificas[1], opciones[3]) < 0)
     {
         free(texto_permiso);
-        free_split(opciones);
+        free_split_con_numero_de_celdas(opciones);
         if (estado_out != NULL)
         {
             *estado_out = RET_ERROR_GENERIC;
@@ -277,14 +278,18 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
 
     imprimirMensaje_para_depurar("tiene_permiso_espacio=%d\n", tiene_permiso_espacio);
     imprimirMensaje_para_depurar("nivel_del_usuario_espacio=%d\n", nivel_del_usuario_espacio);
+    
     free(texto_permiso);
 
     int nivel_del_usuario_negocio = -1;
     int tiene_permiso_negocio = 1;
-    if (opciones[4] && retorna_direccion_espacio_negocio)
+
+    imprimirMensaje_para_depurar_arreglo(opciones, "opcion", -1);
+
+    if (cant_opciones > 4 && retorna_direccion_espacio_negocio != NULL)
     {
-        char **partes_negocio = modelo_split(opciones[4], G_caracter_separacion_funciones_espesificas[1]);
-        imprimirMensaje_para_depurar("\n\n%s\n%s\n%s\n", partes_negocio[0], partes_negocio[1], partes_negocio[2]);
+        char **partes_negocio = split(opciones[4], G_caracter_separacion_funciones_espesificas[1]);
+        imprimirMensaje_para_depurar_arreglo(partes_negocio, "partes_negocio", -1);
         if (partes_negocio && partes_negocio[0] && partes_negocio[1] && partes_negocio[2])
         {
             char *texto_permiso_negocio = NULL;
@@ -295,8 +300,9 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 free(texto_permiso_negocio);
             }
         }
-        free_split(partes_negocio);
+        free_split_con_numero_de_celdas(partes_negocio);
     }
+
     imprimirMensaje_para_depurar("nivel_del_usuario_negocio=%d\n", nivel_del_usuario_negocio);
 
     /* Resumen de entrada antes de decidir el flujo. */
@@ -307,7 +313,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
     imprimirMensaje_para_depurar("usuario/contraseña_espacio opciones[3] = %s\n", opciones[3] ? opciones[3] : "(nulo)");
     imprimirMensaje_para_depurar("nivel_usuario de espacio= %d\n", nivel_del_usuario_espacio);
     imprimirMensaje_para_depurar("dir_espacio_negocio = %s\n", retorna_direccion_espacio_negocio ? retorna_direccion_espacio_negocio : "(nulo)");
-    imprimirMensaje_para_depurar("usuario/contraseña_negocio/id opciones[4] = %s\n", opciones[4] ? opciones[4] : "(nulo)");
+    //imprimirMensaje_para_depurar("usuario/contraseña_negocio/id opciones[4] = %s\n", opciones[4] ? opciones[4] : "(nulo)");
     imprimirMensaje_para_depurar("nivel_usuario de negocio= %d\n", nivel_del_usuario_negocio);
     imprimirMensaje_para_depurar("tiene_permiso_negocio= %d\n", tiene_permiso_negocio);
     imprimirMensaje_para_depurar("============================\n\n");
@@ -370,7 +376,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
             if (!opciones[1]) // verifica que exista la sub-operacion despues del primer "~"
             {
                 printf("Falta sub-opcion en op_tienda.\n"); // avisa en consola
-                free_split(opciones);                       // libera memoria antes de retornar
+                free_split_con_numero_de_celdas(opciones);                       // libera memoria antes de retornar
                 if (retorna_direccion_espacio_negocio)
                 {
                     free(retorna_direccion_espacio_negocio);
@@ -382,13 +388,13 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 return construir_retorno_estandar(RET_ERROR_GENERIC, GG_caracter_para_confirmacion_o_error[0], "error en el conmutador", "Falta sub-opcion en op_tienda.");
             }
 
-            sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]); // divide opciones[1] por "ï¿½"; ejemplo: "agregar_productoï¿½producto?2ï¿½..." ?
+            sub_opcion = split(opciones[1], G_caracter_separacion_funciones_espesificas[1]); // divide opciones[1] por "ï¿½"; ejemplo: "agregar_productoï¿½producto?2ï¿½..." ?
                 
             
             
             
             
-            if (sub_opcion && sub_opcion[0] && sub_opcion[1]) // verifica que el split dio al menos dos partes validas
+            if (sub_opcion && sub_opcion[0] && sub_opcion[1]) // verifica que el split_con_numero_de_celdas dio al menos dos partes validas
             {
                 imprimirMensaje_para_depurar("%s\n", sub_opcion[0]); // muestra nombre de la sub-operacion; ejemplo: "agregar_producto"
                 imprimirMensaje_para_depurar("%s\n", sub_opcion[1]); // muestra los parametros; ejemplo: "producto?2ï¿½contenido?3ï¿½tipo_medida?4ï¿½..."
@@ -495,7 +501,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
 
 
 
-            else // el split no dio suficientes partes para la sub-operacion
+            else // el split_con_numero_de_celdas no dio suficientes partes para la sub-operacion
             {
                 printf("Sub-opcion incompleta en op_tienda.\n");
                 resultado = RET_ERROR_GENERIC;
@@ -504,7 +510,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], "error en este modelo llamado op_tienda", detalle_resultado);
             }
 
-            free_split(sub_opcion); // libera el arreglo de sub-opciones
+            free_split_con_numero_de_celdas(sub_opcion); // libera el arreglo de sub-opciones
         }
 
 
@@ -536,7 +542,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                 if (!opciones[1]) // verifica que exista la sub-operacion
                 {
                     printf("Falta sub-opcion en administracion_espacio.\n");
-                    free_split(opciones);
+                    free_split_con_numero_de_celdas(opciones);
                     if (estado_out != NULL)
                     {
                         *estado_out = RET_ERROR_GENERIC;
@@ -544,7 +550,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     return construir_retorno_estandar(RET_ERROR_GENERIC, GG_caracter_para_confirmacion_o_error[0], "error en el conmutador", "Falta sub-opcion en administracion_espacio.");
                 }
 
-                sub_opcion = modelo_split(opciones[1], G_caracter_separacion_funciones_espesificas[1]); // divide por "ï¿½"; ejemplo: "crear_espacioï¿½nom_espacio?ferreteria_danï¿½..." ?
+                sub_opcion = split(opciones[1], G_caracter_separacion_funciones_espesificas[1]); // divide por "ï¿½"; ejemplo: "crear_espacioï¿½nom_espacio?ferreteria_danï¿½..." ?
                                                                                                         // sub_opcion[0]="crear_espacio", sub_opcion[1]="nom_espacio?ferreteria_danï¿½..."
 
                 if (sub_opcion && sub_opcion[0] && sub_opcion[1]) // verifica que hay al menos dos partes
@@ -558,8 +564,8 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         char *direccion_archivo_espacios = NULL;                                                                                             // guardara la ruta del archivo de espacios
                         if (concatenar_formato_separado_por_variable(&direccion_archivo_espacios, NULL, "%s\\%s", GG_archivos[0][0], GG_archivos[0][2]) < 0) // construye la ruta; ejemplo resultado: "espacios\\archivo_espacios.txt"
                         {
-                            free_split(sub_opcion);
-                            free_split(opciones);
+                            free_split_con_numero_de_celdas(sub_opcion);
+                            free_split_con_numero_de_celdas(opciones);
                             if (estado_out != NULL)
                             {
                                 *estado_out = RET_ERROR_GENERIC;
@@ -594,7 +600,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                         detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], "error en este modelo llamado administracion_espacio", detalle_resultado);
                     }
                 }
-                else // el split no dio suficientes partes
+                else // el split_con_numero_de_celdas no dio suficientes partes
                 {
                     printf("Sub-opcion incompleta en administracion_espacio.\n");
                     resultado = RET_ERROR_GENERIC;
@@ -603,7 +609,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
                     detalle_capa_modelo = construir_retorno_estandar(resultado, GG_caracter_para_confirmacion_o_error[1], "error en este modelo llamado administracion_espacio", detalle_resultado);
                 }
 
-                free_split(sub_opcion); // libera sub-opciones
+                free_split_con_numero_de_celdas(sub_opcion); // libera sub-opciones
             }
 
             else if (opciones && strcmp(opciones[0], "procesos_generales") == 0) // si el comando es "procesos_generales" (operaciones contables generales)
@@ -648,7 +654,7 @@ char *conmutador(char *info_a_conmutar, int *estado_out)
     } 
     
     // libera el arreglo de opciones al final de la funcion
-    free_split(opciones);   
+    free_split_con_numero_de_celdas(opciones);   
     
     // si se paso un puntero para recibir el estado, guarda el resultado final del conmutador (exito o error) en ese puntero para que el llamador pueda usarlo
     if (estado_out != NULL) 
@@ -712,13 +718,13 @@ static int extraer_datos_transferencia(const char *linea_transferencia, char **p
 
     /* Formato: ID_DESTINOï¿½ID_ORIGEN-COMANDOï¿½ESPEJO
      [0]="ï¿½" separa columnas, [1]="-" separa DESTINO de ORIGEN */
-    total_partes_transferencia = split(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia); // divide por "ï¿½"; ejemplo entrada:
+    total_partes_transferencia = split_con_numero_de_celdas(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia); // divide por "ï¿½"; ejemplo entrada:
                                                                                                                                       // "SISTEMA_QU1R30N-NEXOPORTALARCANOï¿½op_tienda~...ï¿½PREGUNTAS_WSï¿½"
     if (total_partes_transferencia >= 3 && partes_transferencia != NULL &&                                                            // necesita al menos 3 columnas
         partes_transferencia[0] != NULL && partes_transferencia[1] != NULL && partes_transferencia[2] != NULL)                        // ninguna columna puede ser nula
     {
         /* Separar "ID_DESTINO-ID_ORIGEN" ? ["ID_DESTINO", "ID_ORIGEN"] */
-        total_partes_comando = split(partes_transferencia[0], GG_caracter_para_transferencia_entre_archivos[1], &partes_comando); // divide por "-"; ejemplo: "SISTEMA_QU1R30N-NEXOPORTALARCANO" ?
+        total_partes_comando = split_con_numero_de_celdas(partes_transferencia[0], GG_caracter_para_transferencia_entre_archivos[1], &partes_comando); // divide por "-"; ejemplo: "SISTEMA_QU1R30N-NEXOPORTALARCANO" ?
                                                                                                                                   // ["SISTEMA_QU1R30N", "NEXOPORTALARCANO"]
         if (total_partes_comando >= 2 && partes_comando != NULL &&                                                                // necesita al menos 2 partes
             partes_comando[0] != NULL && strcmp(partes_comando[0], GG_id_programa) == 0 &&                                        // el destino debe ser este programa: "SISTEMA_QU1R30N"
@@ -728,8 +734,8 @@ static int extraer_datos_transferencia(const char *linea_transferencia, char **p
             *comando_out = variable_string("%s", partes_transferencia[1]);      /* COMANDO: cuerpo del comando; ejemplo: "op_tienda~agregar_productoï¿½..." */
             *info_espejo_out = variable_string("%s", partes_transferencia[2]);  /* ESPEJO: se retornara intacto al emisor; ejemplo: "PREGUNTAS_WSï¿½" */
 
-            free_split(partes_comando);       // libera el arreglo de destino/origen
-            free_split(partes_transferencia); // libera el arreglo de columnas
+            free_split_con_numero_de_celdas(partes_comando);       // libera el arreglo de destino/origen
+            free_split_con_numero_de_celdas(partes_transferencia); // libera el arreglo de columnas
 
             if (*programa_respuesta_out == NULL || *comando_out == NULL || *info_espejo_out == NULL) // verifica que todos los malloc funcionaron
             {
@@ -746,8 +752,8 @@ static int extraer_datos_transferencia(const char *linea_transferencia, char **p
         }
     }
 
-    free_split(partes_comando);       // libera si se asigno antes del fallo
-    free_split(partes_transferencia); // libera si se asigno antes del fallo
+    free_split_con_numero_de_celdas(partes_comando);       // libera si se asigno antes del fallo
+    free_split_con_numero_de_celdas(partes_transferencia); // libera si se asigno antes del fallo
     return RET_NOT_FOUND;             // la linea no era para este programa o el formato era incorrecto
 }
 
@@ -759,10 +765,10 @@ int main()
 {
     inicializacion(); // crea los archivos del sistema si no existen y registra este programa en banderas.txt
 
-     /*//ejemplos de comandos que el sistema entrega al modelo
+     //ejemplos de comandos que el sistema entrega al modelo
     const char *ejemplos[] = {
         //"op_tienda~agregar_producto§1¶Leche§1L¶unidad¶10¶123456¶100¶50¶ProveedorA",
-        //"administracion_espacio~crear_espacio§nom_espacio⊓ferreteria_dan¶usuario_de_negocio⊓administrador_negocio¶contraseña_de_negocio⊓54321~id_de_espacio⊓0§usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓0",
+        "administracion_espacio~crear_espacio§nom_espacio⊓ferreteria_dan¶usuario_de_negocio⊓administrador_negocio¶contraseña_de_negocio⊓54321~id_de_espacio⊓0§usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓0",
         //"op_tienda~agregar_producto§producto⊓2¶contenido⊓3¶tipo_medida⊓4¶precio_venta⊓5⊓no_predeterminado¶cod_barras⊓6¶cantidad⊓7¶costo_compra⊓8¶proveedor⊓9~id_de_espacio⊓20260330113640_ferreteria_dan~usuario_de_espacio⊓administrador_de_espacio§contraseña_de_espacio⊓12345~usuario_de_negocio⊓administrador_negocio§contraseña_de_negocio⊓54321",
         //"op_tienda~ventas§ABC123¶2§SucursalX",
         //"op_tienda~compras§XYZ987¶5§Proveedor1",
@@ -776,7 +782,7 @@ int main()
     char *respuesta_ejemplo = conmutador((char *)ejemplos[i], &estado_ejemplo);
     free(respuesta_ejemplo);
     }
-    */
+    
 
 
  //Flujo principal del programa:

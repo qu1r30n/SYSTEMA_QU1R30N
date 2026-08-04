@@ -12,7 +12,7 @@ El proyecto tiene dos capas estrictas:
 
 ### CAPA MODELO (`modelos/` + `cabeceras/cabeceras_modelos/`)
 - Recibe un `char *texto` con separadores especiales concatenados
-- Parsea usando `modelo_split()` con los separadores de `GG_caracter_separacion_funciones_espesificas[]`
+- Parsea usando `split()` con los separadores de `GG_caracter_separacion_funciones_espesificas[]`
 - Valida los parámetros
 - Orquesta llamadas a la capa proceso
 - SIEMPRE retorna `int` (código de retorno)
@@ -89,7 +89,7 @@ int modelo_operacion(char *texto)
 
     // ... trabajo ...
 
-    modelo_free_split(partes);
+    modelo_free_split_con_numero_de_celdas(partes);
     return RET_OK;
 }
 ```
@@ -114,8 +114,8 @@ return RET_OK;
 ## Manejo de Strings
 
 Usar las utilidades del proyecto, NO inventar parsing propio:
-- `split(const char *txt, const char *sep, char ***salida)` → devuelve cantidad
-- `modelo_split(char *texto, const char *sep)` → wrapper con `modelo_free_split()`
+- `split_con_numero_de_celdas(const char *txt, const char *sep, char ***salida)` → devuelve cantidad
+- `split(char *texto, const char *sep)` → wrapper con `modelo_free_split_con_numero_de_celdas()`
 - `concatenar_formato_separado_por_variable(char **dest, const char *sep, const char *fmt, ...)` → concatenación segura
 - `texto_a_int_seguro(const char *texto, int *var)` / `texto_a_float_seguro()`
 - `buscar_fila()`, `editar_celda()`, `agregar_fila()` de `tex_bas.c`

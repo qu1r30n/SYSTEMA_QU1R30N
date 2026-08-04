@@ -150,8 +150,8 @@ int leerInventario(char **retorno_inventario, char *dir_espacio)
 
     // cuenta filas validas (excluye cabecera) para mantener retorno int compatible
     char **lineas = NULL;
-    int total_lineas = split(contenido, GG_caracter_separacion_funciones_espesificas[3], &lineas);
-    if (total_lineas <= 0 || !lineas){if (lineas){free_split(lineas);}RETORNAR_PROCESO_ESTANDAR(0);}
+    int total_lineas = split_con_numero_de_celdas(contenido, GG_caracter_separacion_funciones_espesificas[3], &lineas);
+    if (total_lineas <= 0 || !lineas){if (lineas){free_split_con_numero_de_celdas(lineas);}RETORNAR_PROCESO_ESTANDAR(0);}
 
     int cantidad_productos = 0;
     for (int i = 0; i < total_lineas; i++)
@@ -161,7 +161,7 @@ int leerInventario(char **retorno_inventario, char *dir_espacio)
         cantidad_productos++;
     }
 
-    free_split(lineas);
+    free_split_con_numero_de_celdas(lineas);
 
     char *contenido_salida = ReemplazarCaracteres_de_texto_string(contenido, GG_caracter_separacion_funciones_espesificas[3], GG_caracter_separacion_funciones_espesificas[0]);
     if (!contenido_salida){free(contenido);RETORNAR_PROCESO_ESTANDAR(-1);}
@@ -194,13 +194,13 @@ static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
     }
 
     char **lineas = NULL;
-    int total_lineas = split(retorno_inventario, GG_caracter_para_usar_como_enter_y_nuevo_mensaje[0], &lineas);
+    int total_lineas = split_con_numero_de_celdas(retorno_inventario, GG_caracter_para_usar_como_enter_y_nuevo_mensaje[0], &lineas);
     if (total_lineas <= 0 || !lineas)
     {
         free(retorno_inventario);
         if (lineas)
         {
-            free_split(lineas);
+            free_split_con_numero_de_celdas(lineas);
         }
         RETORNAR_PROCESO_ESTANDAR(0);
     }
@@ -208,7 +208,7 @@ static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
     char ***inventario_dinamico = (char ***)malloc(sizeof(char **) * MAX_PRODUCTOS);
     if (!inventario_dinamico)
     {
-        free_split(lineas);
+        free_split_con_numero_de_celdas(lineas);
         free(retorno_inventario);
         RETORNAR_PROCESO_ESTANDAR(-1);
     }
@@ -229,7 +229,7 @@ static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
         char *linea_limpia = duplicar_texto_dinamico(lineas[i]);
         if (!linea_limpia)
         {
-            free_split(lineas);
+            free_split_con_numero_de_celdas(lineas);
             free(retorno_inventario);
             liberarInventario(inventario_dinamico, cantidad_productos);
             RETORNAR_PROCESO_ESTANDAR(-1);
@@ -248,13 +248,13 @@ static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
         }
 
         char **partes = NULL;
-        int total_partes = split(linea_limpia, GG_caracter_separacion[0], &partes);
+        int total_partes = split_con_numero_de_celdas(linea_limpia, GG_caracter_separacion[0], &partes);
         free(linea_limpia);
         if (total_partes <= 0 || !partes)
         {
             if (partes)
             {
-                free_split(partes);
+                free_split_con_numero_de_celdas(partes);
             }
             continue;
         }
@@ -262,8 +262,8 @@ static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
         char **fila = (char **)malloc(sizeof(char *) * COLUMNAS);
         if (!fila)
         {
-            free_split(partes);
-            free_split(lineas);
+            free_split_con_numero_de_celdas(partes);
+            free_split_con_numero_de_celdas(lineas);
             free(retorno_inventario);
             liberarInventario(inventario_dinamico, cantidad_productos);
             RETORNAR_PROCESO_ESTANDAR(-1);
@@ -284,8 +284,8 @@ static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
                     free(fila[k]);
                 }
                 free(fila);
-                free_split(partes);
-                free_split(lineas);
+                free_split_con_numero_de_celdas(partes);
+                free_split_con_numero_de_celdas(lineas);
                 free(retorno_inventario);
                 liberarInventario(inventario_dinamico, cantidad_productos);
                 RETORNAR_PROCESO_ESTANDAR(-1);
@@ -302,8 +302,8 @@ static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
                     free(fila[k]);
                 }
                 free(fila);
-                free_split(partes);
-                free_split(lineas);
+                free_split_con_numero_de_celdas(partes);
+                free_split_con_numero_de_celdas(lineas);
                 free(retorno_inventario);
                 liberarInventario(inventario_dinamico, cantidad_productos);
                 RETORNAR_PROCESO_ESTANDAR(-1);
@@ -311,11 +311,11 @@ static int cargar_inventario_en_memoria(char ****inventario, char *dir_espacio)
         }
 
         inventario_dinamico[cantidad_productos] = fila;
-        free_split(partes);
+        free_split_con_numero_de_celdas(partes);
         cantidad_productos++;
     }
 
-    free_split(lineas);
+    free_split_con_numero_de_celdas(lineas);
     free(retorno_inventario);
     *inventario = inventario_dinamico;
     RETORNAR_PROCESO_ESTANDAR(cantidad_productos);
@@ -445,12 +445,12 @@ int hacerInventario(char *inv_a_checar, char **retorno_inv_revisado, char *dir_e
     }
 
     char **pares = NULL;
-    int n_pares = split(inv_a_checar, GG_caracter_separacion_nom_parametro_de_valor[1], &pares);
+    int n_pares = split_con_numero_de_celdas(inv_a_checar, GG_caracter_separacion_nom_parametro_de_valor[1], &pares);
     if (n_pares <= 0 || !pares)
     {
         if (pares)
         {
-            free_split(pares);
+            free_split_con_numero_de_celdas(pares);
         }
         if (inventario_local)
         {
@@ -471,12 +471,12 @@ int hacerInventario(char *inv_a_checar, char **retorno_inv_revisado, char *dir_e
         }
 
         char **campos = NULL;
-        int n_campos = split(pares[i], GG_caracter_separacion_nom_parametro_de_valor[2], &campos);
+        int n_campos = split_con_numero_de_celdas(pares[i], GG_caracter_separacion_nom_parametro_de_valor[2], &campos);
         if (n_campos < 2 || !campos)
         {
             if (campos)
             {
-                free_split(campos);
+                free_split_con_numero_de_celdas(campos);
             }
             continue;
         }
@@ -487,7 +487,7 @@ int hacerInventario(char *inv_a_checar, char **retorno_inv_revisado, char *dir_e
 
         if (!codigo || !codigo[0] || texto_a_float_seguro(cantidad_txt, &cantidad_fisica) < 0)
         {
-            free_split(campos);
+            free_split_con_numero_de_celdas(campos);
             continue;
         }
 
@@ -519,8 +519,8 @@ int hacerInventario(char *inv_a_checar, char **retorno_inv_revisado, char *dir_e
                                                              "") < 0)
                 {
                     free(delta_txt);
-                    free_split(campos);
-                    free_split(pares);
+                    free_split_con_numero_de_celdas(campos);
+                    free_split_con_numero_de_celdas(pares);
                     free(ya_revisado);
                     liberarInventario(inventario_local, cantidad_productos);
                     free(*retorno_inv_revisado);
@@ -541,10 +541,10 @@ int hacerInventario(char *inv_a_checar, char **retorno_inv_revisado, char *dir_e
             free(cantidad_formateada);
         }
 
-        free_split(campos);
+        free_split_con_numero_de_celdas(campos);
     }
 
-    free_split(pares);
+    free_split_con_numero_de_celdas(pares);
 
     // agrega los productos que no se revisaron en el conteo fisico
     for (int i = 0; i < cantidad_productos; i++)
@@ -661,13 +661,13 @@ int venta_desde_texto(char *texto_venta, char *dir_espacio)
     
 
     char **ventas_lote = NULL;
-    int total_ventas = split(texto_venta, GG_caracter_separacion_funciones_espesificas[2], &ventas_lote);
+    int total_ventas = split_con_numero_de_celdas(texto_venta, GG_caracter_separacion_funciones_espesificas[2], &ventas_lote);
     for (int i = 0; i < total_ventas; i++)
     {
         imprimirMensaje_para_depurar("\nventa %d: %s\n", i, ventas_lote[i] ? ventas_lote[i] : "NULL");
     }
     
-    if (total_ventas <= 0 || !ventas_lote){if (ventas_lote){free_split(ventas_lote);}RETORNAR_PROCESO_ESTANDAR(-1);}
+    if (total_ventas <= 0 || !ventas_lote){if (ventas_lote){free_split_con_numero_de_celdas(ventas_lote);}RETORNAR_PROCESO_ESTANDAR(-1);}
 
     int resultado = 0;
     char **venta_codigo = NULL;
@@ -675,21 +675,21 @@ int venta_desde_texto(char *texto_venta, char *dir_espacio)
 
     for (int i = 0; i < total_ventas; i++)
     {
-        char **venta_espliteada = NULL; // guarda la venta actual separada por campos
+        char **venta_esplit_con_numero_de_celdaseada = NULL; // guarda la venta actual separada por campos
         char *codigo_actual = NULL;
         char *cantidad_actual = NULL;
-        int total_venta_espliteada = split(ventas_lote[i], GG_caracter_separacion_funciones_espesificas[3], &venta_espliteada); // separa por "╬"
-        if (total_venta_espliteada <= 0 || !venta_espliteada){if (venta_espliteada){free_split(venta_espliteada);}continue;} // ignora ventas mal formadas
+        int total_venta_esplit_con_numero_de_celdaseada = split_con_numero_de_celdas(ventas_lote[i], GG_caracter_separacion_funciones_espesificas[3], &venta_esplit_con_numero_de_celdaseada); // separa por "╬"
+        if (total_venta_esplit_con_numero_de_celdaseada <= 0 || !venta_esplit_con_numero_de_celdaseada){if (venta_esplit_con_numero_de_celdaseada){free_split_con_numero_de_celdas(venta_esplit_con_numero_de_celdaseada);}continue;} // ignora ventas mal formadas
 
-        for (int j = 0; j < total_venta_espliteada; j++)
+        for (int j = 0; j < total_venta_esplit_con_numero_de_celdaseada; j++)
         {
-            if (!venta_espliteada[j] || !venta_espliteada[j][0]){continue;}
+            if (!venta_esplit_con_numero_de_celdaseada[j] || !venta_esplit_con_numero_de_celdaseada[j][0]){continue;}
 
             char **par = NULL;
-            int total_par = split(venta_espliteada[j], GG_caracter_separacion_nom_parametro_de_valor[0], &par);
+            int total_par = split_con_numero_de_celdas(venta_esplit_con_numero_de_celdaseada[j], GG_caracter_separacion_nom_parametro_de_valor[0], &par);
             
             if (total_par < 2 || !par || !par[0] || !par[1])
-            {if (par){free_split(par);}continue;}
+            {if (par){free_split_con_numero_de_celdas(par);}continue;}
 
             if (strcmp(par[0], "codigo") == 0)
             {
@@ -704,13 +704,13 @@ int venta_desde_texto(char *texto_venta, char *dir_espacio)
                 concatenar_formato_separado_por_variable(&cantidad_actual, NULL, "%s", par[1]);
             }
 
-            free_split(par);
+            free_split_con_numero_de_celdas(par);
         }
 
         agregar_texto_a_arreglo(&venta_codigo, (codigo_actual && codigo_actual[0]) ? codigo_actual : "0");
         agregar_texto_a_arreglo(&venta_cantida, (cantidad_actual && cantidad_actual[0]) ? cantidad_actual : "0");
 
-        free(codigo_actual);free(cantidad_actual);free_split(venta_espliteada); // libera la venta ya separada porque aqui solo se queria guardar el split
+        free(codigo_actual);free(cantidad_actual);free_split_con_numero_de_celdas(venta_esplit_con_numero_de_celdaseada); // libera la venta ya separada porque aqui solo se queria guardar el split_con_numero_de_celdas
     
     }
 
@@ -733,7 +733,7 @@ int venta_desde_texto(char *texto_venta, char *dir_espacio)
 
     for (int i = 0; venta_cantida && venta_cantida[i]; i++){free(venta_cantida[i]);}free(venta_cantida);
 
-    free_split(ventas_lote);
+    free_split_con_numero_de_celdas(ventas_lote);
     RETORNAR_PROCESO_ESTANDAR(resultado);
 }
 
@@ -749,13 +749,13 @@ int compra_desde_texto(char *texto_compra, char *dir_espacio)
     if (!texto_compra || !texto_compra[0] || !dir_espacio){RETORNAR_PROCESO_ESTANDAR(-1);}
 
     char **compras_lote = NULL;
-    int total_compras = split(texto_compra, GG_caracter_separacion_funciones_espesificas[2], &compras_lote);
+    int total_compras = split_con_numero_de_celdas(texto_compra, GG_caracter_separacion_funciones_espesificas[2], &compras_lote);
     for (int i = 0; i < total_compras; i++)
     {
         imprimirMensaje_para_depurar("\ncompra %d: %s\n", i, compras_lote[i] ? compras_lote[i] : "NULL");
     }
 
-    if (total_compras <= 0 || !compras_lote){if (compras_lote){free_split(compras_lote);}RETORNAR_PROCESO_ESTANDAR(-1);}
+    if (total_compras <= 0 || !compras_lote){if (compras_lote){free_split_con_numero_de_celdas(compras_lote);}RETORNAR_PROCESO_ESTANDAR(-1);}
 
     int resultado = 0;
     char **compra_codigo = NULL;
@@ -763,21 +763,21 @@ int compra_desde_texto(char *texto_compra, char *dir_espacio)
 
     for (int i = 0; i < total_compras; i++)
     {
-        char **compra_espliteada = NULL;
+        char **compra_esplit_con_numero_de_celdaseada = NULL;
         char *codigo_actual = NULL;
         char *cantidad_actual = NULL;
-        int total_compra_espliteada = split(compras_lote[i], GG_caracter_separacion_funciones_espesificas[3], &compra_espliteada);
-        if (total_compra_espliteada <= 0 || !compra_espliteada){if (compra_espliteada){free_split(compra_espliteada);}continue;}
+        int total_compra_esplit_con_numero_de_celdaseada = split_con_numero_de_celdas(compras_lote[i], GG_caracter_separacion_funciones_espesificas[3], &compra_esplit_con_numero_de_celdaseada);
+        if (total_compra_esplit_con_numero_de_celdaseada <= 0 || !compra_esplit_con_numero_de_celdaseada){if (compra_esplit_con_numero_de_celdaseada){free_split_con_numero_de_celdas(compra_esplit_con_numero_de_celdaseada);}continue;}
 
-        for (int j = 0; j < total_compra_espliteada; j++)
+        for (int j = 0; j < total_compra_esplit_con_numero_de_celdaseada; j++)
         {
-            if (!compra_espliteada[j] || !compra_espliteada[j][0]){continue;}
+            if (!compra_esplit_con_numero_de_celdaseada[j] || !compra_esplit_con_numero_de_celdaseada[j][0]){continue;}
 
             char **par = NULL;
-            int total_par = split(compra_espliteada[j], GG_caracter_separacion_nom_parametro_de_valor[0], &par);
+            int total_par = split_con_numero_de_celdas(compra_esplit_con_numero_de_celdaseada[j], GG_caracter_separacion_nom_parametro_de_valor[0], &par);
 
             if (total_par < 2 || !par || !par[0] || !par[1])
-            {if (par){free_split(par);}continue;}
+            {if (par){free_split_con_numero_de_celdas(par);}continue;}
 
             if (strcmp(par[0], "codigo") == 0)
             {
@@ -792,13 +792,13 @@ int compra_desde_texto(char *texto_compra, char *dir_espacio)
                 concatenar_formato_separado_por_variable(&cantidad_actual, NULL, "%s", par[1]);
             }
 
-            free_split(par);
+            free_split_con_numero_de_celdas(par);
         }
 
         agregar_texto_a_arreglo(&compra_codigo, (codigo_actual && codigo_actual[0]) ? codigo_actual : "0");
         agregar_texto_a_arreglo(&compra_cantida, (cantidad_actual && cantidad_actual[0]) ? cantidad_actual : "0");
 
-        free(codigo_actual);free(cantidad_actual);free_split(compra_espliteada);
+        free(codigo_actual);free(cantidad_actual);free_split_con_numero_de_celdas(compra_esplit_con_numero_de_celdaseada);
     }
 
     for (int i = 0; compra_codigo && compra_codigo[i]; i++)
@@ -819,7 +819,7 @@ int compra_desde_texto(char *texto_compra, char *dir_espacio)
     for (int i = 0; compra_codigo && compra_codigo[i]; i++){free(compra_codigo[i]);}free(compra_codigo);
     for (int i = 0; compra_cantida && compra_cantida[i]; i++){free(compra_cantida[i]);}free(compra_cantida);
 
-    free_split(compras_lote);
+    free_split_con_numero_de_celdas(compras_lote);
     RETORNAR_PROCESO_ESTANDAR(resultado);
 }
 
@@ -852,21 +852,21 @@ int venta(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espa
         if (res_sel)
         {
             char **p_sel = NULL;
-            int    n_sel = split(res_sel, GG_caracter_para_confirmacion_o_error[0], &p_sel);
+            int    n_sel = split_con_numero_de_celdas(res_sel, GG_caracter_para_confirmacion_o_error[0], &p_sel);
             free(res_sel);
             if (n_sel >= 2 && p_sel && p_sel[0][0] == '1')
             {
                 char **cols_id = NULL;
-                int    n_c     = split(p_sel[1], GG_caracter_separacion[0], &cols_id);
+                int    n_c     = split_con_numero_de_celdas(p_sel[1], GG_caracter_separacion[0], &cols_id);
                 if (n_c > 4 && cols_id && strcmp(cols_id[4], codigo) == 0)
                 {
                     // el id corresponde al mismo codigo: usar directo
                     concatenar_formato_separado_por_variable(&id_resuelto,   NULL, "%s", id);
                     concatenar_formato_separado_por_variable(&fila_de_stock, NULL, "%s", p_sel[1]);
                 }
-                if (cols_id){free_split(cols_id);}
+                if (cols_id){free_split_con_numero_de_celdas(cols_id);}
             }
-            if (p_sel){free_split(p_sel);}
+            if (p_sel){free_split_con_numero_de_celdas(p_sel);}
         }
     }
 
@@ -878,35 +878,35 @@ int venta(char *codigo, float cantidad, char *sucursal, char *id, char *dir_espa
         if (!resultado_busqueda){free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);}
 
         char **partes_bus = NULL;
-        int n_bus = split(resultado_busqueda, GG_caracter_para_confirmacion_o_error[0], &partes_bus);
+        int n_bus = split_con_numero_de_celdas(resultado_busqueda, GG_caracter_para_confirmacion_o_error[0], &partes_bus);
         
         free(resultado_busqueda);
 
         if (n_bus < 3 || !partes_bus || partes_bus[0][0] != '1')
         {
-            if (partes_bus){free_split(partes_bus);}free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
+            if (partes_bus){free_split_con_numero_de_celdas(partes_bus);}free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
         }
 
         concatenar_formato_separado_por_variable(&id_resuelto,   NULL, "%s", partes_bus[2]);
         concatenar_formato_separado_por_variable(&fila_de_stock, NULL, "%s", partes_bus[1]);
-        free_split(partes_bus);
+        free_split_con_numero_de_celdas(partes_bus);
     }
 
     // verifica el stock antes de decrementar
     char **cols_fila = NULL;
-    int n_cols = split(fila_de_stock, GG_caracter_separacion[0], &cols_fila);
+    int n_cols = split_con_numero_de_celdas(fila_de_stock, GG_caracter_separacion[0], &cols_fila);
     free(fila_de_stock);
     if (n_cols <= 5 || !cols_fila)
     {
-        if (cols_fila){free_split(cols_fila);}free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
+        if (cols_fila){free_split_con_numero_de_celdas(cols_fila);}free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     float stock_actual = 0.0f;
     if (texto_a_float_seguro(cols_fila[5], &stock_actual) < 0 || stock_actual < cantidad)
     {
-        free_split(cols_fila);free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
+        free_split_con_numero_de_celdas(cols_fila);free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
     }
-    free_split(cols_fila);
+    free_split_con_numero_de_celdas(cols_fila);
 
     // arma los argumentos: decrementa col 5 (stock) e incrementa col 30 (total_vendido)
     char *cant_neg  = NULL;
@@ -986,21 +986,21 @@ int compra(char *codigo, float cantidad, char *sucursal, char *id, char *dir_esp
         if (res_sel)
         {
             char **p_sel = NULL;
-            int    n_sel = split(res_sel, GG_caracter_para_confirmacion_o_error[0], &p_sel);
+            int    n_sel = split_con_numero_de_celdas(res_sel, GG_caracter_para_confirmacion_o_error[0], &p_sel);
             free(res_sel);
             if (n_sel >= 2 && p_sel && p_sel[0][0] == '1')
             {
                 char **cols_id = NULL;
-                int    n_c     = split(p_sel[1], GG_caracter_separacion[0], &cols_id);
+                int    n_c     = split_con_numero_de_celdas(p_sel[1], GG_caracter_separacion[0], &cols_id);
                 if (n_c > 4 && cols_id && strcmp(cols_id[4], codigo) == 0)
                 {
                     // el id corresponde al mismo codigo: usar directo
                     concatenar_formato_separado_por_variable(&id_resuelto,   NULL, "%s", id);
                     concatenar_formato_separado_por_variable(&fila_de_stock, NULL, "%s", p_sel[1]);
                 }
-                if (cols_id){free_split(cols_id);}
+                if (cols_id){free_split_con_numero_de_celdas(cols_id);}
             }
-            if (p_sel){free_split(p_sel);}
+            if (p_sel){free_split_con_numero_de_celdas(p_sel);}
         }
     }
 
@@ -1012,29 +1012,29 @@ int compra(char *codigo, float cantidad, char *sucursal, char *id, char *dir_esp
         if (!resultado_busqueda){free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);}
 
         char **partes_bus = NULL;
-        int n_bus = split(resultado_busqueda, GG_caracter_para_confirmacion_o_error[0], &partes_bus);
+        int n_bus = split_con_numero_de_celdas(resultado_busqueda, GG_caracter_para_confirmacion_o_error[0], &partes_bus);
         
         free(resultado_busqueda);
 
         if (n_bus < 3 || !partes_bus || partes_bus[0][0] != '1')
         {
-            if (partes_bus){free_split(partes_bus);}free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
+            if (partes_bus){free_split_con_numero_de_celdas(partes_bus);}free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
         }
 
         concatenar_formato_separado_por_variable(&id_resuelto,   NULL, "%s", partes_bus[2]);
         concatenar_formato_separado_por_variable(&fila_de_stock, NULL, "%s", partes_bus[1]);
-        free_split(partes_bus);
+        free_split_con_numero_de_celdas(partes_bus);
     }
 
     // valida que la fila tenga columna de stock para poder incrementarla
     char **cols_fila = NULL;
-    int n_cols = split(fila_de_stock, GG_caracter_separacion[0], &cols_fila);
+    int n_cols = split_con_numero_de_celdas(fila_de_stock, GG_caracter_separacion[0], &cols_fila);
     free(fila_de_stock);
     if (n_cols <= 5 || !cols_fila)
     {
-        if (cols_fila){free_split(cols_fila);}free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
+        if (cols_fila){free_split_con_numero_de_celdas(cols_fila);}free(id_resuelto);free(ruta_inventario);RETORNAR_PROCESO_ESTANDAR(-1);
     }
-    free_split(cols_fila);
+    free_split_con_numero_de_celdas(cols_fila);
 
     // arma los argumentos: incrementa col 5 (stock) y decrementa col 30 (total_vendido)
     char *cant_neg  = NULL;
@@ -1133,7 +1133,7 @@ int editarPrecio(char *codigo, char *precio, char *proveedor, char *id, char *di
         if (res_sel)
         {
             char **p_sel = NULL;
-            int n_sel = split(res_sel, GG_caracter_para_confirmacion_o_error[0], &p_sel);
+            int n_sel = split_con_numero_de_celdas(res_sel, GG_caracter_para_confirmacion_o_error[0], &p_sel);
             free(res_sel);
 
             if (n_sel >= 2 && p_sel && p_sel[0][0] == '1')
@@ -1148,14 +1148,14 @@ int editarPrecio(char *codigo, char *precio, char *proveedor, char *id, char *di
                 else
                 {
                     char **cols_id = NULL;
-                    int n_c = split(p_sel[1], GG_caracter_separacion[0], &cols_id);
+                    int n_c = split_con_numero_de_celdas(p_sel[1], GG_caracter_separacion[0], &cols_id);
                     if (n_c > 4 && cols_id && strcmp(cols_id[4], codigo) == 0)
                     {
                         id_valido = 1;
                     }
                     if (cols_id)
                     {
-                        free_split(cols_id);
+                        free_split_con_numero_de_celdas(cols_id);
                     }
                 }
 
@@ -1167,7 +1167,7 @@ int editarPrecio(char *codigo, char *precio, char *proveedor, char *id, char *di
 
             if (p_sel)
             {
-                free_split(p_sel);
+                free_split_con_numero_de_celdas(p_sel);
             }
         }
     }
@@ -1191,14 +1191,14 @@ int editarPrecio(char *codigo, char *precio, char *proveedor, char *id, char *di
         }
 
         char **partes_bus = NULL;
-        int n_bus = split(resultado_busqueda, GG_caracter_para_confirmacion_o_error[0], &partes_bus);
+        int n_bus = split_con_numero_de_celdas(resultado_busqueda, GG_caracter_para_confirmacion_o_error[0], &partes_bus);
         free(resultado_busqueda);
 
         if (n_bus < 3 || !partes_bus || partes_bus[0][0] != '1')
         {
             if (partes_bus)
             {
-                free_split(partes_bus);
+                free_split_con_numero_de_celdas(partes_bus);
             }
             free(precio_nuevo);
             free(ruta_inventario);
@@ -1206,7 +1206,7 @@ int editarPrecio(char *codigo, char *precio, char *proveedor, char *id, char *di
         }
 
         concatenar_formato_separado_por_variable(&id_resuelto, NULL, "%s", partes_bus[2]);
-        free_split(partes_bus);
+        free_split_con_numero_de_celdas(partes_bus);
     }
 
     // actualiza precio y, si se recibe, tambien el proveedor asociado

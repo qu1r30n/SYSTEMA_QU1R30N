@@ -331,7 +331,7 @@ const char *GG_ventana_provedor[][5] = {
     {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Aprendices (32 campos) */
-const char *GG_ventana_APRENDICES_E[][5] = {
+const char *GG_ventana_afiliados_unificados[][5] = {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     {"2", "_00_ID", "", "-0", "TEXTO"},
     {"1", "_01_NOMBRE", "", "NOSE", "TEXTO"},
@@ -352,7 +352,7 @@ const char *GG_ventana_APRENDICES_E[][5] = {
     {"1", "_16_ESTADO_DE_CURS_APRENDIS_E", "", "NOSE", "TEXTO"},
     {"1", "_17_SUPERVISOR", "", "NOSE", "TEXTO"},
     {"1", "_18_NOTAS", "", "", "TEXTO"},
-    {"1", "_19_AFILIADO", "", "NOSE", "TEXTO"},
+    {"1", "_19_IDS_DE_AFILIADOS", "", "NOSE", "TEXTO"},
     {"1", "_20_FECHA_DE_TERMINACIÓN", "0°SOLO_NUMEROS", "0", "TEXTO"},
     {"1", "_21_MOTIVO_DE_TERMINACIÓN", "", "NOSE", "TEXTO"},
     {"1", "_22_HORAS_TRABAJADAS", "", "NOSE", "TEXTO"},
@@ -364,20 +364,18 @@ const char *GG_ventana_APRENDICES_E[][5] = {
     {"1", "_28_HISTORIAL_DE_CAPACITACIÓN", "", "NOSE", "TEXTO"},
     {"1", "_29_ÚLTIMO_AUMENTO_DE_SALARIO", "", "NOSE", "TEXTO"},
     {"1", "_30_TIPO_EMPLEADO", "", "NOSE", "TEXTO"},
-    {"1", "_31_RANGO_CALIF", "", "-0", "TEXTO"},
-    {NULL, NULL, NULL, NULL, NULL}};
+    {"1", "_31_RANGO_CALIF", "", "-0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_32_ID_PATROCINADOR", "", "0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_33_ID_ENCARGADO", "", "0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_34_PUNTOS_A_P", "", "0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_35_REG_PUNTOS_DIA", "", "0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_36_REG_PUNTOS_MES", "", "0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_37_REG_PUNTOS_AÑO", "", "0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_38_REG_PUNTOS_TOTAL", "", "0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_39_NIVEL", "", "0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_40_FECHA_ASIGNACION", "", "0°SOLO_NUMEROS", "TEXTO"},
+    {"1", "_40_ESTADO_DEL_USUARIO", "", "0°SOLO_NUMEROS", "TEXTO"},
 
-/* Ventana: Afiliados Unificados (8 campos) */
-const char *GG_ventana_afiliados_unificados[][5] = {
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"1", "_00_ID_USUARIO", "", "0", "TEXTO"}, {"1", "_01_IDP", "", "0╔0╦0¬0╔1╦1", "TEXTO"}, {"1", "_02_PUNTOS_D_R", "", "0╦0¬0╦0", "TEXTO"}, {"1", "_03_PUNTOS_D_R_TOTALES", "", "0", "TEXTO"}, {"1", "_04_DATOS", "", "NOSE", "TEXTO"}, {"1", "_05_NIVEL", "", "0", "TEXTO"}, {"1", "_06_ID_HORIZONTAL", "", "0", "TEXTO"}, {"1", "_07_TIPO_AFILIADO", "", "NOSE", "TEXTO"}, {NULL, NULL, NULL, NULL, NULL}};
-/* Ventana: Niveles Afiliados Unificado (4 campos) */
-const char *GG_ventana_niv_afiliados_unificado[][5] = {
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    {"2", "_00_ID", "", "-1", "ENTERO_DECIMAL"},
-    {"1", "_01_NIVEL", "", "0", "TEXTO"},
-    {"1", "_02_ID_HORIZONTAL", "", "0", "TEXTO"},
-    {"1", "_03_VACIOS", "", "", "TEXTO"},
     {NULL, NULL, NULL, NULL, NULL}};
 
 /* Ventana: Sucursales (20 campos) */
@@ -543,100 +541,7 @@ void RecargarVentanaEmergenteProvedor(const char *al_finalizar_que_borrar)
     }
 }
 
-/*
- * Uso: Ejecuta RecargarVentanaEmergenteAPRENDICES_E de forma segura.
- * Entrada ejemplo: RecargarVentanaEmergenteAPRENDICES_E(al_finalizar_que_borrar)
- */
-void RecargarVentanaEmergenteAPRENDICES_E(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
 
-/*
- * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_simples de forma segura.
- * Entrada ejemplo: RecargarVentanaEmergenteAfiliados_simples(al_finalizar_que_borrar)
- */
-void RecargarVentanaEmergenteAfiliados_simples(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
-
-/*
- * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_complejos de forma segura.
- * Entrada ejemplo: RecargarVentanaEmergenteAfiliados_complejos(al_finalizar_que_borrar)
- */
-void RecargarVentanaEmergenteAfiliados_complejos(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
-
-/*
- * Uso: Ejecuta RecargarVentanaEmergente_niv_afiliados_simples de forma segura.
- * Entrada ejemplo: RecargarVentanaEmergente_niv_afiliados_simples(al_finalizar_que_borrar)
- */
-void RecargarVentanaEmergente_niv_afiliados_simples(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
-
-/*
- * Uso: Ejecuta RecargarVentanaEmergente_niv_afiliados_comp de forma segura.
- * Entrada ejemplo: RecargarVentanaEmergente_niv_afiliados_comp(al_finalizar_que_borrar)
- */
-void RecargarVentanaEmergente_niv_afiliados_comp(const char *al_finalizar_que_borrar)
-{
-    /* Paso a paso: validar entradas, procesar y manejar errores. */
-    if (al_finalizar_que_borrar != NULL && strcmp(al_finalizar_que_borrar, "TODO") == 0) // verifica que el parámetro no sea NULL y sea "TODO"; ejemplo: "TODO"
-    {
-        for (int i = 0; i < MAX_VAR_STRING; i++) // recorre todas las variables string globales
-        {
-            if (GG_variables_string[i] != NULL) // verifica que la posición no sea NULL antes de limpiar
-            {
-                strcpy(GG_variables_string[i], ""); // limpia la variable string en la posición i; ejemplo: ""
-            }
-        }
-    }
-}
 
 /*
  * Uso: Ejecuta RecargarVentanaEmergenteAfiliados_unificados de forma segura.
@@ -1214,10 +1119,6 @@ void RecargarArregloArchivos_dir_nom_archivos(void)
     if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_provedor, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de proveedores al arreglo global
         return;                                                                                                                              // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\APRENDICES_E.TXT", base);                                                                    // construye ruta al archivo de aprendices
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_APRENDICES_E, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de aprendices al arreglo global
-        return;                                                                                                                                  // aborta si no se pudo agregar por falta de memoria
-
     snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\AFILIADOS_UNIFICADO.TXT", base);                                                                    // construye ruta al archivo de afiliados unificado
     if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de afiliados al arreglo global
         return;                                                                                                                                          // aborta si no se pudo agregar por falta de memoria
@@ -1226,21 +1127,9 @@ void RecargarArregloArchivos_dir_nom_archivos(void)
     if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de registros a confirmar al arreglo global
         return;                                                                                                                                          // aborta si no se pudo agregar por falta de memoria
 
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);                                               // construye ruta al archivo de niveles de afiliados
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de niveles de afiliados al arreglo global
-        return;                                                                                                                                             // aborta si no se pudo agregar por falta de memoria
-
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);                                               // construye ruta al archivo de niveles de afiliados (segunda referencia)
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega segunda referencia al archivo de niveles de afiliados
-        return;                                                                                                                                             // aborta si no se pudo agregar por falta de memoria
-
     snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\AFILIADOS_UNIFICADO.TXT", base);                                                                    // construye ruta al archivo de afiliados unificado (segunda referencia)
     if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_afiliados_unificados, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega segunda referencia al archivo de afiliados
         return;                                                                                                                                          // aborta si no se pudo agregar por falta de memoria
-
-    snprintf(tmp, sizeof(tmp), "%sCONFIG\\AFILIADOS\\NIVELES_E_ID_HORISONTAL_AFILIADOS_UNIFICADO.TXT", base);                                               // construye ruta al archivo de niveles de afiliados (tercera referencia)
-    if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_niv_afiliados_unificado, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega tercera referencia al archivo de niveles de afiliados
-        return;                                                                                                                                             // aborta si no se pudo agregar por falta de memoria
 
     snprintf(tmp, sizeof(tmp), "%sCONFIG\\INF\\DAT\\SUCUR.TXT", base);                                                                    // construye ruta al archivo de sucursales
     if (agregar_archivo_base_negocio_con_columnas(tmp, columnas_concatenadas(GG_ventana_SUCUR, 0, 1, GG_caracter_separacion[1]), "") < 0) // agrega el archivo de sucursales al arreglo global

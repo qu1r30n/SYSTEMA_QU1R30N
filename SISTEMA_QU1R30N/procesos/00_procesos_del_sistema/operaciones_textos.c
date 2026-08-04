@@ -100,10 +100,10 @@ char *variable_string(const char *format, ...) // define una funcion que crea y 
 
 /*
 ===============================================================================
- CORE_STRING_SPLIT
+ CORE_STRING_split_con_numero_de_celdas
 ===============================================================================
 
- FUNCION: core_split
+ FUNCION: core_split_con_numero_de_celdas
 
  Divide un texto usando un separador (string completo).
  ------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ char *variable_string(const char *format, ...) // define una funcion que crea y 
 ===============================================================================
 */
 
-int split(const char *txt, const char *sep, char ***salida)
+int split_con_numero_de_celdas(const char *txt, const char *sep, char ***salida)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
 
@@ -140,7 +140,7 @@ int split(const char *txt, const char *sep, char ***salida)
 
     Si alguno es NULL ? error inmediato
     ----------------------------------------------------------------------- */
-    if (txt == NULL || sep == NULL || salida == NULL) // al menos uno de los punteros obligatorios es nulo // ejemplo: txt=NULL al llamar split mal
+    if (txt == NULL || sep == NULL || salida == NULL) // al menos uno de los punteros obligatorios es nulo // ejemplo: txt=NULL al llamar split_con_numero_de_celdas mal
     {
         RETORNAR_PROCESO_ESTANDAR(-1);
     }
@@ -309,10 +309,10 @@ int split(const char *txt, const char *sep, char ***salida)
 
 /*
 ===============================================================================
- FUNCION: free_split
+ FUNCION: free_split_con_numero_de_celdas
 -------------------------------------------------------------------------------
 
- Libera completamente la memoria creada por core_split.
+ Libera completamente la memoria creada por core_split_con_numero_de_celdas.
 
  Parametro:
   arreglo -> arreglo dinamico terminado en NULL
@@ -332,10 +332,10 @@ int split(const char *txt, const char *sep, char ***salida)
 */
 
 /*
- * Uso: Ejecuta free_split de forma segura.
- * Entrada ejemplo: free_split(arreglo)
+ * Uso: Ejecuta free_split_con_numero_de_celdas de forma segura.
+ * Entrada ejemplo: free_split_con_numero_de_celdas(arreglo)
  */
-void free_split(char **arreglo)
+void free_split_con_numero_de_celdas(char **arreglo)
 {
     /* Si es NULL, no hacer nada */
     if (arreglo == NULL) // si el puntero es NULL no hay nada que liberar
@@ -369,7 +369,7 @@ int main()
 
  char** partes;
 
- int n = split(linea, "|", &partes);
+ int n = split_con_numero_de_celdas(linea, "|", &partes);
 
  if (n == -1)
  {
@@ -386,7 +386,7 @@ int main()
   i++;
  }
 
- free_split(partes);
+ free_split_con_numero_de_celdas(partes);
 
  RETORNAR_PROCESO_ESTANDAR(0);
 }
@@ -751,11 +751,11 @@ char *join_paresido_simple(char caracter_union_filas, char **texto, int n_texto,
         for (int i = 0; i < n_texto; i++) // itera cada fila del arreglo
         {
             char **partes = NULL;                                      // fragmentos de la fila actual separados por el separador de columnas
-            int n = split(texto[i], caracter_union_columnas, &partes); // divide la fila actual en columnas // ejemplo: "Tornillo|5|12.50" -> 3 partes
+            int n = split_con_numero_de_celdas(texto[i], caracter_union_columnas, &partes); // divide la fila actual en columnas // ejemplo: "Tornillo|5|12.50" -> 3 partes
             if (n > 0)                                                 // la fila tiene al menos una columna
             {
                 char **cols_extraer = NULL;                                                   // indices de columnas a extraer, parseados
-                int n_cols = split(columnas_extraer, caracter_union_columnas, &cols_extraer); // parsea la lista de indices de columnas // ejemplo: "0|2" -> ["0","2"]
+                int n_cols = split_con_numero_de_celdas(columnas_extraer, caracter_union_columnas, &cols_extraer); // parsea la lista de indices de columnas // ejemplo: "0|2" -> ["0","2"]
 
                 for (int j = 0; j < n_cols; j++) // itera cada indice de columna a extraer
                 {
@@ -767,10 +767,10 @@ char *join_paresido_simple(char caracter_union_filas, char **texto, int n_texto,
                         strncat(resultado, partes[col_idx], 65535 - strlen(resultado) - 1);             // agrega el valor de la columna al resultado // ejemplo: "Tornillo"
                     }
                 }
-                free_split(cols_extraer);                                                 // libera los indices de columnas parseados
+                free_split_con_numero_de_celdas(cols_extraer);                                                 // libera los indices de columnas parseados
                 strncat(resultado, &caracter_union_filas, 65535 - strlen(resultado) - 1); // agrega el separador de filas al final de la fila procesada
             }
-            free_split(partes); // libera la fila dividida en columnas
+            free_split_con_numero_de_celdas(partes); // libera la fila dividida en columnas
         }
     }
     else // modo sin extraccion selectiva: une todas las filas tal cual
@@ -809,10 +809,10 @@ char *joineada_paraesida_y_quitador_de_extremos(const char *data, int restar_cua
     resultado[0] = '\0'; // inicializa el buffer como cadena vacia
 
     char **partes = NULL;                                    // fragmentos de la cadena separada por el separador primario
-    int n = split(data, GG_caracter_separacion[0], &partes); // divide el texto en columnas usando el separador primario // ejemplo: "ID|nombre|precio" -> 3 partes
+    int n = split_con_numero_de_celdas(data, GG_caracter_separacion[0], &partes); // divide el texto en columnas usando el separador primario // ejemplo: "ID|nombre|precio" -> 3 partes
     if (n <= 0)                                              // no se pudo dividir o no hay partes
     {
-        free_split(partes); // libera aunque este vacio para evitar fugas
+        free_split_con_numero_de_celdas(partes); // libera aunque este vacio para evitar fugas
         return resultado;
     }
 
@@ -838,7 +838,7 @@ char *joineada_paraesida_y_quitador_de_extremos(const char *data, int restar_cua
         }
     }
 
-    free_split(partes); // libera las partes divididas
+    free_split_con_numero_de_celdas(partes); // libera las partes divididas
     return resultado;   // retorna el texto con extremos recortados
 }
 
@@ -857,10 +857,10 @@ char *Trimend_paresido(const char *texto)
         return NULL;
 
     char **partes = NULL;                                     // fragmentos del texto dividido por separador primario
-    int n = split(texto, GG_caracter_separacion[0], &partes); // divide el texto en columnas // ejemplo: "A|B|" -> ["A","B",""]
+    int n = split_con_numero_de_celdas(texto, GG_caracter_separacion[0], &partes); // divide el texto en columnas // ejemplo: "A|B|" -> ["A","B",""]
     if (n <= 0)                                               // no se pudo dividir
     {
-        free_split(partes);       // libera aunque este vacio
+        free_split_con_numero_de_celdas(partes);       // libera aunque este vacio
         strcpy(resultado, texto); // retorna el texto original sin modificar
         return resultado;
     }
@@ -878,7 +878,7 @@ char *Trimend_paresido(const char *texto)
             strncat(resultado, partes[i], strlen(texto) - 1);                 // agrega el valor de la columna // ejemplo: "A"
     }
 
-    free_split(partes); // libera las partes divididas
+    free_split_con_numero_de_celdas(partes); // libera las partes divididas
     return resultado;   // retorna el texto sin separador final sobrante
 }
 
@@ -1030,7 +1030,7 @@ resultado[i][0] = '\0';
   return resultado;
 
  char **partes = NULL;
- int n = split(direccion_archivo, "\\", &partes);
+ int n = split_con_numero_de_celdas(direccion_archivo, "\\", &partes);
  if (n > 0)
  {
   for (int i = 0; i < n - 1; i++)
@@ -1041,15 +1041,15 @@ if (i < n - 2)
   }
 
   char **nom_ext = NULL;
-  int n_ne = split(partes[n - 1], ".", &nom_ext);
+  int n_ne = split_con_numero_de_celdas(partes[n - 1], ".", &nom_ext);
   if (n_ne > 0)
   {
 strncpy(resultado[1], nom_ext[0], 511);
 if (n_ne > 1)
  strncpy(resultado[2], nom_ext[1], 511);
-free_split(nom_ext);
+free_split_con_numero_de_celdas(nom_ext);
   }
-  free_split(partes);
+  free_split_con_numero_de_celdas(partes);
  }
 
  return resultado;
@@ -1079,7 +1079,7 @@ int desfragmentar_direccion(const char *direccion, char **retorna_directorios, c
     *retorna_extencion = NULL;   // extension del archivo // ejemplo: "txt"
 
     // 1) Dividir la direccion completa por separador de carpetas.
-    int n_partes = split(direccion, "\\", &partes); // divide la ruta completa por backslash // ejemplo: 3 partes para "C:\espacios\inventario.txt"
+    int n_partes = split_con_numero_de_celdas(direccion, "\\", &partes); // divide la ruta completa por backslash // ejemplo: 3 partes para "C:\espacios\inventario.txt"
     if (n_partes <= 0 || !partes)                   // la ruta no pudo dividirse
     {
         RETORNAR_PROCESO_ESTANDAR(-1);
@@ -1090,16 +1090,16 @@ int desfragmentar_direccion(const char *direccion, char **retorna_directorios, c
     {
         if (concatenar_formato_separado_por_variable(retorna_directorios, NULL, (*retorna_directorios && (*retorna_directorios)[0] != '\0') ? "\\%s" : "%s", partes[i]) < 0) // fallo al concatenar el segmento de directorio
         {
-            free_split(partes); // libera los segmentos antes de retornar error
+            free_split_con_numero_de_celdas(partes); // libera los segmentos antes de retornar error
             RETORNAR_PROCESO_ESTANDAR(-1);
         }
     }
 
     // 3) Tomar la ultima parte (archivo.ext) y dividirla por '.'.
-    int n_nom_ext = split(partes[n_partes - 1], ".", &nom_ext); // divide "inventario.txt" en ["inventario","txt"] // ejemplo: n_nom_ext = 2
+    int n_nom_ext = split_con_numero_de_celdas(partes[n_partes - 1], ".", &nom_ext); // divide "inventario.txt" en ["inventario","txt"] // ejemplo: n_nom_ext = 2
     if (n_nom_ext <= 0 || !nom_ext || !nom_ext[0])              // no se pudo extraer el nombre del archivo
     {
-        free_split(partes); // libera los segmentos de ruta
+        free_split_con_numero_de_celdas(partes); // libera los segmentos de ruta
         RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
@@ -1107,14 +1107,14 @@ int desfragmentar_direccion(const char *direccion, char **retorna_directorios, c
     if (concatenar_formato_separado_por_variable(retorna_nom_arch, NULL, "%s", nom_ext[0]) < 0 ||                                     // copia el nombre del archivo // ejemplo: "inventario"
         concatenar_formato_separado_por_variable(retorna_extencion, NULL, "%s", (n_nom_ext > 1 && nom_ext[1]) ? nom_ext[1] : "") < 0) // copia la extension o cadena vacia // ejemplo: "txt"
     {
-        free_split(nom_ext); // libera nombre.ext antes de retornar error
-        free_split(partes);  // libera la ruta antes de retornar error
+        free_split_con_numero_de_celdas(nom_ext); // libera nombre.ext antes de retornar error
+        free_split_con_numero_de_celdas(partes);  // libera la ruta antes de retornar error
         RETORNAR_PROCESO_ESTANDAR(-1);
     }
 
     // 5) Liberar temporales y terminar con exito.
-    free_split(nom_ext);          // libera los fragmentos de nombre.extension
-    free_split(partes);           // libera los segmentos de la ruta completa
+    free_split_con_numero_de_celdas(nom_ext);          // libera los fragmentos de nombre.extension
+    free_split_con_numero_de_celdas(partes);           // libera los segmentos de la ruta completa
     RETORNAR_PROCESO_ESTANDAR(0); // desfragmentacion exitosa
 }
 
@@ -1224,9 +1224,9 @@ char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer,
     if (!texto || !columnas_recorrer || !comparar) // alguno de los parametros requeridos es nulo
         return calloc(1, 1);
 
-    /* Usar split para acceder a filas usando separador primario */
+    /* Usar split_con_numero_de_celdas para acceder a filas usando separador primario */
     char **filas = NULL;                                           // arreglo de filas del texto dividido
-    int n_filas = split(texto, GG_caracter_separacion[0], &filas); // divide el texto en filas usando el separador primario // ejemplo: GG_caracter_separacion[0]="|"
+    int n_filas = split_con_numero_de_celdas(texto, GG_caracter_separacion[0], &filas); // divide el texto en filas usando el separador primario // ejemplo: GG_caracter_separacion[0]="|"
 
     char *resultado = malloc(65536); // buffer de 64 KB para acumular las filas que coincidan
     if (!resultado)                  // fallo de malloc
@@ -1239,9 +1239,9 @@ char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer,
         if (!filas[i]) // fila nula, se salta
             continue;
 
-        /* Split la fila por segundo separador para acceder a columnas */
+        /* split_con_numero_de_celdas la fila por segundo separador para acceder a columnas */
         char **columnas = NULL;                                             // columnas de la fila actual
-        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas usando el segundo separador // ejemplo: GG_caracter_separacion[1]="�"
+        int n_cols = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas usando el segundo separador // ejemplo: GG_caracter_separacion[1]="�"
 
         /* Recorrer columnas seg�n �ndices especificados */
         const char *pos = columnas_recorrer; // cursor sobre la lista de indices de columnas a comparar
@@ -1266,10 +1266,10 @@ char *busqueda_profunda_string(const char *texto, const char *columnas_recorrer,
                 pos++;
         }
 
-        free_split(columnas); // libera las columnas de la fila actual
+        free_split_con_numero_de_celdas(columnas); // libera las columnas de la fila actual
     }
 
-    free_split(filas); // libera todas las filas del texto dividido
+    free_split_con_numero_de_celdas(filas); // libera todas las filas del texto dividido
     return resultado;  // retorna las filas que coincidieron con el valor buscado
 }
 
@@ -1289,7 +1289,7 @@ char *busqueda_profunda_comparacion_final_string(const char *texto, const char *
 
     /* Similar a busqueda_profunda_string pero retorna con formato especial */
     char **filas = NULL;                                           // arreglo de filas del texto dividido
-    int n_filas = split(texto, GG_caracter_separacion[0], &filas); // divide en filas usando el separador primario
+    int n_filas = split_con_numero_de_celdas(texto, GG_caracter_separacion[0], &filas); // divide en filas usando el separador primario
 
     char *resultado = malloc(65536); // buffer de 64 KB para la ultima fila coincidente
     if (!resultado)                  // fallo de malloc
@@ -1305,7 +1305,7 @@ char *busqueda_profunda_comparacion_final_string(const char *texto, const char *
             continue;
 
         char **columnas = NULL;                                             // columnas de la fila actual
-        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas con el segundo separador
+        int n_cols = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas con el segundo separador
 
         const char *pos = columnas_recorrer; // cursor sobre los indices de columnas a comparar
         while (pos && *pos)                  // mientras haya indices
@@ -1326,13 +1326,13 @@ char *busqueda_profunda_comparacion_final_string(const char *texto, const char *
                 pos++;
         }
 
-        free_split(columnas); // libera columnas de esta fila
+        free_split_con_numero_de_celdas(columnas); // libera columnas de esta fila
     }
 
     if (encontrado && ultima_fila)      // hubo al menos una fila coincidente
         strcpy(resultado, ultima_fila); // copia la ultima fila coincidente al resultado // ejemplo: ultima fila con el valor buscado
 
-    free_split(filas); // libera todas las filas
+    free_split_con_numero_de_celdas(filas); // libera todas las filas
     return resultado;  // retorna solo la ultima fila que coincidio
 }
 
@@ -1347,7 +1347,7 @@ char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto, const char *c
         return calloc(1, 1);
 
     char **filas = NULL;                                           // arreglo de filas del texto dividido
-    int n_filas = split(texto, GG_caracter_separacion[0], &filas); // divide en filas con el separador primario
+    int n_filas = split_con_numero_de_celdas(texto, GG_caracter_separacion[0], &filas); // divide en filas con el separador primario
 
     char *resultado = malloc(65536); // buffer de 64 KB para las filas que cumplan todas las condiciones
     if (!resultado)                  // fallo de malloc
@@ -1356,7 +1356,7 @@ char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto, const char *c
 
     /* Parsear comparaciones m�ltiples (separadas por alg�n delimitador) */
     char **comparaciones_arr = NULL;                                     // arreglo de condiciones individuales
-    int n_comparaciones = split(comparaciones, "|", &comparaciones_arr); // separa las condiciones por '|' // ejemplo: "0:ID123|2:Tornillo"
+    int n_comparaciones = split_con_numero_de_celdas(comparaciones, "|", &comparaciones_arr); // separa las condiciones por '|' // ejemplo: "0:ID123|2:Tornillo"
 
     int encontrado = 0;               // bandera de si alguna fila paso todas las condiciones
     for (int i = 0; i < n_filas; i++) // itera cada fila
@@ -1365,7 +1365,7 @@ char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto, const char *c
             continue;
 
         char **columnas = NULL;                                             // columnas de la fila actual
-        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas
+        int n_cols = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas
 
         int todas_coinciden = 1; // asume que la fila cumple todas las condiciones hasta que se demuestre lo contrario
 
@@ -1401,11 +1401,11 @@ char *busqueda_con_YY_profunda_texto_id_archivo(const char *texto, const char *c
             encontrado = 1;                                   // marca que hay al menos una coincidencia
         }
 
-        free_split(columnas); // libera las columnas de esta fila
+        free_split_con_numero_de_celdas(columnas); // libera las columnas de esta fila
     }
 
-    free_split(comparaciones_arr); // libera las condiciones parseadas
-    free_split(filas);             // libera las filas del texto
+    free_split_con_numero_de_celdas(comparaciones_arr); // libera las condiciones parseadas
+    free_split_con_numero_de_celdas(filas);             // libera las filas del texto
     return resultado;              // retorna las filas que cumplieron todas las condiciones
 }
 
@@ -1426,7 +1426,7 @@ char *editar_incr_string_funcion_recursiva(const char *texto, const char *column
     int es_incremento = edit_0_increm_1 && strcmp(edit_0_increm_1, "1") == 0; // modo incremento si el flag es "1" // ejemplo: "1" -> suma 1 al valor numerico
 
     char **filas = NULL;                                           // arreglo de filas del texto dividido
-    int n_filas = split(texto, GG_caracter_separacion[0], &filas); // divide en filas con el separador primario
+    int n_filas = split_con_numero_de_celdas(texto, GG_caracter_separacion[0], &filas); // divide en filas con el separador primario
 
     char *resultado = malloc(65536); // buffer de 64 KB para el texto editado
     if (!resultado)                  // fallo de malloc
@@ -1442,7 +1442,7 @@ char *editar_incr_string_funcion_recursiva(const char *texto, const char *column
             continue;
 
         char **columnas = NULL;                                             // columnas de la fila actual
-        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas con el segundo separador
+        int n_cols = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[1], &columnas); // divide la fila en columnas con el segundo separador
 
         /* Parsear �ndices de columnas a editar */
         const char *pos = columnas_recorrer; // cursor sobre la lista de indices de columnas a editar
@@ -1480,10 +1480,10 @@ char *editar_incr_string_funcion_recursiva(const char *texto, const char *column
                 strcat(resultado, columnas[j]);               // agrega el valor de la columna al resultado
         }
 
-        free_split(columnas); // libera las columnas de esta fila
+        free_split_con_numero_de_celdas(columnas); // libera las columnas de esta fila
     }
 
-    free_split(filas); // libera todas las filas
+    free_split_con_numero_de_celdas(filas); // libera todas las filas
     return resultado;  // retorna el texto con las columnas indicadas editadas/incrementadas
 }
 
@@ -1531,7 +1531,7 @@ char *ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(const char
 
     /* Parsear estructura: "texto|indices|info|edit_mode" */
     char **partes = NULL;
-    int n_partes = split(datos, "|", &partes);
+    int n_partes = split_con_numero_de_celdas(datos, "|", &partes);
 
     char *resultado = calloc(1, 1);
 
@@ -1540,7 +1540,7 @@ char *ARR_FUN_SOLO_TEXTO_editar_inc_agregar_edicion_profunda_multiple(const char
         resultado = editar_incr_string_funcion_recursiva(partes[0], partes[1], partes[2], n_partes > 3 ? partes[3] : "0");
     }
 
-    free_split(partes);
+    free_split_con_numero_de_celdas(partes);
     return resultado;
 }
 
@@ -1574,7 +1574,7 @@ char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR
 
     /* Buscar filas que coincidan y editarlas */
     char **filas = NULL;
-    int n_filas = split(texto, GG_caracter_separacion[0], &filas);
+    int n_filas = split_con_numero_de_celdas(texto, GG_caracter_separacion[0], &filas);
 
     char *resultado = malloc(65536);
     if (!resultado)
@@ -1591,7 +1591,7 @@ char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR
 
         /* Verificar si esta fila coincide con la b�squeda */
         char **columnas = NULL;
-        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
+        int n_cols = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[1], &columnas);
 
         int debe_editar = 0;
         const char *pos = indices_editar;
@@ -1646,10 +1646,10 @@ char *editar_inc_agregar_edicion_profunda_multiple_comparacion_MULTIPLE_A_CHECAR
                 strcat(resultado, columnas[j]);
         }
 
-        free_split(columnas);
+        free_split_con_numero_de_celdas(columnas);
     }
 
-    free_split(filas);
+    free_split_con_numero_de_celdas(filas);
     return resultado;
 }
 
@@ -1665,7 +1665,7 @@ char *editar_inc_edicion_profunda_multiple_string(const char *texto, const char 
 {
     /* Simplemente aplica la edici�n a todas las filas en los �ndices especificados */
     char **filas = NULL;
-    int n_filas = split(texto, GG_caracter_separacion[0], &filas);
+    int n_filas = split_con_numero_de_celdas(texto, GG_caracter_separacion[0], &filas);
 
     char *resultado = malloc(65536);
     if (!resultado)
@@ -1683,7 +1683,7 @@ char *editar_inc_edicion_profunda_multiple_string(const char *texto, const char 
             continue;
 
         char **columnas = NULL;
-        int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas);
+        int n_cols = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[1], &columnas);
 
         const char *pos = indices_editar;
         while (pos && *pos)
@@ -1715,10 +1715,10 @@ char *editar_inc_edicion_profunda_multiple_string(const char *texto, const char 
                 strcat(resultado, columnas[j]);               // agrega el valor de la columna al resultado
         }
 
-        free_split(columnas); // libera las columnas de esta fila
+        free_split_con_numero_de_celdas(columnas); // libera las columnas de esta fila
     }
 
-    free_split(filas); // libera las filas divididas
+    free_split_con_numero_de_celdas(filas); // libera las filas divididas
     return resultado;  // retorna el texto con todas las filas editadas en los indices indicados
 }
 
@@ -1734,7 +1734,7 @@ char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto, co
 {
     /* Edita solo la �ltima fila que coincide */
     char **filas = NULL;                                           // arreglo de filas del texto dividido
-    int n_filas = split(texto, GG_caracter_separacion[0], &filas); // divide en filas con el separador primario
+    int n_filas = split_con_numero_de_celdas(texto, GG_caracter_separacion[0], &filas); // divide en filas con el separador primario
 
     char *resultado = malloc(65536); // buffer de 64 KB para el texto resultante
     if (!resultado)                  // fallo de malloc
@@ -1756,7 +1756,7 @@ char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto, co
         if (i == n_filas - 1) // es la ultima fila: aplica la edicion
         {
             char **columnas = NULL;                                             // columnas de la ultima fila
-            int n_cols = split(filas[i], GG_caracter_separacion[1], &columnas); // divide la ultima fila en columnas
+            int n_cols = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[1], &columnas); // divide la ultima fila en columnas
 
             const char *pos = indices_editar; // cursor sobre los indices de columnas a editar
             while (pos && *pos)
@@ -1788,7 +1788,7 @@ char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto, co
                     strcat(resultado, columnas[j]);               // agrega el valor de la columna al resultado
             }
 
-            free_split(columnas); // libera las columnas de la ultima fila
+            free_split_con_numero_de_celdas(columnas); // libera las columnas de la ultima fila
         }
         else
         {
@@ -1796,7 +1796,7 @@ char *editar_inc_edicion_profunda_multiple_AL_FINAL_string(const char *texto, co
         }
     }
 
-    free_split(filas); // libera las filas divididas
+    free_split_con_numero_de_celdas(filas); // libera las filas divididas
     return resultado;  // retorna el texto con la ultima fila editada
 }
 
@@ -1815,7 +1815,7 @@ char *recorrer_caracter_separacion(const char *contenidoFila, const char *izquie
         return calloc(1, 1);
 
     char **partes = NULL;                                                    // arreglo de partes divididas por el separador primario
-    int n_partes = split(contenidoFila, GG_caracter_separacion[0], &partes); // divide el texto en partes con el separador primario // ejemplo: 4 partes para "A|B|C|D"
+    int n_partes = split_con_numero_de_celdas(contenidoFila, GG_caracter_separacion[0], &partes); // divide el texto en partes con el separador primario // ejemplo: 4 partes para "A|B|C|D"
 
     char *resultado = malloc(65536); // buffer de 64 KB para el resultado
     if (!resultado)                  // fallo de malloc
@@ -1848,7 +1848,7 @@ char *recorrer_caracter_separacion(const char *contenidoFila, const char *izquie
         }
     }
 
-    free_split(partes); // libera las partes divididas
+    free_split_con_numero_de_celdas(partes); // libera las partes divididas
     return resultado;   // retorna el texto con los extremos recortados por separador
 }
 
@@ -1874,7 +1874,7 @@ char *recorrer_caracter_separacion_funciones_espesificas(const char *contenidoFi
         strcpy(separador, GG_caracter_separacion[0]); // usa el separador primario como fallback // ejemplo: "|"
 
     char **partes = NULL;                                    // arreglo de partes divididas por el separador
-    int n_partes = split(contenidoFila, separador, &partes); // divide el texto usando el separador configurado
+    int n_partes = split_con_numero_de_celdas(contenidoFila, separador, &partes); // divide el texto usando el separador configurado
 
     char *resultado = malloc(65536); // buffer de 64 KB para el resultado
     if (!resultado)                  // fallo de malloc
@@ -1905,6 +1905,6 @@ char *recorrer_caracter_separacion_funciones_espesificas(const char *contenidoFi
         }
     }
 
-    free_split(partes); // libera las partes divididas
+    free_split_con_numero_de_celdas(partes); // libera las partes divididas
     return resultado;   // retorna el texto con los extremos recortados usando el separador especifico
 }

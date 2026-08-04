@@ -75,28 +75,28 @@ static int extraer_comando_de_linea_transferencia(const char *linea_transferenci
         RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": l�nea inv�lida o vac�a
     }
 
-    n_partes_transferencia = split(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia); // divide la l�nea usando el separador principal de transferencia
+    n_partes_transferencia = split_con_numero_de_celdas(linea_transferencia, GG_caracter_para_transferencia_entre_archivos[0], &partes_transferencia); // divide la l�nea usando el separador principal de transferencia
     if (n_partes_transferencia < 3 ||                                                                                             // se esperan al menos 3 partes: destino, comando y espejo
-        partes_transferencia == NULL ||                                                                                           // si split fall� y no devolvi� arreglo
+        partes_transferencia == NULL ||                                                                                           // si split_con_numero_de_celdas fall� y no devolvi� arreglo
         partes_transferencia[0] == NULL ||                                                                                        // si la parte de destino est� vac�a
         partes_transferencia[1] == NULL ||                                                                                        // si la parte de comando est� vac�a
         partes_transferencia[2] == NULL)                                                                                          // si la parte de espejo est� vac�a
     {
-        free_split(partes_transferencia);         // libera el arreglo aunque est� incompleto
+        free_split_con_numero_de_celdas(partes_transferencia);         // libera el arreglo aunque est� incompleto
         RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": formato de l�nea incorrecto
     }
 
     {
         /* Separar "ID_DESTINO┴ID_ORIGEN" y verificar que el destino sea este programa */
         char **partes_destino = NULL;                                                                                             // arreglo para separar destino y origen dentro de la primera parte
-        int n_partes_destino = split(partes_transferencia[0], GG_caracter_para_transferencia_entre_archivos[1], &partes_destino); // divide "ID_DESTINO-ID_ORIGEN" por el separador secundario
-        int es_para_mi = (n_partes_destino >= 1 && partes_destino != NULL &&                                                      // verifica que el split haya funcionado
+        int n_partes_destino = split_con_numero_de_celdas(partes_transferencia[0], GG_caracter_para_transferencia_entre_archivos[1], &partes_destino); // divide "ID_DESTINO-ID_ORIGEN" por el separador secundario
+        int es_para_mi = (n_partes_destino >= 1 && partes_destino != NULL &&                                                      // verifica que el split_con_numero_de_celdas haya funcionado
                           partes_destino[0] != NULL &&                                                                            // verifica que el destino no sea NULL
                           strcmp(partes_destino[0], GG_id_programa) == 0);                                                        // compara el destino con el ID de este programa
-        free_split(partes_destino);                                                                                               // libera las partes de destino, ya no se necesitan
+        free_split_con_numero_de_celdas(partes_destino);                                                                                               // libera las partes de destino, ya no se necesitan
         if (!es_para_mi)                                                                                                          // si el mensaje no es para este programa, ignorarlo
         {
-            free_split(partes_transferencia);         // libera las partes de la l�nea completa
+            free_split_con_numero_de_celdas(partes_transferencia);         // libera las partes de la l�nea completa
             RETORNAR_PROCESO_ESTANDAR(RET_NOT_FOUND); // retorna "no encontrado": el mensaje es para otro programa
         }
     }
@@ -104,11 +104,11 @@ static int extraer_comando_de_linea_transferencia(const char *linea_transferenci
     comando_final = variable_string("%s", partes_transferencia[1]); // duplica el comando (segunda parte) en memoria propia
     if (comando_final == NULL)                                      // si la duplicaci�n fall� por memoria insuficiente
     {
-        free_split(partes_transferencia);             // libera las partes antes de salir con error
+        free_split_con_numero_de_celdas(partes_transferencia);             // libera las partes antes de salir con error
         RETORNAR_PROCESO_ESTANDAR(RET_ERROR_GENERIC); // retorna error gen�rico: fallo de memoria
     }
 
-    free_split(partes_transferencia);  // libera el arreglo de partes, ya se copi� lo necesario
+    free_split_con_numero_de_celdas(partes_transferencia);  // libera el arreglo de partes, ya se copi� lo necesario
     *comando_out = comando_final;      // entrega el comando extra�do al caller
     RETORNAR_PROCESO_ESTANDAR(RET_OK); // retorna �xito: comando extra�do correctamente
 }

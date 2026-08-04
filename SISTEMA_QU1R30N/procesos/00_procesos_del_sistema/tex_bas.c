@@ -178,7 +178,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
     ruta_normalizada[len_ruta] = '\0'; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
 
     char **partes = NULL;                                           // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    int n_partes = split(ruta_normalizada, separador_txt, &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+    int n_partes = split_con_numero_de_celdas(ruta_normalizada, separador_txt, &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
     if (n_partes < 0 || !partes)                                    // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         free(ruta_normalizada);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
@@ -197,7 +197,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
 
     if (indice_ultimo < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
-        free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         free(ruta_normalizada);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         free(ruta_trabajo);            // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
@@ -211,7 +211,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
     {
         if (concatenar_formato_separado_por_variable(&acumulada, NULL, "%s%s", partes[0], separador_txt) < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free(ruta_normalizada);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             free(ruta_trabajo);            // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
@@ -223,7 +223,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
     {
         if (concatenar_formato_separado_por_variable(&acumulada, NULL, "%s", separador_txt) < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free(ruta_normalizada);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             free(ruta_trabajo);            // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
@@ -252,7 +252,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
                 if (concatenar_formato_separado_por_variable(&acumulada, NULL, "%s", separador_txt) < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
                 {
                     free(acumulada);               // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-                    free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                    free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
                     free(ruta_normalizada);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
                     free(ruta_trabajo);            // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
                     RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
@@ -263,7 +263,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
         if (concatenar_formato_separado_por_variable(&acumulada, NULL, "%s", partes[i]) < 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             free(acumulada);               // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-            free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free(ruta_normalizada);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             free(ruta_trabajo);            // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
@@ -290,7 +290,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
             else                      // ejecuta la rama alternativa cuando la condición previa no se cumplió // ejemplo: usar valor por defecto
             {
                 free(acumulada);               // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-                free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
                 free(ruta_normalizada);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
                 free(ruta_trabajo);            // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
                 RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
@@ -299,7 +299,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
         else if (resultado_mkdir != 0 && errno != EEXIST) // ejecuta la rama alternativa cuando la condición previa no se cumplió // ejemplo: usar valor por defecto
         {
             free(acumulada);               // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-            free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free(ruta_normalizada);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             free(ruta_trabajo);            // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
             RETORNAR_PROCESO_ESTANDAR(-1); // retorna el valor calculado en esta ruta de ejecución // ejemplo: -1
@@ -307,7 +307,7 @@ int crearDirectorio(const char *ruta) // crea el directorio requerido antes de t
     }
 
     free(acumulada);        // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
-    free_split(partes);     // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    free_split_con_numero_de_celdas(partes);     // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     free(ruta_normalizada); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
 
     if (estado_creacion == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
@@ -754,7 +754,7 @@ int seleccionar_fila_por_celda(const char *ruta, int col_buscar, // declara una 
     for (int i = 0; i < n_total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n < 0)                                                    // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
@@ -768,7 +768,7 @@ int seleccionar_fila_por_celda(const char *ruta, int col_buscar, // declara una 
                 char **temp = (char **)realloc(resultado, capacidad * sizeof(char *)); // redimensiona memoria dinámica para ampliar o ajustar la capacidad actual // ejemplo: duplicar el arreglo de punteros
                 if (!temp)                                                             // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
                 {
-                    free_split(partes);                  // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                    free_split_con_numero_de_celdas(partes);                  // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
                     free_lineas(resultado, encontrados); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                     free_lineas(lineas, n_total);        // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                     *salida_out = NULL;                  // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
@@ -780,7 +780,7 @@ int seleccionar_fila_por_celda(const char *ruta, int col_buscar, // declara una 
             resultado[encontrados] = (char *)malloc(strlen(lineas[i]) + 1); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
             if (!resultado[encontrados])                                    // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
             {
-                free_split(partes);                  // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                free_split_con_numero_de_celdas(partes);                  // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
                 free_lineas(resultado, encontrados); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                 free_lineas(lineas, n_total);        // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                 *salida_out = NULL;                  // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
@@ -790,7 +790,7 @@ int seleccionar_fila_por_celda(const char *ruta, int col_buscar, // declara una 
             encontrados++;                             // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
         }
 
-        free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
 
     free_lineas(lineas, n_total);           // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
@@ -836,7 +836,7 @@ void eliminar_fila_por_celda(const char *ruta, int col_buscar, // continúa envi
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
 
         int eliminar = 0;                                                             // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
         if (n > 0 && col_buscar < n && strcmp(partes[col_buscar], valor_buscar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
@@ -846,7 +846,7 @@ void eliminar_fila_por_celda(const char *ruta, int col_buscar, // continúa envi
 
         if (n > 0)              // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
 
         if (!eliminar) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
@@ -908,7 +908,7 @@ void editar_celda_por_celda(const char *ruta, int col_buscar,        // continú
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
@@ -916,7 +916,7 @@ void editar_celda_por_celda(const char *ruta, int col_buscar,        // continú
 
         if (col_buscar >= n || strcmp(partes[col_buscar], valor_buscar) != 0 || col_editar >= n) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
 
@@ -924,7 +924,7 @@ void editar_celda_por_celda(const char *ruta, int col_buscar,        // continú
         char *nueva_linea = malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
         if (!nueva_linea)                 // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);         // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);         // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             return;                     // sale de la función actual sin devolver un valor adicional // ejemplo: termina aquí
         }
@@ -946,7 +946,7 @@ void editar_celda_por_celda(const char *ruta, int col_buscar,        // continú
             free(lineas[i]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         lineas[i] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-        free_split(partes);      // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);      // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
@@ -1095,7 +1095,7 @@ void incrementar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
@@ -1103,7 +1103,7 @@ void incrementar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
 
         if (colBuscar >= n || strcmp(partes[colBuscar], valorBuscar) != 0 || colEditar >= n) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
 
@@ -1114,7 +1114,7 @@ void incrementar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
         char *nueva_linea = malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
         if (!nueva_linea)                 // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);         // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);         // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             return;                     // sale de la función actual sin devolver un valor adicional // ejemplo: termina aquí
         }
@@ -1135,7 +1135,7 @@ void incrementar_celda(const char *ruta, int colBuscar, const char *valorBuscar,
             free(lineas[i]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         lineas[i] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-        free_split(partes);      // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);      // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
@@ -1169,21 +1169,21 @@ void editar_columna_completa(const char *ruta, int col, const char *nuevo) // ej
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
         if (col >= n)                                                 // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
 
         char *nueva_linea = malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
         if (!nueva_linea)                 // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);         // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);         // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             return;                     // sale de la función actual sin devolver un valor adicional // ejemplo: termina aquí
         }
@@ -1204,7 +1204,7 @@ void editar_columna_completa(const char *ruta, int col, const char *nuevo) // ej
             free(lineas[i]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         lineas[i] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-        free_split(partes);      // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);      // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
@@ -1236,7 +1236,7 @@ void eliminar_columna(const char *ruta, int col) // ejecuta la llamada o condici
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
@@ -1245,7 +1245,7 @@ void eliminar_columna(const char *ruta, int col) // ejecuta la llamada o condici
         char *nueva_linea = malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
         if (!nueva_linea)                 // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);         // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);         // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             return;                     // sale de la función actual sin devolver un valor adicional // ejemplo: termina aquí
         }
@@ -1271,7 +1271,7 @@ void eliminar_columna(const char *ruta, int col) // ejecuta la llamada o condici
             free(lineas[i]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         lineas[i] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-        free_split(partes);      // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);      // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
@@ -1346,14 +1346,14 @@ int buscar_fila(const char *ruta, int colBuscar, const char *valorBuscar, // dec
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
 
         int coincide = (colBuscar < n && strcmp(partes[colBuscar], valorBuscar) == 0); // compara dos cadenas para saber si representan el mismo valor // ejemplo: ID_TOT contra la cabecera leída
-        free_split(partes);                                                            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);                                                            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
 
         if (coincide) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
@@ -1434,12 +1434,12 @@ int editar_celda_id_fila(const char *ruta, int id_fila, int col, // declara una 
     }
 
     char **partes = NULL;                                               // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    int n = split(lineas[id_fila], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+    int n = split_con_numero_de_celdas(lineas[id_fila], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
     if (n <= 0 || col >= n)                                             // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         if (n > 0)                    // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);       // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);       // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
         free_lineas(lineas, total);   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
@@ -1448,7 +1448,7 @@ int editar_celda_id_fila(const char *ruta, int id_fila, int col, // declara una 
     char *nueva_linea = malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
     if (!nueva_linea)                 // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
-        free_split(partes);           // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);           // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total);   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
@@ -1469,7 +1469,7 @@ int editar_celda_id_fila(const char *ruta, int id_fila, int col, // declara una 
         free(lineas[id_fila]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
     }
     lineas[id_fila] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-    free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
     free_lineas(lineas, total);           // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
@@ -1508,12 +1508,12 @@ int incrementar_celda_id_fila(const char *ruta, int id_fila, int col, // declara
     }
 
     char **partes = NULL;                                               // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    int n = split(lineas[id_fila], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+    int n = split_con_numero_de_celdas(lineas[id_fila], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
     if (n <= 0 || col >= n)                                             // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         if (n > 0)                    // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);       // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);       // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
         free_lineas(lineas, total);   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
@@ -1526,7 +1526,7 @@ int incrementar_celda_id_fila(const char *ruta, int id_fila, int col, // declara
     char *nueva_linea = malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
     if (!nueva_linea)                 // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
-        free_split(partes);           // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);           // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total);   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
@@ -1547,7 +1547,7 @@ int incrementar_celda_id_fila(const char *ruta, int id_fila, int col, // declara
         free(lineas[id_fila]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
     }
     lineas[id_fila] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-    free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
     free_lineas(lineas, total);           // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
@@ -1582,7 +1582,7 @@ void borrar_celdas_excepto_primera(const char *ruta, int colBuscar, // continúa
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
@@ -1590,14 +1590,14 @@ void borrar_celdas_excepto_primera(const char *ruta, int colBuscar, // continúa
 
         if (colBuscar >= n || strcmp(partes[colBuscar], valorBuscar) != 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
 
         char *nueva_linea = malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
         if (!nueva_linea)                 // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);         // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);         // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             return;                     // sale de la función actual sin devolver un valor adicional // ejemplo: termina aquí
         }
@@ -1614,7 +1614,7 @@ void borrar_celdas_excepto_primera(const char *ruta, int colBuscar, // continúa
             free(lineas[i]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         lineas[i] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-        free_split(partes);      // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);      // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
@@ -1741,13 +1741,13 @@ static int leer_config_metadata(const char *ruta_metadata, long *id_total_out, l
     for (int i = 0; i < n; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **p = NULL;
-        int np = split(lineas[i], GG_caracter_separacion[0], &p); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int np = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &p); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (np >= 2 && p) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             if (strcmp(p[0], "ID_TOT") == 0)            { id_total = atol(p[1]); }
             else if (strcmp(p[0], "CANT_POR_ARCH") == 0) { long v = atol(p[1]); if (v > 0) { cant = v; } }
         }
-        if (p) { free_split(p); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (p) { free_split_con_numero_de_celdas(p); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
     free_lineas(lineas, n); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
 
@@ -1984,7 +1984,7 @@ char *agregar_info_dividida(const char *direccion,    // ruta del archivo metada
     for (int i = 0; i < n_lineas; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                                // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n_partes = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n_partes = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n_partes >= 2 && partes)                                         // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             if (strcmp(partes[0], "ID_TOT") == 0)        // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
@@ -1996,7 +1996,7 @@ char *agregar_info_dividida(const char *direccion,    // ruta del archivo metada
                 char *tmp_col = (char *)malloc(strlen(partes[1]) + 1); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
                 if (!tmp_col)                                          // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
                 {
-                    free_split(partes);                                                                                                          // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                    free_split_con_numero_de_celdas(partes);                                                                                                          // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
                     free_lineas(lineas, n_lineas);                                                                                               // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                     concatenar_formato_separado_por_variable(&respuesta, NULL, "0%serror de memoria", GG_caracter_para_confirmacion_o_error[0]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
                     return respuesta;                                                                                                            // retorna el valor calculado en esta ruta de ejecución // ejemplo: respuesta
@@ -2020,7 +2020,7 @@ char *agregar_info_dividida(const char *direccion,    // ruta del archivo metada
 
         if (partes)             // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
     }
 
@@ -2155,7 +2155,7 @@ int incrementa_celda_solo_prog(const char *ruta, const char *id_principal,      
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
@@ -2164,17 +2164,17 @@ int incrementa_celda_solo_prog(const char *ruta, const char *id_principal,      
         /* Verificación: col 0 == id_principal Y col 2 == programa_id */
         if (n > 0 && strcmp(partes[0], id_principal) != 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
         if (n <= 2 || strcmp(partes[2], programa_id) != 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
         if (col_editar >= n) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
 
@@ -2185,7 +2185,7 @@ int incrementa_celda_solo_prog(const char *ruta, const char *id_principal,      
         char *nueva_linea = (char *)malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
         if (!nueva_linea)                         // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);                     // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);                     // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total);             // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             RETORNAR_PROCESO_ESTANDAR(encontrados); // retorna el valor calculado en esta ruta de ejecución // ejemplo: encontrados
         }
@@ -2206,7 +2206,7 @@ int incrementa_celda_solo_prog(const char *ruta, const char *id_principal,      
             free(lineas[i]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         lineas[i] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-        free_split(partes);      // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);      // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         encontrados++;           // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
     }
 
@@ -2255,7 +2255,7 @@ void eliminar_fila_para_multiples_programas_solo_prog(const char *ruta,         
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
 
         int eliminar = 0;                                     // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
         if (n > 0 && strcmp(partes[0], id_a_eliminar) == 0 && // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
@@ -2266,7 +2266,7 @@ void eliminar_fila_para_multiples_programas_solo_prog(const char *ruta,         
 
         if (n > 0)              // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
 
         if (!eliminar) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
@@ -2327,7 +2327,7 @@ int editar_fila_espesifica_sin_arreglo_gg(const char *ruta, const char *id_fila,
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
@@ -2335,14 +2335,14 @@ int editar_fila_espesifica_sin_arreglo_gg(const char *ruta, const char *id_fila,
 
         if (strcmp(partes[0], id_fila) != 0 || col_editar >= n) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
 
         char *nueva_linea = (char *)malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
         if (!nueva_linea)                         // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);           // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);           // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total);   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
         }
@@ -2363,7 +2363,7 @@ int editar_fila_espesifica_sin_arreglo_gg(const char *ruta, const char *id_fila,
             free(lineas[i]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         lineas[i] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-        free_split(partes);      // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);      // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
 
         guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
         free_lineas(lineas, total);           // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
@@ -2418,7 +2418,7 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
@@ -2426,7 +2426,7 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
 
         if (n <= 2 || strcmp(partes[2], programa_id) != 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
 
@@ -2436,7 +2436,7 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
             char **temp = (char **)realloc(resultado, capacidad * sizeof(char *)); // redimensiona memoria dinámica para ampliar o ajustar la capacidad actual // ejemplo: duplicar el arreglo de punteros
             if (!temp)                                                             // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
             {
-                free_split(partes);                  // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                free_split_con_numero_de_celdas(partes);                  // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
                 free_lineas(resultado, encontrados); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                 free_lineas(lineas, total);          // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
                 *salida_out = NULL;                  // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
@@ -2448,7 +2448,7 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
         resultado[encontrados] = (char *)malloc(strlen(lineas[i]) + 1); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
         if (!resultado[encontrados])                                    // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);                  // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);                  // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(resultado, encontrados); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             free_lineas(lineas, total);          // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             *salida_out = NULL;                  // escribe el valor indicado en la dirección apuntada por el puntero // ejemplo: *n_lineas_out = 0
@@ -2456,7 +2456,7 @@ int leer_solo_prog(const char *ruta, const char *programa_id, char ***salida_out
         }
         strcpy(resultado[encontrados], lineas[i]); // copia una cadena completa al destino indicado // ejemplo: duplicar la ruta original
         encontrados++;                             // mantiene esta instrucción dentro del flujo actual sin alterar la lógica original // ejemplo: paso intermedio del proceso
-        free_split(partes);                        // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);                        // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
 
     free_lineas(lineas, total);             // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
@@ -2496,12 +2496,12 @@ int editar_celda_id_fila_solo_prog(const char *ruta, int id_fila,           // d
     }
 
     char **partes = NULL;                                                             // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    int n = split(lineas[id_fila], GG_caracter_separacion[0], &partes);               // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+    int n = split_con_numero_de_celdas(lineas[id_fila], GG_caracter_separacion[0], &partes);               // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
     if (n <= 0 || col_editar >= n || (n <= 2 || strcmp(partes[2], programa_id) != 0)) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         if (n > 0)                    // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);       // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);       // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
         free_lineas(lineas, total);   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
@@ -2510,7 +2510,7 @@ int editar_celda_id_fila_solo_prog(const char *ruta, int id_fila,           // d
     char *nueva_linea = (char *)malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
     if (!nueva_linea)                         // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
-        free_split(partes);           // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);           // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total);   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
@@ -2531,7 +2531,7 @@ int editar_celda_id_fila_solo_prog(const char *ruta, int id_fila,           // d
         free(lineas[id_fila]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
     }
     lineas[id_fila] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-    free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
     free_lineas(lineas, total);           // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
@@ -2571,12 +2571,12 @@ int incrementa_celda_id_fila_solo_prog(const char *ruta, int id_fila, int col,  
     }
 
     char **partes = NULL;                                                      // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-    int n = split(lineas[id_fila], GG_caracter_separacion[0], &partes);        // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+    int n = split_con_numero_de_celdas(lineas[id_fila], GG_caracter_separacion[0], &partes);        // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
     if (n <= 0 || col >= n || (n <= 2 || strcmp(partes[2], programa_id) != 0)) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         if (n > 0)                    // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);       // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);       // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
         free_lineas(lineas, total);   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
@@ -2589,7 +2589,7 @@ int incrementa_celda_id_fila_solo_prog(const char *ruta, int id_fila, int col,  
     char *nueva_linea = (char *)malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
     if (!nueva_linea)                         // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
-        free_split(partes);           // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);           // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         free_lineas(lineas, total);   // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
         RETORNAR_PROCESO_ESTANDAR(0); // retorna el valor calculado en esta ruta de ejecución // ejemplo: 0
     }
@@ -2610,7 +2610,7 @@ int incrementa_celda_id_fila_solo_prog(const char *ruta, int id_fila, int col,  
         free(lineas[id_fila]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
     }
     lineas[id_fila] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-    free_split(partes);            // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    free_split_con_numero_de_celdas(partes);            // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
     free_lineas(lineas, total);           // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
@@ -2645,7 +2645,7 @@ void borrar_contenido_excepto_id(const char *ruta, const char *id_fila) // ejecu
     for (int i = 0; i < total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
     {
         char **partes = NULL;                                         // declara e inicializa una variable con el valor necesario para continuar el proceso // ejemplo: contador en 0
-        int n = split(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int n = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &partes); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (n <= 0)                                                   // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             continue;                                                 // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
@@ -2653,14 +2653,14 @@ void borrar_contenido_excepto_id(const char *ruta, const char *id_fila) // ejecu
 
         if (strcmp(partes[0], id_fila) != 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             continue;           // salta al siguiente ciclo de la iteración actual // ejemplo: pasa al siguiente registro
         }
 
         char *nueva_linea = (char *)malloc(8192); // reserva memoria dinámica para almacenar el dato o buffer requerido // ejemplo: espacio para una nueva cadena
         if (!nueva_linea)                         // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
-            free_split(partes);         // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(partes);         // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             free_lineas(lineas, total); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
             return;                     // sale de la función actual sin devolver un valor adicional // ejemplo: termina aquí
         }
@@ -2677,7 +2677,7 @@ void borrar_contenido_excepto_id(const char *ruta, const char *id_fila) // ejecu
             free(lineas[i]);     // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
         }
         lineas[i] = nueva_linea; // actualiza una posición específica del arreglo actual // ejemplo: lineas[i] = nueva_linea
-        free_split(partes);      // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        free_split_con_numero_de_celdas(partes);      // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
 
     guardar_archivo(ruta, lineas, total); // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
@@ -2796,21 +2796,21 @@ char *agregar_sino_existe_info_dividida(const char *direccion, // ruta del archi
     if (todo && todo[0] && comparar) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         char **filas  = NULL;
-        int    nf     = split(todo, GG_caracter_separacion_funciones_espesificas[3], &filas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int    nf     = split_con_numero_de_celdas(todo, GG_caracter_separacion_funciones_espesificas[3], &filas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         for (int i = 0; i < nf && filas; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
         {
             char **celdas = NULL;
-            int    nc     = split(filas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            int    nc     = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
             if (nc > (int)col_comp && celdas && strcmp(celdas[(int)col_comp], comparar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
             {
                 id_encontrado = i + 1;
                 concatenar_formato_separado_por_variable(&info_encontrada, NULL, "%s", filas[i]); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
-                if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                if (celdas) { free_split_con_numero_de_celdas(celdas); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
                 break;
             }
-            if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            if (celdas) { free_split_con_numero_de_celdas(celdas); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
-        if (filas) { free_split(filas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (filas) { free_split_con_numero_de_celdas(filas); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
     free(todo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
 
@@ -3059,7 +3059,7 @@ char *editar_id_info_dividida(const char *direccion,       // ruta del archivo m
         for (int i = 0; i < nl; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
         {
             char **celdas = NULL;
-            int    nc     = split(lineas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            int    nc     = split_con_numero_de_celdas(lineas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
             int    coincide = 0;
 
             if (col_comp >= 0) // busca por valor en columna específica
@@ -3085,7 +3085,7 @@ char *editar_id_info_dividida(const char *direccion,       // ruta del archivo m
                     encontro  = 1;
                 }
             }
-            if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            if (celdas) { free_split_con_numero_de_celdas(celdas); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
 
         if (encontro)
@@ -3176,16 +3176,16 @@ char *editar_celda_id_info_dividida(const char *direccion, // ruta del archivo m
     if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         char **cols_arr = NULL;
-        int    nc_cols  = split(cols_str, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a editar usando el separador de nivel 4
+        int    nc_cols  = split_con_numero_de_celdas(cols_str, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a editar usando el separador de nivel 4
         char **vals_arr = NULL;
-        int    nc_vals  = split(vals_str, GG_caracter_separacion_funciones_espesificas[4], &vals_arr); // divide los nuevos valores usando el separador de nivel 4
+        int    nc_vals  = split_con_numero_de_celdas(vals_str, GG_caracter_separacion_funciones_espesificas[4], &vals_arr); // divide los nuevos valores usando el separador de nivel 4
 
         for (long j = 0; j < nl; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
         {
             if (posicion != j) { continue; }
 
             char **celdas = NULL;
-            int    nc     = split(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            int    nc     = split_con_numero_de_celdas(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
             if (nc <= 0 || !celdas) { break; }
 
             for (int k = 0; k < nc_cols && k < nc_vals && cols_arr && vals_arr; k++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
@@ -3208,12 +3208,12 @@ char *editar_celda_id_info_dividida(const char *direccion, // ruta del archivo m
                 concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s",
                     GG_caracter_para_confirmacion_o_error[0], nueva); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
             }
-            free_split(celdas); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(celdas); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             break;
         }
 
-        if (cols_arr) { free_split(cols_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
-        if (vals_arr) { free_split(vals_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (cols_arr) { free_split_con_numero_de_celdas(cols_arr); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
+        if (vals_arr) { free_split_con_numero_de_celdas(vals_arr); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         if (encontro) { guardar_archivo(ruta_a, lineas, nl); } // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
         free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
     }
@@ -3299,16 +3299,16 @@ char *incrementa_celda_id_info_dividida(const char *direccion, // ruta del archi
     if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         char **cols_arr  = NULL;
-        int    nc_cols   = split(cols_str_proc, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a incrementar usando el separador de nivel 4
+        int    nc_cols   = split_con_numero_de_celdas(cols_str_proc, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a incrementar usando el separador de nivel 4
         char **cants_arr = NULL;
-        int    nc_cants  = split(cants_str, GG_caracter_separacion_funciones_espesificas[4], &cants_arr); // divide las cantidades usando el separador de nivel 4
+        int    nc_cants  = split_con_numero_de_celdas(cants_str, GG_caracter_separacion_funciones_espesificas[4], &cants_arr); // divide las cantidades usando el separador de nivel 4
 
         for (long j = 0; j < nl; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
         {
             if (posicion != j) { continue; }
 
             char **celdas = NULL;
-            int    nc     = split(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            int    nc     = split_con_numero_de_celdas(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
             if (nc <= 0 || !celdas) { break; }
 
             for (int k = 0; k < nc_cols && k < nc_cants && cols_arr && cants_arr; k++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
@@ -3335,12 +3335,12 @@ char *incrementa_celda_id_info_dividida(const char *direccion, // ruta del archi
                 concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s",
                     GG_caracter_para_confirmacion_o_error[0], nueva); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
             }
-            free_split(celdas); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(celdas); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             break;
         }
 
-        if (cols_arr)  { free_split(cols_arr);  } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
-        if (cants_arr) { free_split(cants_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (cols_arr)  { free_split_con_numero_de_celdas(cols_arr);  } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
+        if (cants_arr) { free_split_con_numero_de_celdas(cants_arr); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         if (encontro)  { guardar_archivo(ruta_a_incr, lineas, nl); } // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
         free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
     }
@@ -3430,18 +3430,18 @@ char *incrementa_celda_id_info_dividida_copia_si_cero(const char *direccion,    
     if (lineas && nl > 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {
         char **cols_arr  = NULL;
-        int    nc_cols   = split(cols_str_cero, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a incrementar usando el separador de nivel 4
+        int    nc_cols   = split_con_numero_de_celdas(cols_str_cero, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a incrementar usando el separador de nivel 4
         char **cants_arr = NULL;
-        int    nc_cants  = split(cants_str, GG_caracter_separacion_funciones_espesificas[4], &cants_arr); // divide las cantidades usando el separador de nivel 4
+        int    nc_cants  = split_con_numero_de_celdas(cants_str, GG_caracter_separacion_funciones_espesificas[4], &cants_arr); // divide las cantidades usando el separador de nivel 4
         char **cop_arr   = NULL;
-        int    nc_cop    = split(cols_fuente_str ? cols_fuente_str : "", GG_caracter_separacion_funciones_espesificas[4], &cop_arr); // divide las columnas fuente de copia usando el separador de nivel 4
+        int    nc_cop    = split_con_numero_de_celdas(cols_fuente_str ? cols_fuente_str : "", GG_caracter_separacion_funciones_espesificas[4], &cop_arr); // divide las columnas fuente de copia usando el separador de nivel 4
 
         for (long j = 0; j < nl; j++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
         {
             if (posicion != j) { continue; }
 
             char **celdas = NULL;
-            int    nc     = split(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            int    nc     = split_con_numero_de_celdas(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
             if (nc <= 0 || !celdas) { break; }
 
             int decrementa_paquete = 0;
@@ -3505,13 +3505,13 @@ char *incrementa_celda_id_info_dividida_copia_si_cero(const char *direccion,    
                         GG_caracter_para_confirmacion_o_error[0], nueva); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
                 }
             }
-            free_split(celdas); // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            free_split_con_numero_de_celdas(celdas); // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
             break;
         }
 
-        if (cols_arr)  { free_split(cols_arr);  } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
-        if (cants_arr) { free_split(cants_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
-        if (cop_arr)   { free_split(cop_arr);   } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (cols_arr)  { free_split_con_numero_de_celdas(cols_arr);  } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
+        if (cants_arr) { free_split_con_numero_de_celdas(cants_arr); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
+        if (cop_arr)   { free_split_con_numero_de_celdas(cop_arr);   } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         if (encontro)  { guardar_archivo(ruta_a, lineas, nl); } // reescribe el archivo con las líneas ya modificadas en memoria // ejemplo: guardar cambios de una tabla
         free_lineas(lineas, nl); // libera el arreglo de líneas y sus cadenas asociadas // ejemplo: contenido del archivo leído
     }
@@ -3577,9 +3577,9 @@ char *incrementa_celda_busqueda_info_dividida(const char *direccion,          //
     }
 
     char **cols_arr  = NULL;
-    int    nc_cols   = split(cols_inc_str, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a incrementar usando el separador de nivel 4
+    int    nc_cols   = split_con_numero_de_celdas(cols_inc_str, GG_caracter_separacion_funciones_espesificas[4], &cols_arr); // divide las columnas a incrementar usando el separador de nivel 4
     char **cants_arr = NULL;
-    int    nc_cants  = split(cants_inc_str, GG_caracter_separacion_funciones_espesificas[4], &cants_arr); // divide las cantidades usando el separador de nivel 4
+    int    nc_cants  = split_con_numero_de_celdas(cants_inc_str, GG_caracter_separacion_funciones_espesificas[4], &cants_arr); // divide las cantidades usando el separador de nivel 4
     int    encontro  = 0;
 
     for (long i = 1; i <= id_total; i++) // recorre una secuencia controlando el índice de esta iteración // ejemplo: i de 0 a total-1
@@ -3603,7 +3603,7 @@ char *incrementa_celda_busqueda_info_dividida(const char *direccion,          //
                 if (cont == 0) { cont++; continue; } // salta el encabezado de columnas del archivo de datos
 
                 char **celdas = NULL;
-                int    nc     = split(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+                int    nc     = split_con_numero_de_celdas(lineas[j], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
 
                 if (nc > col_buscar && celdas && strcmp(celdas[col_buscar], dato_a_buscar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
                 {
@@ -3630,7 +3630,7 @@ char *incrementa_celda_busqueda_info_dividida(const char *direccion,          //
                         encontro  = 1;
                     }
                 }
-                if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+                if (celdas) { free_split_con_numero_de_celdas(celdas); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
                 cont++;
             }
 
@@ -3648,8 +3648,8 @@ char *incrementa_celda_busqueda_info_dividida(const char *direccion,          //
         if (res) { free(res); } // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
     }
 
-    if (cols_arr)  { free_split(cols_arr);  } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
-    if (cants_arr) { free_split(cants_arr); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    if (cols_arr)  { free_split_con_numero_de_celdas(cols_arr);  } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
+    if (cants_arr) { free_split_con_numero_de_celdas(cants_arr); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     free(carpeta_data); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
 
     concatenar_formato_separado_por_variable(&respuesta, NULL, "%s", encontro ? "1" : "0"); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
@@ -3699,7 +3699,7 @@ char *buscar_info_dividida(const char *direccion,  // ruta del archivo metadata
     }
 
     char **filas  = NULL;
-    int    nf     = split(todo, GG_caracter_separacion_funciones_espesificas[3], &filas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+    int    nf     = split_con_numero_de_celdas(todo, GG_caracter_separacion_funciones_espesificas[3], &filas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
     free(todo); // libera memoria dinámica previamente reservada para evitar fugas // ejemplo: buffer temporal
 
     int encontro = 0;
@@ -3707,7 +3707,7 @@ char *buscar_info_dividida(const char *direccion,  // ruta del archivo metadata
     if (id_hint >= 0 && id_hint < nf && filas && filas[id_hint]) // verifica primero en la posición sugerida por el hint
     {
         char **celdas = NULL;
-        int    nc     = split(filas[id_hint], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+        int    nc     = split_con_numero_de_celdas(filas[id_hint], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
         if (nc > col_buscar && celdas && strcmp(celdas[col_buscar], dato_buscar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
         {
             concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s%s%d",
@@ -3715,7 +3715,7 @@ char *buscar_info_dividida(const char *direccion,  // ruta del archivo metadata
                 GG_caracter_para_confirmacion_o_error[0], id_hint); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
             encontro = 1;
         }
-        if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+        if (celdas) { free_split_con_numero_de_celdas(celdas); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
     }
 
     if (!encontro && id_hint > 0) // busca en el rango anterior al hint
@@ -3725,7 +3725,7 @@ char *buscar_info_dividida(const char *direccion,  // ruta del archivo metadata
         {
             if (!filas || !filas[i]) { continue; }
             char **celdas = NULL;
-            int    nc     = split(filas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            int    nc     = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
             if (nc > col_buscar && celdas && strcmp(celdas[col_buscar], dato_buscar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
             {
                 concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s%s%d",
@@ -3733,7 +3733,7 @@ char *buscar_info_dividida(const char *direccion,  // ruta del archivo metadata
                     GG_caracter_para_confirmacion_o_error[0], i + 1); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
                 encontro = 1;
             }
-            if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            if (celdas) { free_split_con_numero_de_celdas(celdas); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
     }
 
@@ -3743,7 +3743,7 @@ char *buscar_info_dividida(const char *direccion,  // ruta del archivo metadata
         {
             if (!filas || !filas[i]) { continue; }
             char **celdas = NULL;
-            int    nc     = split(filas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
+            int    nc     = split_con_numero_de_celdas(filas[i], GG_caracter_separacion[0], &celdas); // divide el texto usando el separador configurado para trabajar cada campo por separado // ejemplo: ID|NOMBRE
             if (nc > col_buscar && celdas && strcmp(celdas[col_buscar], dato_buscar) == 0) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
             {
                 concatenar_formato_separado_por_variable(&respuesta, NULL, "1%s%s%s%d",
@@ -3751,11 +3751,11 @@ char *buscar_info_dividida(const char *direccion,  // ruta del archivo metadata
                     GG_caracter_para_confirmacion_o_error[0], i + 1); // arma una cadena dinámica con formato seguro usando los valores indicados // ejemplo: respuesta de éxito
                 encontro = 1;
             }
-            if (celdas) { free_split(celdas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+            if (celdas) { free_split_con_numero_de_celdas(celdas); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
         }
     }
 
-    if (filas) { free_split(filas); } // libera el arreglo de partes generado por split cuando ya no se necesita // ejemplo: columnas temporales
+    if (filas) { free_split_con_numero_de_celdas(filas); } // libera el arreglo de partes generado por split_con_numero_de_celdas cuando ya no se necesita // ejemplo: columnas temporales
 
     if (!encontro) // evalúa la condición para decidir si entra al bloque actual // ejemplo: ruta != NULL
     {

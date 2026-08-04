@@ -110,9 +110,7 @@ extern const char *GG_ventana_datos_conf[][5];
 extern const char *GG_ventana_emergente_productos[][5];
 extern const char *GG_ventana_COSAS_NO_ESTABAN_INVENTARIO[][5];
 extern const char *GG_ventana_provedor[][5];
-extern const char *GG_ventana_APRENDICES_E[][5];
 extern const char *GG_ventana_afiliados_unificados[][5];
-extern const char *GG_ventana_niv_afiliados_unificado[][5];
 extern const char *GG_ventana_SUCUR[][5];
 extern const char *GG_ventana_reg_dia[][5];
 extern const char *GG_ventana_reg_mes[][5];
@@ -153,9 +151,7 @@ extern const char *GG_trabajos_dia[][5];
 #define G_ventana_emergente_productos GG_ventana_emergente_productos
 #define G_ventana_COSAS_NO_ESTABAN_INVENTARIO GG_ventana_COSAS_NO_ESTABAN_INVENTARIO
 #define G_ventana_provedor GG_ventana_provedor
-#define G_ventana_APRENDICES_E GG_ventana_APRENDICES_E
 #define G_ventana_afiliados_unificados GG_ventana_afiliados_unificados
-#define G_ventana_niv_afiliados_unificado GG_ventana_niv_afiliados_unificado
 #define G_ventana_SUCUR GG_ventana_SUCUR
 #define G_ventana_reg_dia GG_ventana_reg_dia
 #define G_ventana_reg_mes GG_ventana_reg_mes

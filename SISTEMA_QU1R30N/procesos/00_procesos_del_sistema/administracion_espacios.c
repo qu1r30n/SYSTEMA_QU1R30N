@@ -137,6 +137,7 @@ int crear_archivos_base_negocio(const char *id_espacio) // crea todos los archiv
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     int errores = 0;                                           // contador de errores acumulados durante la creacion de archivos base
     const char *base_anterior = GG_direccion_carpetas_base[0]; // guarda la ruta base global actual para restaurarla al terminar // ejemplo: "espacios\\"
+    imprimirMensaje_para_depurar_arreglo(GG_direccion_carpetas_base, "GG_direccion_carpetas_base", -1); // imprime la ruta base global actual en modo depuracion
     char *base_dinamica = NULL;                                // ruta base temporal apuntando al espacio recien creado
 
     if (!id_espacio || !id_espacio[0]) // valida que id_espacio no sea nulo ni cadena vacia

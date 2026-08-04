@@ -16,7 +16,7 @@
 #elif defined(__XC)
 #define _XTAL_FREQ 4000000
 #include <xc.h>
-/* PIC16F: Sin malloc. Las funciones de split son stubs. */
+/* PIC16F: Sin malloc. Las funciones de split_con_numero_de_celdas son stubs. */
 
 #else
 #include <stdlib.h>
@@ -29,19 +29,19 @@
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/var_fun_GG.h"
 
 /*
- * Uso: Ejecuta modelo_split de forma segura.
- * Entrada ejemplo: modelo_split(texto, sep)
+ * Uso: Ejecuta split_con_numero_de_celdas de forma segura.
+ * Entrada ejemplo: split_con_numero_de_celdas(texto, sep)
  */
-char **modelo_split(char *texto, const char *sep)
+char **split(char *texto, const char *sep)
 {
     /* Paso a paso: validar entradas, procesar y manejar errores. */
     char **salida = NULL;
 
-    int resultado = split(texto, sep, &salida);
+    int resultado = split_con_numero_de_celdas(texto, sep, &salida);
 
     if (resultado == -1)
     {
-        // Error al hacer split
+        // Error al hacer split_con_numero_de_celdas
         return NULL;
     }
 
@@ -49,10 +49,10 @@ char **modelo_split(char *texto, const char *sep)
 }
 
 /*
- * Uso: Ejecuta modelo_free_split de forma segura.
- * Entrada ejemplo: modelo_free_split(arreglo)
+ * Uso: Ejecuta modelo_free_split_con_numero_de_celdas de forma segura.
+ * Entrada ejemplo: modelo_free_split_con_numero_de_celdas(arreglo)
  */
-void modelo_free_split(char **arreglo)
+void modelo_free_split_con_numero_de_celdas(char **arreglo)
 {
     /* Si es NULL, no hacer nada */
     if (arreglo == NULL)

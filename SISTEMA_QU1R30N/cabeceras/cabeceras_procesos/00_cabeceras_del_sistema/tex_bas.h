@@ -87,7 +87,7 @@ void agregar_columna(const char *ruta, const char *nombre);
  */
 int existe_archivo(const char *ruta);
 
-/* Busca filas donde la celda[col_buscar] == valor_buscar (split por GG_caracter_separacion[0]).
+/* Busca filas donde la celda[col_buscar] == valor_buscar (split_con_numero_de_celdas por GG_caracter_separacion[0]).
 Retorna arreglo din�mico de filas encontradas y actualiza salida_out.
 El caller es responsable de llamar a free_lineas(). */
 int seleccionar_fila_por_celda(const char *ruta, int col_buscar, const char *valor_buscar, char ***salida_out);

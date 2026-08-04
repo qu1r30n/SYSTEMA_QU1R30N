@@ -53,6 +53,58 @@ void imprimirMensaje_para_depurar(const char *format, ...) // define una funcion
     va_end(args); // cierra el uso de la lista variádica para liberar su estado interno // ejemplo: fin de lectura de args
 }
 
+/*
+ * Uso: Ejecuta imprimirMensaje_para_depurar_arreglo de forma segura.
+ * Entrada ejemplo: imprimirMensaje_para_depurar_arreglo(arreglo, "celda", total)
+ */
+void imprimirMensaje_para_depurar_arreglo(char **contenido, const char *texto, int total)
+{
+    if (contenido == NULL)
+    {
+        printf("%s[0]: (null)\n", texto ? texto : "celda");
+        return;
+    }
+
+    const char *prefijo = texto ? texto : "celda";
+    int i = 0;
+    if (total > 0)
+    {
+        for (; i < total; ++i)
+        {
+            const char *valor = contenido[i] ? contenido[i] : "(null)";
+
+#ifdef PIC16F
+            char buffer[120];
+            snprintf(buffer, sizeof(buffer), "\n%s[%d]: %s", prefijo, i, valor);
+            printf("%s", buffer);
+#else
+            printf("\n%s[%d]: %s", prefijo, i, valor);
+#endif
+        }
+    }
+    else
+    {
+        while (contenido[i] != NULL)
+        {
+            const char *valor = contenido[i] ? contenido[i] : "(null)";
+
+#ifdef PIC16F
+            char buffer[120];
+            snprintf(buffer, sizeof(buffer), "%s[%d]: %s\n", prefijo, i, valor);
+            printf("%s", buffer);
+#else
+            printf("%s[%d]: %s\n", prefijo, i, valor);
+#endif
+            ++i;
+        }
+
+        if (i == 0)
+        {
+            printf("%s[0]: (null)\n", prefijo);
+        }
+    }
+}
+
 /* =========================
    DELAY PORTABLE
 ========================= */

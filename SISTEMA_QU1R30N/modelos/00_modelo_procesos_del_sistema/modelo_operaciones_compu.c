@@ -8,7 +8,7 @@
  * - stddef.h: Tipos base como size_t y NULL
  */
 #include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_compu.h"
-#include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h" /* necesitamos la firma de modelo_split */
+#include "../../cabeceras/cabeceras_modelos/00_cabeceras_modelos_del_sistema/modelo_operaciones_textos.h" /* necesitamos la firma de split */
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/estructuras_dinamicas.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_compu.h"
 #include "../../cabeceras/cabeceras_procesos/00_cabeceras_del_sistema/operaciones_textos.h"
@@ -35,13 +35,13 @@ void modelo_fechaActual(char *texto)
         cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->2->NULL
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    char **partes = split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
         return;
     }
 
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
+    int cuantas_partes = 0; // contador de partes resultantes del split_con_numero_de_celdas // ejemplo: 3
     while (partes[cuantas_partes])
     {
         cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
@@ -52,17 +52,17 @@ void modelo_fechaActual(char *texto)
 
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
-        modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+        modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
         liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         return;
     }
 
-    /* Antes se hacía modelo_split(texto,"|") pero el valor devuelto no
+    /* Antes se hacía split(texto,"|") pero el valor devuelto no
        se utilizaba; quitar la llamada o almacenarla si hace falta.
        El propósito de esta función es simplemente delegar en el proceso. */
     fechaActual(texto, "%Y-%m-%d %H:%M:%S");
 
-    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+    modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 }
 
@@ -86,13 +86,13 @@ void modelo_delay_ms(char *texto)
         cuantos_parametros_hay++; // avanza al siguiente parametro esperado // ejemplo: 0->1->2->NULL
     }
 
-    char **partes = modelo_split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
+    char **partes = split(texto, G_caracter_separacion_nom_parametro_de_valor[1]);
     if (!partes)
     {
         return;
     }
 
-    int cuantas_partes = 0; // contador de partes resultantes del split // ejemplo: 3
+    int cuantas_partes = 0; // contador de partes resultantes del split_con_numero_de_celdas // ejemplo: 3
     while (partes[cuantas_partes])
     {
         cuantas_partes++; // incrementa contador de partes // ejemplo: 0->1->2
@@ -103,7 +103,7 @@ void modelo_delay_ms(char *texto)
 
     if (ret_parse < 0 || cuantas_partes <= 0) // aborta si el parseo fallo o no hay partes para procesar // ejemplo: ret_parse=-1 -> retorna
     {
-        modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+        modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
         liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
         return;
     }
@@ -111,6 +111,6 @@ void modelo_delay_ms(char *texto)
     unsigned int ms = *(int *)obtenerValorPorOrden(&datos, 0);
     delay_ms(ms);
 
-    modelo_free_split(partes); // libera la memoria del arreglo generado por modelo_split // ejemplo: libera partes[0..n]
+    modelo_free_split_con_numero_de_celdas(partes); // libera la memoria del arreglo generado por split // ejemplo: libera partes[0..n]
     liberarStructura(&datos);  // libera la memoria interna de la estructura dinamica // ejemplo: libera arreglo_char, nombres, etc.
 }
